@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * sqlmap.opro.main
+ * OproMainLoginFormMapper.xml
+ * 
+ * @Author :  chanil_Hong
+ * @Date   : 2018. 2. 20.
+ * 
+ -->
+ 
+ <mapper namespace="com.eunwoosoft.opro.ebid.dao.OproEbidSttlmntDao">
+ 
+	<!--  
+     * <pre>
+     * 1. 개요 : 수의시담 목록조회_페이징 
+     * 2. 처리내용 :
+     *  	
+     * </pre>
+     * @Query ID : selectVltrnPrvstlListWithPgng
+     * @date : 2015. 03. 02.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 02.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectVltrnPrvstlListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="vltrnPrvstlList"/>
+			<include refid="vltrnPrvstlListWhere"/>
+			ORDER BY  RQST_DE DESC
+			
+		) T1
+		WHERE 1 = 1
+		AND PVST_PSCD NOT IN('PO10','PO20','PO30')
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 수의시담목록총건수조회 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectVltrnPrvstlListTotcnt
+     * @date : 2015. 03. 02.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 02.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectVltrnPrvstlListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="vltrnPrvstlList"/>
+			<include refid="vltrnPrvstlListWhere"/>
+		) T1
+		WHERE 1 = 1
+		AND PVST_PSCD NOT IN('PO10','PO20','PO30')		
+	</select>
+
+	<sql id="vltrnPrvstlList">
+			SELECT	 MST.PRCH_RQR_NO
+						,F_CDVAL_INQIRE('C00001', MST.CONT_SECD) AS CONT_SENM
+						,MST.CONT_SECD
+						,MST.PVST_NM
+						,MST.PVST_NO
+						,MST.RQST_DE
+						,MST.RQSTR_ID
+						,(SELECT USR_NM FROM T_MM_USER_MST USER_MST WHERE 1=1 AND USER_MST.USR_ID = MST.RQSTR_ID) AS USR_NM
+						,MST.PVST_DT
+						,MST.PVST_PSCD
+						,F_CDVAL_INQIRE(22689, MST.PVST_PSCD) AS PVST_PSNM 
+			FROM  T_PP_MST MST
+					,T_PP_VEND VEND
+			WHERE 	MST.PVST_NO = VEND.PVST_NO(+) 
+			AND 		MST.DEL_AT = 'N'
+			AND		VEND.VEND_REG_NO = #{P_VEND_REG_NO}
+																		
+	</sql> 
+	
+	<sql id="vltrnPrvstlListWhere"> 
+			<if test='P_PVST_NM_S != null and P_PVST_NM_S != "" '>
+				AND PVST_NM LIKE '%'||#{P_PVST_NM_S}||'%'
+			</if> 
+			<if test='P_CONT_SECD_S != null and P_CONT_SECD_S != "" '>
+				AND CONT_SECD = #{P_CONT_SECD_S}
+			</if>
+			<if test='P_PVST_PSCD_S != null and P_PVST_PSCD_S != "" '>
+				AND PVST_PSCD = #{P_PVST_PSCD_S}
+			</if>
+			<if test='P_RQST_BEGIN_DE_S != null and P_RQST_BEGIN_DE_S != "" '>
+				AND RQST_DE >= #{P_RQST_BEGIN_DE_S}
+			</if>
+			<if test='P_RQST_END_DE_S != null and P_RQST_END_DE_S != "" '>
+				AND RQST_DE &lt;= #{P_RQST_END_DE_S}
+			</if>
+			<if test='P_PVST_BEGIN_DT_S != null and P_PVST_BEGIN_DT_S != "" '>
+				AND PVST_DT >= #{P_PVST_BEGIN_DT_S}
+			</if>
+			<if test='P_PVST_BEGIN_END_DT_S != null and P_PVST_BEGIN_END_DT_S != "" '>
+				AND PVST_DT &lt;= #{P_PVST_BEGIN_END_DT_S}
+			</if>
+		
+	</sql>
+ <!--  
+     * <pre>
+     * 1. 개요 : 수의시담 상세 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectVltrnPrvstlDetail
+     * @date : 2015. 02. 26.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 02. 26.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+	<select id="selectVltrnPrvstlDetail" resultType="dataEntity">
+	
+		SELECT 	 MST.PRCH_RQR_NO
+					,MST.RQST_DE
+					,MST.PVST_NM
+					,MST.PVST_NO
+					,F_CDVAL_INQIRE(22026, MST.CONT_MTCD) AS CONT_MTNM
+					,MST.BID_LMT_AMT
+					,MST.LT_NEGO_AMT
+                    ,MST.RQSTR_ID
+					,(SELECT DISTINCT USR_NM FROM T_MM_USER_MST USER_MST WHERE MST.RQSTR_ID = USER_MST.USR_ID) AS RQSTR_NM
+					,RQST_DEPT_NM
+					,MST.DLGD_LMT
+					,MST.PVST_DT
+					,MST.CHRGR_ID
+					,(SELECT DISTINCT USR_NM FROM T_MM_USER_MST USER_MST WHERE MST.CHRGR_ID = USER_MST.USR_ID) AS CHRGR_NM
+					,MST.CHRG_DEPT_NM
+					,MST.PVST_NTC_CNTN
+					,MST.PVST_PSCD
+					,VEND.FILE_GRP_NO
+					,MST.ESTPC_AMT
+					,MST.ESTPC_REGR_ID
+					,MST.ESTPC_REG_DT
+					,VEND.SIGN_DT
+					,CUMST.VEND_NM
+					,CUMST.VEND_REG_NO
+					,CUMST.TEL_NO
+		FROM T_PP_MST MST           
+				,T_PP_VEND VEND        
+				,T_CU_MST CUMST 
+				 
+		WHERE  	MST.PVST_NO = VEND.PVST_NO
+		AND		VEND.VEND_REG_NO = CUMST.VEND_REG_NO  
+		AND		MST.PVST_NO = #{P_PVST_NO, jdbcType=VARCHAR} 
+		AND		VEND.VEND_REG_NO = #{P_LOGIN_ID, jdbcType=VARCHAR} 
+	 
+	</select>
+	
+	
+	
+	<select id="selectVltrnPrvstlProgrsList" resultType="dataEntity">
+	SELECT
+					 PVST_NO
+					,VEND_REG_NO
+					,HSTY_SN
+					,PVST_CNTN
+					,CNTN_INP_DT
+					,RMK
+					<include refid="ComRegr.selectColumnClause"/> 	 
+		FROM T_PP_CNTN_HIST 
+		WHERE PVST_NO =  #{P_PVST_NO, jdbcType=VARCHAR} 
+		ORDER BY HSTY_SN DESC
+	</select>
+
+	
+	
+	
+
+	<!--  
+     * <pre>
+     * 1. 개요 : 수의시담 내용 등록 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : insertVltrnPrvstlCnRegist
+     * @date : 2015. 02. 26.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 02. 26.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+
+	<insert id="insertVltrnPrvstlCnRegist">
+		<selectKey keyProperty="P_HSTY_SN" resultType="int" order="BEFORE">
+			SELECT 	NVL(MAX(HSTY_SN)+1,1) 
+			FROM 	T_PP_CNTN_HIST
+			WHERE 	PVST_NO = #{P_PVST_NO, jdbcType=VARCHAR} 
+		</selectKey>
+		INSERT INTO T_PP_CNTN_HIST
+		(
+			  PVST_NO
+			, VEND_REG_NO
+			, HSTY_SN
+			, PVST_CNTN
+			, CNTN_INP_DT     
+			, RMK
+		<!-- 	<include refid="ComRegr.RegrColumnClause"/> 	 -->		
+		)
+		VALUES
+		(
+			  #{P_PVST_NO , jdbcType=VARCHAR}  
+			, #{P_VEND_REG_NO , jdbcType=VARCHAR}   
+			, #{P_HSTY_SN , jdbcType=INTEGER}  
+			, #{P_PVST_CNTN, jdbcType=VARCHAR}  
+			, #{P_CNTN_INP_DT, jdbcType=VARCHAR}   
+			, #{P_RMK, jdbcType=VARCHAR}  
+			<!-- <include refid="ComRegr.RegrValueClause"/>  -->
+		)		
+	</insert>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 수의시담  협상 금액 등록 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : insertVltrnPrvstlNtatAmountRegist
+     * @date : 2015. 06. 17.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 06. 17.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+	<insert id="insertVltrnPrvstlNtatAmountRegist">
+	<selectKey keyProperty="P_HSTY_SN" resultType="int" order="BEFORE">
+			SELECT 	NVL(MAX(HSTY_SN)+1,1) 
+			FROM 	T_PP_NEGO_HIST
+			WHERE 	PVST_NO = #{P_PVST_NO, jdbcType=VARCHAR} 
+	</selectKey>
+	INSERT INTO T_PP_NEGO_HIST
+	(
+		 PVST_NO
+		,HSTY_SN
+		,NEGO_AMT
+		,VEND_REG_NO
+	<!-- 외부 로그인작업이 아직 안된거가틈..
+		,REGISTER_ID
+		,REGIST_DT -->
+	) 
+	VALUES
+	(
+		 #{P_PVST_NO, jdbcType=VARCHAR}
+		,#{P_HSTY_SN jdbcType=INTEGER}
+		,#{P_NEGO_AMT, jdbcType=VARCHAR}
+		,#{P_VEND_REG_NO, jdbcType=VARCHAR}
+	<!-- 	,#{P_REGISTER_ID}
+		,#{P_REGIST_DT} -->
+	)
+		
+	</insert>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 수의시담 협상 금액 목록
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectVltrnPrvstlNtatAmountList
+     * @date : 2015. 06. 17.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 06. 17.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+	<select id="selectVltrnPrvstlNtatAmountList" resultType="dataEntity">
+	
+		SELECT 
+					 PVST_NO
+					,VEND_REG_NO
+					,HSTY_SN
+					,NEGO_AMT
+					,ESTPC_BLOW_YN
+					,RMK
+					<include refid="ComRegr.selectColumnClause"/> 	 
+		FROM T_PP_NEGO_HIST
+		WHERE PVST_NO = #{P_PVST_NO}
+		ORDER BY HSTY_SN DESC
+	 
+	
+	</select>
+	
+	<select id="selectEntrpsPrdprcBelowInputAmount" resultType="dataEntity">
+	
+		SELECT 
+					A.HSTY_SN
+				   ,A.NEGO_AMT
+				  
+		FROM T_PP_NEGO_HIST A
+		,(SELECT MAX(HSTY_SN)AS HSTY_SN
+					,PVST_NO
+			 FROM T_PP_NEGO_HIST
+			 WHERE PVST_NO =  #{P_PVST_NO}
+			 <if test='P_ESTPC_BLOW_YN == "Y" '> <!-- 예가 이하 인지 확인 -->
+			 AND		ESTPC_BLOW_YN = #{P_ESTPC_BLOW_YN}
+			 </if>
+			 GROUP BY PVST_NO
+			 ) B
+		<!-- <if test='MAX_HIST_SN == "Y" and P_PRDPRC_BELOW_AT != "Y" '>
+		,(SELECT MAX(HIST_SN)AS HIST_SN
+					,PRVSTL_NO
+			 FROM TEPN_PRAMNEHI
+			 WHERE PRVSTL_NO =  #{P_PRVSTL_NO}
+			 
+			 GROUP BY PRVSTL_NO
+			 ) B
+		</if>
+		<if test='MAX_HIST_SN == "Y" and P_PRDPRC_BELOW_AT == "Y" '>
+		,(SELECT MAX(HIST_SN)AS HIST_SN
+					,PRVSTL_NO
+			 FROM TEPN_PRAMNEHI
+			 WHERE PRVSTL_NO =  #{P_PRVSTL_NO}
+			 AND		PRDPRC_BELOW_AT = #{P_PRDPRC_BELOW_AT}
+			 GROUP BY PRVSTL_NO
+			 ) B
+		</if> -->
+		WHERE 	A.PVST_NO = #{P_PVST_NO}
+		<!-- <if test='MAX_HIST_SN == "Y" '> -->
+		AND		A.PVST_NO = B.PVST_NO
+		AND		A.HSTY_SN = B.HSTY_SN
+		<!-- </if> -->
+		<if test='P_PRDPRC_BELOW_AT == "Y" '> <!-- 예가 이하 인지 확인 -->
+		AND		ESTPC_BLOW_YN = #{P_ESTPC_BLOW_YN}
+		</if> 
+		<!-- <if test='MAX_HIST_SN == "Y"'>가장 최근에 입력한 값 확인
+		AND		HIST_SN = (SELECT MAX(HIST_SN)AS HIST_SN FROM TEPN_PRAMNEHI WHERE PRVSTL_NO = #{P_PRVSTL_NO} )		
+		</if>  -->
+	
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 수의시담 최종 금액 등록
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : updatePrvstlLastAmountRegist
+     * @date : 2015. 06. 19.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 06. 19.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+	<update id="updatePrvstlLastAmountRegist">
+		
+		UPDATE TEPN_VOPRMA		SET		
+
+				 LAST_NTAT_AMOUNT = #{P_LAST_NTAT_AMOUNT}
+				 ,PRVSTL_PRST_CD = #{P_PRVSTL_PRST_CD}
+				<!-- ,PLNPRC_ENCPT_VALUE = #{P_PLNPRC_ENCPT_VALUE} -->
+		     	,UPDUSR_ID = #{P_LOGIN_ID}
+				,UPDT_DT = TO_CHAR(SYSDATE , 'YYYYMMDDHH24MMSS')
+		WHERE	PRVSTL_NO = #{P_PRVSTL_NO}
+	
+	
+	</update>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 수의시담 예가 이하 여부 등록
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : updateVltrnPrvstlPrdprcBelowAtRegist
+     * @date : 2015. 07. 07.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 07. 07.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+	<update id="updateVltrnPrvstlPrdprcBelowAtRegist">
+	
+		UPDATE T_PP_NEGO_HIST SET
+				ESTPC_BLOW_YN = #{P_ESTPC_BLOW_YN, jdbcType=VARCHAR}
+		WHERE	PVST_NO = #{P_PVST_NO, jdbcType=VARCHAR}
+		AND		HSTY_SN = #{P_HSTY_SN, jdbcType=INTEGER}
+	
+	</update>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 수의시담 전자서명 등록
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : insertPrvstlSignRegist
+     * @date : 2015. 06. 19.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 06. 19.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	<insert id="insertPrvstlSignRegist">
+		INSERT INTO TEPN_PRELSI(
+			PRVSTL_NO
+			,ENTRPS_REGIST_NO
+			,CRTFCT_ESNTL_VALUE
+			,ORGINL_VALUE
+			,ELTSGN_VALUE
+			,SIGN_DT		
+		)VALUES(
+			#{P_PRVSTL_NO}
+			,#{P_LOGIN_ID}
+			,#{P_CRTFCT_ESNTL_VALUE}
+			,#{P_LAST_NTAT_AMOUNT}
+			,#{P_PLNPRC_ENCPT_VALUE}
+			,TO_CHAR(SYSDATE , 'YYYYMMDDHH24MMSS')
+		)
+	</insert>
+	
+	<!-- 
+	 * <pre>
+     * 1. 개요 : 수의시담 진행이력 등록 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : insertVltrnPrvstlEntrpsRegist
+     * @date : 2015. 03. 03.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 03.       은우소프트 손연우              최초 작성 
+     *  =======================================================
+	 -->
+	<insert id="insertVltrnPrvstlHistRegist">
+		<selectKey keyProperty="P_HIST_SN" resultType="int" order="BEFORE">
+			SELECT 	NVL(MAX(HIST_SN)+1,1) 
+			FROM 	TEPN_VOPRPRHI
+			WHERE 	PRVSTL_NO = #{P_PRVSTL_NO, jdbcType=VARCHAR} 
+		</selectKey>
+		INSERT INTO TEPN_VOPRPRHI
+		(
+			 PRVSTL_NO
+			,HIST_SN
+			,PRVSTL_PRST_CD
+			,WRTER_ID
+			,ENTRPS_REGIST_NO
+			,STTUS_DE
+		)
+		VALUES
+		(
+			 #{P_PRVSTL_NO}
+			,#{P_HIST_SN}
+			,#{P_PRVSTL_PRST_CD}
+			,#{P_LOGIN_ID}
+			,#{P_LOGIN_ID}
+			,TO_CHAR(SYSDATE , 'YYYYMMDD')
+		)
+	</insert>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 전체 수의시담 목록조회_페이징 
+     * 2. 처리내용 :
+     *  	
+     * </pre>
+     * @Query ID : selectAllVltrnPrvstlListWithPgng
+     * @date : 2016. 02. 19.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2016. 02. 19.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectAllVltrnPrvstlListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="allVltrnPrvstlList"/>
+			<include refid="allVltrnPrvstlListWhere"/>
+			ORDER BY  RQST_DE DESC
+			
+		) T1
+		WHERE 1 = 1
+		AND PVST_PSCD IN('PO60','PO94')
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 전체 수의시담목록총건수조회 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectAllVltrnPrvstlListTotcnt
+     * @date : 2016. 02. 19.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2016. 02. 19.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectAllVltrnPrvstlListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="allVltrnPrvstlList"/>
+			<include refid="allVltrnPrvstlListWhere"/>
+		) T1
+		WHERE 1 = 1
+		AND PVST_PSCD IN('PO60','PO94')
+	</select>
+	<sql id="allVltrnPrvstlList">
+			SELECT	 MST.PRCH_RQR_NO
+						,F_CDVAL_INQIRE('C00001', MST.CONT_SECD) AS CONT_SENM
+						,MST.CONT_SECD
+						,MST.PVST_NM
+						,MST.PVST_NO
+						,MST.RQST_DE
+						,MST.RQSTR_ID
+						,(SELECT USR_NM FROM T_MM_USER_MST USER_MST WHERE 1=1 AND USER_MST.USR_ID = MST.RQSTR_ID) AS USR_NM
+						,MST.PVST_DT
+						,MST.PVST_PSCD
+						,F_CDVAL_INQIRE(22689, MST.PVST_PSCD) AS PVST_PSNM 
+			FROM  T_PP_MST MST
+					,T_PP_VEND VEND
+			WHERE 	MST.PVST_NO = VEND.PVST_NO
+			AND 		MST.DEL_AT = 'N'
+			 <!-- AND VOPRMA.PRCURE_BSNS_SE_CD = #{P_PRCURE_BSNS_SE_CD} -->
+	</sql>
+	
+	<sql id="allVltrnPrvstlListWhere">
+			<if test='P_PVST_NM_S != null and P_PVST_NM_S != "" '>
+				AND PVST_NM LIKE '%'||#{P_PVST_NM_S}||'%'
+			</if>
+			<if test='P_CONT_SECD_S != null and P_CONT_SECD_S != "" '>
+				AND CONT_SECD = #{P_CONT_SECD_S}
+			</if>
+			<if test='P_PVST_PSCD_S != null and P_PVST_PSCD_S != "" '>
+				AND PVST_PSCD = #{P_PVST_PSCD_S}
+			</if>
+			<if test='P_RQST_BEGIN_DE_S != null and P_RQST_BEGIN_DE_S != "" '>
+				AND RQST_DE >= #{P_RQST_BEGIN_DE_S}
+			</if>
+			<if test='P_RQST_END_DE_S != null and P_RQST_END_DE_S != "" '>
+				AND RQST_DE &lt;= #{P_RQST_END_DE_S}
+			</if>
+			<if test='P_PVST_BEGIN_DT_S != null and P_PVST_BEGIN_DT_S != "" '>
+				AND PVST_DT >= #{P_PVST_BEGIN_DT_S}
+			</if>
+			<if test='P_PVST_BEGIN_END_DT_S != null and P_PVST_BEGIN_END_DT_S != "" '>
+				AND PVST_DT &lt;= #{P_PVST_BEGIN_END_DT_S}
+			</if>
+	</sql>
+ </mapper>

@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+<script type="text/javascript" src="../library/json3.min.js?revision=e54ce34"></script>
+<script type="text/javascript" src="../library/iecompatibility.js?revision=e54ce34"></script>
+
+<script type="text/javascript" src="../vestsign.js?revision=e54ce34"></script>
+<SCRIPT language=javascript>
+
+    function getError(error) {
+        // error = { code, getReason() };
+        if(error.code != -9999)  // 취소 버튼 이벤트 error.code: -9999
+            alert(error.msg);
+    }
+
+    function makeSignature(plain, inputType, outputType, outputfile) {
+        var option = {
+            encoding: 'hex',
+            charset: 'UTF-8'
+        };
+
+//        vest.token.makeSignature(tokenIdentifier, password, identifier, plain, option, function (result) {
+//            var str = '';
+//            str += result.signature;
+//            document.getElementById('result').value = str;
+//        }, getError);
+
+        yettie.fileSign(outputfile, plain, option, function(result){
+            var str = '';
+            str += result.signature;
+            document.getElementById('result').value = str;
+        }, getError);
+    };
+
+
+    function verifySignature(signedMsg, inputType, outputType, outputfile) {
+        var option = {
+            encoding: 'hex',
+            charset: 'UTF-8'
+        };
+
+//        vest.token.verifySignature(signedMsg, undefined, option, function (result) {
+//            var str = '';
+//            str += result;
+//            document.getElementById('result2').value = str;
+//        }, getError)
+        yettie.fileVerifySignature(outputfile, signedMsg, undefined, option, function(result) {
+            alert(result);
+        }, getError);
+    }
+
+</SCRIPT>
+<br><br><br>
+<table border="1" align="center" width=50%>
+    <tr>
+        <td align="center"><br>
+            서명 할 파일경로 (c:\testFile) <input type="text" id="plain"><br><br>
+            서명 결과를 저장 할 파일경로 (c:\testFile) <input type="text" id="filePath"><br><br>
+            <input type=button
+                   onclick="makeSignature(document.getElementById('plain').value, 1, 1, document.getElementById('filePath').value)"
+                   value="전자서명(file/file)" style="width:150"><br>
+            <br>
+        </td>
+    </tr>
+    <tr>
+        <td align="center"><br>
+            검증 할 파일경로 (c:\testFile) <input type="text" id="result"><br><br>
+            검증 결과를 저장 할 파일경로 (c:\testFile) <input type="text" id="filePath2"><br><br>
+            <!--검증 결과(원문)<br><textarea rows='10' style="width:100%" id="result2">c:\testFile</textarea><br><br>-->
+            <input type=button
+                   onclick="verifySignature(document.getElementById('result').value, 1, 1, document.getElementById('filePath2').value)"
+                   value="서명 검증(file/file)" style="width:150"><br>
+            <br>
+        </td>
+    </tr>
+    <!--<tr>-->
+        <!--<td align="center"><br>-->
+            <!--<input type=button-->
+                   <!--onclick="makeSignature(document.getElementById('plain').value, 1, 1, document.getElementById('filePath').value)"-->
+                   <!--value="전자서명(file/file)" style="width:150"><br>-->
+            <!--<br>-->
+            <!--<input type=button-->
+                   <!--onclick="verifySignature(document.getElementById('result').value, 1, 1, document.getElementById('filePath2').value)"-->
+                   <!--value="서명 검증(file/file)" style="width:150"><br>-->
+            <!--<br><br>-->
+        <!--</td>-->
+    <!--</tr>-->
+</table>

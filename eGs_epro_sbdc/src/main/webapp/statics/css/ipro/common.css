@@ -1,0 +1,198 @@
+@charset "utf-8";
+
+
+/*****************************************************************************************
+   Web Font
+**************************************************************************************/
+
+@font-face {
+    font-family:"Noto Sans KR";
+    src:url("../../../statics/css/font/NotoSansKR-Bold.otf"),
+    url("../../../statics/css/font/NotoSansKR-Bold.eot"),
+    url("../../../statics/css/font/NotoSansKR-Bold.eot") format("eot"),
+    url("../../../statics/css/font/NotoSansKR-Bold.woff") format("woff"),
+    url("../../../statics/css/font/NotoSansKR-Bold.ttf") format("truetype");
+    font-weight:bold;
+    font-style:normal;
+
+}
+@font-face {
+    font-family:"Noto Sans KR";
+    src: url("../../../statics/css/font/NotoSansKR-Regular.otf"),
+    url("../../../statics/css/font/NotoSansKR-Regular.eot"),
+    url("../../../statics/css/font/NotoSansKR-Regular.eot") format("eot"),
+    url("../../../statics/css/font/NotoSansKR-Regular.woff") format("woff"),
+    url("../../../statics/css/font/NotoSansKR-Regular.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal;
+}
+
+@font-face {
+    font-family:"Noto Sans KR";
+    src: url("../../../statics/css/font/NotoSansKR-Medium.otf"),
+    url("../../../statics/css/font/NotoSansKR-Medium.eot"),
+    url("../../../statics/css/font/NotoSansKR-Medium.eot") format("eot"),
+    url("../../../statics/css/font/NotoSansKR-Medium.woff") format("woff"),
+    url("../../../statics/css/font/NotoSansKR-Medium.ttf") format("truetype");
+    font-weight:500;
+    font-style:normal;
+}
+
+@font-face {
+    font-family:"Noto Sans KR";
+    src: url("../../../statics/css/font/NotoSansKR-Light.otf"),
+    url("../../../statics/css/font/NotoSansKR-Light.eot"),
+    url("../../../statics/css/font/NotoSansKR-Light.eot") format("eot"),
+    url("../../../statics/css/font/NotoSansKR-Light.eot?#iefix") format("embedded-opentype"),
+    url("../../../statics/css/font/NotoSansKR-Light.woff") format("woff"),
+    url("../../../statics/css/font/NotoSansKR-Light.ttf") format("truetype");
+    font-weight:100;
+    font-style:normal;
+}
+
+/*************************************************************
+    기본설정
+ *************************************************************/
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight:normal;
+    box-sizing:border-box;
+    letter-spacing:-0.5px;
+    line-height:1em;
+}
+
+*:focus {
+    outline: none;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+    background-color: #F0F1F5;
+}
+
+body, p, h1, h2, h3, h4, h5, h6, ul, ol, li, dl, dt, dd, table, th, td, form, fieldset, legend, input, textarea, button, select {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    color: #000;
+}
+hr {border:none;}
+
+body {
+    font-size: 16px;
+    background-color: #F0F1F5;
+}
+
+header, footer, nav {
+    display: block;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+img, button {
+    border: 0 none;
+    font-family:'Noto Sans KR', sans-serif;
+    font-weight:normal;
+}
+
+table {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+label {
+    margin-bottom:0;
+}
+
+em {
+    font-style: normal;
+}
+
+a, u, a:hover {
+    text-decoration: none;
+    color: #000;
+}
+
+a {
+    outline: 0;
+}
+
+textarea {
+    resize: none;
+}
+
+input, select, textarea {
+    outline: none;
+    box-shadow: none;
+}
+
+button {
+    cursor: pointer;
+    background-color:#fff;
+}
+
+button:focus {
+    outline: none;
+}
+
+/*************************************************************
+    Header
+ *************************************************************/
+.layout-header {height:317px; background:url(../../../statics/images/ipro/common/bg_header.png) no-repeat; background-size:100% auto;}
+.layout-header .wrap-header {width:1300px; margin:0 auto; overflow:hidden;}
+.layout-header .img-logo {display:inline-block; float:left; margin:42px 0 0 0; width:271px; height:49px; background:url(../../../statics/images/ipro/common/img_logo.png)no-repeat;}
+.layout-header .header-menu {float:right;}
+.layout-header .list-menu {padding:58px 0 0 0;overflow:hidden;}
+.layout-header .list-menu li {float:left; padding-left:56px;}
+.layout-header .list-menu li a {display:inline-block;  font-size:16px; font-weight:500;color:#fff;}
+
+/*************************************************************
+    Contents
+ *************************************************************/
+.layout-contents {position:relative; margin:-168px auto 0 auto; width:1300px; }
+.layout-contents .ui-contents + .ui-contents {margin:21px 0 0 0;}
+.layout-contents .ui-contents:after {display:table; clear:both; content:'';}
+
+
+/*************************************************************
+    popup
+ *************************************************************/
+.layout-pop {padding: 20px 20px 40px; min-width: 500px;}
+.pop_header {padding-bottom: 12px; border-bottom: 1px solid #333;}
+.pop-header .tit {padding-bottom: 12px; border-bottom: 1px solid #333; font-size: 24px; line-height: 24px; font-weight: 500; color: #2373aa;}
+
+/*************************************************************
+    Footer
+ *************************************************************/
+
+.layout-footer {width:1100px; margin:0 auto; padding:69px 0 50px 0; overflow:hidden;}
+
+.layout-footer .footer-logo {display:inline-block; float:left; margin-right:24px; width:196px; height:36px; background:url(../../../statics/images/ipro/common/icon_footer_logo.png) no-repeat;mix-blend-mode: luminosity;}
+.txt-footer {float:left; font-weight: 500; font-size: 11px; line-height: 10px; color: #8D8B8B;}
+.txt-footer .txt-copy {margin:10px 0 0 0;}
+.btn-download {display:inline-block; margin:-20px 0 0 0;padding:20px 0; float:right; width: 190px;
+    background: #DFE8F9;border-radius: 4px;font-size: 13px; line-height: 10px;color: #1455A9; font-weight: 500;}
+.btn-download:before {display:inline-block; margin:-5px 7px 0 0; width:17px; height:18px; background: url(../../../statics/images/ipro/common/icon_download.png)
+		no-repeat; content:'';
+    vertical-align: top;}
+
+
+
+
+
+
+

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ew.com.cmcd.dao.ComSancSttusDao">
+
+	<!--  
+     * <pre>
+     
+     * 1. 개요 : 결재상태정보 조회
+     * 2. 처리내용 :
+     *  	TABLE : MIRECO_GW.MIRECO_GAPP_QTABLE(결재 테이블)
+     *		GW_APP_STAT_CD :: 0: 상신/재상신, F: 승인/승인취소/접수완료/발송반송/발송반려, 5: 반려, 7: 회수/강제회수, D: 삭제/편철
+     * </pre>
+     -->
+	<select id="selectSancSttusInfo" resultType="dataEntity">
+		SELECT	DOC_ID
+				, DOC_TITLE
+				, GW_APP_ID
+				, GW_APP_STAT_CD
+				, GW_ACD_PRC_STAT_CD
+		FROM	MIRECO_GAPP_QTABLE
+		WHERE 	DOC_ID = #{P_SANCTN_DOC_ID, jdbcType=VARCHAR}
+	</select>
+	
+</mapper>

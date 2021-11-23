@@ -1,0 +1,211 @@
+@charset "utf-8";
+
+/*이미지 및 동영상 게시판 스타일*/
+.imgListBoard{
+
+}
+.imgListBoard .imgListCount{
+    float: left;
+    font:14px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+    color:#252525;
+    margin-left: 12px;
+}
+.imgListBoard .imgListCount span{
+    font : 24px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+    color:#fb8d3c;
+}
+.imgListBoard .imgListWrap{
+    float:left;
+    clear: both;
+    width: 980px;
+    margin : 15px 0;
+}
+.imgListBoard .imgListWrap ul{
+    float: left;
+    clear: both;
+    width: 100%;
+}
+.imgListBoard .imgListWrap li{
+    float:left;
+    margin: 0 12px 30px;
+}
+.imgListBoard .imgListWrap .objImg img{
+    width: 220px;
+    height: 180px;
+}
+.imgListBoard .imgListWrap .objTxt{
+    font:14px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+    margin-top: 10px;
+    margin-left:5px;
+    width: 210px;
+}
+.imgListBoard .imgListWrap .objDay{
+    font: 12px "NanumGothic", NanumGothic, Dotum, "NanumGothic", Arial, sans-serif;
+    color: #8a8a8a;
+    margin-top: 5px;
+    margin-left: 5px;
+    width: 210px;
+    height: 18px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+}
+
+/*상세보기 페이지*/
+.imgListDetail{
+    float:left;
+    width:980px;
+}
+.imgListDetail .listTitle{
+    width:980px;
+    clear: both;
+    float:left;
+    border-bottom : 3px solid #7a7a7a;
+    position:relative;
+}
+.imgListDetail .listTitle .listTitleTxt{
+    width: 550px;
+    float:left;
+    font:18px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+    margin-bottom: 11px;
+    line-height: 25px;
+}
+.imgListDetail .listTitle .listTitleDay{
+    position: absolute;
+    bottom:11px;
+    right:5px;
+    color:#017ac3;
+    font: 14px;
+}
+.imgListDetail .listTitle .listTitleDay span{
+    width:1px;
+    margin: 0 5px;
+    border-left:1px solid #017ac3;
+}
+.imgListDetail .imgObj{
+    width: 500px;
+    height: 370px;
+    border: 2px solid #cacaca;
+    margin:20px 0 0 238px;
+}
+
+.imgSlideWrap{
+    width: 455px;
+    height:70px;
+    position:relative;
+    margin: 20px auto 0;
+}
+.imgSlideWrap .imgSlideLayer{
+    width:440px;
+    overflow: hidden;
+    height:70px;
+    margin: 0 auto;
+}
+.imgSlideWrap .imgSlideLayer ul li{
+    float: left;
+}
+.imgSlideWrap .imgSlideLayer ul li img{
+    width: 90px;
+    height: 65px;
+    border:2px solid #cecece;
+    margin: 0 8px;
+}
+.imgSlideWrap .imgSlideBtns a{
+    display:block;
+    background-image: url('../../images/template_btn_slide.png');
+    background-repeat: no-repeat;
+    width: 12px;
+    height: 19px;
+    text-indent: -999999px;
+    position: absolute;
+}
+.imgSlideWrap .imgSlideBtns a.left{
+    background-position: 0 0;
+    top: 25px;
+    left: -10px;
+}
+.imgSlideWrap .imgSlideBtns a.right{
+    background-position: -12px 0;
+    top: 25px;
+    right: -10px;
+}
+.imgListDetail dt.listDay{
+    float: left;
+    font:14px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+    margin: 35px 0 25px;
+}
+.imgListDetail dd.listTxt{
+    float: left;
+    font:12px "NanumGothic", NanumGothic, Dotum, "NanumGothic", Arial, sans-serif;
+    margin-bottom: 25px;
+    line-height: 1.5em;
+}
+
+/*카페 글 상세보기*/
+.imgListDetail .textWrap{
+    width: 940px;
+    min-height: 300px;
+    padding:20px;
+    float:left;
+}
+.communityListTitle{
+    float: left;
+    border-top:3px solid #7a7a7a;
+    border-bottom:1px solid #d9d9d9;
+    width:980px;
+    padding-top: 12px;
+    height: 28px;
+    color:#555555;
+}
+.communityListTitle .communityListTitleTxt{
+    float: left;
+    font-size: 16px;
+    text-indent: 15px;
+    color:#7a7a7a;
+}
+.communityListTitle .communityListTitleDay{
+    float: right;
+}
+.communityListTitle .communityListTitleDay span{
+    height:15px;
+    display: inline-block;
+    padding-right: 10px;
+    margin-right: 10px;
+    background-image: url('../../images/bar_util15.png');
+    background-repeat: no-repeat;
+    background-position: right 5px;
+}
+.communityListTitle .communityListTitleDay span.noBg{
+    background-image: none;
+}
+.downLoadList{
+    width: 980px;
+    padding:10px 0;
+    border-top: 1px solid #d9d9d9;
+    border-bottom: 1px solid #7a7a7a;
+    float:left;
+    margin-bottom: 10px;
+}
+.downLoadList p{
+    float:left;
+    width: 75px;
+    background-image: url('../../images/bar_util.png');
+    background-repeat: no-repeat;
+    background-position: 58px center;
+}
+.downLoadList ul ,.downLoadList ul li{
+    float:left;
+    width:905px;
+}
+.downLoadList ul li{
+    margin-bottom: 5px;
+}
+.downLoadList ul li a{
+    color:#306d92;
+    padding-bottom: 2px;
+    border-bottom: 1px solid #306d92;
+}
+.downLoadList ul li a:hover{
+    text-decoration: none;
+}

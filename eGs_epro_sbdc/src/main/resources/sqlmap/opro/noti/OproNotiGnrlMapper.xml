@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+ --> 
+ <mapper namespace="com.eunwoosoft.opro.noti.dao.OproNotiGnrlDao">
+ 
+ 	<resultMap id="BBS_CNTN" type="dataEntity">
+    	<result property="BBS_CNTN" column="BBS_CNTN" jdbcType="CLOB" javaType="java.lang.String" />
+    </resultMap>
+
+    <select id="notiGnrlListWithPgng" resultType="dataEntity">
+        <include refid="ComPgng.pgngHeaderClause"/>
+        SELECT * FROM (
+		    <include refid="selectNotiGnrlList"/>
+			<include refid="selectNotiGnrlListWhere"/>
+			ORDER BY REG_DT DESC
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>   
+    </select>
+
+    <select id="notiGnrlExcelList" resultType="dataEntity">
+        SELECT ROWNUM AS RNUM, T1.* FROM (
+		    <include refid="selectNotiGnrlList"/>
+			<include refid="selectNotiGnrlListWhere"/>
+			ORDER BY REG_DT DESC
+		) T1
+		WHERE 1 = 1
+    </select>
+ 
+    <select id="notiGnrlListTotCnt" resultType="int" > 
+		SELECT COUNT(1) FROM ( 
+			<include refid="selectNotiGnrlList"/>
+			<include refid="selectNotiGnrlListWhere"/>
+		) T1
+		WHERE 1 = 1
+	</select>
+	
+	<sql id="selectNotiGnrlList">
+		SELECT TB.*, ROWNUM AS RNUM_DESC FROM
+		(
+	        SELECT	BBS_SECD
+						, BBS_SN
+						, TTL_NM
+						, BBS_PWD
+						, NVL(INQ_CNT,0) AS INQ_CNT
+						, BBS_PSCD
+						, NTC_YN
+						, USE_YN
+						, RQRD_YN
+						, PPUP_YN
+						, PPUP_STDE
+						, PPUP_ENDE
+						, FILE_GRP_NO
+						, REGR_ID
+						, REGR_NM
+						, REG_DT
+						, TO_CHAR(TO_DATE(REG_DT, 'yyyyMMddHH24miss'), 'yyyy-MM-dd') AS REG_DT_F
+						, MODR_ID
+						, MODR_NM
+						, MOD_DT
+						, CONN_IP
+						, DEL_AT
+						, ( SELECT COUNT(*) FROM T_MM_FILE_MST WHERE FILE_GRP_NO = BA.FILE_GRP_NO AND DEL_AT = 'N') AS FILE_CNT
+	        FROM		T_BA_MST BA
+			WHERE	1=1
+			AND		DEL_AT = #{P_DEL_AT, jdbcType=VARCHAR}
+			AND		BBS_SECD = #{P_BBS_SECD, jdbcType=VARCHAR}
+			ORDER BY REG_DT ASC	        
+		) TB
+        
+	</sql>
+	
+	<sql id="selectNotiGnrlListWhere">
+		<where>
+            
+            <if test='P_TTL_NM_S != null and P_TTL_NM_S != "" '>
+                AND TTL_NM LIKE '%'|| #{P_TTL_NM_S} || '%' 
+            </if>
+            <if test='P_REGR_NM_S != null and P_REGR_NM_S != "" '>
+                AND REGR_NM LIKE '%'|| #{P_REGR_NM_S}||'%'
+            </if>
+            <if test='P_MOD_DT_BEGIN_S != null and P_MOD_DT_BEGIN_S != "" '>
+                AND TO_CHAR(TO_DATE(MOD_DT, 'yyyyMMddHH24miss'), 'yyyyMMdd') >= #{P_MOD_DT_BEGIN_S}
+            </if>
+            <if test='P_MOD_DT_END_S != null and P_MOD_DT_END_S != "" '>
+                AND TO_CHAR(TO_DATE(MOD_DT, 'yyyyMMddHH24miss'), 'yyyyMMdd') &lt;= #{P_MOD_DT_END_S}
+            </if>
+		</where>
+	</sql>
+	
+	
+	<select id="notiGnrlDetail" resultType="dataEntity" resultMap="BBS_CNTN">
+		SELECT BBS_SECD
+                  , BBS_SN
+                  , TTL_NM
+                  , BBS_CNTN
+                  , BBS_PWD
+                  , INQ_CNT
+                  , BBS_PSCD
+                  , NTC_YN
+                  , USE_YN
+                  , RQRD_YN
+                  , PPUP_YN
+                  , PPUP_STDE
+                  , PPUP_ENDE
+                  , FILE_GRP_NO
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+                  , ( SELECT EMAL_ADDR FROM T_MM_USER_MST M WHERE M.USR_ID = A.REGR_ID ) AS EMAL_ADDR
+		FROM T_BA_MST A
+		WHERE BBS_SECD = #{P_BBS_SECD, jdbcType=VARCHAR}
+		AND BBS_SN = #{P_BBS_SN, jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updateInqCntBaMst">
+		UPDATE	T_BA_MST
+		SET		INQ_CNT = (NVL(INQ_CNT,0)+1)
+		WHERE	1=1
+		AND		BBS_SECD = #{P_BBS_SECD}
+		AND		BBS_SN = #{P_BBS_SN}
+	</update>
+	
+ </mapper> 

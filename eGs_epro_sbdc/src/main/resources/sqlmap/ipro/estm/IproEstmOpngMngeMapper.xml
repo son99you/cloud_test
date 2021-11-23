@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eunwoosoft.ipro.estm.dao.IproEstmOpngMngeDao">
+
+	<!-- 
+   	 * <pre>
+     * 1. 개요 : 개찰현황 목록조회
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : estiOpngMngeListInqireWithPgng
+	 * @date : 2019. 03. 11
+	 * @author : 은우소프트 맹경열
+     * @history : 
+     *  ====================================================================
+     *  변경일             		작성자                     		변경내용  
+     *  ====================================================================
+	 *	2019. 03. 11.		  은우소프트 맹경열  				최초 작성 
+     *  ====================================================================   
+	-->
+	<select id="estiOpngMngeListInqireWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="estiOpngMngeList"/>
+			<include refid="estiOpngMngeListWhere"/>
+			ORDER BY ANNC_NO DESC ,ANNC_NGR DESC
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<select id="estiOpngMngeListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="estiOpngMngeList"/>
+			<include refid="estiOpngMngeListWhere"/>
+		) T1
+		WHERE 1 = 1
+	</select>
+	
+	<sql id="estiOpngMngeList">
+        SELECT	* FROM (
+            SELECT A.ANNC_NO
+                      , A.ANNC_NGR
+                      , B.ROUND_NO
+                      , A.APPR_STCD
+                      , F_CDVAL_INQIRE('APPR_STCD', A.APPR_STCD) AS APPR_STCD_NM
+                      , A.CONT_SECD
+                      , F_CDVAL_INQIRE('CONT_SECD', A.CONT_SECD) AS CONT_SECD_NM
+                      , A.BID_NM
+                      , A.SBID_MTCD
+                      , F_CDVAL_INQIRE('SBID_MTCD', A.SBID_MTCD) AS SBID_MTCD_NM
+                      , B.BIDC_SBMT_ENDT
+                      , A.EMRG_YN
+					, ( 
+						SELECT	COUNT(1)
+						FROM		T_BI_MST Z
+									, T_BI_ROUND Y
+									, T_BI_VEND_DTL X
+						WHERE	1=1
+						AND		Z.ANNC_NO = Y.ANNC_NO
+						AND		Z.ANNC_NGR = Y.ANNC_NGR
+						AND		Y.ANNC_NO = X.ANNC_NO
+						AND		Y.ANNC_NGR = X.ANNC_NGR
+						AND		Y.ROUND_NO = X.ROUND_NO
+						AND		X.ANNC_NO = B.ANNC_NO
+						AND		X.ANNC_NGR = B.ANNC_NGR
+						AND		X.ROUND_NO = B.ROUND_NO
+						AND		(
+									Y.BIDC_SBMT_ENDT IS NOT NULL AND X.BID_TPI_SECD = 'OP03' 
+									OR
+									Y.PRPDC_SBMT_ENDT IS NOT NULL AND Y.BIDC_SBMT_ENDT IS NULL AND BID_TPI_SECD = 'OP05'
+									)
+					         ) AS VEND_CNT
+                      , A.CHRGR_NM
+                      , A.CHRGR_ID
+                      , ( SELECT COUNT(*)
+                             FROM T_BI_VEND_MST VM
+                          WHERE 1=1
+                              AND B.ANNC_NO  = VM.ANNC_NO
+                              AND B.ANNC_NGR = VM.ANNC_NGR
+                              AND B.ROUND_NO = VM.ROUND_NO ) AS OPEN_CNT
+               FROM T_BI_MST A
+                      , T_BI_ROUND B
+             WHERE 1=1
+                  AND A.ANNC_NGR = ( SELECT MAX(ANNC_NGR) FROM T_BI_MST WHERE ANNC_NO = A.ANNC_NO )
+                  AND A.ANNC_NO = B.ANNC_NO
+                  AND A.ANNC_NGR = B.ANNC_NGR
+                  AND NVL(A.DEL_AT, 'N') != 'Y'
+                  AND B.BIDC_SBMT_ENDT &lt; TO_CHAR(SYSDATE, 'yyyyMMddhh24miss')
+                  AND A.BID_PSCD IN ('PF20', 'PF30')
+                  AND A.BID_MTCD = 'EST'
+                  AND B.ROUND_NO = ( SELECT MAX(ROUND_NO) FROM T_BI_ROUND WHERE ANNC_NO = A.ANNC_NO AND ANNC_NGR = A.ANNC_NGR )
+        )
+	</sql>
+	<sql id="estiOpngMngeListWhere">
+		<where>
+		<if test='P_BID_NM_S != null and P_BID_NM_S != "" '>
+			AND BID_NM LIKE '%'||#{P_BID_NM_S}||'%'
+		</if>
+		<if test='P_ANNC_NO_S != null and P_ANNC_NO_S != "" '>
+			AND ANNC_NO LIKE '%'||#{P_ANNC_NO_S}|| '%'
+		</if>
+		<if test='P_BRFS_STDT_S != null and P_BRFS_STDT_S != "" '>
+			AND TO_CHAR(TO_DATE(BRFS_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') >= #{P_BRFS_STDT_S}
+		</if>
+		<if test='P_BRFS_ENDT_S != null and P_BRFS_ENDT_S != "" '>
+			AND TO_CHAR(TO_DATE(BRFS_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') &lt;= #{P_BRFS_ENDT_S}
+		</if>
+		<if test='P_CONT_SECD_S != null and P_CONT_SECD_S != "" '>
+			AND CONT_SECD = #{P_CONT_SECD_S}
+		</if>
+		<if test='P_SBID_MTCD_S != null and P_SBID_MTCD_S != "" '>
+			AND SBID_MTCD = #{P_SBID_MTCD_S}
+		</if>
+		<if test='P_CHRGR_ID_S != null and P_CHRGR_ID_S != "" '>
+			AND CHRGR_ID = #{P_CHRGR_ID_S}
+		</if>		
+		</where>
+	</sql>
+	
+	<!-- 
+   	 * <pre>
+     * 1. 개요 : 낙찰자선정 목록조회
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : estiSuccMngeListInqireWithPgng
+	 * @date : 2019. 03. 11
+	 * @author : 은우소프트 맹경열
+     * @history : 
+     *  ====================================================================
+     *  변경일             		작성자                     		변경내용  
+     *  ====================================================================
+	 *	2019. 03. 11.		  은우소프트 맹경열  				최초 작성 
+     *  ====================================================================   
+	-->
+	<select id="estiSuccMngeListInqireWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="estiSuccMngeList"/>
+			<include refid="estiSuccMngeListWhere"/>
+			ORDER BY ANNC_NO DESC ,ANNC_NGR DESC
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<select id="estiSuccMngeListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="estiSuccMngeList"/>
+			<include refid="estiSuccMngeListWhere"/>
+		) T1
+		WHERE 1 = 1
+	</select>
+	
+	<sql id="estiSuccMngeList">
+		SELECT	*
+		FROM		(
+			SELECT	ONE.ANNC_NO
+						,ONE.ANNC_NGR
+						,TWO.ROUND_NO
+						,ONE.CONT_SECD
+						,F_CDVAL_INQIRE('CONT_SECD', ONE.CONT_SECD) AS CONT_SECD_NM
+						,ONE.BID_NM
+						,ONE.SBID_MTCD
+						,F_CDVAL_INQIRE('SBID_MTCD', ONE.SBID_MTCD) AS SBID_MTCD_NM
+						,TWO.OPNG_DT
+						,ONE.EMRG_YN
+						,ONE.BID_PSCD
+						,F_CDVAL_INQIRE('BID_PSCD', ONE.BID_PSCD) AS BID_PSCD_NM
+						, ONE.CHRGR_ID
+						
+			FROM  	T_BI_MST ONE
+						,T_BI_ROUND TWO
+			WHERE 	1=1
+			AND		ONE.ANNC_NO = TWO.ANNC_NO
+			AND    	ONE.ANNC_NGR = TWO.ANNC_NGR
+			AND		TWO.ROUND_NO = ( SELECT MAX(ROUND_NO) FROM T_BI_ROUND WHERE ANNC_NO = ONE.ANNC_NO AND ANNC_NGR = ONE.ANNC_NGR )
+			AND 		ONE.BID_PSCD IN ('PF50','PF62')
+			AND		NVL(ONE.DEL_AT,'N') != 'Y'
+			AND		ONE.BID_MTCD = 'EST'
+			<!--  
+			AND		(SELECT LEGACYDEPTCODE FROM V_SSO_USER WHERE USERID = ONE.REGR_ID AND ADDJOBTYPE = 'BASIC') = #{P_DEPT_NO}
+			-->
+					)
+	</sql>
+	<sql id="estiSuccMngeListWhere">
+		<where>
+		<if test='P_BID_NM_S != null and P_BID_NM_S != "" '>
+			AND BID_NM LIKE '%'||#{P_BID_NM_S}||'%'
+		</if>
+		<if test='P_ANNC_NO_S != null and P_ANNC_NO_S != "" '>
+			AND ANNC_NO LIKE '%'||#{P_ANNC_NO_S}|| '%'
+		</if>
+		<if test='P_BRFS_STDT_S != null and P_BRFS_STDT_S != "" '>
+			AND TO_CHAR(TO_DATE(BRFS_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') >= #{P_BRFS_STDT_S}
+		</if>
+		<if test='P_BRFS_ENDT_S != null and P_BRFS_ENDT_S != "" '>
+			AND TO_CHAR(TO_DATE(BRFS_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') &lt;= #{P_BRFS_ENDT_S}
+		</if>
+		<if test='P_CONT_SECD_S != null and P_CONT_SECD_S != "" '>
+			AND CONT_SECD = #{P_CONT_SECD_S}
+		</if>
+		<if test='P_SBID_MTCD_S != null and P_SBID_MTCD_S != "" '>
+			AND SBID_MTCD = #{P_SBID_MTCD_S}
+		</if>
+		<if test='P_CHRGR_ID_S != null and P_CHRGR_ID_S != "" '>
+			AND CHRGR_ID = #{P_CHRGR_ID_S}
+		</if>		
+		</where>
+	</sql>	
+	
+</mapper>

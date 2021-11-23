@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <title>비밀번호 입력</title>
+    <link type="text/css" rel="stylesheet" href="../styles/css/common.css?revision=e54ce34"/>
+    <!--[if IE 7]>
+    <link rel="stylesheet" type="text/css" href="../styles/css/ie7Debug.css"/>
+    <![endif]-->
+    <link rel="stylesheet" href="../styles/css/jquery-ui.css?revision=e54ce34">
+    
+    <script>
+        (function (){
+            try{
+                //console.log("page documnet.domain: " + document.domain);
+                parent.document.location;
+            }catch(e) {
+                if (document.domain.indexOf(".co.kr") != -1) {
+                    //co.kr
+                    var domainArr = document.domain.split(".");
+                    //console.log("arr:" + domainArr);
+                    document.domain = domainArr[domainArr.length - 3] + ".co.kr";
+                }
+                else if (document.domain.indexOf(".com") != -1) {
+                    //com
+                    var domainArr = document.domain.split(".");
+                    //console.log("arr:" + domainArr);
+                    document.domain = domainArr[domainArr.length - 2] + ".com";
+                }
+            }
+        })();
+    </script>
+    
+    <script type="text/javascript" src="../styles/js/jquery-1.11.0.min.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../styles/js/jquery-ui.js?revision=e54ce34"></script>
+
+    <script type="text/javascript" src="../library/json3.min.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../library/iecompatibility.js?revision=e54ce34"></script>
+
+    <script type="text/javascript" src="../scripts/__GobalValue__.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../languages/inputPinLang.js?revision=e54ce34"></script>
+</head>
+<script>
+    function dragCheck(){
+        if(window.navigator.userAgent.toLowerCase().indexOf('firefox') !== -1)
+            return;
+        addHandle(document.getElementById('titleText'), window);
+    }
+</script>
+<body onload="dragCheck()">
+<div class="CERT_titlebar">
+    <div class="titleIcon"></div>
+    <h1 class="inputter_h1"><ul><li id="titleText" tabindex="1"><script>document.write(inputPinLang(0))</script></li></ul></h1>
+    <div id="versionText" class="CERT_util_version"></div>
+    <div class="inputter_btnClose" id="x_btn"><a href="#" tabindex="2" alt="닫힘" title="닫힘"></a></div>
+</div>
+<div class="certWrap">
+    <dl class="tab1">
+        <dd>
+            <div class="notice_wrap" id="mainInfo">
+                <div class="noticieTitle2">
+                <p id="infoMsg"><script>document.write(inputPinLang(1))</script></p>
+                </div>
+            </div>
+
+            <form id="passwordForm" name="passwordForm" method="post" onsubmit="return false;" >
+                <div class="pw_wrap">
+                    <div class="marginTextBox">
+                        <p id="pwMsg"><script>document.write(inputPinLang(9))</script></p>
+                    </div>
+                    
+                    <input type="password" autocomplete="off" tabindex="3" title="pin" id="pin" class="CERT_inputStyle" value="" />
+                    <label for="pin"></label>
+                </div>
+            </form>
+        </dd>
+    </dl>
+</div>
+<div class="CERT_btns_common">
+    <p class="CERT_btnBg_mbtn"><a id="dialogCertTab_okBtn" tabindex="9998"><script>document.write(inputPinLang(2))</script></a></p>
+    <p class="CERT_btnBg_mbtn"><a id="dialogCertTab_cancelBtn" tabindex="9999"><script>document.write(inputPinLang(3))</script></a></p>
+</div>
+</body>
+<script type="text/javascript" src="../library/keySafer.js?revision=e54ce34"></script>
+<script type="text/javascript" src="../scripts/inputPin.js?revision=e54ce34"></script>
+<script type="text/javascript" src="../library/dragiframe.js?revision=e54ce34"></script>
+</html>

@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <title>인증서 가져오기</title>
+    <link type="text/css" rel="stylesheet" href="../styles/css/common.css?revision=e54ce34"/>
+    <!--[if IE 7]>
+    <link rel="stylesheet" type="text/css" href="../styles/css/ie7Debug.css"/>
+    <![endif]-->
+
+    <script>
+        (function (){
+            try{
+                //console.log("page documnet.domain: " + document.domain);
+                parent.document.location;
+            }catch(e) {
+                if (document.domain.indexOf(".co.kr") != -1) {
+                    //co.kr
+                    var domainArr = document.domain.split(".");
+                    //console.log("arr:" + domainArr);
+                    document.domain = domainArr[domainArr.length - 3] + ".co.kr";
+                }
+                else if (document.domain.indexOf(".com") != -1) {
+                    //com
+                    var domainArr = document.domain.split(".");
+                    //console.log("arr:" + domainArr);
+                    document.domain = domainArr[domainArr.length - 2] + ".com";
+                }
+            }
+        })();
+    </script>
+    <script type="text/javascript" src="../styles/js/jquery-1.11.0.min.js?revision=e54ce34"></script>
+
+    <script type="text/javascript" src="../library/json3.min.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../library/iecompatibility.js?revision=e54ce34"></script>
+
+    <script type="text/javascript" src="../scripts/__GobalValue__.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../languages/browserCertificateDragAnddropImport.js?revision=e54ce34"></script>
+</head>
+<script>
+    function dragCheck(){
+        if(window.navigator.userAgent.toLowerCase().indexOf('firefox') !== -1)
+            return;
+        addHandle(document.getElementById('titleText'), window);
+    }
+</script>
+
+<body>
+    <form id="passwordForm" name="passwordForm" method="post" onsubmit="return false;">
+    <div id="allLayerWrap">
+<div class="dragAnddropImportP12_main_box" id="dragAnddropDiv">
+    <div>
+        <h1>
+            <ul>
+                <li id="titleImport" tabindex="1">
+                    <script>document.write(browserCertificateDragAnddropImportLang(5))</script>
+                </li>
+            </ul>
+        </h1>
+    </div>
+</div>
+        <div class="certWrap2">
+                <p class="browTit"><script>document.write(browserCertificateDragAnddropImportLang(17))</script></p>
+                <p><script>document.write(browserCertificateDragAnddropImportLang(20))</script></p>
+        
+                <p></p>
+        
+        
+                <h2 class="certText">1. <script>document.write(browserCertificateDragAnddropImportLang(18))</script></h2>
+                <div id="importBrowserViewDefault" style="position: relative;">
+                    <input id="browserCertificateImportFile" type="file" style="display:none" multiple="multiple" accept=".pfx,.p12,.der,.key">
+                    <div id="browserCertificateImportContentBackGround" class="CERT_contWrap17 drageAnddrop_content_bg">
+                        <input type="text" id="selectFileInfo" readonly="readonly" style="display:none; border: none; 
+                        width: 300px;text-align: center;background: transparent; margin: 103px 50px 1px 50px; color:#2b40ab; font-weight: bold; " />
+                    </div>
+                    <ul class="CERT_get_list3">
+                        <li id="browserCertificateImportBtn" tabindex="50"> <img src="../styles/images/popCertiIco.png" />
+                            <br /><script>document.write(browserCertificateDragAnddropImportLang(6))</script>
+                            <br /><script>document.write(browserCertificateDragAnddropImportLang(24))</script>
+                        </li>
+                    </ul>
+                </div>
+                <h2 id="pwdText" class="certText">2. <script>document.write(browserCertificateDragAnddropImportLang(25))</script></h2>
+
+            <div id="pwdBackGround" class="pwd_bg3 drageAnddrop_pwd_bg2" style="display:none"> </div>
+            <div class="cert01_06 clfix"></div>
+        
+                <p class="input_pw">
+                    <input type="password" id="passwordInput" name="passwordInput" class="style2" style="width:398px; height:26px;"
+                        tabindex="51" alt="비밀번호를 입력 필드">
+                    <input type="password" id="pfxPasswordInput" class="style3" style="width:398px; height:26px; display:none"
+                        tabindex="51" alt="비밀번호를 입력 필드">
+                    <input type="password" id="pfxnpkiPasswordInput" name="pfxnpkiPasswordInput" class="style2" style="width:398px; height:26px; display:none"
+                        tabindex="51" alt="비밀번호를 입력 필드">
+                    <input type="password" id="browserCertificatePasswordInput" name="testInput" class="style3"
+                        style="width:398px; height:26px; display:none" tabindex="51" alt="비밀번호를 입력 필드">
+                </p>
+            </div>
+            <input type="text" id="importResult" val="" class="style3" readonly="readonly" style="width:398px; height:26px; margin: -10px 14px 14px 15px; background: #efefef;" tabindex="9996">
+        
+            <div class="CERT_btns2 clfix">
+                <div class="CERT_btnBg_mbtn3"><a href="#" id="submit_btn" tabindex="9997"><script>document.write(browserCertificateDragAnddropImportLang(3))</script></a></div>
+                <div class="CERT_btnBg_mbtn3"><a href="#" id="cancel_btn" tabindex="9998"><script>document.write(browserCertificateDragAnddropImportLang(4))</script></a></div>
+            </div>
+            </br>
+            <div class="certWrap3" >
+                <div class="certiBox">
+                    <div id="certificateTit">※ <script>document.write(browserCertificateDragAnddropImportLang(21))</script></div>
+                    <div id="certificateTxt">
+                        <p><script>document.write(browserCertificateDragAnddropImportLang(23))</script></p>
+        
+                        <a href="#" class="dwIco" id="window_download" tabindex="9999"><img src="../styles/images/dwIco.png" /><script>document.write(browserCertificateDragAnddropImportLang(19))</script></a>
+                    </div>
+                </div>
+            </div>
+            
+</div>
+</form>
+
+</body>
+
+<script type="text/javascript" src="../library/keySafer.js?revision=e54ce34"></script>
+<script type="text/javascript" src="../scripts/checkPin.js?revision=e54ce34"></script>
+<script type="text/javascript" src="../library/dragiframe.js?revision=e54ce34"></script>
+<script type="text/javascript" src="../scripts/browserCertificateDragAnddropImport.js?revision=e54ce34"></script>
+</html>

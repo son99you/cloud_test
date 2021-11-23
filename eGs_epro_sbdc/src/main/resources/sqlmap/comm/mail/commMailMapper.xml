@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eunwoosoft.comm.mail.dao.CommMailDao"> 
+	
+	<select id="getContents" resultType="dataEntity">
+		SELECT MSG_CNTN 
+				, MSG_TTL
+		FROM T_MM_MSG
+		WHERE  MSG_SECD = #{P_MSG_SECD , jdbcType=VARCHAR}
+		  AND  MSG_OBJ_ID = #{P_MSG_OBJ_ID , jdbcType=VARCHAR}
+	</select>
+	 
+	<select id="selectBidInfoDetail" resultType="dataEntity">
+		SELECT	BM.ANNC_NO
+					,BM.ANNC_NGR
+					,BR.ROUND_NO
+					,BM.BID_NM
+			FROM T_BI_MST BM
+				, T_BI_ROUND BR
+			WHERE 1=1
+			AND BM.ANNC_NO = BR.ANNC_NO
+			AND BM.ANNC_NGR = BR.ANNC_NGR
+			AND BM.ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR}
+			AND BM.ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER}
+			AND BR.ROUND_NO = #{P_ROUND_NO, jdbcType=INTEGER}
+			AND NVL(BM.DEL_AT,'N') = 'N'
+	</select> 
+	
+	<insert id="insertSendSms">
+		INSERT INTO M_NOTICE_MSG 
+   		(	
+   			  SEQ
+   			, T_CODE
+   			, B_CODE
+   			, SENDER
+   			, SENDERNAME
+   			, RECEIVER
+   			, TITLE
+   			, CONTENT
+   			, MSGDIVISION
+   			, MSGTYPE
+   			, TF
+   		) 
+		VALUES
+		( 
+			SEQ_NO.NEXTVAL
+			, #{P_T_CODE, jdbcType=VARCHAR}
+			, #{P_B_CODE, jdbcType=VARCHAR}
+			, #{P_SENDER, jdbcType=VARCHAR}
+			, #{P_SENDERNAME, jdbcType=VARCHAR} 
+			, #{P_RECEIVER, jdbcType=VARCHAR}
+			, #{P_TITLE, jdbcType=VARCHAR}
+			, #{P_CONTENTS, jdbcType=VARCHAR}
+			, 0
+			, 0
+			, '0'  
+		)
+	</insert>
+	
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ComPgng">
+
+	<sql id="pgngHeaderClause">
+		SELECT R2.* FROM ( 							
+			SELECT R1.*, ROWNUM AS RNUM FROM (</sql>
+	
+	<sql id="pgngTailClause" ><![CDATA[	) R1 WHERE ROWNUM <= (NVL(#{P_PAGE_NO, jdbcType=INTEGER}, 1) - 1) * NVL(#{P_PAGE_SIZE, jdbcType=INTEGER}, 10) + NVL(#{P_PAGE_SIZE, jdbcType=INTEGER}, 10) 
+	 	) R2 WHERE R2.RNUM > (NVL(#{P_PAGE_NO, jdbcType=INTEGER}, 1) - 1) * NVL(#{P_PAGE_SIZE, jdbcType=INTEGER}, 10)
+	 ]]>
+	</sql>
+	
+	<sql id="pgngHeaderClauseForEstm">
+		SELECT R2.* FROM ( 							
+			SELECT R1.*
+			 	, ROWNUM AS RNUM 
+			FROM (</sql>
+	
+	<sql id="pgngTailClauseForEstm" ><![CDATA[	) R1 WHERE ROWNUM <= (NVL(#{P_PAGE_NO, jdbcType=INTEGER}, 1) - 1) * NVL(#{P_PAGE_SIZE, jdbcType=INTEGER}, 100) + NVL(#{P_PAGE_SIZE, jdbcType=INTEGER}, 100) 
+	 	) R2 WHERE R2.RNUM > (NVL(#{P_PAGE_NO, jdbcType=INTEGER}, 1) - 1) * NVL(#{P_PAGE_SIZE, jdbcType=INTEGER}, 100)
+	 ]]>
+	</sql>
+
+</mapper>

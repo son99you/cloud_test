@@ -1,0 +1,59 @@
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+<script type="text/javascript" src="../library/json3.min.js"></script>
+<script type="text/javascript" src="../library/iecompatibility.js"></script>
+
+<script type="text/javascript" src="../vestsign.js"></script>
+<SCRIPT language=javascript>
+
+    var callback = function (result) {
+        alert("성공");
+    };
+
+    var errorcallback = function (error) {
+    // error = { code, getReason() };
+    if(error.code == -9999) console.log(error.code);  // 취소 버튼 이벤트 error.code: -9999
+    else alert(error.msg);
+    };
+
+    function issue(refNum, authCode, ca, caIP, caPort) {
+        var option = {
+          ca: ca,
+          refNum: refNum,
+          authCode: authCode,
+          CAServiceIP: caIP,
+          CAServicePort: caPort*1
+        };
+
+        yettie.issue(option, callback, errorcallback);
+    };
+
+</SCRIPT>
+<br><br><br>
+<center>
+    <table border="1" align="center" width=50%>
+        <tr>
+            <td align="center"><br>
+                CA 유형:
+                <select id="ca">
+                    <option value="yessign">yessign</option>
+                    <option value="signkorea">signkorea</option>
+                    <option value="crosscert">crosscert</option>
+                    <option value="signgate">signgate</option>
+                    <option value="kisa">kisa</option>
+                </select><br>
+                참조번호: <input type=TEXT id="refNum" value="403053"><br>
+                인가코드: <input type=TEXT id="authCode" value="99504408375498748312"><br>
+                IP:　 <input type=TEXT id="caIP"><br>
+                Port: <input type=TEXT id="caPort"><br><br>
+        </tr>
+        <tr>
+            <td align="center"><br>
+                <input type=button
+                       onclick="issue(document.getElementById('refNum').value, document.getElementById('authCode').value, document.getElementById('ca').value, (document.getElementById('caIP').value == '') ? undefined : document.getElementById('caIP').value,  (document.getElementById('caPort').value == '') ? undefined : document.getElementById('caPort').value)"
+                       value="인증서 발급" style="width:150"><br><br><br>
+            </td>
+        </tr>
+    </table>
+</center>

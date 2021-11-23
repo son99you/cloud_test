@@ -1,0 +1,210 @@
+##### \uc804\uc790\uc870\ub2ec \uae30\ubcf8\uc124\uc815 \uc815\ubcf4 START #####
+# contextPath 
+EW.CONTEXTPATH =
+# \uc11c\ubc84\uad6c\ubd84 - WINDOW/UNIX/LOCALHOST
+EW.SERVER.GUBUN = WINDOW
+# \ub0b4\ubd80 \uc2dc\uc2a4\ud15c \uc0ac\uc5c5\uc790\ubc88\ud638 - \uc0ac\uc5c5\uc790\ubc88\ud638 \uc774\uc678\uc758 \ub098\uba38\uc9c0\uc815\ubcf4(\uace0\uac1d\uc0ac\uba85, \ub300\ud45c\uc790\uba85,\ub2f4\ub2f9\uc790 \ub4f1\uc740 db\ub85c \uad00\ub9ac)
+EW.EPRO.ENTRPS_REGIST_NO = 2028150707
+EW.EPRO.VEND_REG_NO = 99999999991
+EW.EPRO.BIZRNO = 2028150707
+EW.EPRO.ENTRPS_NM = \ud55c\uad6d\uad00\uad11\uacf5\uc0ac
+EW.EPRO.RPRS_NM = \uc548\uc601\ubc30
+EW.EPRO.TEL_NO = 033-738-3000
+EW.EPRO.MAIL = admin@knto.or.kr
+EW.EPRO.ADDR = \uac15\uc6d0\ub3c4 \uc6d0\uc8fc\uc2dc \uc138\uacc4\ub85c 10
+
+EW.EPRO.DN = cn=\ud55c\uad6d\uad00\uad11\uacf5\uc0ac_0001491586,ou=KTNET,ou=AccreditedCA,o=TradeSign,c=KR
+##### \uc804\uc790\uc870\ub2ec \uae30\ubcf8\uc124\uc815 \uc815\ubcf4 END #####
+
+##### \uc778\uc99d\uc11c \uc815\ubcf4 START ######
+#\uc778\uc99d\uc11c \uc704\uce58 \uacbd\ub85c\uc815\ubcf4 - \uc11c\ubc84\uc778\uc99d\uc11c \ub4f1\ub85d\uc740 \ub0b4\ubd80\ud654\uba74\uc5d0\uc11c \ub4f1\ub85d \ubc0f \ube44\ubc00\ubc88\ud638 \uc785\ub825 \ucc98\ub9ac
+##EW.SERV.PKI.DIR  = D:/ewGov-3.1.1-64bit/data/pki/
+# \ud234\ud0b7\ud504\ub85c\ud37c\ud2f0 \uacbd\ub85c
+EW.SERV.PKI.PROP = D:/eGs_epro-3.6.0-64bit_SBDC/workspace/eGs_epro_sbdc/src/main/resources/config/properties/
+# \uc11c\uba85\uc6a9 \uc778\uc99d\uc11c\uc758 \uacbd\ub85c
+EW.SERV.SIGN.KEY.PATH = D:/eGs_epro-3.6.0-64bit_SBDC/workspace/eGs_epro_sbdc/src/main/webapp/cert/certificate/signPri.key
+#EW.SERV.SIGN.KEY.PATH = /WAS/weblogic1036/domains/docuDomain/applications/eCdocu/cert/certificate/signPri.key
+EW.SERV.SIGN.CERT.PATH = D:/eGs_epro-3.6.0-64bit_SBDC/workspace/eGs_epro_sbdc/src/main/webapp/cert/certificate/signCert.der
+#EW.SERV.SIGN.CERT.PATH = /WAS/weblogic1036/domains/docuDomain/applications/eCdocu/cert/certificate/signCert.der
+# \uc11c\uba85\uc6a9 \uc778\uc99d\uc11c\uc758 \ube44\ubc00\ubc88\ud638
+EW.SERV.SIGN.PASSWORD = kto202011!
+# \uc11c\uba85\uc6a9 \uc778\uc99d\uc11c\uc758 \uacbd\ub85c
+EW.SERV.KM.KEY.PATH = D:/eGs_epro-3.6.0-64bit_SBDC/workspace/eGs_epro_sbdc/src/main/webapp/cert/certificate/kmPri.key
+#EW.SERV.KM.KEY.PATH = /WAS/weblogic1036/domains/docuDomain/applications/eCdocu/cert/certificate/kmPri.key 
+EW.SERV.KM.CERT.PATH = D:/eGs_epro-3.6.0-64bit_SBDC/workspace/eGs_epro_sbdc/src/main/webapp/cert/certificate/kmCert.der
+#EW.SERV.KM.CERT.PATH = /WAS/weblogic1036/domains/docuDomain/applications/eCdocu/cert/certificate/kmCert.der
+# \uc11c\uba85\uc6a9 \uc778\uc99d\uc11c\uc758 \ube44\ubc00\ubc88\ud638
+EW.SERV.KM.PASSWORD = kto202011!
+##### \uc778\uc99d\uc11c \uc815\ubcf4 END ###### 
+
+##### \ub370\uc774\ud0c0\ubca0\uc774\uc2a4 \uc815\ubcf4 START ######
+ew.dbUrl = jdbc:oracle:thin:@eunwoo.iptime.org:1521:orcl
+ew.dbUser = egs_sdbc
+ew.dbPw = egs_sdbc
+##### \uc778\uc99d\uc11c \uc815\ubcf4 END ######
+
+##### \uba54\uc77c \uc815\ubcf4 START ######
+#\uc6b4\uc601\ubc18\uc601\uc2dc
+#smtp.mail.server.ip = mail.knto.or.kr
+#smtp.mail.username = econt@knto.or.kr
+#smtp.mail.password = KTOit699!
+smtp.mail.server.ip = 106.250.181.107
+smtp.mail.server.port = 401
+smtp.mail.username = mail
+smtp.mail.password = Eun\oo12@3
+smtp.mail.from = econt@knto.or.kr
+# \uc774\uba54\uc77c \ubc1c\uc1a1 \uc5ec\ubd80
+email.send		= true
+sms.send = true
+##### \uc778\uc99d\uc11c \uc815\ubcf4 END ######
+
+# SFTP \uc124\uc815\uc815\ubcf4
+# \ub85c\uceec HOST
+SFTP.SYSTEM.HOST = 106.250.181.107
+# \uc6b4\uc601 HOST
+#SFTP.SYSTEM.HOST = 10.1.111.39 
+SFTP.SYSTEM.PORT = 58888
+SFTP.SYSTEM.USERNAME = korailRetail
+SFTP.SYSTEM.PASSWORD = korailRetail
+SFTP.SYSTEM.DIR = \\
+SFTP.YN = Y
+#SFTP.SYSTEM.DIR = /jeus3/kto-1-0/ext/Upload/FAS/Purchase/PctfFile
+#SFTP.SYSTEM.PORT = 9587
+#SFTP.SYSTEM.USERNAME = econtdev
+#SFTP.SYSTEM.PASSWORD = econtdev
+
+
+##### \uc11c\ubc84 \uad6c\ubd84  START - LOCAL/TEST/REAL #####
+EW.SERVER.SE = LOCAL 
+##### \uc11c\ubc84 \uad6c\ubd84  END #####
+
+##### \ucca8\ubd80\ubb38\uc11c \uc0dd\uc131 \ub514\ub809\ud1a0\ub9ac \uacbd\ub85c - \ud3f4\ub354\ub294 \ud574\ub2f9 \uc0dd\uc131\ubc88\ud638\ubcc4\uc73c\ub85c \uc0dd\uc131 \uc598:\uacc4\uc57d\ubc88\ud638 EW20170523 \uc774\uba74 \ud3f4\ub354\ub3c4 cont/EW20170523 \uc0dd\uc131\ud558\uace0 \uc800\uc7a5 ##########
+
+#\ucca8\ubd80\ud30c\uc77c\uc740 \uc0c1\uc704\ub514\ub809\ud1a0\ub9ac\uae4c\uc9c0\ub9cc \uacb0\uc815 - \uc800\uc7a5\uc2dc\uc5d0 \uc5c5\ubb34 \ud3f4\ub354\uba85\uc73c\ub85c \uc800\uc7a5
+EW.SYS.FILE.DIR  = D:/edata1/
+EW.UBI.FILE.DIR  = D:/edata1/
+# ERP \uc5f0\uacc4 \ud30c\uc77c \uacbd\ub85c
+EW.ERP.FILE_DIR = D:/data/ed_if/
+
+
+#####   \uacc4\uc57d\uc11c html \uc0dd\uc131 ##########
+evali.upload.sys.contract.dir  = D:/data3/
+upload.sys.acpr.dir  = D:/data/acpr/
+upload.sys.cont.dir  = D:/data/cont/
+
+# \ubcf5\uc218\uc608\uac00 \ucd94\ucca8 \uac1c\uc218
+EW.CON.DRPRREPR = 15
+
+#\uc5c5\ub85c\ub4dc \uacbd\ub85c
+IEP.DEXT5.PATH =  D:/data1
+#host\uc815\ubcf4
+IEP.UBI.HOST = http://localhost:8080
+#work\ud3f4\ub354 \uacbd\ub85c
+IEP.UBI.WORK.PATH = /ubi4/work/
+
+IPRO.UBI.FILE.URL = /ubi4
+IPRO.UBI.SERVER.URL = /UbiServer
+IPRO.UBI.DATASOURCE = egs_sdbc
+
+UBI.FONT = D:/eGs_epro-3.6.0-64bit_SBDC/workspace/eGs_epro_sbdc/src/main/webapp/UbiService/fonts
+
+UBI.JRF.PATH = D:/eGs_epro-3.6.0-64bit_SBDC/workspace/eGs_epro_sbdc/src/main/webapp/ubi4/work/
+
+YETTIE.CONFIG.FILE = vestsign_client_config.json
+
+IPRO.SERVER.WEBAPP.PATH = D:/eGs_epro-3.6.0-64bit_SBDC/workspace/eGs_epro_sbdc/src/main/webapp/
+IPRO.SERVER.WEBAPP.PATH2 = D:/eGs_epro-3.6.0-64bit_SBDC/workspace/eGs_epro_sbdc/src/main/webapp 
+
+IPRO.SSO.SSO_URL = http://172.30.1.145:8081/oauth2/token.do 
+IPRO.SSO.CLIENT_ID = 2e613055bb604bc4a192cd7b6712cd87
+IPRO.SSO.CLIENT_SECRET = 6fgm8n5592zy3momuiljikght
+IPRO.SSO.SCOPE = http://sso.keri.re.kr
+IPRO.SSO.TOKEN_NAME = access_token
+IPRO.SYS.URL = devbid.keri.re.kr
+
+# ERP \uc5f0\uacc4 URL
+IPRO.ERP.CONN_URL = http://devkepos.keri.re.kr/api/cntrct/cntrctInfo
+IPRO.ERP.CONN_URL_VEND = http://devkepos.keri.re.kr/api/cntrct/trdplcList
+
+# ERP \uc5f0\uacc4 \uc778\uc99d\ud0a4\uac12
+IPRO.ERP.AUTC_NO = jtvA9IxG9wA1sFtoMxF2qdrrzpQoTYYi_SpTlMj730M
+
+# PDF CHARSET 
+IPRO.PDF.CHARSET = EUC-KR
+
+# \uacc4\uc57d\uc11cF CHARSET
+IPRO.CONT.CHARSET = EUC-KR
+
+# \uac80\uc99d\uac12 
+# 0:CRL\uac80\uc99d,   1:OCSP\uac80\uc99d,   2:\uac80\uc99d\uc548\ud568 
+YETTIE.CERT_STATUS = 2
+
+#M_NOTICE_MSG  INSERT
+MSG.TCODE = 7
+MSG.BCODE = 1
+MSG.SENDER = econt
+MSG.SENDERNAME = \uc804\uc790\uacc4\uc57d\uc2dc\uc2a4\ud15c
+MSG.RECEIVER = user1,user2,user3
+MSG.LAWRECEIVER = user6
+
+ 
+# OTP \uc5f0\uacc4
+OTP.SERVER.IP = 10.1.111.71
+OTP.SERVER.PORT = 1812
+OTP.SERVER.SECRET = 1AABAC6D068EEF6A7BAD3FDF50A05CC8
+OTP.SERVER.NASID = 
+
+STAMP.TEMPLATE.PATH = D:/eGs_epro-3.6.0-64bit_SBDC/workspace/eGs_epro_sbdc/src/main/webapp/stamp/kto-form.pdf
+
+# pay url \ud638\ucd9c
+KTNET.PAY.URL = http://localhost:9800/ets-hub-window-connect/ToolkitIssuePurcharseUrlExample.jsp
+# issue url \ud638\ucd9c
+KTNET.ISSUE.URL = http://localhost:9800/ets-hub-window-connect/NewIssueCfrmPayListExample.jsp
+#\uc6b4\uc601\ubc18\uc601\uc2dc 
+#KTNET.PAY.URL = http://172.20.110.207:9800/ets-hub-window-connect/ToolkitIssuePurcharseUrlExample.jsp
+#KTNET.ISSUE.URL = http://172.20.110.207:9800/ets-hub-window-connect/NewIssueCfrmPayListExample.jsp
+
+#\uc778\ud130\ud398\uc774\uc2a4 \ud30c\uc77c\uad6c\ubd84
+ITFC.FILE.TYPE = C
+
+#\uacb0\uc7acURL
+APPR.URL = http://portaltest.knto.or.kr/portal/ectGateway.jsp
+#APPR.URL = http://portaltest.knto.or.kr/portal/ectGateway.jsp
+
+# \uacb0\uc7ac SFTP \uc124\uc815\uc815\ubcf4
+# \ub85c\uceec HOST
+SFTP.APPR.HOST = 106.250.181.107
+SFTP.APPR.PORT = 58888
+SFTP.APPR.USERNAME = korailRetail
+SFTP.APPR.PASSWORD = korailRetail
+SFTP.APPR.DIR = \\
+SFTP.APPR.VOLUME =
+SFTP.APPR.HTML.DIR = \\
+SFTP.APPR.YN = Y
+
+#e\ud3ec\ud0c8 \ud14c\uc2a4\ud2b8\uc11c\ubc84
+#hostname : eportal_old  (10.1.111.38)
+#\ub3c4\uba54\uc778 : http://portaltest.knto.or.kr:8080/
+#\uacc4\uc815 : www / KTOit699!
+
+#e\ud3ec\ud0c8 \uac1c\ubc1c\uc11c\ubc84
+#hostname : Eportal-Dev (10.1.111.198)
+#\ub3c4\uba54\uc778 : http://eportaldev.knto.or.kr:8080/
+#\uacc4\uc815 : 
+
+#e\ud3ec\ud0c8 \uc6b4\uc601\uc11c\ubc84
+#hostname : Eportal-Dev (10.1.111.199)
+#\ub3c4\uba54\uc778 : http://eportal.knto.or.kr
+#\uacc4\uc815 : 
+
+# \uc6b4\uc601 HOST
+#SFTP.APPR.HOST = 10.1.111.38
+#SFTP.APPR.PORT = 9857
+#SFTP.APPR.USERNAME = www
+#SFTP.APPR.PASSWORD = KTOit699!
+#SFTP.APPR.DIR = /eportal3/data08/www_new
+#SFTP.APPR.VOLUME = /AttVolume04/ect/attach/
+#SFTP.APPR.HTML.DIR = /eportal3/data08/www_new/AttVolume04/ect/
+
+#smtp url\ud638\ucd9c
+SMTP.URL = http://localhost:9800/ets-hub-window-connect/mailSend.jsp

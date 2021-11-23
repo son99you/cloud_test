@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="euc-kr" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee/
+        http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+        version="2.0">
+
+	<description>comFn</description>
+	<tlib-version>2.0</tlib-version>
+	<jsp-version>2.0</jsp-version>
+	<short-name>comFn</short-name>
+
+	<function>
+		<description>Null 값을 다른 값으로 치환</description>
+		<name>nvl</name>
+		<function-class>com.eunwoosoft.frwk.fol.util.FwkStringUtil</function-class>
+		<function-signature>java.lang.String nvl(java.lang.String, java.lang.String)</function-signature>
+		<example>
+			${comFn:nvl(string, string)}
+		</example>
+	</function>
+	
+	<function>
+		<description>날짜 값을 'YYYY-MM-DD' 형태로 치환</description>
+		<name>formatDate</name>
+		<function-class>com.eunwoosoft.frwk.fol.util.FwkFormatUtil</function-class>
+		<function-signature>java.lang.String formatDate(java.lang.String, java.lang.String, java.lang.String)</function-signature>
+		<example>
+			${comFn:formatDate(string, string, string)}
+		</example>
+	</function>
+	
+	<function>
+		<description>금액을 천단위 형태로 치환</description>
+		<name>formatMoney</name>
+		<function-class>com.eunwoosoft.frwk.fol.util.FwkFormatUtil</function-class>
+		<function-signature>java.lang.String formatMoney(java.lang.String)</function-signature>
+		<example>
+			${comFn:formatMoney(string)}
+		</example>
+	</function>
+	
+	<function>
+		<description>금액을 천단위 형태로 치환</description>
+		<name>formatMoneyDp</name>
+		<function-class>com.eunwoosoft.frwk.fol.util.FwkFormatUtil</function-class>
+		<function-signature>java.lang.String formatMoneyDp(java.lang.String)</function-signature>
+		<example>
+			${comFn:formatMoneyDp(string)}
+		</example>
+	</function>
+	
+	<function>
+		<description>사업자번호를 '000-00-00000' 형태로 치환</description>
+		<name>formatBizNumber</name>
+		<function-class>com.eunwoosoft.frwk.fol.util.FwkFormatUtil</function-class>
+		<function-signature>java.lang.String formatBizNumber(java.lang.String)</function-signature>
+		<example>
+			${comFn:formatBizNumber(string)}
+		</example>
+	</function>
+	
+	<function>
+		<description>전화번호를 '00-000-0000' 형태로 치환</description>
+		<name>formatPhoneNumber</name>
+		<function-class>com.eunwoosoft.frwk.fol.util.FwkFormatUtil</function-class>
+		<function-signature>java.lang.String formatPhoneNumber(java.lang.String)</function-signature>
+		<example>
+			${comFn:formatPhoneNumber(string)}
+		</example>
+	</function>
+	
+	<function>
+		<description>우편번호를 '000-000' 형태로 치환</description>
+		<name>formatPostNumber</name>
+		<function-class>com.eunwoosoft.frwk.fol.util.FwkFormatUtil</function-class>
+		<function-signature>java.lang.String formatPostNumber(java.lang.String)</function-signature>
+		<example>
+			${comFn:formatPostNumber(string)}
+		</example>
+	</function>
+	
+	<function>
+		<description>서버인증서DN값조회</description>
+		<name>getServerCert</name>
+		<function-class>com.eunwoosoft.frwk.fol.util.FwkCertUtil</function-class>
+		<function-signature>java.lang.String getServerCert()</function-signature>
+		<example>
+			${comFn:getServerCert()}
+		</example>
+	</function>
+	
+	<function>
+		<description>말줄임처리</description>
+		<name>toShorten</name>
+		<function-class>com.eunwoosoft.frwk.fol.util.FwkStringUtil</function-class>
+		<function-signature>java.lang.String toShorten(java.lang.String, int)</function-signature>
+		<example>
+			${comFn:toShorten(string, int)}
+		</example>
+	</function>
+	
+	<function>
+		<description>HTML 태그 변환</description>
+		<name>convertToHtmlTag</name>
+		<function-class>com.eunwoosoft.frwk.fol.util.FwkStringUtil</function-class>
+		<function-signature>java.lang.String convertToHtmlTag( java.lang.String)</function-signature>
+		<example>
+			${comFn:convertToHtmlTag(string)}
+		</example>
+	</function>
+	
+</taglib>

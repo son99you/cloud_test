@@ -1,0 +1,52 @@
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+<script type="text/javascript" src="../library/json3.min.js"></script>
+<script type="text/javascript" src="../library/iecompatibility.js"></script>
+
+<script type="text/javascript" src="../vestsign.js"></script>
+<SCRIPT language=javascript>
+
+    var getToken = function (pString, pToken) {
+
+        //if (!pString.match(pToken + '='))
+        //    return '';
+        var tmpStr = pString.split('$');
+        if (tmpStr[0] == pString) return "";
+
+        var resultStr;
+        //var resultStr = tmpStr[kos_var.tokenCnt].split(pToken + '=');
+        for (var i = 0; i < tmpStr.length; i++) {
+            if (tmpStr[i].match(pToken + '=')) {
+                resultStr = tmpStr[i].split(pToken + "=");
+            }
+        }
+        return (typeof(resultStr) == 'undefined' ? '' : resultStr[1]);
+    };
+
+    function getPCInfo() {
+        vest.token.getMacAddress(6+64, function(info){
+//            var str = '';
+//            str += getToken(info, "mac");
+//            str += '\n';
+
+            document.getElementById('pcInfo').value = info;
+        }, function(error) {
+            alert(error.getReason());
+        });
+    };
+
+</SCRIPT>
+<br><br><br>
+<table border="1" align="center" width=50%>
+    <tr>
+        <td align="center"><br>
+            PC 정보<br><textarea rows='10' style="width:90%" id="pcInfo"></textarea><br><br>
+        </td>
+    </tr>
+    <tr>
+        <td align="center"><br>
+            <input type=button onclick=getPCInfo(); value="PC 정보 요청" style="width:150">
+        </td>
+    </tr>
+</table>

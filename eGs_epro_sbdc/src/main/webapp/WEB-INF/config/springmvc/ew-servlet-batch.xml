@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd
+		">
+	
+	<description>배치 서비스 관리</description> 
+			
+	<context:annotation-config />
+	
+	<!-- 스케쥴러 수행 클래스 등록 -->	
+	<bean name="autoSend" class="org.springframework.scheduling.quartz.JobDetailBean">
+	  <property name="jobClass" value="com.eunwoosoft.comm.util.AutoSend" />
+	  <property name="jobDataAsMap">
+	    <map>
+	      <entry key="timeout" value="5" />
+	      <entry key="comBatchService"><ref bean="comBatchService"/></entry>
+	    </map>
+	  </property>
+	</bean>
+	
+	<bean name="autoSend2" class="org.springframework.scheduling.quartz.JobDetailBean">
+	  <property name="jobClass" value="com.eunwoosoft.comm.util.AutoSend2" />
+	  <property name="jobDataAsMap">
+	    <map>
+	      <entry key="timeout" value="5" />
+	      <entry key="comBatchService"><ref bean="comBatchService"/></entry>
+	    </map>
+	  </property>
+	</bean>
+
+ 	<!-- 스케쥴러 트리거 실행주기 설정  -->
+ 	<bean id="makeTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="autoSend" />	   
+		<property name="cronExpression" value="0 0/1 * * * ? " />
+	</bean>
+	
+	<bean id="makeTrigger2" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	    <property name="jobDetail" ref="autoSend2" />	   
+		<property name="cronExpression" value="0 0/5 * * * ? " />
+	</bean>
+
+	<!-- 스케쥴러 트리거 실행 -->
+ 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<!--  
+				<ref bean="makeTrigger"/>
+				-->
+			</list>
+		</property>
+	</bean>
+	
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<!--  
+				<ref bean="makeTrigger2"/>
+				-->
+			</list>
+		</property>
+	</bean>
+	 
+</beans>

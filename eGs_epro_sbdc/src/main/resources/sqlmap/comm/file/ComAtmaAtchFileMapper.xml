@@ -1,0 +1,1456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eunwoosoft.comm.file.dao.ComAtmaAtchFileDao"> 
+
+	<!--  첨부파일 등록-->
+	<insert id="insertAtchFileRegist">		
+		INSERT INTO T_MM_FILE_MST(
+			 FILE_SN
+			,FILE_GRP_NO
+			,ATCH_FSCD
+			,TSK_SECD
+			,SV_FILE_NM
+			,SYS_FILE_NM
+			,FILE_SZ
+			,FILE_LCTN
+			,FILE_DOC_NM
+			,FILE_DESC
+			,OPEN_YN
+			,TSK_VKEY1
+			,TSK_VKEY2
+			,TSK_VKEY3
+			,RMK
+			,REGR_ID
+			,REGR_NM
+			,REG_DT 
+			,MODR_ID
+			,MODR_NM
+			,MOD_DT
+			,CONN_IP
+			,DEL_AT
+			,FILE_DOC_SECD
+		)
+		SELECT QMBM_ATFI_ATCHMNFL_SN.NEXTVAL, T1.* FROM (
+		<foreach separator="union all" item="file" collection="fileList"> 
+		  SELECT #{atchFileGroupNo} AS FILE_GRP_NO
+			, #{file.P_ATCH_FSCD, jdbcType=VARCHAR} AS ATCH_FSCD
+			, #{file.P_TSK_SECD, jdbcType=VARCHAR} AS TSK_SECD
+			, #{file.P_SV_FILE_NM, jdbcType=VARCHAR} AS SV_FILE_NM
+			, #{file.P_SYS_FILE_NM, jdbcType=VARCHAR} AS SYS_FILE_NM
+<!-- 			, #{file.P_ATCHMNFL_EXTSN_NM, jdbcType=VARCHAR} AS ATCHMNFL_EXTSN_NM -->
+			, #{file.P_FILE_SZ, jdbcType=VARCHAR} AS FILE_SZ
+			, #{file.P_FILE_LCTN, jdbcType=VARCHAR} AS FILE_LCTN
+			, #{file.P_FILE_DOC_NM, jdbcType=VARCHAR} AS FILE_DOC_NM
+			, #{file.P_FILE_DESC, jdbcType=VARCHAR} AS FILE_DESC
+			, #{file.P_OPEN_YN, jdbcType=VARCHAR} AS OPEN_YN
+			, #{file.P_CONT_FILE_DOC_SECD, jdbcType=VARCHAR} AS TSK_VKEY1   
+			, #{file.P_TSK_VKEY2, jdbcType=VARCHAR} AS TSK_VKEY2
+			, #{file.P_TSK_VKEY3, jdbcType=VARCHAR} AS TSK_VKEY3
+			, #{file.P_RMK, jdbcType=VARCHAR} AS RMK
+			, #{USR_ID} AS REGR_ID
+			, #{USR_NM} AS REGR_NM 
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')AS REG_DT 
+			, #{USR_ID} AS MODR_ID 
+			, #{USR_NM} AS MODR_NM 
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS') AS MOD_DT 
+			, #{CONN_IP} AS CONN_IP 
+			, 'N' AS DEL_AT	
+			, #{P_FILE_DOC_SECD, jdbcType=VARCHAR} AS FILE_DOC_SECD
+		FROM DUAL
+		</foreach>
+		) T1
+	</insert>	
+	
+	<insert id="insertAtchFileRegistA">		
+		INSERT INTO T_MM_FILE_MST(
+			 FILE_SN
+			,FILE_GRP_NO
+			,ATCH_FSCD
+			,TSK_SECD
+			,SV_FILE_NM
+			,SYS_FILE_NM
+			,FILE_SZ
+			,FILE_LCTN
+			,FILE_DOC_NM
+			,FILE_DESC
+			,OPEN_YN
+			,RMK
+			,REGR_ID
+			,REGR_NM
+			,REG_DT 
+			,MODR_ID
+			,MODR_NM
+			,MOD_DT
+			,CONN_IP
+			,DEL_AT
+			,FILE_DOC_SECD
+		)
+		SELECT QMBM_ATFI_ATCHMNFL_SN.NEXTVAL, T1.* FROM (
+		<foreach separator="union all" item="file" collection="fileList"> 
+		  SELECT #{atchFileGroupNo} AS FILE_GRP_NO
+			, #{file.P_ATCH_FSCD, jdbcType=VARCHAR} AS ATCH_FSCD
+			, #{file.P_TSK_SECD, jdbcType=VARCHAR} AS TSK_SECD
+			, #{file.P_SV_FILE_NM, jdbcType=VARCHAR} AS SV_FILE_NM
+			, #{file.P_SYS_FILE_NM, jdbcType=VARCHAR} AS SYS_FILE_NM
+<!-- 			, #{file.P_ATCHMNFL_EXTSN_NM, jdbcType=VARCHAR} AS ATCHMNFL_EXTSN_NM -->
+			, #{file.P_FILE_SZ, jdbcType=VARCHAR} AS FILE_SZ
+			, #{file.P_FILE_LCTN, jdbcType=VARCHAR} AS FILE_LCTN
+			, #{file.P_FILE_DOC_NM, jdbcType=VARCHAR} AS FILE_DOC_NM
+			, #{file.P_FILE_DESC, jdbcType=VARCHAR} AS FILE_DESC
+			, #{file.P_OPEN_YN, jdbcType=VARCHAR} AS OPEN_YN
+			, #{file.P_RMK, jdbcType=VARCHAR} AS RMK
+			, #{USR_ID} AS REGR_ID
+			, #{USR_NM} AS REGR_NM 
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')AS REG_DT 
+			, #{USR_ID} AS MODR_ID 
+			, #{USR_NM} AS MODR_NM 
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS') AS MOD_DT 
+			, #{CONN_IP} AS CONN_IP 
+			, 'N' AS DEL_AT	
+			, #{P_FILE_DOC_SECD, jdbcType=VARCHAR} AS FILE_DOC_SECD
+		FROM DUAL
+		</foreach>
+		) T1
+	</insert>	
+	
+	
+	<!--  첨부파일 등록-->
+	<insert id="insertMMFileRegist">		
+		INSERT INTO T_MM_FILE_MST(
+			 FILE_SN
+			,FILE_GRP_NO
+			,ATCH_FSCD
+			,TSK_SECD
+			,SV_FILE_NM 
+			,SYS_FILE_NM
+			,FILE_SZ
+			,FILE_LCTN
+			,FILE_DOC_NM
+			,FILE_DESC
+			,OPEN_YN
+			,TSK_VKEY1
+			,TSK_VKEY2
+			,TSK_VKEY3
+			,RMK
+			,REGR_ID
+			,REGR_NM
+			,REG_DT 
+			,MODR_ID
+			,MODR_NM
+			,MOD_DT
+			,CONN_IP
+			,DEL_AT
+			,FILE_DOC_SECD
+		)
+		SELECT QMBM_ATFI_ATCHMNFL_SN.NEXTVAL, T1.* FROM (
+		<foreach separator="union all" item="file" collection="fileList"> 
+		  SELECT #{atchFileGroupNo} AS FILE_GRP_NO
+			, #{file.P_ATCH_FSCD, jdbcType=VARCHAR} AS ATCH_FSCD
+			, #{file.P_TSK_SECD, jdbcType=VARCHAR} AS TSK_SECD
+			, #{file.P_SV_FILE_NM, jdbcType=VARCHAR} AS SV_FILE_NM
+			, #{file.P_SYS_FILE_NM, jdbcType=VARCHAR} AS SYS_FILE_NM
+<!-- 			, #{file.P_ATCHMNFL_EXTSN_NM, jdbcType=VARCHAR} AS ATCHMNFL_EXTSN_NM -->
+			, #{file.P_FILE_SZ, jdbcType=VARCHAR} AS FILE_SZ
+			, #{file.P_FILE_LCTN, jdbcType=VARCHAR} AS FILE_LCTN
+			, #{file.P_FILE_DOC_NM, jdbcType=VARCHAR} AS FILE_DOC_NM
+			, #{file.P_FILE_DESC, jdbcType=VARCHAR} AS FILE_DESC
+			, #{file.P_OPEN_YN, jdbcType=VARCHAR} AS OPEN_YN
+			, #{file.P_TSK_VKEY1, jdbcType=VARCHAR} AS TSK_VKEY1
+			, #{file.P_TSK_VKEY2, jdbcType=VARCHAR} AS TSK_VKEY2
+			, #{file.P_TSK_VKEY3, jdbcType=VARCHAR} AS TSK_VKEY3
+			, #{file.P_RMK, jdbcType=VARCHAR} AS RMK
+			, #{USR_ID} AS REGR_ID
+			, #{USR_NM} AS REGR_NM 
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')AS REG_DT 
+			, #{USR_ID} AS MODR_ID 
+			, #{USR_NM} AS MODR_NM 
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS') AS MOD_DT 
+			, #{CONN_IP} AS CONN_IP 
+			, 'N' AS DEL_AT	
+			, #{file.P_FILE_DOC_SECD, jdbcType=VARCHAR} AS FILE_DOC_SECD
+		FROM DUAL
+		</foreach>
+		) T1
+	</insert>	
+	
+	
+	<!-- del_at = 'Y'처리  -->
+	<update id="deleteAtchFileUpdt">
+		UPDATE	T_MM_FILE_MST T1 
+		     SET	MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+		     		, DEL_AT = 'Y'
+		WHERE 	1=1
+		AND		FILE_GRP_NO = #{atchFileGroupNo, jdbcType=VARCHAR}
+		AND	  	FILE_DOC_SECD = #{P_FILE_DOC_SECD, jdbcType=VARCHAR}
+	</update>	
+	
+	<!--  첨부파일 등록 ( 한개 )-->
+	<insert id="insertAtchFileRegistOne">	
+		<selectKey keyProperty="P_FILE_SN" resultType="int" order="BEFORE">
+			SELECT QMBM_ATFI_ATCHMNFL_SN.NEXTVAL 
+			FROM DUAL
+		</selectKey>	
+		INSERT INTO T_MM_FILE_MST(
+			 FILE_SN
+			, FILE_GRP_NO
+			, ATCH_FSCD
+			, TSK_SECD
+			, SV_FILE_NM
+			, SYS_FILE_NM
+			, FILE_SZ
+			, FILE_LCTN
+			, FILE_DOC_NM
+			, FILE_DESC
+			, OPEN_YN
+			, TSK_VKEY1
+			, TSK_VKEY2
+			, TSK_VKEY3
+			, FILE_DOC_SECD
+			, RMK
+			, REGR_ID
+			, REGR_NM
+			, REG_DT
+			, MODR_ID
+			, MODR_NM
+			, MOD_DT
+			, CONN_IP
+			, DEL_AT
+		)VALUES(
+		      #{P_FILE_SN, jdbcType=VARCHAR}
+		    , #{P_FILE_GRP_NO, jdbcType=VARCHAR}
+			, #{P_ATCH_FSCD, jdbcType=VARCHAR}
+			, #{P_TSK_SECD, jdbcType=VARCHAR}
+			, #{P_SV_FILE_NM, jdbcType=VARCHAR}
+			, #{P_SYS_FILE_NM, jdbcType=VARCHAR}
+			, #{P_FILE_SZ, jdbcType=VARCHAR}
+			, #{P_FILE_LCTN, jdbcType=VARCHAR}
+			, #{P_FILE_DOC_NM, jdbcType=VARCHAR}
+			, #{P_FILE_DESC, jdbcType=VARCHAR}
+			, #{P_OPEN_YN, jdbcType=VARCHAR}
+			, #{P_TSK_VKEY1, jdbcType=VARCHAR}
+			, #{P_TSK_VKEY2, jdbcType=VARCHAR}
+			, #{P_TSK_VKEY3, jdbcType=VARCHAR}
+			, #{P_FILE_DOC_SECD, jdbcType=VARCHAR}
+			, #{P_RMK, jdbcType=VARCHAR}
+			, #{USR_ID, jdbcType=VARCHAR}
+			, #{USR_NM, jdbcType=VARCHAR} 
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+			, #{USR_ID, jdbcType=VARCHAR}
+			, #{USR_NM, jdbcType=VARCHAR} 
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+			, #{CONN_IP, jdbcType=VARCHAR}
+			, 'N'
+		)
+	</insert>
+	
+	<!--  첨부파일 등록 ( 한개 )-->
+	<insert id="insertAtchFileRegistCmtm">	
+		<selectKey keyProperty="P_FILE_SN" resultType="int" order="BEFORE">
+			SELECT QMBM_ATFI_ATCHMNFL_SN.NEXTVAL 
+			FROM DUAL
+		</selectKey>	
+		INSERT INTO T_MM_FILE_MST(
+			 FILE_SN
+			, FILE_GRP_NO
+			<!-- , ATCH_FSCD
+			, TSK_SECD -->
+			, SV_FILE_NM
+			, SYS_FILE_NM
+			, FILE_SZ
+			, FILE_LCTN
+			<!-- , FILE_DOC_NM
+			, FILE_DESC
+			, OPEN_YN
+			, TSK_VKEY1
+			, TSK_VKEY2
+			, TSK_VKEY3 -->
+			, FILE_DOC_SECD
+			<!-- , RMK -->
+			, REGR_ID
+			, REGR_NM
+			, REG_DT
+			, MODR_ID
+			, MODR_NM
+			, MOD_DT
+			, CONN_IP
+			, DEL_AT
+		)VALUES(
+		      #{P_FILE_SN, jdbcType=INTEGER}
+		    , #{P_FILE_GRP_NO, jdbcType=VARCHAR}
+			<!-- , #{P_ATCH_FSCD, jdbcType=VARCHAR}
+			, #{P_TSK_SECD, jdbcType=VARCHAR} -->
+			, #{P_SV_FILE_NM, jdbcType=VARCHAR}
+			, #{P_SYS_FILE_NM, jdbcType=VARCHAR}
+			, #{P_FILE_SZ, jdbcType=INTEGER}
+			, #{P_FILE_LCTN, jdbcType=VARCHAR}
+			<!-- , #{P_FILE_DOC_NM, jdbcType=VARCHAR}
+			, #{P_FILE_DESC, jdbcType=VARCHAR}
+			, #{P_OPEN_YN, jdbcType=VARCHAR}
+			, #{P_TSK_VKEY1, jdbcType=VARCHAR}
+			, #{P_TSK_VKEY2, jdbcType=VARCHAR}
+			, #{P_TSK_VKEY3, jdbcType=VARCHAR} -->
+			, #{P_FILE_DOC_SECD, jdbcType=VARCHAR}
+			<!-- , #{P_RMK, jdbcType=VARCHAR} -->
+			, #{USR_ID, jdbcType=VARCHAR}
+			, #{USR_NM, jdbcType=VARCHAR} 
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+			, #{USR_ID, jdbcType=VARCHAR}
+			, #{USR_NM, jdbcType=VARCHAR} 
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+			, #{CONN_IP, jdbcType=VARCHAR}
+			, 'N'
+		)
+	</insert>
+	
+	
+	
+	<!--  첨부파일 등록--> 
+	<insert id="insertDextAtchFileRegist">		
+		INSERT INTO T_MM_FILE_MST(
+			  FILE_SN
+			, FILE_GRP_NO
+			, ATCH_FSCD
+			, TSK_SECD
+			, SV_FILE_NM
+			, SYS_FILE_NM
+			, FILE_SZ
+			, FILE_LCTN
+			, FILE_DOC_NM
+			, FILE_DESC
+			, OPEN_YN
+			, TSK_VKEY1
+			, TSK_VKEY2
+			, TSK_VKEY3
+			, RMK
+			, FILE_DOC_SECD
+			, REGR_ID
+			, REGR_NM
+			, REG_DT
+			, MODR_ID
+			, MODR_NM
+			, MOD_DT
+			, CONN_IP
+			, DEL_AT
+		)
+		SELECT QMBM_ATFI_ATCHMNFL_SN.NEXTVAL, T1.* FROM (
+		  SELECT #{atchFileGroupNo} AS FILE_GRP_NO
+			, #{P_ATCH_FSCD, jdbcType=VARCHAR} AS ATCH_FSCD
+			, #{P_TSK_SECD, jdbcType=VARCHAR} AS TSK_SECD
+			, #{P_SV_FILE_NM, jdbcType=VARCHAR} AS SV_FILE_NM
+			, #{P_SYS_FILE_NM, jdbcType=VARCHAR} AS SYS_FILE_NM
+			, #{P_FILE_SZ, jdbcType=VARCHAR} AS FILE_SZ
+			, #{P_FILE_LCTN, jdbcType=VARCHAR} AS FILE_LCTN
+			, #{P_FILE_DOC_NM, jdbcType=VARCHAR} AS FILE_DOC_NM
+			, #{P_FILE_DESC, jdbcType=VARCHAR} AS FILE_DESC
+			, #{P_OPEN_YN, jdbcType=VARCHAR} AS OPEN_YN
+			, #{P_TSK_VKEY1, jdbcType=VARCHAR} AS TSK_VKEY1
+			, #{P_TSK_VKEY2, jdbcType=VARCHAR} AS TSK_VKEY2
+			, #{P_TSK_VKEY3, jdbcType=VARCHAR} AS TSK_VKEY3
+			, #{P_RMK, jdbcType=VARCHAR} AS RMK
+			, #{P_FILE_DOC_SECD, jdbcType=VARCHAR} AS FILE_DOC_SECD
+			, #{USR_ID, jdbcType=VARCHAR} AS REGR_ID
+			, #{USR_NM, jdbcType=VARCHAR} AS REGR_NM 
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')AS REG_DT 
+			, #{USR_ID, jdbcType=VARCHAR} AS MODR_ID 
+			, #{USR_NM, jdbcType=VARCHAR} AS MODR_NM 
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS') AS MOD_DT 
+			, #{CONN_IP, jdbcType=VARCHAR} AS CONN_IP 
+			, 'N' AS DEL_AT	
+		FROM DUAL
+		) T1
+	</insert>	
+	
+	
+	<insert id="insertEtcAtchFileRegist">		
+		INSERT INTO T_MM_FILE_MST(
+			  FILE_SN
+			, FILE_GRP_NO
+			, ATCH_FSCD
+			, TSK_SECD
+			, SV_FILE_NM
+			, SYS_FILE_NM
+			, FILE_SZ
+			, FILE_LCTN
+			, FILE_DOC_NM
+			, FILE_DESC
+			, OPEN_YN
+			, TSK_VKEY1
+			, TSK_VKEY2
+			, TSK_VKEY3
+			, RMK
+			, REGR_ID
+			, REGR_NM
+			, REG_DT
+			, MODR_ID
+			, MODR_NM
+			, MOD_DT
+			, CONN_IP
+			, DEL_AT
+			, FILE_DOC_SECD
+		)
+		SELECT QMBM_ATFI_ATCHMNFL_SN.NEXTVAL, T1.* FROM (
+		  SELECT #{atchFileGroupNo} AS FILE_GRP_NO
+			, #{P_ATCH_FSCD, jdbcType=VARCHAR} AS ATCH_FSCD
+			, #{P_TSK_SECD, jdbcType=VARCHAR} AS TSK_SECD
+			, #{P_SV_FILE_NM, jdbcType=VARCHAR} AS SV_FILE_NM
+			, #{P_SYS_FILE_NM, jdbcType=VARCHAR} AS SYS_FILE_NM
+			, #{P_FILE_SZ, jdbcType=VARCHAR} AS FILE_SZ
+			, #{P_FILE_LCTN, jdbcType=VARCHAR} AS FILE_LCTN
+			, #{P_FILE_DOC_NM, jdbcType=VARCHAR} AS FILE_DOC_NM
+			, #{P_FILE_DESC, jdbcType=VARCHAR} AS FILE_DESC
+			, #{P_OPEN_YN, jdbcType=VARCHAR} AS OPEN_YN
+			, #{P_TSK_VKEY1, jdbcType=VARCHAR} AS TSK_VKEY1
+			, #{P_TSK_VKEY2, jdbcType=VARCHAR} AS TSK_VKEY2
+			, #{P_TSK_VKEY3, jdbcType=VARCHAR} AS TSK_VKEY3
+			, #{P_RMK, jdbcType=VARCHAR} AS RMK
+			, #{USR_ID, jdbcType=VARCHAR} AS REGR_ID
+			, #{USR_NM, jdbcType=VARCHAR} AS REGR_NM 
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')AS REG_DT 
+			, #{USR_ID, jdbcType=VARCHAR} AS MODR_ID 
+			, #{USR_NM, jdbcType=VARCHAR} AS MODR_NM 
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS') AS MOD_DT 
+			, #{CONN_IP, jdbcType=VARCHAR} AS CONN_IP 
+			, 'N' AS DEL_AT	
+			, #{P_FILE_DOC_SECD, jdbcType=VARCHAR} AS FILE_DOC_SECD 
+		FROM DUAL
+		) T1
+	</insert>
+	
+	<!-- 유찰데이터 첨부파일 저장  -->
+	<insert id="selectInsertDextAtchFile">		
+		INSERT INTO T_MM_FILE_MST(
+			  FILE_SN
+			, FILE_GRP_NO
+			, ATCH_FSCD
+			, TSK_SECD
+			, SV_FILE_NM
+			, SYS_FILE_NM
+			, FILE_SZ
+			, FILE_LCTN
+			, FILE_DOC_NM
+			, FILE_DESC
+			, OPEN_YN
+			, TSK_VKEY1
+			, TSK_VKEY2
+			, TSK_VKEY3
+			, RMK
+			, REGR_ID
+			, REGR_NM
+			, REG_DT
+			, MODR_ID
+			, MODR_NM
+			, MOD_DT
+			, CONN_IP
+			, DEL_AT
+		)
+		SELECT QMBM_ATFI_ATCHMNFL_SN.NEXTVAL, T1.* FROM (
+		  SELECT 	 #{P_FILE_GRP_NO_NEW} AS FILE_GRP_NO                 
+			, ATCH_FSCD
+			, TSK_SECD
+			, SV_FILE_NM
+			, SYS_FILE_NM
+			, FILE_SZ
+			, FILE_LCTN
+			, FILE_DOC_NM
+			, FILE_DESC
+			, OPEN_YN
+			, TSK_VKEY1
+			, TSK_VKEY2
+			, TSK_VKEY3
+			, RMK
+			, #{USR_ID} AS REGR_ID
+			, #{USR_NM} AS REGR_NM 
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')AS REG_DT 
+			, #{USR_ID} AS MODR_ID 
+			, #{USR_NM} AS MODR_NM 
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS') AS MOD_DT 
+			, #{CONN_IP} AS CONN_IP 
+			, 'N' AS DEL_AT	
+			FROM T_MM_FILE_MST
+			WHERE 1=1
+			AND  FILE_GRP_NO = #{P_FILE_GRP_NO}
+			AND  DEL_AT != 'Y'
+			<if test='fileList == null and fileList == "" '>
+				AND	FILE_SN NOT IN (  
+					#{P_FILE_SN_DEL, jdbcType=VARCHAR}
+				)
+			</if>  
+			<if test='fileList != null and fileList != "" '>
+				AND	FILE_SN NOT IN (  
+				<foreach separator="," item="file" collection="fileList">
+					#{file.P_FILE_SN_DEL, jdbcType=VARCHAR}
+				</foreach>
+				)
+			</if> 
+		) T1
+	</insert>	
+	
+	<!-- 유찰데이터 첨부파일 저장  -->
+	<insert id="selectAtchFileInsert">		
+		INSERT INTO T_MM_FILE_MST(
+			  FILE_SN
+			, FILE_GRP_NO
+			, REG_YM
+			, ATCH_FSCD
+			, TSK_SECD
+			, SV_FILE_NM
+			, SYS_FILE_NM
+			, FILE_SZ
+			, FILE_LCTN
+			, FILE_DOC_NM
+			, FILE_DESC
+			, OPEN_YN
+			, TSK_VKEY1
+			, TSK_VKEY2
+			, TSK_VKEY3
+			, RMK
+			, REGR_ID
+			, REGR_NM
+			, REG_DT
+			, MODR_ID
+			, MODR_NM
+			, MOD_DT
+			, CONN_IP
+			, DEL_AT
+		)
+		SELECT QMBM_ATFI_ATCHMNFL_SN.NEXTVAL, T1.* FROM (
+		  SELECT 	 #{P_FILE_GRP_NO_NEW} AS FILE_GRP_NO                 
+			, TO_CHAR(SYSDATE, 'yyyyMM')AS REG_YM
+			, ATCH_FSCD
+			, TSK_SECD
+			, SV_FILE_NM
+			, SYS_FILE_NM
+			, FILE_SZ
+			, FILE_LCTN
+			, FILE_DOC_NM
+			, FILE_DESC
+			, OPEN_YN
+			, TSK_VKEY1
+			, TSK_VKEY2
+			, TSK_VKEY3
+			, RMK
+			, #{USR_ID} AS REGR_ID
+			, #{USR_NM} AS REGR_NM 
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')AS REG_DT 
+			, #{USR_ID} AS MODR_ID 
+			, #{USR_NM} AS MODR_NM 
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS') AS MOD_DT 
+			, #{CONN_IP} AS CONN_IP 
+			, 'N' AS DEL_AT	
+			FROM T_MM_FILE_MST
+			WHERE 1=1
+			AND  FILE_GRP_NO = #{P_FILE_GRP_NO_ORG}
+			AND  DEL_AT != 'Y'
+			<if test='P_DEL_SN != null and P_DEL_SN != "" '>
+				AND	FILE_SN NOT IN (  
+				<foreach separator="," item="file" collection="fileList">
+					#{file.P_FILE_SN, jdbcType=VARCHAR}
+				</foreach>
+				)
+			</if> 
+					<!-- AND  FILE_SN NOT IN ( 
+						#{P_FILE_SN, jdbcType=VARCHAR}
+					) -->
+		) T1
+	</insert>	
+	
+	<!--  첨부파일 그룹 등록-->
+	<insert id="insertAtchFileGroupRegist">		
+		INSERT INTO TMDM_ATFIGR(
+		      ATCHMNFL_GROUP_NO			
+			, REGISTER_ID
+			, REGIST_DT
+		)
+		  SELECT #{atchFileGroupNo} AS ATCHMNFL_GROUP_NO
+			, #{P_EMPL_ID, jdbcType=VARCHAR} AS REGISTER_ID
+			, #{P_SYSDATE, jdbcType=VARCHAR} AS REGIST_DT
+		FROM DUAL
+	</insert>
+	
+	
+	<!--  첨부파일목록조회_페이징-->
+	<select id="selectAtchFileListInqireWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT <include refid="selectAtchFile_Select_Clause"/> 
+		FROM TMDM_ATFI T1
+		<include refid="selectAtchFile_Where_Clause"/>
+		ORDER BY T1.REGIST_DT DESC
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<!--  첨부파일목록조회 총건수-->
+	<select id="selectAtchFileListInqireTotcnt" resultType="long">
+		SELECT COUNT(1) 
+		FROM TMDM_ATFI T1
+		<include refid="selectAtchFile_Where_Clause"/>
+	</select>
+	
+	<!--  첨부파일상세조회-->
+	<select id="selectAtchFileDetailInqire" resultType="dataEntity">
+		SELECT <include refid="selectAtchFile_Select_Clause"/> 
+		FROM TMDM_ATFI T1
+		WHERE 1=1 
+		<if test='P_ATCHMNFL_SN != null and P_ATCHMNFL_SN != "" '>
+		AND T1.ATCHMNFL_SN = #{P_ATCHMNFL_SN, jdbcType=VARCHAR}
+		</if> 
+		AND (T1.DELETE_AT != 'Y' OR T1.DELETE_AT IS NULL)
+		<if test='P_ATCHMNFL_GROUP_NO != null and P_ATCHMNFL_GROUP_NO != "" '>
+			AND ATCHMNFL_GROUP_NO = #{P_ATCHMNFL_GROUP_NO}
+		</if>
+		<if test='P_ATCHMNFL_SE_CD != null and P_ATCHMNFL_SE_CD != "" '>
+			AND ATCHMNFL_SE_CD = #{P_ATCHMNFL_SE_CD}
+		</if>
+	</select>
+	
+	<!--  첨부파일그룹일련번호에 의한 첨부파일목록조회-->
+	
+	<select id="selectAtchFileListInqireByAtchFileGroupNo" resultType="dataEntity">
+		SELECT	FILE_GRP_NO
+					, FILE_SN
+					, ATCH_FSCD
+					, TSK_SECD
+					, SV_FILE_NM
+					, SYS_FILE_NM
+					, FILE_SZ
+					, FILE_LCTN
+					, FILE_DOC_NM
+					, FILE_DESC
+					, OPEN_YN
+					, TSK_VKEY1
+					, TSK_VKEY2
+					, TSK_VKEY3
+					, RMK
+					, FILE_DOC_SECD
+		FROM		T_MM_FILE_MST T1
+		WHERE	T1.FILE_GRP_NO = #{P_FILE_GRP_NO, jdbcType=VARCHAR}	
+		AND		T1.DEL_AT IN ('N')
+		<if test='P_TSK_VKEY1 != null and P_TSK_VKEY1 != "" '>
+			AND TSK_VKEY1 = #{P_TSK_VKEY1, jdbcType=VARCHAR}	
+		</if>
+		<if test='P_FILE_EXIT != null and P_FILE_EXIT != "" '>
+			AND FILE_DOC_SECD != #{P_FILE_EXIT, jdbcType=VARCHAR}	
+		</if>
+		<if test='P_FILE_DOC_SECD_S != null and P_FILE_DOC_SECD_S != "" '>
+			AND FILE_DOC_SECD = #{P_FILE_DOC_SECD_S, jdbcType=VARCHAR}	
+		</if>
+		<!-- <if test='P_TSK_VKEY1 == null or P_TSK_VKEY1 == "" '>
+				AND TSK_VKEY1 = null
+		</if> -->
+	</select>
+	<!--  첨부파일 삭제-->
+	<!-- <delete id="deleteAtchFileDelete">
+		DELETE FROM TMDM_ATFI T1
+		WHERE T1.ATCHMNFL_SN in ( 
+				<foreach separator="," item="file" collection="fileList">
+				#{file.P_ATCHMNFL_SN, jdbcType=VARCHAR}
+				</foreach>
+				)
+	</delete> -->
+	<!--  첨부파일 삭제-->
+	<update id="deleteAtchFileDelete">
+		UPDATE	T_MM_FILE_MST T1 
+		     SET	MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+		     		, DEL_AT = 'Y'
+		WHERE 	1=1
+		AND		T1.FILE_SN IN ( 
+					<foreach separator="," item="file" collection="fileList">
+						#{file.P_FILE_SN, jdbcType=VARCHAR}
+					</foreach>
+					)
+		<if test='P_FILE_GRP_NO != null and P_FILE_GRP_NO != "" '>
+		AND		FILE_GRP_NO = #{P_FILE_GRP_NO}
+		</if>
+		<if test='P_FILE_DOC_SECD != null and P_FILE_DOC_SECD != "" '>
+		AND		FILE_DOC_SECD = #{P_FILE_DOC_SECD}
+		</if>
+	</update>
+
+	<update id="deleteEducFileDelete">
+		UPDATE	T_MM_FILE_MST T1 
+		     SET	MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+		     		, DEL_AT = 'Y'
+		WHERE 	1=1
+		AND		FILE_GRP_NO = #{P_FILE_GRP_NO}
+	</update>
+	
+	<!--  첨부파일 삭제-->
+	<update id="deleteAtchFileDelByGrpNo">
+		UPDATE	T_MM_FILE_MST T1 
+		     SET	MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+		     		, DEL_AT = 'Y'
+		WHERE 	1=1
+		AND		FILE_GRP_NO = #{P_FILE_GRP_NO}
+		<if test='P_TSK_VKEY1 != null and P_TSK_VKEY1 != "" '>
+				AND	  TSK_VKEY1 = #{P_TSK_VKEY1}
+		</if>
+		<if test='P_FILE_DOC_SECD != null and P_FILE_DOC_SECD != "" '>
+				AND	  FILE_DOC_SECD = #{P_FILE_DOC_SECD}
+		</if>
+	</update>	
+	
+	<!--  첨부파일 삭제-->
+	<update id="deleteAtchFileDelByGrpNoB">
+		UPDATE	T_MM_FILE_MST T1 
+		     SET	MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+		     		, DEL_AT = 'Y'
+		WHERE 	1=1
+		AND		FILE_GRP_NO = #{P_FILE_GRP_NO}
+		<if test='P_FILE_DOC_SECD != null and P_FILE_DOC_SECD != "" '>
+				AND	  FILE_DOC_SECD = #{P_FILE_DOC_SECD}
+		</if>
+		<if test='P_ESS_YN != "N" '>
+			AND TSK_VKEY1 IS NULL
+		</if>
+		<if test='P_ESS_YN == "N" '>
+			AND TSK_VKEY1 IS NOT NULL
+		</if>
+	</update>	
+	
+	<!--  첨부파일 삭제-->
+	<update id="deleteDextFileDelete">
+		UPDATE	T_MM_FILE_MST T1  
+		     SET	MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+		     		, DEL_AT = 'Y'
+		WHERE 	1=1
+		AND		T1.FILE_SN IN ( 
+						#{P_FILE_SN, jdbcType=VARCHAR}
+					)
+		<if test='P_FILE_GRP_NO != null and P_FILE_GRP_NO != "" '>
+				AND		FILE_GRP_NO = #{P_FILE_GRP_NO}
+		</if>
+	</update>
+	
+	
+	<update id="deleteEtcFileDelete">
+		UPDATE	T_MM_FILE_MST T1  
+		     SET	MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+		     		, DEL_AT = 'Y'
+		WHERE 	1=1
+		AND		T1.FILE_SN IN ( 
+						#{P_FILE_SN, jdbcType=VARCHAR}
+					)
+		<if test='P_FILE_GRP_NO_ETC != null and P_FILE_GRP_NO_ETC != "" '>
+				AND		FILE_GRP_NO = #{P_FILE_GRP_NO_ETC}
+		</if>
+	</update>
+	
+		
+	<!--  첨부파일 삭제 (파일이름으로)-->
+	<delete id="deleteAtchFileDeleteByNm">
+		DELETE FROM TMDM_ATFI T1
+		WHERE T1.STRE_FILE_NM in ( 
+				<foreach separator="," item="file" collection="fileList">
+				#{file.P_STRE_FILE_NM, jdbcType=VARCHAR}
+				</foreach>
+				)
+		<if test='P_ATCHMNFL_GROUP_NO != null and P_ATCHMNFL_GROUP_NO != "" '>
+			AND T1.ATCHMNFL_GROUP_NO = #{P_ATCHMNFL_GROUP_NO, jdbcType=VARCHAR}
+		</if>
+	</delete>
+	
+	<!-- 사용자조회 Select 절 -->
+	<sql id="selectAtchFile_Select_Clause">
+		 FILE_GRP_NO
+		,FILE_SN
+		,ATCH_FSCD
+		,TSK_SECD
+		,SV_FILE_NM
+		,SYS_FILE_NM
+		,FILE_SZ
+		,FILE_LCTN
+		,FILE_DOC_NM
+		,FILE_DESC
+		,OPEN_YN
+		,TSK_VKEY1
+		,TSK_VKEY2
+		,TSK_VKEY3
+		,RMK
+		,REGR_ID
+		,REGR_NM
+		,REG_DT
+		,MODR_ID
+		,MODR_NM
+		,MOD_DT
+		,CONN_IP
+		,DEL_AT
+	</sql>
+	
+	<sql id="selectAtchFile_Where_Clause">
+		<where>	
+			<if test='P_ATCHMNFL_NM != null and P_ATCHMNFL_NM != "" '>
+			    AND T1.ATCHMNFL_NM = #{P_ATCHMNFL_NM, jdbcType=VARCHAR}
+			</if>			
+		</where>
+	</sql>
+				
+	<!--  첨부파일 그룹번호 여부 -->
+	<select id="selectAtchFileGroupNoCnt" resultType="int">	
+		SELECT COUNT(FILE_GRP_NO)
+		FROM T_MM_FILE_MST
+		WHERE FILE_GRP_NO = #{atchFileGroupNo}
+		AND   DEL_AT != 'Y'
+	</select>
+				
+	<!--  첨부파일 그룹번호 여부(외부)	seongkil	20150820 -->
+	<select id="selectAtchFileGroupNoCntExtern" resultType="int">	
+		SELECT COUNT(ATCHMNFL_GROUP_NO)
+		FROM TPPO_ATFIGR
+		WHERE ATCHMNFL_GROUP_NO = #{atchFileGroupNo}
+	</select>
+	
+	<!--  첨부파일 등록 ( 외부 )-->
+	<insert id="insertAtchFileRegistExtern">		
+		INSERT INTO TPPO_ATFI(ATCHMNFL_SN
+			, ATCHMNFL_GROUP_NO
+			, ATCHMNFL_SE_CD
+			, STRE_FILE_NM
+			, ATCHMNFL_NM
+			, ATCHMNFL_EXTSN_NM
+			, FILE_CPCTY
+			, ATCHMNFL_COURS_NM
+			, ATCHMNFL_STORGE_CD
+			, REGISTER_ID
+			, REGIST_DT
+		)
+		SELECT QMBM_ATFI_ATCHMNFL_SN.NEXTVAL, T1.* FROM (
+		<foreach separator="union all" item="file" collection="fileList"> 
+		  SELECT #{atchFileGroupNo} AS ATCHMNFL_GROUP_NO
+			, #{file.P_ATCHMNFL_SE_CD, jdbcType=VARCHAR} AS ATCHMNFL_SE_CD
+			, #{file.P_STRE_FILE_NM, jdbcType=VARCHAR} AS STRE_FILE_NM
+			, #{file.P_ATCHMNFL_NM, jdbcType=VARCHAR} AS ATCHMNFL_NM
+			, #{file.P_ATCHMNFL_EXTSN_NM, jdbcType=VARCHAR} AS ATCHMNFL_EXTSN_NM
+			, #{file.P_FILE_CPCTY, jdbcType=VARCHAR} AS FILE_CPCTY
+			, #{file.P_ATCHMNFL_COURS_NM, jdbcType=VARCHAR} AS ATCHMNFL_COURS_NM
+			, #{file.P_ATCHMNFL_STORGE_CD, jdbcType=VARCHAR} AS ATCHMNFL_STORGE_CD
+			, 'test' AS REGISTER_ID
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS') AS REGIST_DT
+		FROM DUAL
+		</foreach>
+		) T1
+	</insert>	
+	
+	<!--  첨부파일 그룹 등록-->
+	<insert id="insertAtchFileGroupRegistExtern">		
+		INSERT INTO TPPO_ATFIGR(
+		      ATCHMNFL_GROUP_NO			
+			, REGISTER_ID
+			, REGIST_DT
+		)
+		  SELECT #{atchFileGroupNo} AS ATCHMNFL_GROUP_NO
+			, 'test' AS REGISTER_ID
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS') AS REGIST_DT
+		FROM DUAL
+	</insert>
+	
+	<!--  첨부파일 등록 ( 내부 )-->
+	<insert id="insertAtchFileRegistLocal">		
+		INSERT INTO TMDM_ATFI(ATCHMNFL_SN
+			, ATCHMNFL_GROUP_NO
+			, ATCHMNFL_SE_CD
+			, STRE_FILE_NM
+			, ATCHMNFL_NM
+			, ATCHMNFL_EXTSN_NM
+			, FILE_CPCTY
+			, ATCHMNFL_COURS_NM
+			, ATCHMNFL_STORGE_CD
+			, REGISTER_ID
+			, REGIST_DT
+		)
+		SELECT QMBM_ATFI_ATCHMNFL_SN.NEXTVAL, T1.* FROM (
+		<foreach separator="union all" item="file" collection="fileList"> 
+		  SELECT #{atchFileGroupNo} AS ATCHMNFL_GROUP_NO
+			, #{file.P_ATCHMNFL_SE_CD, jdbcType=VARCHAR} AS ATCHMNFL_SE_CD
+			, #{file.P_STRE_FILE_NM, jdbcType=VARCHAR} AS STRE_FILE_NM
+			, #{file.P_ATCHMNFL_NM, jdbcType=VARCHAR} AS ATCHMNFL_NM
+			, #{file.P_ATCHMNFL_EXTSN_NM, jdbcType=VARCHAR} AS ATCHMNFL_EXTSN_NM
+			, #{file.P_FILE_CPCTY, jdbcType=VARCHAR} AS FILE_CPCTY
+			, #{file.P_ATCHMNFL_COURS_NM, jdbcType=VARCHAR} AS ATCHMNFL_COURS_NM
+			, #{file.P_ATCHMNFL_STORGE_CD, jdbcType=VARCHAR} AS ATCHMNFL_STORGE_CD
+			, 'test' AS REGISTER_ID
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS') AS REGIST_DT
+		FROM DUAL
+		</foreach>
+		) T1
+	</insert>
+	
+	<!--  첨부파일 삭제(외부)-->
+	<update id="deleteAtchFileUpdtExtern">
+		UPDATE	TPPO_ATFI  T1
+		     SET	DELETE_AT = 'Y'
+<!-- 		WHERE T1.ATCHMNFL_SN in ( 
+				<foreach separator="," item="file" collection="fileList">
+				#{file.P_ATCHMNFL_SN, jdbcType=VARCHAR} -->
+		WHERE T1.ATCHMNFL_NM in ( 
+				<foreach separator="," item="file" collection="fileList">
+				#{file.P_ATCHMNFL_NM, jdbcType=VARCHAR}
+				</foreach>
+				)
+		AND	ATCHMNFL_GROUP_NO = #{atchFileGroupNo}
+	</update>
+	
+			<!--  첨부파일 삭제-->
+	<update id="deleteAtchFileDeleteExtern">
+		UPDATE	TMDM_ATFI T1 
+		     SET	DELETE_AT = 'Y'
+		WHERE T1.ATCHMNFL_SN in ( 
+				<foreach separator="," item="file" collection="fileList">
+				#{file.P_ATCHMNFL_SN, jdbcType=VARCHAR}
+				</foreach>
+				)
+	</update>
+	
+	
+		<!--  첨부파일 그룹 등록-->
+	<insert id="insertAtchFileGroupRegistLocal">		
+		INSERT INTO TMDM_ATFIGR(
+		      ATCHMNFL_GROUP_NO			
+			, REGISTER_ID
+			, REGIST_DT
+		)
+		  SELECT #{atchFileGroupNo} AS ATCHMNFL_GROUP_NO
+			, 'test' AS REGISTER_ID
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS') AS REGIST_DT
+		FROM DUAL
+	</insert>
+	
+		<!--  첨부파일 삭제(외부)-->
+	<update id="deleteAtchFileUpdtLocal">
+		UPDATE	TMDM_ATFI  T1
+		     SET	DELETE_AT = 'Y'
+<!-- 		WHERE T1.ATCHMNFL_SN in ( 
+				<foreach separator="," item="file" collection="fileList">
+				#{file.P_ATCHMNFL_SN, jdbcType=VARCHAR} -->
+		WHERE T1.ATCHMNFL_NM in ( 
+				<foreach separator="," item="file" collection="fileList">
+				#{file.P_ATCHMNFL_NM, jdbcType=VARCHAR}
+				</foreach>
+				)
+		AND	ATCHMNFL_GROUP_NO = #{atchFileGroupNo}
+	</update>
+	
+	<update id="updateFileDocNm">
+		UPDATE	T_MM_FILE_MST
+		SET		FILE_DOC_NM = #{P_FILE_DOC_NM, jdbcType=VARCHAR}
+		WHERE 	FILE_GRP_NO = #{P_FILE_GRP_NO}
+		AND		FILE_SN = #{P_FILE_SN}
+	</update>
+	
+	<insert id="insertAtchFileRegistExist">		
+		INSERT 
+		INTO		T_MM_FILE_MST
+		(
+			FILE_SN
+			, FILE_GRP_NO
+			, REG_YM
+			, ATCH_FSCD
+			, TSK_SECD 
+			, SV_FILE_NM
+			, SYS_FILE_NM
+			, FILE_SZ
+			, FILE_LCTN
+			, FILE_DOC_NM
+			, FILE_DESC
+			, OPEN_YN
+			, TSK_VKEY1
+			, TSK_VKEY2
+			, TSK_VKEY3
+			, RMK
+			<include refid="ComRegr.RegrColumnClause"/>
+		)
+		SELECT	QMBM_ATFI_ATCHMNFL_SN.NEXTVAL
+					, T1.FILE_GRP_NO
+					, T1.REG_YM
+					, T1.ATCH_FSCD
+					, T1.TSK_SECD
+					, T1.SV_FILE_NM
+					, T1.SYS_FILE_NM
+					, T1.FILE_SZ
+					, T1.FILE_LCTN
+					, T1.FILE_DOC_NM
+					, T1.FILE_DESC
+					, T1.OPEN_YN
+					, T1.TSK_VKEY1
+					, T1.TSK_VKEY2
+					, T1.TSK_VKEY3
+					, T1.RMK 
+					, T1.REGR_ID
+					, T1.REGR_NM
+					, T1.REG_DT
+					, T1.MODR_ID
+					, T1.MODR_NM
+					, T1.MOD_DT
+					, T1.CONN_IP
+					, T1.DEL_AT
+		FROM		(
+		 
+			SELECT	#{atchFileGroupNoZ} AS FILE_GRP_NO
+						, TO_CHAR(SYSDATE, 'yyyyMM') AS REG_YM
+						, ATCH_FSCD
+						, TSK_SECD
+						, SV_FILE_NM 
+						, SYS_FILE_NM
+						, FILE_SZ
+						, FILE_LCTN
+						, FILE_DOC_NM
+						, FILE_DESC
+						, OPEN_YN
+						, TSK_VKEY1
+						, TSK_VKEY2 
+						, TSK_VKEY3
+						, RMK
+						<include refid="ComRegr.RegrValueClause"/>
+			FROM 	T_MM_FILE_MST
+			WHERE	1=1
+			AND		FILE_GRP_NO = #{atchmnflGroupNo, jdbcType=VARCHAR}
+			AND     DEL_AT != 'Y'
+			<if test='fileList != null'>
+			AND		FILE_SN NOT IN	
+			<foreach separator="," item="file" collection="fileList" open="(" close=")">
+						#{file.CT_FILE_SN, jdbcType=VARCHAR, javaType=String}
+			</foreach>
+			</if>
+		) T1
+	</insert>		
+
+	
+	<select id="selectFileListInqireByFileGrpNo" resultType="dataEntity">
+		SELECT * FROM (
+			SELECT	FILE_GRP_NO
+						, FILE_SN
+						, ATCH_FSCD
+						, TSK_SECD
+						, SV_FILE_NM
+						, SYS_FILE_NM
+						, FILE_SZ
+						, FILE_LCTN
+						, FILE_DOC_NM
+						, FILE_DESC
+						, OPEN_YN
+						, TSK_VKEY1
+						, TSK_VKEY2
+						, NVL(TSK_VKEY3,'Y') AS TSK_VKEY3
+						, RMK
+			FROM		T_MM_FILE_MST T1
+			WHERE	T1.FILE_GRP_NO = #{P_FILE_GRP_NO, jdbcType=VARCHAR}	
+			AND		T1.DEL_AT IN ('N')
+			<if test='P_TSK_VKEY1 != null and P_TSK_VKEY1 != "" '>
+				AND TSK_VKEY1 = #{P_TSK_VKEY1, jdbcType=VARCHAR}	
+			</if>
+			<if test='P_FILE_DOC_SECD != null and P_FILE_DOC_SECD != "" '>
+				AND FILE_DOC_SECD = #{P_FILE_DOC_SECD, jdbcType=VARCHAR}	
+			</if>
+		)
+		WHERE 1 = 1
+		<if test='P_USR_SECD == "opro" '>
+			AND TSK_VKEY3 != 'N'
+		</if>
+	</select>
+	
+	
+	<select id="selectFileEtcListByFileGrpNo" resultType="dataEntity">
+		SELECT	FILE_GRP_NO
+					, FILE_SN
+					, ATCH_FSCD
+					, TSK_SECD
+					, SV_FILE_NM
+					, SYS_FILE_NM
+					, FILE_SZ
+					, FILE_LCTN
+					, FILE_DOC_NM
+					, FILE_DESC
+					, OPEN_YN
+					, TSK_VKEY1
+					, TSK_VKEY2
+					, NVL(TSK_VKEY3,'N') AS TSK_VKEY3
+					, RMK
+		FROM		T_MM_FILE_MST T1
+		WHERE	1=1
+		<if test='P_FILE_GRP_NO_ETC != null and P_FILE_GRP_NO_ETC != "" '>
+			AND 	T1.FILE_GRP_NO = #{P_FILE_GRP_NO_ETC, jdbcType=VARCHAR}
+		</if>
+		<if test='P_FILE_GRP_NO_ETC == "" '>
+			AND 	T1.FILE_GRP_NO = NULL
+		</if>
+		<if test='P_ORG_FILE_GRP_NO_ETC != null and P_ORG_FILE_GRP_NO_ETC != "" '> 
+			AND 	T1.FILE_GRP_NO = #{P_ORG_FILE_GRP_NO_ETC, jdbcType=VARCHAR}
+		</if>	
+		<if test='P_ORG_FILE_GRP_NO_ETC == "" '> 
+			AND 	T1.FILE_GRP_NO = NULL
+		</if>		
+		AND		T1.DEL_AT IN ('N')
+		<if test='P_TSK_VKEY1 != null and P_TSK_VKEY1 != "" '>
+			AND TSK_VKEY1 = #{P_TSK_VKEY1, jdbcType=VARCHAR}	
+		</if>
+	</select> 
+	
+	<select id="selectFileListInqireByFileGrpNoAll_back" resultType="dataEntity">
+		SELECT	T1.FILE_GRP_NO
+					, FILE_SN
+					, ATCH_FSCD
+					, TSK_SECD
+					, SV_FILE_NM
+					, SYS_FILE_NM
+					, FILE_SZ
+					, FILE_LCTN
+					, FILE_DOC_NM
+					, FILE_DESC
+					, OPEN_YN
+					, TSK_VKEY1
+					, TSK_VKEY2
+					, NVL(TSK_VKEY3,'N') AS TSK_VKEY3
+					, T1.RMK
+					, F.MOD_DT
+		FROM		T_MM_FILE_MST T1, T_CT_VEND_FILE F
+		WHERE		F.CONT_NO= #{P_CONT_NO , jdbcType=VARCHAR}
+		AND			F.CHNG_NGR= #{P_CHNG_NGR , jdbcType=INTEGER}
+		AND			F.FILE_GRP_NO = T1.FILE_GRP_NO
+		AND		    T1.DEL_AT IN ('N')
+		<if test='P_TSK_VKEY1 != null and P_TSK_VKEY1 != "" '>
+			AND TSK_VKEY1 = #{P_TSK_VKEY1, jdbcType=VARCHAR}	
+		</if>
+		ORDER BY T1.FILE_SN
+	</select>
+	
+	<select id="selectFileListInqireByFileGrpNoAll" resultType="dataEntity">
+		SELECT	T1.FILE_GRP_NO
+					, FILE_SN
+					, ATCH_FSCD
+					, TSK_SECD
+					, SV_FILE_NM
+					, SYS_FILE_NM
+					, FILE_SZ
+					, FILE_LCTN
+					, FILE_DOC_NM
+					, FILE_DESC
+					, OPEN_YN
+					, TSK_VKEY1
+					, TSK_VKEY2
+					, NVL(TSK_VKEY3,'N') AS TSK_VKEY3
+					, T1.RMK
+					, F.MOD_DT
+		FROM		T_MM_FILE_MST T1, V_CT_WAIT_FILE F
+		WHERE		F.CONT_WAIT_NO= #{P_CONT_WAIT_NO , jdbcType=VARCHAR}
+		AND			F.WAIT_CHNG_NGR= #{P_WAIT_CHNG_NGR , jdbcType=INTEGER}
+		AND			F.FILE_GRP_NO = T1.FILE_GRP_NO
+		AND		    T1.DEL_AT IN ('N')
+		AND			F.CONT_FSCD = 'C'
+		
+		<if test='P_TSK_VKEY1 != null and P_TSK_VKEY1 != "" '>
+			AND TSK_VKEY1 = #{P_TSK_VKEY1, jdbcType=VARCHAR}	
+		</if>
+		ORDER BY T1.FILE_SN
+	</select>
+		<update id="updateFileNm">
+		UPDATE	T_MM_FILE_MST
+		SET		SV_FILE_NM = #{P_SV_FILE_NM, jdbcType=VARCHAR}
+		WHERE 	FILE_GRP_NO = #{P_FILE_GRP_NO}
+		AND		FILE_SN = #{P_FILE_SN}
+	</update>
+	<select id="selectAtchFileInfoInqireByAtchFileGroupNo" resultType="dataEntity">
+		SELECT	FILE_GRP_NO
+					, FILE_SN
+					, ATCH_FSCD
+					, TSK_SECD
+					, SV_FILE_NM
+					, SYS_FILE_NM
+					, FILE_SZ
+					, FILE_LCTN
+					, FILE_DOC_NM
+					, FILE_DESC
+					, OPEN_YN
+					, TSK_VKEY1
+					, TSK_VKEY2
+					, TSK_VKEY3
+					, RMK
+					, (SELECT FILE_NM FROM T_CT_FORM_FILE WHERE FILE_GRP_NO = #{P_FILE_GRP_NO, jdbcType=VARCHAR}) AS FILE_COPY_NM
+		FROM		T_MM_FILE_MST T1
+		WHERE	T1.FILE_GRP_NO = #{P_FILE_GRP_NO, jdbcType=VARCHAR}	
+		AND		T1.DEL_AT IN ('N')
+		<if test='P_TSK_VKEY1 != null and P_TSK_VKEY1 != "" '>
+			AND TSK_VKEY1 = #{P_TSK_VKEY1, jdbcType=VARCHAR}	
+		</if>
+		<!-- <if test='P_TSK_VKEY1 == null or P_TSK_VKEY1 == "" '>
+				AND TSK_VKEY1 = null
+		</if> -->
+	</select> 	
+	
+	
+	<!-- <insert id="insertAtchFileCopy">	
+		<selectKey keyProperty="P_FILE_SN" resultType="int" order="BEFORE">
+			SELECT QMBM_ATFI_ATCHMNFL_SN.NEXTVAL 
+			FROM DUAL
+		</selectKey>	
+		INSERT INTO T_MM_FILE_MST(
+			 FILE_SN
+			, FILE_GRP_NO
+			, ATCH_FSCD
+			, TSK_SECD
+			, SV_FILE_NM
+			, SYS_FILE_NM
+			, FILE_SZ
+			, FILE_LCTN
+			, FILE_DOC_NM
+			, FILE_DESC
+			, OPEN_YN
+			, TSK_VKEY1
+			, TSK_VKEY2
+			, TSK_VKEY3
+			, FILE_DOC_SECD
+			, RMK
+			, REGR_ID
+			, REGR_NM
+			, REG_DT
+			, MODR_ID
+			, MODR_NM
+			, MOD_DT
+			, CONN_IP
+			, DEL_AT
+		)VALUES(
+		      #{P_FILE_SN, jdbcType=VARCHAR}
+		    , #{P_FILE_GRP_NO, jdbcType=VARCHAR}
+			, #{P_ATCH_FSCD, jdbcType=VARCHAR}
+			, #{P_TSK_SECD, jdbcType=VARCHAR}
+			, #{P_SV_FILE_NM, jdbcType=VARCHAR}
+			, #{P_SYS_FILE_NM, jdbcType=VARCHAR}
+			, #{P_FILE_SZ, jdbcType=VARCHAR}
+			, #{P_FILE_LCTN, jdbcType=VARCHAR}
+			, #{P_FILE_DOC_NM, jdbcType=VARCHAR}
+			, #{P_FILE_DESC, jdbcType=VARCHAR}
+			, #{P_OPEN_YN, jdbcType=VARCHAR}
+			, #{P_TSK_VKEY1, jdbcType=VARCHAR}
+			, #{P_TSK_VKEY2, jdbcType=VARCHAR}
+			, #{P_TSK_VKEY3, jdbcType=VARCHAR}
+			, #{P_FILE_DOC_SECD, jdbcType=VARCHAR}
+			, #{P_RMK, jdbcType=VARCHAR}
+			, #{USR_ID, jdbcType=VARCHAR}
+			, #{USR_NM, jdbcType=VARCHAR} 
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+			, #{USR_ID, jdbcType=VARCHAR}
+			, #{USR_NM, jdbcType=VARCHAR} 
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+			, #{CONN_IP, jdbcType=VARCHAR}
+			, 'N'
+		)
+	</insert> -->
+	
+	<!--  첨부파일상세조회-->
+	<select id="selectAtchFileDetail" resultType="dataEntity">
+		SELECT <include refid="selectAtchFile_Select_Clause"/> 
+		FROM T_MM_FILE_MST T1
+		WHERE 1=1 
+		<if test='P_FILE_SN != null and P_FILE_SN != "" '>
+		AND T1.FILE_SN = #{P_FILE_SN, jdbcType=VARCHAR}
+		</if> 
+		AND NVL(T1.DEL_AT,'N') != 'Y'
+		
+	</select>
+	
+	<select id="selectAtchFileCDetail" resultType="dataEntity">
+		SELECT M.FILE_GRP_NO
+				,FILE_SN
+				,ATCH_FSCD
+				,TSK_SECD
+				,SV_FILE_NM
+				,SYS_FILE_NM
+				,FILE_SZ
+				,FILE_LCTN
+				,FILE_DOC_NM
+				,FILE_DESC
+				,OPEN_YN
+				,TSK_VKEY1
+				,TSK_VKEY2
+				, NVL(TSK_VKEY3, 'Y') AS TSK_VKEY3
+				,M.RMK
+				,M.REGR_ID
+				,M.REGR_NM
+				,M.REG_DT
+				,M.MODR_ID
+				,M.MODR_NM
+				,M.MOD_DT
+				,M.CONN_IP
+				,M.DEL_AT
+		FROM T_MM_FILE_MST M, V_CT_WAIT_FILE F
+		WHERE 1=1
+		AND  F.CONT_WAIT_NO =  #{P_CONT_WAIT_NO, jdbcType=VARCHAR}
+		AND  F.WAIT_CHNG_NGR = #{P_WAIT_CHNG_NGR, jdbcType=VARCHAR}
+		AND  F.FILE_GRP_NO = M.FILE_GRP_NO
+		AND  NVL(M.DEL_AT,'N') != 'Y'
+		AND  NVL(F.DEL_AT,'N') != 'Y'
+		<if test='fileList == null or fileList == "" '>
+			<if test='P_FILE_SN_DEL != null and P_FILE_SN_DEL != "" '>
+			AND	FILE_SN NOT IN (  
+				#{P_FILE_SN_DEL, jdbcType=VARCHAR}
+			)
+			</if>
+		</if>  
+		<if test='fileList != null and fileList != "" '>
+			AND	FILE_SN NOT IN (  
+			<foreach separator="," item="file" collection="fileList">
+				#{file.P_FILE_SN_DEL, jdbcType=VARCHAR}
+			</foreach>
+			)
+		</if> 
+		<if test='P_FILE_DOC_SECD != null and P_FILE_DOC_SECD != "" '>
+			AND NVL(FILE_DOC_SECD,'C') = #{P_FILE_DOC_SECD, jdbcType=VARCHAR}	
+		</if>
+		<if test='P_CONT_FSCD != null and P_CONT_FSCD != "" '>
+			AND NVL(F.CONT_FSCD,'C') = #{P_CONT_FSCD, jdbcType=VARCHAR}	
+		</if>
+	</select>
+	
+	<select id="selectAtchFileCDetail2" resultType="dataEntity">
+		SELECT M.FILE_GRP_NO
+				,FILE_SN
+				,ATCH_FSCD
+				,TSK_SECD
+				,SV_FILE_NM
+				,SYS_FILE_NM
+				,FILE_SZ
+				,FILE_LCTN
+				,FILE_DOC_NM
+				,FILE_DESC
+				,OPEN_YN
+				,TSK_VKEY1
+				,TSK_VKEY2
+				,TSK_VKEY3
+				,M.RMK
+				,M.REGR_ID
+				,M.REGR_NM
+				,M.REG_DT
+				,M.MODR_ID
+				,M.MODR_NM
+				,M.MOD_DT
+				,M.CONN_IP
+				,M.DEL_AT
+		FROM T_MM_FILE_MST M, T_CT_FILE F
+		WHERE 1=1
+		AND  F.CONT_NO =  #{P_CONT_NO, jdbcType=VARCHAR}
+		AND  F.CHNG_NGR = #{P_CHNG_NGR, jdbcType=VARCHAR}
+		AND  F.FILE_GRP_NO = M.FILE_GRP_NO
+		AND  NVL(M.DEL_AT,'N') != 'Y'
+		AND  NVL(F.DEL_AT,'N') != 'Y'
+		<if test='fileList == null or fileList == "" '>
+			<if test='P_FILE_SN_DEL != null and P_FILE_SN_DEL != "" '>
+			AND	FILE_SN NOT IN (  
+				#{P_FILE_SN_DEL, jdbcType=VARCHAR}
+			)
+			</if>
+		</if>  
+		<if test='fileList != null and fileList != "" '>
+			AND	FILE_SN NOT IN (  
+			<foreach separator="," item="file" collection="fileList">
+				#{file.P_FILE_SN_DEL, jdbcType=VARCHAR}
+			</foreach>
+			)
+		</if> 
+		<if test='P_FILE_DOC_SECD != null and P_FILE_DOC_SECD != "" '>
+			AND NVL(FILE_DOC_SECD,'C') = #{P_FILE_DOC_SECD, jdbcType=VARCHAR}	
+		</if>
+		<if test='P_CONT_FSCD != null and P_CONT_FSCD != "" '>
+			AND NVL(F.CONT_FSCD,'C') = #{P_CONT_FSCD, jdbcType=VARCHAR}	
+		</if>
+	</select>
+	
+	<select id="selectCopyAtchFile" resultType="dataEntity">
+		SELECT	FILE_GRP_NO
+					, FILE_SN
+					, ATCH_FSCD
+					, TSK_SECD
+					, SV_FILE_NM
+					, SYS_FILE_NM
+					, FILE_SZ
+					, FILE_LCTN
+					, FILE_DOC_NM
+					, FILE_DESC
+					, OPEN_YN
+					, TSK_VKEY1
+					, TSK_VKEY2
+					, TSK_VKEY3
+					, RMK
+					, FILE_DOC_SECD
+		FROM		T_MM_FILE_MST T1
+		WHERE	T1.FILE_GRP_NO = #{P_FILE_GRP_NO, jdbcType=VARCHAR}	
+		AND		T1.DEL_AT IN ('N') 
+		<if test='fileDocSecdList !="" and fileDocSecdList != null'>
+			AND	FILE_DOC_SECD NOT IN (  
+			<foreach separator="," item="file" collection="fileDocSecdList">
+				#{file.P_FILE_DOC_SECD, jdbcType=VARCHAR}
+			</foreach>
+			) 
+		</if> 
+		<if test='delList != "" and delList != null '>
+			AND	FILE_SN NOT IN (  
+			<foreach separator="," item="file" collection="delList">
+				#{file.P_FILE_SN_DEL, jdbcType=VARCHAR}
+			</foreach>
+			)
+		</if> 
+		
+	</select> 
+	
+	
+	<select id="selectAtchFileList" resultType="dataEntity">
+		SELECT	FILE_GRP_NO
+					, FILE_SN
+					, ATCH_FSCD
+					, TSK_SECD
+					, SV_FILE_NM
+					, SYS_FILE_NM
+					, FILE_SZ
+					, FILE_LCTN
+					, FILE_DOC_NM
+					, FILE_DESC
+					, OPEN_YN
+					, TSK_VKEY1
+					, TSK_VKEY2
+					, TSK_VKEY3
+					, RMK
+					, FILE_DOC_SECD
+		FROM		T_MM_FILE_MST T1
+		WHERE	T1.FILE_GRP_NO = #{P_FORM_FILE_GRP_NO, jdbcType=VARCHAR}	
+		AND		T1.DEL_AT IN ('N') 
+		
+				<if test="fileSnList != null and fileSnList != '' ">
+			AND	FILE_SN NOT IN (  
+			<foreach separator="," item="file" collection="fileSnList">
+				#{file.P_FILE_SN, jdbcType=VARCHAR}
+			</foreach>
+			)
+		</if> 
+		
+		
+	</select> 	
+	
+	
+	<select id="selectAtchFileList2" resultType="dataEntity">
+		SELECT	FILE_GRP_NO
+					, FILE_SN
+					, ATCH_FSCD
+					, TSK_SECD
+					, SV_FILE_NM
+					, SYS_FILE_NM
+					, FILE_SZ
+					, FILE_LCTN
+					, FILE_DOC_NM
+					, FILE_DESC
+					, OPEN_YN
+					, TSK_VKEY1
+					, TSK_VKEY2
+					, TSK_VKEY3
+					, RMK
+					, FILE_DOC_SECD
+		FROM		T_MM_FILE_MST T1
+		WHERE	T1.FILE_GRP_NO = (SELECT FILE_GRP_NO FROM T_CT_FILE WHERE CONT_NO=#{P_CONT_NO, jdbcType=VARCHAR} AND CHNG_NGR=#{P_PRE_CHNG_NGR, jdbcType=VARCHAR} AND CONT_FSCD='B')	
+		AND		T1.DEL_AT IN ('N') 
+		AND   	FILE_DOC_SECD = 'B'
+				<if test="fileSnList != null and fileSnList != '' ">
+			AND	FILE_SN NOT IN (  
+			<foreach separator="," item="file" collection="fileSnList">
+				#{file.P_FILE_SN, jdbcType=VARCHAR}
+			</foreach>
+			)
+		</if> 
+		
+		
+	</select> 	
+</mapper>

@@ -1,0 +1,36 @@
+
+@media (min-width: 1260px) {
+    .container {
+        width: 970px;
+    }
+}
+@media (min-width: 1200px) {
+    .container {
+        width: 970px;
+    }
+}
+.control-label {font-weight:bold;}
+.panel-heading {font-weight:bold;font-size:16px;}
+.panel-body .panel-heading {font-size:14px;}
+.list-group > .list-group-item:first-child {font-size:16px;font-weight:bold;}
+.form-horizontal .checkbox, .form-horizontal .checkbox-inline, .form-horizontal .radio, .form-horizontal .radio-inline {padding-top:5px;}
+.panel-info {
+    border-color: #36d7b7;
+}
+.panel-info>.panel-heading {
+    color: #fff;
+    background-color: #36d7b7;
+    border-color: #36d7b7;
+}
+.panel-success {
+    border-color: #4db3a2;
+}
+.panel-success>.panel-heading {
+    color: #fff;
+    background-color: #6b6b6b;
+    border-color: #4db3a2;
+}
+
+.bg-title-custom {
+    background-color: #6b6b6b
+}

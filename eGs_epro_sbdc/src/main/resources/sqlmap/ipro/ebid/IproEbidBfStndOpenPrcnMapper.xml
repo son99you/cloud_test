@@ -1,0 +1,609 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * 입찰관리 > 사전규격공개진행현황 Mapper
+ *
+ * <pre>
+ * sqlmap.oda.iep.elbi 
+ *    |_ IproEbidBfStndOpenMapper.xml
+ * 
+ * </pre>
+ * @date : 2015. 01. 12. 오후 1:25:24
+ * @version : 1.0
+ * @author : 은우소프트 손연우
+-->
+<mapper namespace="com.eunwoosoft.ipro.ebid.dao.IproEbidBfStndOpenPrcnDao">	
+	<!--  
+     * <pre>
+     * 1. 개요 : 사전규격공개진행현황 목록조회_페이징 
+     * 2. 처리내용 :
+     *  	
+     * </pre>
+     * @Query ID : selectBfStndOpenPrcnListWithPgng
+     -->
+	<select id="selectBfStndOpenPrcnListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="bfStndOpenList"/>
+			<include refid="bfStndOpenWhere"/>
+			ORDER BY BFAN_NO DESC
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<select id="selectBfStndOpenExcelList" resultType="dataEntity">
+		SELECT  ROWNUM AS RNUM, R1.* FROM (
+			SELECT * FROM (
+				<include refid="bfStndOpenList"/>
+				<include refid="bfStndOpenWhere"/>
+				ORDER BY BFAN_NO DESC
+			) T1
+			WHERE 1 = 1
+		) R1
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 사전규격공개진행현황 건수 조회 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectBfStndOpenPrcnListTotCnt
+     -->
+	<select id="selectBfStndOpenPrcnListTotCnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="bfStndOpenList"/>
+			<include refid="bfStndOpenWhere"/>
+		) T1
+		WHERE 1 = 1		
+	</select>
+
+	<sql id="bfStndOpenList">
+    SELECT * FROM (
+			SELECT 	BF.BFAN_NO
+							, BF.ARA_DEPT_CD
+							, F_CDVAL_INQIRE('ARA_DEPT_CD', BF.ARA_DEPT_CD) AS ARA_DEPT_CD_NM
+							, BF.CONT_SECD
+							, F_CDVAL_INQIRE('CONT_SECD', BF.CONT_SECD) AS CONT_SECD_NM
+							, BF.CONT_DECD
+							, F_CDVAL_INQIRE('CONT_DECD', BF.CONT_DECD) AS CONT_DECD_NM
+							, BF.BID_MTCD
+							, F_CDVAL_INQIRE('BID_MTCD', BF.BID_MTCD) AS BID_MTCD_NM
+							, BF.CONT_MTCD
+							, F_CDVAL_INQIRE('CONT_MTCD', BF.CONT_MTCD) AS CONT_MTCD_NM
+							, BF.SBID_MTCD
+							, F_CDVAL_INQIRE('SBID_MTCD', BF.SBID_MTCD) AS SBID_MTCD_NM
+							, BF.BFAN_PSCD
+							, F_CDVAL_INQIRE('BFAN_PSCD', BF.BFAN_PSCD) AS BFAN_PSCD_NM
+							, BF.BFAN_STDE
+							, BF.BFAN_ENDE
+							, BF.OPNN_CLOS_DT
+							, BF.PRCH_NO
+							, BF.DOC_NO
+							, BF.BSNS_BDG_AMT
+							, BF.STAX_INC_YN
+							, BF.CHRGR_ID
+							, BF.CHRGR_NM
+							, BF.CHRGR_TEL_NO
+							, BF.CHRGR_EMAL
+							, BF.G2B_NTFY_YN
+							, BF.DLGD_LMT
+							, BF.SW_BSNS_OBJ_YN
+							, BF.PCRQ_NO
+							, BF.BFAN_NM
+							, BF.CONT_TE
+							, BF.RQR_DE
+							, BF.RQR_DEPT_NO
+							, BF.RQR_DEPT_NM
+							, BF.RQR_CHRGR_ID
+							, BF.RQR_CHRGR_NM
+							, BF.PRCH_DEPT_NO
+							, BF.PRCH_DEPT_NM
+							, BF.PRCH_CHRGR_ID
+							, BF.PRCH_CHRGR_NM
+							, BF.ACPT_DE
+							, BF.ESTT_PRCE
+							, BF.BF_STND_OPEN_YN
+							, BF.BF_STND_OPEN_TE
+							, BF.PRCH_CHRG_SECD
+							, BF.MNGR_CHRGR_ID
+							, BF.MNGR_CHRGR_NM
+							, BF.CHCK_CHRGR_ID
+							, BF.CHCK_CHRGR_NM
+							, BF.RTRN_RSN
+							, BF.ESTT_FRCUR_AMT
+							, BF.CURR_SECD
+							, BF.EXRT
+							, BF.DLGD_PLCD
+							, BF.EMRG_YN
+							, BF.DLGD_PLC_NM
+							, BF.ASSO_SPDM_CD
+							, BF.PVCT_RSN_NO
+							, BF.PRVT_CONT_RSN
+							, BF.BFAN_WAIT_NO
+							, BF.DEL_AT
+			FROM 	T_BI_BFAN_MST BF
+			WHERE   1 = 1
+			AND BFAN_PSCD IN (
+	            					SELECT CD_DTL_ID FROM T_MM_CODE_MST
+									WHERE 1=1
+									AND CD_ID = 'BFAN_PSCD'
+									AND ETC_VAL3 = 'Y'
+								)
+        ) 
+	</sql>
+	
+	<sql id="bfStndOpenWhere">
+		<where>
+				AND DEL_AT = 'N'
+				<if test='P_PCRQ_NO_S != null and P_PCRQ_NO_S != "" '>
+					AND PCRQ_NO LIKE '%'||#{P_PCRQ_NO_S}||'%'
+				</if>
+				<if test='P_BFAN_NO_S != null and P_BFAN_NO_S != "" '>
+					AND BFAN_NO LIKE '%'||#{P_BFAN_NO_S}||'%'
+				</if>
+				<if test='P_ARA_DEPT_CD_S != null and P_ARA_DEPT_CD_S != "" '>
+					AND ARA_DEPT_CD = #{P_ARA_DEPT_CD_S}
+				</if>
+				<if test='P_CONT_SECD_S != null and P_CONT_SECD_S != "" '>
+					AND CONT_SECD = #{P_CONT_SECD_S}
+				</if>
+				<if test='P_BFAN_NM_S != null and P_BFAN_NM_S != "" '>
+					AND BFAN_NM LIKE '%'||#{P_BFAN_NM_S}||'%'
+				</if>
+				<if test='P_RQR_DEPT_NO_S != null and P_RQR_DEPT_NO_S != "" '>
+					AND RQR_DEPT_NO = #{P_RQR_DEPT_NO_S}
+				</if>
+				<if test='P_RQR_BEGIN_DT_S != null and P_RQR_BEGIN_DT_S != "" '>
+					AND RQR_DE >= #{P_RQR_BEGIN_DT_S}
+				</if>
+				<if test='P_RQR_END_DT_S != null and P_RQR_END_DT_S != "" '>
+					AND RQR_DE &lt;= #{P_RQR_END_DT_S}
+				</if>
+				<if test='P_BFAN_PSCD_S != null and P_BFAN_PSCD_S != "" '>
+					AND BFAN_PSCD = #{P_BFAN_PSCD_S}
+				</if>
+		</where>
+	</sql>
+	
+	<select id="selectBfStndOpenPrcnDetail" resultType="dataEntity">
+       SELECT  *  FROM (
+						SELECT 	BF.BFAN_NO
+								, BF.ARA_DEPT_CD
+								, F_CDVAL_INQIRE('ARA_DEPT_CD', BF.ARA_DEPT_CD) AS ARA_DEPT_CD_NM
+								, BF.CONT_SECD
+								, F_CDVAL_INQIRE('CONT_SECD', BF.CONT_SECD) AS CONT_SECD_NM
+								, BF.CONT_DECD
+								, F_CDVAL_INQIRE('CONT_DECD', BF.CONT_DECD) AS CONT_DECD_NM
+								, BF.BID_MTCD
+								, F_CDVAL_INQIRE('BID_MTCD', BF.BID_MTCD) AS BID_MTCD_NM
+								, BF.CONT_MTCD
+								, F_CDVAL_INQIRE('CONT_MTCD', BF.CONT_MTCD) AS CONT_MTCD_NM
+								, BF.SBID_MTCD
+								, F_CDVAL_INQIRE('SBID_MTCD', BF.SBID_MTCD) AS SBID_MTCD_NM
+								, BF.BFAN_PSCD
+								, F_CDVAL_INQIRE('BFAN_PSCD', BF.BFAN_PSCD) AS BFAN_PSCD_NM
+								, BF.BFAN_STDE
+								, BF.BFAN_ENDE
+								, BF.OPNN_CLOS_DT
+								, BF.PRCH_NO
+								, BF.DOC_NO
+								, BF.BSNS_BDG_AMT
+								, BF.STAX_INC_YN
+								, BF.CHRGR_ID
+								, BF.CHRGR_NM
+								, BF.CHRGR_TEL_NO
+								, BF.CHRGR_EMAL
+								, BF.G2B_NTFY_YN
+								, BF.DLGD_LMT
+								, BF.PCRQ_NO
+								, BF.BFAN_NM
+								, BF.CONT_TE
+								, BF.RQR_DE
+								, BF.RQR_DEPT_NO
+								, BF.RQR_DEPT_NM
+								, BF.RQR_CHRGR_ID
+								, BF.RQR_CHRGR_NM
+								, BF.PRCH_DEPT_NO
+								, BF.PRCH_DEPT_NM
+								, BF.PRCH_CHRGR_ID
+								, BF.PRCH_CHRGR_NM
+								, BF.ACPT_DE
+								, BF.ESTT_PRCE
+								, BF.BF_STND_OPEN_YN
+								, BF.BF_STND_OPEN_TE
+								, BF.PRCH_CHRG_SECD
+								, BF.MNGR_CHRGR_ID
+								, BF.MNGR_CHRGR_NM
+								, BF.CHCK_CHRGR_ID
+								, BF.CHCK_CHRGR_NM
+								, BF.RTRN_RSN
+								, BF.ESTT_FRCUR_AMT
+								, BF.CURR_SECD
+								, BF.EXRT
+								, BF.DLGD_PLCD
+								, BF.EMRG_YN
+								, BF.DLGD_PLC_NM
+								, BF.ASSO_SPDM_CD
+								, F_CDVAL_INQIRE('ASSO_SPDM_CD', BF.ASSO_SPDM_CD) AS ASSO_SPDM_CD_NM
+								, BF.PVCT_RSN_NO
+								, BF.PRVT_CONT_RSN
+								, BF.BFAN_WAIT_NO
+								, BF.DEL_AT
+								, BF.RMK
+								, ETC_ITEM
+								, BF.SW_BSNS_OBJ_YN
+								, BF.SBCT_YN
+								, BF.SMVE_CMPTI_YN
+								, BF.PRIO_PRCH_YN
+								, BF.SCLSH_SVC_YN
+								, BF.WMAN_SCTY_CORP_YN
+								, BF.ACPS_LMT_YN
+								, BF.INF_BSNS_YN
+								, (SELECT FILE_GRP_NO FROM T_BI_BFAN_FILE WHERE 1 = 1 AND BFAN_FSCD = 'ETC' AND BFAN_NO =  #{P_BFAN_NO, jdbcType=VARCHAR}) AS FILE_GRP_NO_ETC
+								, (SELECT DISTINCT FILE_GRP_NO FROM T_BI_BFAN_FILE WHERE 1 = 1 AND BFAN_FSCD != 'ETC' AND BFAN_NO =  #{P_BFAN_NO, jdbcType=VARCHAR}) AS FILE_GRP_NO
+								, REGR_ID  
+								, REGR_NM
+								, F_CDVAL_INQIRE('APPR_STCD', NVL((SELECT CNTC.APPR_STCD FROM T_BI_BFAN_APPR_CNTC  CNTC WHERE CNTC.BFAN_NO = BF.BFAN_NO AND CNTC.APPR_CNTC_KEY = 'B'),'0000')) AS APPR_STCD_NM
+				FROM 	T_BI_BFAN_MST BF
+				WHERE   1 = 1
+		)
+		WHERE 1 = 1
+		AND BFAN_NO = #{P_BFAN_NO, jdbcType=VARCHAR}
+	</select>
+	
+	<select  id="selectBfStndOpenItemList"  resultType="dataEntity">
+		SELECT ROWNUM AS RNUM, A.* FROM
+			(
+				SELECT    BFAN_NO
+								, ITEM_SN
+								, ITEM_NO
+								, ITEM_NM
+								, ITEM_UNCD
+								, F_CDVAL_INQIRE('ITEM_UNCD', ITEM_UNCD) AS ITEM_UNCD_NM
+								, ITEM_QTY
+								, ITEM_STND
+								, UNIT
+								, ESTT_UPRC
+								, ESTT_PRCE
+								, ITEM_STAX
+								, ESTT_AMT
+								, BDG_YR
+								, BDG_MM
+								, BSNS_CD
+								, ACNT_CD
+								, ACNT_ITEM_CD
+								, DEPT_NO
+								, ACNT_NM
+								, ASTS_TYCD
+								, F_CDVAL_INQIRE('ASTS_TYCD', ASTS_TYCD) AS ASTS_TYCD_NM
+								, STAX_SECD
+								, F_CDVAL_INQIRE('STAX_SECD', STAX_SECD) AS STAX_SECD_NM
+								, ITEM_DTL
+								, RMK
+								, REGR_ID
+								, REGR_NM
+								, REG_DT
+								, MODR_ID
+								, MODR_NM
+								, MOD_DT
+								, CONN_IP
+								, DEL_AT
+				FROM  T_BI_BFAN_ITEM
+				WHERE 1 = 1
+				AND DEL_AT = 'N'
+				AND BFAN_NO = #{P_BFAN_NO, jdbcType=VARCHAR}
+				ORDER BY ITEM_SN ASC
+			)A
+	</select>
+	
+	<select id="selectBfStndOpenFile" resultType="dataEntity">
+		SELECT BF.BFAN_NO
+					, BF.BFAN_FSCD
+					, F_CDVAL_INQIRE('PCRQ_FSCD', BF.BFAN_FSCD) AS BFAN_FSCD_NM
+					, BF.FILE_GRP_NO
+					, BF.DEL_AT
+					, MST.SYS_FILE_NM
+					, MST.FILE_SN
+		FROM T_BI_BFAN_FILE BF, T_MM_FILE_MST MST
+		WHERE  1 = 1
+		AND NVL(BF.DEL_AT,'N') = 'N'
+		AND NVL(MST.DEL_AT, 'N') = 'N'
+		AND BF.BFAN_NO = #{P_BFAN_NO, jdbcType=VARCHAR}
+		AND BF.BFAN_FSCD != 'ETC'
+		AND BF.BFAN_FSCD = MST.FILE_DOC_SECD
+		AND BF.FILE_GRP_NO = MST.FILE_GRP_NO
+		ORDER BY BFAN_FSCD ASC
+	</select>
+	
+	<update id="updateBfanStat">
+		UPDATE T_BI_BFAN_MST
+		SET
+			BFAN_PSCD = #{P_BFAN_PSCD, jdbcType = VARCHAR}
+			, MODR_ID	 = #{P_REGR_ID, jdbcType = VARCHAR}
+			, MODR_NM	 = #{P_REGR_NM, jdbcType = VARCHAR}
+			, MOD_DT	 = #{P_REG_DT, jdbcType = VARCHAR}
+			<if test='P_BFAN_PSCD == "B004" '>
+				, CHRGR_ID	 = #{P_REGR_ID, jdbcType = VARCHAR}
+				, CHRGR_NM	= #{P_REGR_NM, jdbcType = VARCHAR}
+				, ACPT_DE	 = TO_CHAR(TO_DATE(#{P_REG_DT, jdbcType = VARCHAR} , 'yyyyMMddHH24MISS'), 'yyyyMMdd')
+			 </if>
+			<if test='P_BFAN_PSCD == "B005" '>
+				, CHRGR_ID	 = ''
+				, CHRGR_NM = ''
+				, ACPT_DE = ''
+			 </if>
+		WHERE 1 = 1
+		AND BFAN_NO = #{P_BFAN_NO, jdbcType = VARCHAR}
+	</update>
+	
+	<insert id="insertBfStndOpenProgHist" useGeneratedKeys="true" keyProperty="P_HSTY_SN">
+		<selectKey resultType="int" keyProperty="P_HSTY_SN" order="BEFORE">
+			SELECT 	NVL(MAX(TO_NUMBER(HSTY_SN)),0)+1 AS HSTY_SN
+			FROM T_BI_BFAN_PROG_HIST
+			WHERE BFAN_NO = #{P_BFAN_NO , jdbcType=VARCHAR}
+		</selectKey>
+		INSERT INTO T_BI_BFAN_PROG_HIST (
+                           BFAN_NO
+							, HSTY_SN
+							, BFAN_PSCD
+							, PROC_DT
+							, RMK
+							, REGR_ID
+							, REGR_NM
+							, REG_DT
+							, MODR_ID
+							, MODR_NM
+							, MOD_DT
+							, CONN_IP
+							, DEL_AT
+		) VALUES (
+                            #{P_BFAN_NO , jdbcType=VARCHAR}
+                          , #{P_HSTY_SN, jdbcType=INTEGER}
+                          , #{P_BFAN_PSCD, jdbcType=VARCHAR}
+                          , #{P_REG_DT, jdbcType=VARCHAR}
+                          , #{P_HIST_RMK, jdbcType=VARCHAR}
+                          , #{P_REGR_ID, jdbcType=VARCHAR}
+                          , #{P_REGR_NM, jdbcType=VARCHAR}
+                          , #{P_REG_DT, jdbcType=VARCHAR}
+                          , #{P_REGR_ID, jdbcType=VARCHAR}
+                          , #{P_REGR_NM, jdbcType=VARCHAR}
+                          , #{P_REG_DT, jdbcType=VARCHAR}
+                          , #{P_CONN_IP, jdbcType=VARCHAR}
+                          , #{P_DEL_AT, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select  id="selectBfStndRtnRsn"  resultType="dataEntity">
+		SELECT * FROM (
+			SELECT BFAN_NO
+						, BFAN_PSCD
+						, PROC_DT
+						, RMK
+						, DEL_AT
+			FROM T_BI_BFAN_PROG_HIST
+			WHERE 1 = 1 
+			AND DEL_AT = 'N'
+			AND BFAN_NO = #{P_BFAN_NO, jdbcType=VARCHAR}
+			AND BFAN_PSCD = #{P_BFAN_PSCD, jdbcType=VARCHAR}
+			ORDER BY PROC_DT DESC
+		)
+		WHERE 1 = 1
+		AND ROWNUM = 1
+	</select>
+	
+	<update id="updateBfStndOpen">
+		UPDATE T_BI_BFAN_MST
+		SET
+			<!-- ARA_DEPT_CD = #{P_ARA_DEPT_CD,  jdbcType=VARCHAR}
+			  , CONT_SECD = #{P_CONT_SECD, jdbcType=VARCHAR}
+			  , MNGR_CHRGR_NM = #{P_MNGR_CHRGR_NM, jdbcType=VARCHAR}
+			  , MNGR_CHRGR_ID = #{P_MNGR_CHRGR_ID, jdbcType=VARCHAR}
+			  , CHCK_CHRGR_NM = #{P_CHCK_CHRGR_NM, jdbcType=VARCHAR}
+			  , CHCK_CHRGR_ID = #{P_CHCK_CHRGR_ID, jdbcType=VARCHAR}
+			  , BFAN_NM = #{P_BFAN_NM,  jdbcType=VARCHAR}
+			  , CONT_TE = #{P_CONT_TE,  jdbcType=VARCHAR}
+			  , ESTT_PRCE = #{P_ESTT_PRCE_M,  jdbcType=VARCHAR}
+			  , CONT_MTCD = #{P_CONT_MTCD,  jdbcType=VARCHAR}
+			  , SBID_MTCD = #{P_SBID_MTCD,  jdbcType=VARCHAR}
+			  , PRCH_CHRG_SECD = #{P_PRCH_CHRG_SECD,  jdbcType=VARCHAR}
+			  , PRCH_DEPT_NM = #{P_PRCH_DEPT_NM,  jdbcType=VARCHAR}
+			  , PRCH_DEPT_NO = #{P_PRCH_DEPT_NO,  jdbcType=VARCHAR}
+			  , DLGD_PLC_NM = #{P_DLGD_PLC_NM,  jdbcType=VARCHAR}
+			  , ASSO_SPDM_CD = #{P_ASSO_SPDM_CD,  jdbcType=VARCHAR}
+			  , RQR_DE = #{P_RQR_DE,  jdbcType=VARCHAR}
+			  , EMRG_YN = #{P_EMRG_YN,  jdbcType=VARCHAR}
+			  , BF_STND_OPEN_YN = #{P_BF_STND_OPEN_YN,  jdbcType=VARCHAR}
+			  , BF_STND_OPEN_TE = #{P_BF_STND_OPEN_TE,  jdbcType=VARCHAR}
+			  , RMK = #{P_RMK ,  jdbcType=VARCHAR}
+			  , BSNS_BDG_AMT = #{P_BSNS_BDG_AMT ,  jdbcType=VARCHAR}
+			  , BFAN_STDE = #{P_BFAN_STDE ,  jdbcType=VARCHAR}
+			  , BFAN_ENDE = #{P_BFAN_ENDE ,  jdbcType=VARCHAR}
+			  , CHRGR_ID =#{P_CHRGR_ID,  jdbcType=VARCHAR}
+			  , ACPT_DE =#{P_ACPT_DE,  jdbcType=VARCHAR}
+			  , DEL_AT = #{P_DEL_AT, jdbcType=VARCHAR}
+			  , MODR_ID = #{P_REGR_ID, jdbcType=VARCHAR}
+			  , MODR_NM = #{P_REGR_NM, jdbcType=VARCHAR}
+			  , MOD_DT = #{P_REG_DT, jdbcType=VARCHAR}
+			  , ETC_ITEM = #{P_ETC_ITEM, jdbcType=VARCHAR}
+			  , SW_BSNS_OBJ_YN = #{P_SW_BSNS_OBJ_YN, jdbcType=VARCHAR}
+			  , SBCT_YN = #{P_SBCT_YN, jdbcType=VARCHAR}
+			  , SMVE_CMPTI_YN = #{P_SMVE_CMPTI_YN, jdbcType=VARCHAR}
+			  , PRIO_PRCH_YN = #{P_PRIO_PRCH_YN, jdbcType=VARCHAR}
+			  , SCLSH_SVC_YN = #{P_SCLSH_SVC_YN, jdbcType=VARCHAR}
+ 			  , WMAN_SCTY_CORP_YN = #{P_WMAN_SCTY_CORP_YN, jdbcType=VARCHAR}
+			  , ACPS_LMT_YN = #{P_ACPS_LMT_YN, jdbcType=VARCHAR}
+			  , INF_BSNS_YN = #{P_INF_BSNS_YN, jdbcType=VARCHAR} -->	
+		
+			 	RQR_DE = #{P_RQR_DE,  jdbcType=VARCHAR}
+			  , BFAN_PSCD = #{P_BFAN_PSCD ,  jdbcType=VARCHAR}
+			  , BSNS_BDG_AMT = #{P_BSNS_BDG_AMT ,  jdbcType=VARCHAR}
+			  , BFAN_STDE = #{P_BFAN_STDE ,  jdbcType=VARCHAR}
+			  , BFAN_ENDE = #{P_BFAN_ENDE ,  jdbcType=VARCHAR}
+			  , DEL_AT = #{P_DEL_AT, jdbcType=VARCHAR}
+			  , MODR_ID = #{P_REGR_ID, jdbcType=VARCHAR}
+			  , MODR_NM = #{P_REGR_NM, jdbcType=VARCHAR}
+			  , MOD_DT = #{P_REG_DT, jdbcType=VARCHAR}
+			  , ETC_ITEM = #{P_ETC_ITEM, jdbcType=VARCHAR}
+		WHERE 1 = 1
+		AND BFAN_NO = #{P_BFAN_NO, jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="deleteBfStndOpenItem">
+		DELETE FROM T_BI_BFAN_ITEM
+		WHERE 1 = 1
+		AND BFAN_NO = #{P_BFAN_NO, jdbcType=VARCHAR}
+	</delete>
+	
+	<insert id="insertBfStndOpenItem" useGeneratedKeys="true" keyProperty="P_ITEM_SN">
+		<selectKey resultType="int" keyProperty="P_ITEM_SN" order="BEFORE">
+			SELECT 	NVL(MAX(TO_NUMBER(ITEM_SN)),0)+1 AS ITEM_SN
+			FROM T_BI_BFAN_ITEM
+			WHERE BFAN_NO = #{P_BFAN_NO , jdbcType=VARCHAR}
+		</selectKey>
+		INSERT INTO T_BI_BFAN_ITEM (
+                           BFAN_NO
+							, ASTS_TYCD
+							, ITEM_SN
+							, ITEM_NO
+							, ITEM_NM
+							, ITEM_DTL
+							, ITEM_STND
+							, ITEM_UNCD
+							, ITEM_QTY
+							, ESTT_UPRC
+							, ESTT_PRCE
+							, STAX_SECD
+							, ITEM_STAX
+							, ESTT_AMT
+							, BDG_YR
+							, BDG_MM
+							, BSNS_CD
+							, ACNT_CD
+							, ACNT_ITEM_CD
+							, DEPT_NO
+							, ACNT_NM
+							, REGR_ID
+							, REGR_NM
+							, REG_DT
+							, MODR_ID
+							, MODR_NM
+							, MOD_DT
+							, CONN_IP
+							, DEL_AT
+		) VALUES (
+                            #{P_BFAN_NO , jdbcType=VARCHAR}
+                          , #{P_ASTS_TYCD, jdbcType=VARCHAR}
+                          , #{P_ITEM_SN, jdbcType=INTEGER}
+                          , #{P_ITEM_NO, jdbcType=VARCHAR}
+                          , #{P_ITEM_NM, jdbcType=VARCHAR}
+                          , #{P_ITEM_DTL, jdbcType=VARCHAR}
+                          , #{P_STND_NM, jdbcType=VARCHAR}
+                          , #{P_ITEM_UNCD, jdbcType=VARCHAR}
+                          , #{P_ITEM_QTY, jdbcType=INTEGER}
+                          , #{P_ESTT_UPRC, jdbcType=INTEGER}
+                          , #{P_ESTT_PRCE, jdbcType=INTEGER}
+                          , #{P_STAX_SECD, jdbcType=VARCHAR}
+                          , #{P_ITEM_STAX, jdbcType=INTEGER}
+                          , #{P_ESTT_AMT, jdbcType=INTEGER}
+                          , #{P_BDG_YR, jdbcType=VARCHAR}
+                          , #{P_BDG_MM, jdbcType=VARCHAR}
+                          , #{P_BSNS_CD, jdbcType=VARCHAR}
+                          , #{P_ACNT_CD, jdbcType=VARCHAR}
+                          , #{P_ACNT_ITEM_CD, jdbcType=VARCHAR}
+                          , #{P_DEPT_NO, jdbcType=VARCHAR}
+                          , #{P_ACNT_NM, jdbcType=VARCHAR}
+                          , #{P_REGR_ID, jdbcType=VARCHAR}
+                          , #{P_REGR_NM, jdbcType=VARCHAR}
+                          , #{P_REG_DT, jdbcType=VARCHAR}
+                          , #{P_REGR_ID, jdbcType=VARCHAR}
+                          , #{P_REGR_NM, jdbcType=VARCHAR}
+                          , #{P_REG_DT, jdbcType=VARCHAR}
+                          , #{P_CONN_IP, jdbcType=VARCHAR}
+                          , #{P_DEL_AT, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<delete id="deleteBfStndOpenFile">
+		DELETE FROM T_BI_BFAN_FILE
+		WHERE 1 = 1
+		AND BFAN_NO = #{P_BFAN_NO, jdbcType=VARCHAR}
+	  <if test='P_FILE_DOC_SECD != null and P_FILE_DOC_SECD != "" '>
+		  AND BFAN_FSCD = #{P_FILE_DOC_SECD, jdbcType=VARCHAR}
+	  </if>
+	</delete>
+	<delete id="deleteBfStndOpenEtcFile">
+		DELETE FROM T_BI_BFAN_FILE
+		WHERE 1 = 1
+		AND BFAN_NO = #{P_BFAN_NO, jdbcType=VARCHAR}
+		AND FILE_GRP_NO = #{P_FILE_GRP_NO_ETC, jdbcType=VARCHAR}
+	  <if test='P_BFAN_FSCD != null and P_BFAN_FSCD != "" '>
+		  AND BFAN_FSCD = #{P_FILE_DOC_SECD, jdbcType=VARCHAR}
+	  </if>
+	</delete>
+	
+	<insert id="insertBfStndOpenFile">
+		INSERT INTO T_BI_BFAN_FILE (
+                          BFAN_NO
+						, BFAN_FSCD
+						, FILE_GRP_NO
+						, RMK
+						, REGR_ID
+						, REGR_NM
+						, REG_DT
+						, MODR_ID
+						, MODR_NM
+						, MOD_DT
+						, CONN_IP
+						, DEL_AT
+		) VALUES (
+                            #{P_BFAN_NO , jdbcType=VARCHAR}
+                          , #{P_FILE_DOC_SECD, jdbcType=VARCHAR}
+                          , #{P_FILE_GRP_NO, jdbcType=INTEGER}
+                          , #{P_RMK, jdbcType=VARCHAR}
+                          , #{P_REGR_ID, jdbcType=VARCHAR}
+                          , #{P_REGR_NM, jdbcType=VARCHAR}
+                          , #{P_REG_DT, jdbcType=VARCHAR}
+                          , #{P_REGR_ID, jdbcType=VARCHAR}
+                          , #{P_REGR_NM, jdbcType=VARCHAR}
+                          , #{P_REG_DT, jdbcType=VARCHAR}
+                          , #{P_CONN_IP, jdbcType=VARCHAR}
+                          , #{P_DEL_AT, jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertBfStndOpenEtcFile">
+		INSERT INTO T_BI_BFAN_FILE (
+                          BFAN_NO
+						, BFAN_FSCD
+						, FILE_GRP_NO
+						, RMK
+						, REGR_ID
+						, REGR_NM
+						, REG_DT
+						, MODR_ID
+						, MODR_NM
+						, MOD_DT
+						, CONN_IP
+						, DEL_AT
+		) VALUES (
+                            #{P_BFAN_NO , jdbcType=VARCHAR}
+                          , #{P_FILE_DOC_SECD, jdbcType=VARCHAR}
+                          , #{P_FILE_GRP_NO_ETC, jdbcType=INTEGER}
+                          , #{P_RMK, jdbcType=VARCHAR}
+                          , #{P_REGR_ID, jdbcType=VARCHAR}
+                          , #{P_REGR_NM, jdbcType=VARCHAR}
+                          , #{P_REG_DT, jdbcType=VARCHAR}
+                          , #{P_REGR_ID, jdbcType=VARCHAR}
+                          , #{P_REGR_NM, jdbcType=VARCHAR}
+                          , #{P_REG_DT, jdbcType=VARCHAR}
+                          , #{P_CONN_IP, jdbcType=VARCHAR}
+                          , #{P_DEL_AT, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="selectBfStndAuthYn" resultType="dataEntity">
+		SELECT APPR_AUTH_YN FROM T_MM_USER_MST
+		WHERE USR_ID = #{P_USR_ID, jdbcType=VARCHAR}
+	</select>
+	
+</mapper>

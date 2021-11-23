@@ -1,0 +1,48 @@
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+<script type="text/javascript" src="../library/json3.min.js"></script>
+<script type="text/javascript" src="../library/iecompatibility.js"></script>
+
+<script type="text/javascript" src="../vestsign.js"></script>
+<SCRIPT language=javascript>
+
+    var callback = function (result) {
+        alert("성공");
+    };
+
+    var errorcallback = function (error) {
+    // error = { code, getReason() };
+    if(error.code == -9999) console.log(error.code);  // 취소 버튼 이벤트 error.code: -9999
+    else alert(error.msg);
+    };
+
+    function update(caIP, caPort) {
+        // option에 고객사에서 저장한 인증서의 정보( dn, serial ) 꼭 입력해야함.
+        var option = {
+          // updateDN: 'CN=은행법인1(Hong Kil-dong)003305720151230154245,OU=TEST Company,OU=KSC,OU=corporation4EC,O=SignKorea,C=KR',
+          // updateSerial: '0778b1'
+          CAServiceIP: caIP,
+          CAServicePort: caPort*1
+        };
+
+        // reIssue 옵션
+        var chk = document.getElementsByName("chk_info");
+        if (chk[0].checked)
+            option.reIssue = chk[0].value * 1;
+
+        yettie.update(option, callback, errorcallback);
+    };
+
+</SCRIPT>
+<br><br><br>
+<table border="1" align="center" width=50%>
+    <tr>
+        <td align="center"><br>
+            IP:　 <input type=TEXT id="caIP"><br>
+            Port: <input type=TEXT id="caPort"><br><br>
+            <input type="checkbox" name="chk_info" value="1">&nbsp;reIssue?<br><br>
+            <input type=button onclick="update((document.getElementById('caIP').value == '') ? undefined : document.getElementById('caIP').value,  (document.getElementById('caPort').value == '') ? undefined : document.getElementById('caPort').value);" value="인증서 갱신" style="width:150"><br><br>
+        </td>
+    </tr>
+</table>

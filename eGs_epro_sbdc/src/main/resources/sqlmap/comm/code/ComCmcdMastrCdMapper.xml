@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+ * 공통마스터코드 Mapper
+ *
+ * <pre>
+ * oda.com.cmcd.dao 
+ *    |_ ComCmcdMastrCdMapper.xml
+ * 
+ * </pre>
+ * @date : 2014. 12. 9. 오전 11:20:08
+ * @version : 1.0
+ * @author : 
+-->
+<mapper namespace="ew.com.cmcd.dao.ComCmcdMastrCdDao">
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 마스터코드목록조회_페이징 
+     * 2. 처리내용 :
+     *  	TABLE : TB_MDM001(공통마스터코드)
+     * </pre>
+     * @Query ID : selectMastrCdListWithPgng
+     * @date : 2014. 12. 9.
+     * @author : 
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2014. 12. 9.                     최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectMastrCdListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT <include refid="selectMastrCdList_SelectClause"/> 
+		FROM TMDM_COMACO T1
+		<include refid="selectMastrCdList_WhereClause"/>
+		ORDER BY T1.CD_ID_NM
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<select id="selectMastrCdListTotcnt" resultType="int">		
+		SELECT COUNT(1) 
+		FROM TMDM_COMACO T1
+		<include refid="selectMastrCdList_WhereClause"/>
+		
+	</select>
+
+	<select id="selectMastrCdList" resultType="dataEntity">		
+		SELECT 'A' AS A1 FROM DUAL
+	</select>
+	
+	<select id="selectMastrCdDetail" resultType="dataEntity">		
+		SELECT 'A' AS A1 FROM DUAL
+	</select>
+	
+	
+	<!--
+		  마스터코드목록조회 Select 절
+	-->
+	<sql id="selectMastrCdList_SelectClause">
+		T1.CD_ID
+			, T1.CD_ID_NM
+			, T1.CD_MANAGE_DEPT_NM
+			, T1.FIXING_AT
+			, T1.USE_AT
+			, T1.CNVR_CD
+			, T1.CD_RSTRCT_ONE_NO
+			, T1.CD_RSTRCT_TWO_NO
+			, T1.CD_RSTRCT_THREE_NO
+			, T1.CD_RSTRCT_FOUR_NO
+			, T1.CD_RSTRCT_FIVE_NO
+			, T1.OCD_ID
+			, T1.REGISTER_ID
+			, T1.REGIST_DT
+			, T1.UPDUSR_ID
+			, T1.UPDT_DT
+			, T1.DELETE_AT
+	</sql>
+	
+	
+	<!--
+		  마스터코드목록조회 Where 절
+	-->
+	<sql id="selectMastrCdList_WhereClause">
+		<where>			
+			<if test="P_CD_ID != null and P_CD_ID != ''">
+				AND T1.CD_ID LIKE '%'||#{P_CD_ID, jdbcType=VARCHAR, javaType=String}||'%'
+			</if>			
+			<if test="P_CD_ID_NM != null and P_CD_ID_NM != ''">
+				AND T1.CD_ID_NM LIKE '%'||#{P_CD_ID_NM, jdbcType=VARCHAR, javaType=String}||'%'
+			</if>
+			<if test="P_CD_MANAGE_DEPT_NM != null and P_CD_MANAGE_DEPT_NM != ''">
+				AND T1.CD_MANAGE_DEPT_NM LIKE '%'||#{P_CD_MANAGE_DEPT_NM, jdbcType=VARCHAR, javaType=String}||'%'
+			</if>
+			<if test="P_USE_AT != null and P_USE_AT != ''">
+				AND T1.USE_AT = #{P_USE_AT, jdbcType=VARCHAR, javaType=String}
+			</if>
+			<if test="P_DELETE_AT != null and P_DELETE_AT != ''">
+				AND T1.DELETE_AT = #{P_DELETE_AT, jdbcType=VARCHAR, javaType=String}
+			</if>
+		</where>
+	</sql>	
+</mapper>

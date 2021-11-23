@@ -1,0 +1,74 @@
+<!Doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>인증서관리</title>
+
+    <link type="text/css" rel="stylesheet" href="../styles/css/mCommon.css?revision=e54ce34"/>
+    <link type="text/css" rel="stylesheet" href="../styles/css/jquery-ui.css?revision=e54ce34">
+
+    <script type="text/javascript" src="../styles/js/jquery-1.11.0.min.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../styles/js/jquery-ui.js?revision=e54ce34"></script>
+
+    <script type="text/javascript" src="../scripts/__GobalValue__.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../languages/mManagement.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../languages/policiesLang.js?revision=e54ce34"></script>
+</head>
+<body>
+<div>
+    <!-- Top -->
+    <div class="CERT_title">
+        <div class="TITLE_div">
+            <p id="title">
+                <script>document.write(mManagementLang(25));</script>
+            </p>
+        </div>
+        <div class="xBtn" id="x_btn" alt="닫기">닫기</div>
+    </div>
+
+    <div class="titleDivision_div">
+        <div class="titleDivisionLine"></div>
+    </div>
+
+    <!-- middle -->
+    <div class="CERT_contents">
+        <!-- 상세보기 UI 타이틀 -->
+        <div class="MANAGE_TITLE">
+            <div class="MANAGE_dn"><p id="titleDn"></p></div>
+            <div class="MANAGE_isUse"><p id="validTo"></p></div>
+        </div>
+
+        <!-- 상세보기 UI 리스트 -->
+        <div>
+            <div class="CERT_detail">
+                <ul id="dialogCertTab_attrList"/>
+            </div>
+        </div>
+
+        <!-- 비밀번호 변경 삭제 버튼 -->
+        <div class="BTN_common">
+            <div id="commonBtn" class="commonForm" style="display: block">
+                <div class="deleteCert_btn" id="deleteCert_btn">
+                    <p>
+                        <script>document.write(mManagementLang(27));</script>
+                    </p>
+                </div>
+                <div class="change_btn" id="changePin_btn">
+                    <p>
+                        <script>document.write(mManagementLang(26));</script>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <div class="copyright">
+        Copyright 2016 By YETTIESOFT.ALL right reserved.
+    </div>
+</div>
+</body>
+
+<script type="text/javascript" src="../scripts/mManagement.js?revision=e54ce34"></script>
+<script type="text/javascript" src="../library/policies.js?revision=e54ce34"></script>
+</html>

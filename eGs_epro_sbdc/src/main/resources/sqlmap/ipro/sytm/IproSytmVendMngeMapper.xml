@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * sqlmap.ipro.vend
+ * IproVendMngeMapper.xml
+ * 
+ * @Author : jandi_Eun
+ * @Date   : 2018. 2. 19.
+ * 
+ -->
+ 
+ <mapper namespace="com.eunwoosoft.ipro.sytm.dao.IproSytmVendMngeDao">
+ 
+ 	<!-- 
+	 * 1. 개요 : 협력사현황 목록
+	 * 2. 처리내용 : 
+	 *  	
+	 * @Query ID : selectVendMngeListInqireWithPgng
+	 * @date : 2018. 2. 20.
+	 * @author : jandi_Eun
+	 -->
+ 	<select id="selectVendMngeListInqireWithPgng" resultType="dataEntity">
+ 		<include refid="ComPgng.pgngHeaderClause"/>
+		
+		SELECT * FROM (
+		<include refid="vendMngeList"/>
+		<include refid="vendMngeListWhere"/>
+		ORDER BY VEND_NM
+		) T1
+		WHERE 1 = 1
+ 		
+ 		<include refid="ComPgng.pgngTailClause"/>
+ 	</select>
+
+ 	<select id="selectVendMngeExcelList" resultType="dataEntity">
+		SELECT ROWNUM AS RNUM, A.* FROM(
+			SELECT T1.* FROM (
+			<include refid="vendMngeList"/>
+			<include refid="vendMngeListWhere"/>
+			ORDER BY VEND_NM
+			) T1
+			WHERE 1 = 1
+		)A
+ 	</select>
+ 	
+ 	<!-- 
+	 * 1. 개요 : 협력사현황 목록 총 건수
+	 * 2. 처리내용 : 
+	 *  	
+	 * @Query ID : selectVendMngeListTotcnt
+	 * @date : 2018. 2. 20.
+	 * @author : jandi_Eun
+	 -->
+ 	<select id="selectVendMngeListTotcnt" resultType="int">
+ 		SELECT COUNT(1) FROM (
+			<include refid="vendMngeList"/>
+			<include refid="vendMngeListWhere"/>
+		) T1
+ 	</select>
+ 	
+ 	<sql id="vendMngeList">
+	 	SELECT * FROM (
+	 		SELECT
+		 		M.ARA_DEPT_CD
+				, M.VEND_REG_NO
+				, M.VEND_NM
+				, M.BIZRNO
+				, M.RPRS_NM
+				, M.BCNM
+				, M.BTNM
+				, M.TEL_NO
+				, M.EMAL_ADDR
+				, M.ADDR_NM
+				, M.VEND_CD
+				, M.BSNS_CD
+				, M.BSNS_NM
+				, M.CORP_REG_NO
+				, M.CHRGR_NM
+				, M.CHRGR_TEL_NO
+				, M.CHRGR_EMAL
+				, M.BKCD
+				, M.ACNO
+				, M.VEND_STCD
+				, M.WOMAN_YN
+				, M.HANDICAP_YN
+				, M.NEW_TECH_YN
+				, M.ECO_FRIENDLY_YN
+				, M.SER_HANDICAP_YN
+				, M.MAN_HANDICAP_YN
+				, M.SOCIAL_YN
+				, M.SMALL_YN
+				, M.SMMAN_YN
+				, M.SOCIAL_YN2
+				, M.HANDICAP_ST_CORP_YN
+				, M.NEP_YN
+				, M.CLIENT_TAX_TYPE
+				, M.INNO_TYPE_YN
+				, M.INNO_SHOP_YN
+				, M.VENTURE_YN
+				, M.TR_PUR_YN
+				, M.TR_TECH_YN
+				, I.CMPNY_NM
+				, I.BSNM_REGIST_NO
+			FROM V_CU_MST M, V_CMPNY_INFO I
+			WHERE 1 = 1
+			AND VEND_REG_NO = BSNM_REGIST_NO(+)
+		)
+ 	</sql>
+ 	
+ 	<sql id="vendMngeListWhere">
+ 		<where>
+ 			<if test='P_VEND_NM_S != null and P_VEND_NM_S != "" '>
+				AND VEND_NM LIKE '%'||#{P_VEND_NM_S}||'%'
+			</if>
+			<if test='P_BIZRNO_S != null and P_BIZRNO_S != "" '>
+				AND BIZRNO =  REPLACE(#{P_BIZRNO_S, jdbcType=VARCHAR},'-','')
+			</if>
+ 		</where>
+ 	</sql>
+	 
+	 <select id="selectVendMngeDetail" resultType="dataEntity">
+	 	SELECT
+		 		 ARA_DEPT_CD
+				, VEND_REG_NO
+				, VEND_NM
+				, BIZRNO
+				, RPRS_NM
+				, BCNM
+				, BTNM
+				, TEL_NO
+				, EMAL_ADDR
+				, ADDR_NM
+				, VEND_CD
+				, BSNS_CD
+				, BSNS_NM
+				, CORP_REG_NO
+				, CHRGR_NM
+				, CHRGR_TEL_NO
+				, CHRGR_EMAL
+				, BKCD
+				, ACNO
+				, VEND_STCD
+				, WOMAN_YN
+				, HANDICAP_YN
+				, NEW_TECH_YN
+				, ECO_FRIENDLY_YN
+				, SER_HANDICAP_YN
+				, MAN_HANDICAP_YN
+				, SOCIAL_YN
+				, SMALL_YN
+				, SMMAN_YN
+				, SOCIAL_YN2
+				, HANDICAP_ST_CORP_YN
+				, NEP_YN
+				, CLIENT_TAX_TYPE
+				, INNO_TYPE_YN
+				, INNO_SHOP_YN
+				, VENTURE_YN
+				, TR_PUR_YN
+				, TR_TECH_YN
+		FROM V_CU_MST
+		WHERE 1 = 1
+		AND VEND_REG_NO = #{P_VEND_REG_NO , jdbcType=VARCHAR}
+	 </select>
+	 
+ </mapper>

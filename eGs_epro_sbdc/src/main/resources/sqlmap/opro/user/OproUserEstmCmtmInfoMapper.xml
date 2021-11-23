@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+ 	정보관리(외부)
+ 	ㄴ 사용자 정보 상세 
+ --> 
+ <mapper namespace="com.eunwoosoft.opro.user.dao.OproUserEstmCmtmInfoDao">
+ 	<select id="estmCmtmInfoDetail" resultType="dataEntity" >
+ 		SELECT ESTM_CMTM_NO
+ 					,ESTM_CMTM_NM
+ 					,RSDN_NO
+ 					,CP_NO
+ 					,TEL_NO
+ 				    ,EMAL
+ 					,HNDW_REG_YN
+ 					,LLF_SECD
+ 					,LLF_NM
+ 					, F_CDVAL_INQIRE('LLF_SECD', LLF_SECD) AS LLF_SECD_NM  
+ 					 ,F_CDVAL_INQIRE('CNTN_SECD', CNTN_SECD) AS CNTN_SECD_NM
+ 					, F_CDVAL_INQIRE('MLF_SECD', MLF_SECD) AS MLF_SECD_NM 
+ 					, F_CDVAL_INQIRE('SLF_SECD', SLF_SECD) AS SLF_SECD_NM 
+ 					,CNTN_SECD
+ 					,CNTN_NM
+ 					,MLF_SECD
+ 					,MLF_NM
+ 					,SLF_SECD
+ 					,SLF_NM
+ 					,ESTM_CMTM_BLNG_AGNC
+ 					,ESTM_CMTM_BLNG_DEPT
+ 					,ESTM_CMTM_OFPS
+ 					,LT_EDUC
+ 					,SLCT_YN
+ 					,FILE_GRP_NO
+ 					,REGR_ID
+ 					,REGR_NM
+ 					,REG_DT
+ 					,MODR_ID
+ 					,MODR_NM
+ 					,MOD_DT
+ 					,CONN_IP
+ 					,DEL_AT
+ 		  FROM  V_MM_ESTM_CMTM_MST
+ 		WHERE  1=1
+ 		    AND  ESTM_CMTM_NO =  #{P_ESTM_CMTM_NO, jdbcType=VARCHAR}
+ 		</select>
+
+ 	
+ </mapper>

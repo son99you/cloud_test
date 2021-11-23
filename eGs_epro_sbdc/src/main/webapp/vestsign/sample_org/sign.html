@@ -1,0 +1,156 @@
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+<script type="text/javascript" src="../library/json3.min.js"></script>
+<script type="text/javascript" src="../library/iecompatibility.js"></script>
+
+<script type="text/javascript" src="../vestsign.js"></script>
+<SCRIPT language=javascript>
+    var lastCert = {
+        storageType: '',
+        serial: ''
+    };
+
+    var option = {
+        encoding: 'hex',
+        charset: 'UTF-8'
+    };
+
+    function getError(error) {
+        // error = { code, getReason() };
+        if(error.code == -9999) console.log(error.code);  // 취소 버튼 이벤트 error.code: -9999
+        else alert(error.msg);
+    }
+
+    function makeSignature(plain, mode) {
+        if(mode == 1) {
+            //p1
+            option.signtype = 0;
+            option.signprotocol = 0;
+        }
+        else if(mode == 7){
+            //p7
+            option.signtype = 2;
+            option.signprotocol = 0;
+        }
+
+//        vest.token.makeSignature(tokenIdentifier, password, identifier, plain, option, function(result){
+//            var str = '';
+//            str += result.signature;
+//            document.getElementById('result').value = str;
+//
+//            var cert = '';
+//            cert += result.extentions.certificate;
+//            document.getElementById('result.cert').value = cert;
+//        }, getError);
+
+        if(document.getElementById("lastCertView").checked) {
+            option.storageType = lastCert.storageType;
+            option.serial = lastCert.serial;
+        }else {
+            option.storageType = '';
+            option.serial = '';
+        }
+
+        yettie.sign(plain, option,  function(result){
+            var str = '';
+            str += result.signature;
+            document.getElementById('result').value = str;
+
+            var cert = '';
+            cert += result.extentions.certificate;
+            document.getElementById('result.cert').value = cert;
+
+            lastCert.storageType = result.storageType;
+            lastCert.serial = result.serial;
+        }, getError);
+    };
+
+    function verifySignature(signedMsg, mode, plain, cert){
+        var params = {};
+        if(mode == 1){
+            params.certificate = cert;
+            params.plain = plain;
+        }
+        else {
+            params = undefined;
+        }
+
+//        vest.token.verifySignature(signedMsg, params, option, function(result){
+//            alert(result);
+//        }, getError)
+
+        yettie.verifySignature(signedMsg, params, option, function(result) {
+            alert(result);
+        }, getError);
+    }
+
+
+    function verifyVID(idn) {
+        option.encoding = 'hex';
+        yettie.verifyVID(idn, option, function(result){
+            alert('성공');
+        }, getError);
+    };
+
+    function signWithVerifyVID(idn, plain) {
+        option.encoding = 'hex';
+
+        yettie.signWithVerifyVID(plain, idn, option, function(result){
+            var str = '';
+            str += result.signature;
+            document.getElementById('result').value = str;
+        }, getError);
+    };
+
+</SCRIPT>
+<br><br><br>
+<form method="post" name="Reg_Form" id="Reg_Form" action="./Verify.jsp">
+    <table border="1" align="center" width=50%>
+        <tr>
+            <td align="center" colspan="2"><br>
+                원문<br><textarea rows='10' style="width:100%" id="plain">test</textarea><br><br>
+            </td>
+        </tr>
+        <tr>
+            <td align="center"><br>
+                서명문(hex)<br><textarea rows='10' style="width:100%" id="result" name="signedMsg"></textarea><br><br>
+            </td>
+            <td align="center"><br>
+                인증서(hex)<br><textarea rows='10' style="width:100%" id="result.cert"></textarea><br><br>
+            </td>
+        </tr>
+        <tr>
+            <td align="center"  colspan="2"><br>
+                <input type="checkbox" id="lastCertView">마지막에 서명한 인증서만 보고싶을때!! <br><br>
+                <input type=button
+                       onclick="makeSignature(document.getElementById('plain').value, 1)"
+                       value="전자서명(P1)" style="width:150">
+                <input type=button
+                       onclick="makeSignature(document.getElementById('plain').value, 7)"
+                       value="전자서명(P7)" style="width:150">
+                <br>
+                <input type=button
+                       onclick="verifySignature(document.getElementById('result').value, 1, document.getElementById('plain').value, document.getElementById('result.cert').value)"
+                       value="서명 검증(P1)" style="width:150">
+                <input type=button
+                       onclick="verifySignature(document.getElementById('result').value, 7, document.getElementById('plain').value, document.getElementById('result.cert').value)"
+                       value="서명 검증(P7)" style="width:150">
+                <br>
+                <input type=submit value="서버 검증" style="width:150">
+               <br><br>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" colspan="2"><br>
+                식별번호(VID): <input type="password" id="idn"><br><br>
+                <input type=button
+                       onclick="verifyVID(document.getElementById('idn').value)"
+                       value="VID 검증" style="width:150">
+                <input type=button
+                       onclick="signWithVerifyVID(document.getElementById('idn').value, document.getElementById('plain').value)"
+                       value="서명+VID 검증" style="width:150"><br><br>
+            </td>
+        </tr>
+    </table>
+</form>

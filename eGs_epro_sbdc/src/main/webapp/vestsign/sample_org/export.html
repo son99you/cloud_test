@@ -1,0 +1,51 @@
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+<script type="text/javascript" src="../library/json3.min.js"></script>
+<script type="text/javascript" src="../library/iecompatibility.js"></script>
+
+<script type="text/javascript" src="../vestsign.js"></script>
+<SCRIPT language=javascript>
+
+  var callback = function (result) {
+    if ( result != true ) {
+      document.getElementById('pfxValue').value = result;
+    }
+
+    alert("성공");
+  };
+
+  var errorcallback = function (error) {
+    // error = { code, getReason() };
+    if(error.code == -9999) console.log(error.code);  // 취소 버튼 이벤트 error.code: -9999
+    else alert(error.msg);
+  };
+
+  function exportP12() {
+    yettie.exportP12(callback, errorcallback);
+  };
+
+    function webExportP12() {
+        var option = {
+            encoding: 'hex',
+            charset: 'UTF-8'
+        }
+        yettie.webExportP12(option, callback, errorcallback);
+    }
+
+</SCRIPT>
+<br><br><br>
+<center>
+    <table border="1" align="center" width=50%>
+        <tr>
+            <td align=center><br><br>
+            <input type=button onclick="exportP12()" value="내보내기" style="width:150"><br><br><br>
+            </td>
+        </tr>
+        <!--<tr>-->
+            <!--<td align=center><br><br>-->
+                <!--<input type=button onclick="webExportP12()" value="내보내기(web)" style="width:150"><br><br><br>-->
+            <!--</td>-->
+        <!--</tr>-->
+    </table>
+</center>

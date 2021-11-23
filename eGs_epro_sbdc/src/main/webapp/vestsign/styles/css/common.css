@@ -1,0 +1,608 @@
+@charset "utf-8";
+@import url("base.css");
+
+.Wrapper {border:1px solid #5381ac;}
+.CERT_titlebar { position:relative; width:429px; margin:0 auto; border:1px solid #5381ac; border-bottom:0 !important; }
+#titleText:focus {border:1px solid #5381ac;}
+#titleImport:focus {border:1px solid #5381ac;}
+.CERT_titlebar_common { position:relative; border-bottom:1px solid #5381ac; }
+.CERT_util_btnClose { position:absolute; cursor: pointer; display: inline-block; top:0; right:0; width:30px; height:30px; background:url(../images/util_btn_close.png) 8px 7px no-repeat; }
+.CERT_util_btnClose a{ display: inline-block; width:30px; height:30px; }
+.CERT_util_version {position:absolute; top:13px; right:28px; color:#172532;}
+
+.CERT_certWrapper {padding:15px; color:#172532;}
+.CERT_certWrapper2 {color:#172532;}
+
+h1 { width:100%; height:28px; line-height:28px; background:#bfcedd; font-family:'Malgun Gothic','Dotum'; border-top:1px solid #dfe7ee; border-bottom:1px solid #dfe7ee; color:#252e36; font-size:14px; text-align:center; font-weight:normal;}
+h2 { font-size:12px;  color:#172532; font-family:'Malgun Gothic','Dotum'; font-weight:bold; }
+
+/********************************************************************************************/
+
+/*MAIN - CERTIFICATE 01*/
+.certWrap {width:399px; margin:0 auto; border:1px solid #5381ac; padding:13px 15px 13px 15px;}
+.cert_topimg {text-align:center; padding-bottom:13px;}
+.cert_bottom {padding-bottom:20px;}
+.linebox_m { width:96%; height:auto; border:1px solid #d2d1d1; background:#fff; color:#454545; overflow-y:auto; margin-bottom:8px; padding:2%;}
+
+.cert01_01 { position:relative; width:100%; height:70px; padding:10px 0; border:1px solid #8b9eb0; background:#fff; margin-bottom:7px;}
+.cert01_01 ul { position:absolute; left:13px;}
+#button_slide_wrap {position:relative;}
+#button_slide_wrap>div {width:375px; height:70px; overflow:hidden; position:relative; left:10px;}
+#button_slide_wrap ul {width:2000px; height:70px; position:relative; left:-73px;}
+.cert01_01 ul li {float:left; position:relative; padding:0 4px; text-align:center;}
+.cert01_01 ul:after {display:block; content:""; clear:both;}
+.cert01_01 ul li a { width:65px; height:18px; padding-top:50px; display:inline-block; border:1px solid #b1c5d7; font-size:11px; color:#172532;  }
+.cert01_01 ul li a:hover,
+.cert01_01 ul li a.on { border:1px solid #008aff; color:#0365b8;}
+.cert01_01 ul li a.ico1 { background:url(../images/ico_usb.jpg) center 8px no-repeat;}
+.cert01_01 ul li a.ico2 { background:url(../images/ico_securitytoken.jpg) center 8px no-repeat;}
+.cert01_01 ul li a.ico3 { background:url(../images/ico_savetoken.jpg) center 8px no-repeat;}
+.cert01_01 ul li a.ico4 { background:url(../images/ico_harddisk.jpg) center 8px no-repeat;}
+.cert01_01 ul li a.ico5 { background:url(../images/ico_search.jpg) center 8px no-repeat;}
+.cert01_01 ul li a.ico6 { background:url(../images/ico_securityDisk.jpg) center 8px no-repeat;}
+.cert01_01 ul li a.ico7 { background:url(../images/ico_mobile.jpg) center 8px no-repeat;}
+.cert01_01 ul li a.ico8 { background:url(../images/ico_browser.jpg) center 8px no-repeat;}
+.cert01_01 ul li a.ico9 { background:url(../images/ico_securityDisk.jpg) center 8px no-repeat;}
+.cert01_01 ul li a.ico10 { background:url(../images/ico_smart.jpg) center 8px no-repeat;}
+
+.cert01_01 ul li a.ico1:hover,
+.cert01_01 ul li a.ico1_on { background:url(../images/ico_usb_on.jpg) center 8px no-repeat;}
+.cert01_01 ul li a.ico2:hover,
+.cert01_01 ul li a.ico2_on { background:url(../images/ico_securitytoken_on.jpg) center 8px no-repeat;}
+.cert01_01 ul li a.ico3:hover,
+.cert01_01 ul li a.ico3_on { background:url(../images/ico_savetoken_on.jpg) center 8px no-repeat;}
+.cert01_01 ul li a.ico4:hover,
+.cert01_01 ul li a.ico4_on { background:url(../images/ico_harddisk_on.jpg) center 8px no-repeat;}
+.cert01_01 ul li a.ico5:hover,
+.cert01_01 ul li a.ico5_on { background:url(../images/ico_search_on.jpg) center 8px no-repeat;}
+.cert01_01 ul li a.ico6:hover,
+.cert01_01 ul li a.ico6_on { background:url(../images/ico_securityDisk_on.jpg) center 8px no-repeat;}
+.cert01_01 ul li a.ico7:hover,
+.cert01_01 ul li a.ico7_on { background:url(../images/ico_mobile_on.jpg) center 8px no-repeat;}
+.cert01_01 ul li a.ico8:hover,
+.cert01_01 ul li a.ico8_on { background:url(../images/ico_browser_on.jpg) center 8px no-repeat;}
+.cert01_01 ul li a.ico9:hover,
+.cert01_01 ul li a.ico9_on { background:url(../images/ico_securityDisk_on.jpg) center 8px no-repeat;}
+.cert01_01 ul li a.ico10:hover,
+.cert01_01 ul li a.ico10_on { background:url(../images/ico_smart_on.jpg) center 8px no-repeat;}
+.cert01_01 ul li a.ico10:hover,
+
+/*저장매체 disable*/
+.cert01_01 ul li a.ico1_disable { background:url(../images/ico_usb_disable.jpg) no-repeat; color:#b5b5b5;}
+.cert01_01 ul li a.ico2_disable { background:url(../images/ico_securitytoken_disable.jpg) no-repeat; color:#b5b5b5;}
+.cert01_01 ul li a.ico3_disable { background:url(../images/ico_savetoken_disable.jpg) no-repeat; color:#b5b5b5;}
+.cert01_01 ul li a.ico4_disable { background:url(../images/ico_harddisk_disable.jpg) no-repeat; color:#b5b5b5;}
+.cert01_01 ul li a.ico5_disable { background:url(../images/ico_search_disable.jpg) no-repeat; color:#b5b5b5;}
+.cert01_01 ul li a.ico6_disable { background:url(../images/ico_securityDisk_disable.jpg) no-repeat; color:#b5b5b5;}
+.cert01_01 ul li a.ico7_disable { background:url(../images/ico_mobile_disable.jpg) no-repeat; color:#b5b5b5;}
+.cert01_01 ul li a.ico8_disable { background:url(../images/ico_browser_disable.jpg) no-repeat; color:#b5b5b5;}
+.cert01_01 ul li a.ico9_disable { background:url(../images/ico_securityDisk_disable.jpg) no-repeat; color:#b5b5b5;}
+.cert01_01 ul li a.ico10_disable { background:url(../images/ico_smart_disable.jpg) no-repeat; color:#b5b5b5;}
+
+/*저장매체 disable*/
+.cert01_01 ul li.ico1_disable { background:url(../images/ico_usb_disable.jpg) center top no-repeat; width:65px; height:18px; padding:50px 0 0 0; color:#b5b5b5; font-size:11px;  margin:0 3px; border:1px solid #ddd;}
+.cert01_01 ul li.ico2_disable { background:url(../images/ico_securitytoken_disable.jpg) center top no-repeat; width:65px; height:18px; padding:50px 0 0 0; color:#b5b5b5; font-size:11px;  margin:0 4px; border:1px solid #ddd;}
+.cert01_01 ul li.ico3_disable { background:url(../images/ico_savetoken_disable.jpg) center top no-repeat; width:65px; height:18px; padding:50px 0 0 0; color:#b5b5b5; font-size:11px;  margin:0 4px; border:1px solid #ddd;}
+.cert01_01 ul li.ico4_disable { background:url(../images/ico_harddisk_disable.jpg) center top no-repeat; width:65px; height:18px; padding:50px 0 0 0; color:#b5b5b5; font-size:11px;  margin:0 4px; border:1px solid #ddd;}
+.cert01_01 ul li.ico5_disable { background:url(../images/ico_search_disable.jpg) center top no-repeat; width:65px; height:18px; padding:50px 0 0 0; color:#b5b5b5; font-size:11px;  margin:0 4px; border:1px solid #ddd;}
+.cert01_01 ul li.ico6_disable { background:url(../images/ico_securityDisk_disable.jpg) center top no-repeat; width:65px; height:18px; padding:50px 0 0 0; color:#b5b5b5; font-size:11px;  margin:0 4px; border:1px solid #ddd;}
+.cert01_01 ul li.ico7_disable { background:url(../images/ico_mobile_disable.jpg) center top no-repeat; width:65px; height:18px; padding:50px 0 0 0; color:#b5b5b5; font-size:11px;  margin:0 4px; border:1px solid #ddd;}
+.cert01_01 ul li.ico8_disable { background:url(../images/ico_browser_disable.jpg) center top no-repeat; width:65px; height:18px; padding:50px 0 0 0; color:#b5b5b5; font-size:11px;  margin:0 4px; border:1px solid #ddd;}
+.cert01_01 ul li.ico9_disable { background:url(../images/ico_securityDisk_disable.jpg) center top no-repeat; width:65px; height:18px; padding:50px 0 0 0; color:#b5b5b5; font-size:11px;  margin:0 4px; border:1px solid #ddd;}
+.cert01_01 ul li.ico10_disable { background:url(../images/ico_smart_disable.jpg) center top no-repeat; width:65px; height:18px; padding:50px 0 0 0; color:#b5b5b5; font-size:11px;  margin:0 4px; border:1px solid #ddd;}
+
+#button_slide_wrap button {position:absolute; width:10px; height:70px; font-size:0; border:none; cursor:pointer; z-index:100;}
+#button_slide_wrap button.prev{left:3px; top:0; background:url(../images/arr_pre.jpg) left 24px no-repeat;}
+#button_slide_wrap button.prev:hover,
+#button_slide_wrap button.prev:active {left:3px; top:0; background:url(../images/arr_pre_ov.jpg) left 24px no-repeat;}
+#button_slide_wrap button.next{right:3px; top:0; background:url(../images/arr_next.jpg) 0 24px no-repeat;}
+#button_slide_wrap button.next:hover,
+#button_slide_wrap button.next:active {right:3px; top:0; background:url(../images/arr_next_ov.jpg) 0 24px no-repeat;}
+
+.cert01_02 { position:relative; width:100%; height:132px; border:1px solid #8b9eb0; background:#fff; overflow-y:scroll; margin-bottom:3px;}
+ul.list_cate {width:382px; height:23px; background:#fff; position:fixed; z-index:1;}
+ul.list_cate > li { float:left; width:70px; padding-left:5px; height:20px; padding-top:2px; line-height:20px; font-weight:normal; font-size:11px; color:#4f6c87; text-align:left; border-left:1px solid #8b9eb0; border-bottom:1px solid #8b9eb0;}
+ul.list_cate > li:first-child { width:149px; padding-left:5px !important; border-left:0;}
+
+ul.listWrap { position:absolute; top:23px; width:382px; border-top:1px solid #e5e5e5; z-index:0;}
+ul.listWrap img { vertical-align:middle;}
+
+
+ul.list_list {width:382px; cursor:pointer;}
+ul.list_list > li {float:left; width:71px; padding-left:5px; height:20px; padding-top:2px; line-height:22px; color:#172532; overflow:hidden; cursor:pointer;}
+ul.list_list > li:first-child {width:149px; padding-left:5px;}
+ul.list_list > li > p.m_bullet { background:url(../images/bullet_cert.png) left 3px no-repeat; padding-left:18px;}
+ul.list_list > li > p.m_bullet:focus {border:1px solid #5381ac;}
+ul.list_list > li > p.m_bullet_exp { background:url(../images/bullet_cert_exp.png) left 3px no-repeat; padding-left:18px;}
+ul.list_list > li > p.m_bullet_exp:focus {border:1px solid #5381ac;}
+ul.list_list > li > p.m_bullet_time { background:url(../images/bullet_cert_time.png) left 3px no-repeat; padding-left:18px;}
+ul.list_list > li > p.m_bullet_time:focus {border:1px solid #5381ac;}
+ul.list_list > li > p.m_cert_cloud { background:url(../images/cert_in_cloud.png) left 3px no-repeat; padding-left:18px;}
+ul.list_list > li > p.m_cert_exp_cloud { background:url(../images/cert_expire_in_cloud.png) left 3px no-repeat; padding-left:18px;}
+ul.list_list > li > p.m_cert_warn_cloud { background:url(../images/cert_warn_in_cloud.png) left 3px no-repeat; padding-left:18px;}
+
+ul.list_list_ {width:382px; cursor:pointer; }
+ul.list_list_ > li {float:left; width:71px; padding-left:5px; height:20px; padding-top:2px; line-height:22px; color:#172532; overflow:hidden; cursor:pointer;}
+ul.list_list_ > li:first-child {width:149px; padding-left:5px;}
+ul.list_list_ > li > p.m_bullet { background:url(../images/bullet_cert.png) left 3px no-repeat; padding-left:18px;}
+ul.list_list_ > li > p.m_bullet:focus { border:1px solid #5381ac; }
+ul.list_list_ > li > p.m_bullet_exp { background:url(../images/bullet_cert_exp.png) left 3px no-repeat; padding-left:18px;}
+ul.list_list_ > li > p.m_bullet_exp:focus {border:1px solid #5381ac;}
+ul.list_list_ > li > p.m_bullet_time { background:url(../images/bullet_cert_time.png) left 3px no-repeat; padding-left:18px;}
+ul.list_list_ > li > p.m_bullet_time:focus {border:1px solid #5381ac;}
+ul.list_list_ > li > p.m_cert_cloud { background:url(../images/cert_in_cloud.png) left 3px no-repeat; padding-left:18px;}
+ul.list_list_ > li > p.m_cert_exp_cloud { background:url(../images/cert_expire_in_cloud.png) left 3px no-repeat; padding-left:18px;}
+ul.list_list_ > li > p.m_cert_warn_cloud { background:url(../images/cert_warn_in_cloud.png) left 3px no-repeat; padding-left:18px;}
+
+ul.list_list:hover, ul.list_list_:hover, ul.list_list_.on,
+ul.list_list.on {width:382px; cursor:pointer;}
+ul.list_list:hover > li, ul.list_list_:hover > li, ul.list_list_.on > li,
+ul.list_list.on > li {float:left; width:71px; padding-left:5px; height:20px; padding-top:2px; line-height:22px; background:#3a95eb; color:#fff; overflow:hidden; cursor:pointer;}
+ul.list_list:hover > li:first-child, ul.list_list_:hover > li:first-child, ul.list_list_.on > li:first-child,
+ul.list_list.on > li:first-child {width:149px; padding-left:5px;}
+ul.list_list:hover > li > p.m_bullet, ul.list_list_:hover > li > p.m_bullet, ul.list_list_.on > li > p.m_bullet,
+ul.list_list.on > li > p.m_bullet { background:url(../images/bullet_cert_on.png) left 3px no-repeat; padding-left:18px;}
+ul.list_list:hover > li > p.m_bullet_exp, ul.list_list_:hover > li > p.m_bullet_exp, ul.list_list_.on > li > p.m_bullet_exp,
+ul.list_list.on > li > p.m_bullet_exp { background:url(../images/bullet_cert_exp_on.png) left 3px no-repeat; padding-left:18px;}
+ul.list_list:hover > li > p.m_bullet_time, ul.list_list_:hover > li > p.m_bullet_time, ul.list_list_.on > li > p.m_bullet_time,
+ul.list_list.on > li > p.m_bullet_time { background:url(../images/bullet_cert_time_on.png) left 3px no-repeat; padding-left:18px;}
+ul.list_list:hover > li > p.m_cert_cloud, ul.list_list_:hover > li > p.m_cert_cloud, ul.list_list_.on > li > p.m_cert_cloud,
+ul.list_list.on > li > p.m_cert_cloud { background:url(../images/cert_selected_in_cloud.png) left 3px no-repeat; padding-left:18px;}
+ul.list_list:hover > li > p.m_cert_exp_cloud, ul.list_list_:hover > li > p.m_cert_exp_cloud, ul.list_list_.on > li > p.m_cert_exp_cloud,
+ul.list_list.on > li > p.m_cert_exp_cloud { background:url(../images/cert_selected_expire_in_cloud.png) left 3px no-repeat; padding-left:18px;}
+ul.list_list:hover > li > p.m_cert_warn_cloud, ul.list_list_:hover > li > p.m_cert_warn_cloud, ul.list_list_.on > li > p.m_cert_warn_cloud,
+ul.list_list.on > li > p.m_cert_warn_cloud { background:url(../images/cert_warn_selected_in_cloud.png) left 3px no-repeat; padding-left:18px;}
+
+.cert01_03 { width:401px; height:22px; background:url(../images/li03_bg.jpg) left top no-repeat; margin-top:3px;}
+
+.cert01_04 { position:relative; width:379px; padding:10px 10px 8px 10px; margin-top:7px; border:1px solid #8b9eb0;}
+.cert01_04 .CERT_010401 { float:left; width:100px; }
+.cert01_04 .CERT_010402 { float:right; width:270px;}
+.cert01_04 .CERT_010402 input.CERT_01_detail { width:97%; height:20px; line-height:20px; padding:2px 1% 0 1%; background:#e5e5e5; border:1px solid #547797; color:#547797; font-size:11px; font-family:돋움; overflow:hidden;}
+.cert01_04 .CERT_010402 h2 { float:left; line-height:30px;}
+.cert01_04 .CERT_010402 .CERT_0104_q { float:left; padding-top:6px; padding-left:4px; }
+.cert01_04 .CERT_0104_q_pop { position:relative; top:19px; left:202px; width:188px; height:59px; background:url(../images/popdiv_bg.png) no-repeat;}
+.cert01_04 .CERT_0104_q_pop p { position:absolute; padding:10px 0 0 20px; color:#fff; font-size:12px; font-family:돋움; line-height:15px;}
+.cert01_04 .CERT_010402 input.CERT_01_pw {float:right; width:61%; padding:5px; margin-right:1px; }
+
+.cert01_05 { position:relative; width:100%; height:97px; border:1px solid #8b9eb0; background:#fff; overflow-y:scroll; margin-bottom:2px;}
+
+/*DIALOG01*/
+.CERT_dialog01 { position:relative; width:224px; min-height:110px; padding:10px 0; background:#cdcdcd; margin-bottom:12px; overflow-x:scroll; overflow-y:hidden; margin:0 auto;}
+.CERT_dialog01 > ul { position:absolute; left:5px; width:360px; background:#cdcdcd;}
+//.CERT_dialog01 { position:relative; width:224px; min-height:110px; padding:10px 0; background:#ccc; margin-bottom:12px; overflow-x:scroll; overflow-y:hidden;}
+//.CERT_dialog01 > ul { position:absolute; left:5px; width:360px;}
+.CERT_dialog01 > ul > li {float:left; position:relative; margin:0 2px;  text-align:center; background:#fff;}
+.CERT_dialog01 > ul:after {display:block; content:""; clear:both;}
+.CERT_dialog01 > ul > li a { width:65px; padding:50px 0 5px 0; display:inline-block; border:1px solid #aaa; font-size:11px;  }
+.CERT_dialog01 > ul > li a:hover,
+.CERT_dialog01 > ul > li a.on { border:1px solid #008aff; color:#0365b8;}
+.CERT_dialog01 > ul > li a.ico1 { background:url(../images/ico_usb.jpg) center 8px no-repeat;}
+.CERT_dialog01 > ul > li a.ico2 { background:url(../images/ico_securitytoken.jpg) center 8px no-repeat;}
+.CERT_dialog01 > ul > li a.ico3 { background:url(../images/ico_savetoken.jpg) center 8px no-repeat;}
+.CERT_dialog01 > ul > li a.ico4 { background:url(../images/ico_harddisk.jpg) center 8px no-repeat;}
+.CERT_dialog01 > ul > li a.ico5 { background:url(../images/ico_search.jpg) center 8px no-repeat;}
+.CERT_dialog01 > ul > li a.ico6 { background:url(../images/ico_securityDisk.jpg) center 8px no-repeat;}
+.CERT_dialog01 > ul > li a.ico7 { background:url(../images/ico_mobile.jpg) center 8px no-repeat;}
+.CERT_dialog01 > ul > li a.ico8 { background:url(../images/ico_browser.jpg) center 8px no-repeat;}
+.CERT_dialog01 > ul > li a.ico9 { background:url(../images/ico_securityDisk.jpg) center 8px no-repeat;}
+.CERT_dialog01 > ul > li a.ico10 { background:url(../images/ico_smart.jpg) center 8px no-repeat;}
+.CERT_dialog01 > ul > li a.ico1:hover,
+.CERT_dialog01 > ul > li a.ico1_on { background:url(../images/ico_usb_on.jpg) center 8px no-repeat;}
+.CERT_dialog01 > ul > li a.ico2:hover,
+.CERT_dialog01 > ul > li a.ico2_on { background:url(../images/ico_securitytoken_on.jpg) center 8px no-repeat;}
+.CERT_dialog01 > ul > li a.ico3:hover,
+.CERT_dialog01 > ul > li a.ico3_on { background:url(../images/ico_savetoken_on.jpg) center 8px no-repeat;}
+.CERT_dialog01 > ul > li a.ico4:hover,
+.CERT_dialog01 > ul > li a.ico4_on { background:url(../images/ico_harddisk_on.jpg) center 8px no-repeat;}
+.CERT_dialog01 > ul > li a.ico5:hover,
+.CERT_dialog01 > ul > li a.ico5_on { background:url(../images/ico_search_on.jpg) center 8px no-repeat;}
+.CERT_dialog01 > ul > li a.ico6:hover,
+.CERT_dialog01 > ul > li a.ico6_on { background:url(../images/ico_securityDisk_on.jpg) center 8px no-repeat;}
+.CERT_dialog01 > ul > li a.ico7:hover,
+.CERT_dialog01 > ul > li a.ico7_on { background:url(../images/ico_mobile_on.jpg) center 8px no-repeat;}
+.CERT_dialog01 > ul > li a.ico8:hover,
+.CERT_dialog01 > ul > li a.ico8_on { background:url(../images/ico_browser_on.jpg) center 8px no-repeat;}
+.CERT_dialog01 > ul > li a.ico9:hover,
+.CERT_dialog01 > ul > li a.ico9_on { background:url(../images/ico_securityDisk_on.jpg) center 8px no-repeat;}
+.CERT_dialog01 > ul > li a.ico10:hover,
+.CERT_dialog01 > ul > li a.ico10_on { background:url(../images/ico_smart_on.jpg) center 8px no-repeat;}
+
+/********************************************************************************************/
+/*메인버튼*/
+.CERT_btn_right { display:inline-block; float:right;}
+.CERT_btn_center { text-align:center; }
+.CERT_btn_center > p { display:inline-block;}
+
+.CERT_btnBg_btn { display:inline-block; background:url(../images/btnBg_right.jpg) right no-repeat; padding-right:3px; margin-bottom:2px; cursor: pointer;}
+.CERT_btnBg_btn a {display:inline-block; padding:0 10px 0 13px; height:30px; line-height:30px; background:url(../images/btnBg.jpg); color:#326594 !important; }
+.CERT_btnBg_btn a:active {background:url(../images/btnBg_on.jpg);}
+
+.CERT_btns { position:relative; width:401px; margin-top:15px; text-align:center;}
+.CERT_btns > div { float:left; cursor:pointer;}
+.CERT_btnBg_mbtn1 { width:115px; float:left; background:url(../images/btnBg_right.jpg) right no-repeat; padding-right:3px;}
+.CERT_btnBg_mbtn1 a {display:inline-block; width:100%; padding-top:2px; height:26px; line-height:26px; background:url(../images/btnBg.jpg); color:#326594 !important; }
+.CERT_btnBg_mbtn1 a:active {background:url(../images/btnBg_on.jpg);}
+.CERT_btnBg_mbtn2 { width:156px; float:left; background:url(../images/btnBg_right.jpg) right no-repeat; padding-right:3px; margin:0 3px;}
+.CERT_btnBg_mbtn2 a {display:inline-block; width:100%; padding-top:2px; height:26px; line-height:26px; background:url(../images/btnBg.jpg); color:#326594 !important; }
+.CERT_btnBg_mbtn2 a:active {background:url(../images/btnBg_on.jpg);}
+
+/*버튼공통*/
+.CERT_btns_common {position:relative; margin-top:10px; text-align:center;}
+.CERT_btnBg_mbtn { display:inline-block; cursor: pointer; background:url(../images/btnBg_right.jpg) right no-repeat; padding-right:3px;}
+.CERT_btnBg_mbtn a {display:inline-block; padding:2px 45px 0 45px; height:28px; line-height:26px; font-family:돋움; background:url(../images/btnBg.jpg); color:#326594 !important; }
+.CERT_btnBg_mbtn a:active {background:url(../images/btnBg_on.jpg);}
+/*상세버튼*/
+.CERT_btns_right {display:inline-block; float:right;}
+.CERT_btnBg_sbtn { display:inline-block; background:url(../images/btnBg_right.jpg) right no-repeat; padding-right:3px;}
+.CERT_btnBg_sbtn a {display:inline-block; padding:2px 10px 0 13px; height:28px; line-height:26px; background:url(../images/btnBg.jpg); color:#326594 !important; }
+.CERT_btnBg_sbtn a:active {background:url(../images/btnBg_on.jpg);}
+/*버튼_'추가정보'*/
+.CERT_btnBg_sbtn4 { display:inline-block; background:url(../images/btnBg_right.jpg) right no-repeat; padding-right:3px;}
+.CERT_btnBg_sbtn4 a {display:inline-block; width:87px; padding-top:2px; height:28px; line-height:26px; background:url(../images/btnBg.jpg); color:#326594 !important; text-align:center;}
+.CERT_btnBg_sbtn4 a:active {background:url(../images/btnBg_on.jpg);}
+/*상세버튼 스타일2*/
+.CERT_btnBg_sbtn2 { display:inline-block; cursor: pointer; background:url(../images/btn_blue_right.png) right no-repeat; padding-right:5px;}
+.CERT_btnBg_sbtn2 a {display:inline-block; padding:2px 10px 0 15px; height:26px; line-height:26px; background:url(../images/btn_blue.png); color:#fff !important;}
+.CERT_btnBg_sbtn2 a span { display:inline-block; padding-top:1px;}
+.CERT_btnBg_sbtn2 a:hover span { text-decoration:underline;}
+/*상세버튼 스타일3*/
+.CERT_btnBg_sbtn3 { display:inline-block; cursor: pointer; background:url(../images/btn_gray_right.png) right no-repeat; padding-right:1px;}
+.CERT_btnBg_sbtn3 a {display:inline-block; padding:0 10px 0 11px; height:23px; line-height:23px; background:url(../images/btn_gray.png); color:#fff !important;}
+.CERT_btnBg_sbtn3 a span { display:inline-block; padding-top:1px;}
+.CERT_btnBg_sbtn3 a:hover span { text-decoration:underline;}
+/*인증서 가져오기*/
+.CERT_get_btn {display:inline-block; background:url(../images/certificate_get_btn.png) right no-repeat; margin-top:-3px;margin-bottom:4px;}
+.CERT_get_btn a {display:inline-block;width:401px; height:32px; line-height:32px; text-align:center;background:url(../images/certificate_get_btn.png); color:#244c70 !important;}
+.CERT_get_btn a span { display:inline-block; padding-top:1px;}
+.CERT_get_btn a:hover span { text-decoration:underline;}
+
+/*인증서 리스트 보기*/
+.CERT_get_btn2 {display:inline-block; background:url(../images/certificate_get_btn2.png) right no-repeat;margin-top:-3px;margin-bottom:4px}
+.CERT_get_btn2 a {display:inline-block;width:401px; height:32px; line-height:32px; text-align:center;background:url(../images/certificate_get_btn2.png); color:#244c70 !important;}
+.CERT_get_btn2 a span { display:inline-block; padding-top:1px;}
+.CERT_get_btn2 a:hover span { text-decoration:underline;}
+
+/*PFX 가져오기, NPKI 가져오기*/
+.CERT_get_list {overflow:hidden;width:402px;margin-top:3px;}
+.CERT_get_list li {float:left;border:1px solid #d9e5f0;width:199px;height:99px;text-align:center;}
+.CERT_get_list li:nth-child(2){border-left:0;}
+.CERT_get_list li a {display:block;width:199px;height:26px;padding-top:66px; color:#b2c3d2 !important;font-weight:bold;}
+.CERT_get_list li:nth-child(1) a {background:url(../images/ico_pfx.png) center 18px no-repeat;background-color:#fbfcfd;}
+.CERT_get_list li:nth-child(2) a {background:url(../images/ico_npki.png) center 20px no-repeat ;background-color:#fbfcfd;}
+.CERT_get_list li:nth-child(1) a:hover {background:url(../images/ico_pfx_on.png) center 18px no-repeat;background-color:#fbfcfd;color:#005abb !important;}
+.CERT_get_list li:nth-child(2) a:hover {background:url(../images/ico_npki_on.png) center 20px no-repeat;background-color:#fbfcfd;color:#005abb !important;}
+
+.CERT_get_list div.BrowserCertificate_Import_Info { position: absolute;margin-top: 5px;margin-left: 142px;}
+.CERT_get_list div.BrowserCertificate_Import_Info a{background: 0; display:inline}
+.CERT_get_list div.BrowserCertificate_Import_Info a:hover{background: 0; display:inline}
+.CERT_get_list div.BrowserCertificate_Import_Info_right{margin-left: 342px}
+
+.CERT_get_list_flash li {width:399px;}
+.CERT_get_list_flash li div {display:block;width:399px;height:26px;padding-top:66px; color:#b2c3d2 !important;font-weight:bold;}
+.CERT_get_list_flash li:nth-child(1) div {background:url(../images/ico_pfx.png) center 18px no-repeat;background-color:#fbfcfd;}
+
+.CERT_get_list2 {overflow:hidden;width:402px;margin-top:6px;margin-bottom:7px;}
+.CERT_get_list2 li {float:left;border:1px solid #d9e5f0;width:199px;height:128px;text-align:center;}
+.CERT_get_list2 li:nth-child(2){border-left:0;}
+.CERT_get_list2 li a {display:block;width:199px;height:42px;padding-top:86px; color:#b2c3d2 !important;font-weight:bold;}
+.CERT_get_list2 li:nth-child(1) a {background:url(../images/ico_pfx.png) center 36px no-repeat;background-color:#fbfcfd;}
+.CERT_get_list2 li:nth-child(2) a {background:url(../images/ico_npki.png) center 41px no-repeat ;background-color:#fbfcfd;}
+.CERT_get_list2 li:nth-child(1) a:hover {background:url(../images/ico_pfx_on.png) center 36px no-repeat;background-color:#fbfcfd;color:#005abb !important;}
+.CERT_get_list2 li:nth-child(2) a:hover {background:url(../images/ico_npki_on.png) center 41px no-repeat;background-color:#fbfcfd;color:#005abb !important;}
+
+/********************************************************************************************/
+
+
+/*CERTIFICATE 02*/
+pre {width:95%; font-size:12px; color:#666; font-family:돋움; }
+.CERT_stxt2 { height:90px; border:1px solid #b1c5d7; background:#fff; padding:5px; margin-bottom:5px; color:#333; overflow-y:auto;}
+
+
+/*CERTIFICATE 03*/
+/*TAB*/
+.CERT_tabm ul { height:25px; border-bottom:1px solid #b1c5d7;}
+.CERT_tabm ul li {float:left; height:26px; background:url(../images/tabm_l.jpg) left top no-repeat; margin-right:1px;}
+.CERT_tabm ul li a { display:inline-block; padding:2px 8px 0 8px; height:24px; line-height:24px; color:#fff; background:url(../images/tabm_r.jpg) right top no-repeat; letter-spacing:-0.05em;}
+.CERT_tabm ul li.CERT_on { background:url(../images/tabmov_l.jpg) left top no-repeat;}
+.CERT_tabm ul li a.CERT_on { background:url(../images/tabmov_r.jpg) right top no-repeat; color:#000;}
+
+/*TAB COMMON*/
+.CERT_tab_comm ul { height:25px; border-bottom:1px solid #b1c5d7;}
+.CERT_tab_comm ul li {float:left; height:26px; background:url(../images/tabm_l.jpg) left top no-repeat; margin-right:1px;}
+.CERT_tab_comm ul li a { display:inline-block; padding:2px 20px 0 20px; height:24px; line-height:24px;  color:#fff; background:url(../images/tabm_r.jpg) right top no-repeat; letter-spacing:-0.05em;}
+.CERT_tab_comm ul li.CERT_on { background:url(../images/tabmov_l.jpg) left top no-repeat;}
+.CERT_tab_comm ul li a.CERT_on { background:url(../images/tabmov_r.jpg) right top no-repeat; color:#000;}
+.CERT_tab_comm ul li.CERT_on .CERT_on2 { display:inline-block; height:24px; line-height:24px;  font-family:돋움; font-weight:normal; background:url(../images/tabmov_r.jpg) right top no-repeat; color:#000; padding:2px 15px 0 15px;;}
+
+.CERT_contWrap {width:93.6%; height:240px; border:1px solid #b1c5d7; border-top:0 !important; background:#fff; padding:5% 3%; }
+
+.CERT_linebox { position:relative; width:100%; height:137px; line-height:18px; border:1px solid #8b9eb0; background:#fff; overflow-y:scroll; margin-bottom:4px;}
+ul.CERT_list_cate {width:312px; height:23px; background:#fff; position:fixed; z-index:1;}
+ul.CERT_list_cate > li { float:left; width:226px; padding-left:5px; height:20px; padding-top:2px; line-height:20px; font-weight:normal; font-size:11px; color:#4f6c87; text-align:left; border-left:1px solid #8b9eb0; border-bottom:1px solid #8b9eb0;}
+ul.CERT_list_cate > li:first-child { width:75px; padding-left:5px !important; border-left:0;}
+
+ul.CERT_listWrap { position:absolute; top:23px; width:312px; border-top:1px solid #e5e5e5; z-index:0;}
+ul.CERT_listWrap img { vertical-align:middle;}
+
+ul.CERT_list_list {width:312px; cursor:pointer;}
+ul.CERT_list_list > li {float:left; width:226px; padding-left:5px; height:20px; padding-top:2px; line-height:20px; color:#172532; overflow:hidden; cursor:pointer; border-left:1px solid #eee; border-bottom:1px solid #eee; }
+ul.CERT_list_list > li:first-child {width:75px; padding-left:5px; border-left:0;}
+ul.CERT_list_list > li > p.CERT_bullet { background:url(../images/bullet_check.png) left 3px no-repeat; padding-left:18px;}
+
+ul.CERT_list_list_ {width:312px; cursor:pointer; background:#e7e7e7;}
+ul.CERT_list_list_ > li {float:left; width:226px; padding-left:5px; height:20px; padding-top:2px; line-height:20px; color:#172532; overflow:hidden; cursor:pointer; border-left:1px solid #eee; border-bottom:1px solid #eee; }
+ul.CERT_list_list_ > li:first-child {width:75px; padding-left:5px; border-left:0;}
+ul.CERT_list_list_ > li > p.CERT_bullet { background:url(../images/bullet_check.png) left 3px no-repeat; padding-left:18px;}
+
+ul.CERT_list_list:hover, ul.CERT_list_list_:hover, ul.CERT_list_list_.on,
+ul.CERT_list_list.on {width:312px; cursor:pointer;}
+ul.CERT_list_list:hover > li, ul.CERT_list_list_:hover > li, ul.CERT_list_list_.on > li,
+ul.CERT_list_list.on > li {float:left; width:226px; padding-left:5px; height:20px; padding-top:2px; line-height:20px; background:#3a95eb; color:#fff; overflow:hidden; cursor:pointer; border-left:1px solid #eee; border-bottom:1px solid #eee;}
+ul.CERT_list_list:hover > li:first-child, ul.CERT_list_list_:hover > li:first-child, ul.CERT_list_list_.on > li:first-child,
+ul.CERT_list_list.on > li:first-child {width:75px; padding-left:5px; border-left:0;}
+ul.CERT_list_list:hover > li > p.CERT_bullet, ul.CERT_list_list_:hover > li > p.CERT_bullet, ul.CERT_list_list_.on > li > p.CERT_bullet,
+ul.CERT_list_list.on > li > p.CERT_bullet { background:url(../images/bullet_check_on.png) left 3px no-repeat; padding-left:18px;}
+
+
+/*상세정보BOX*/
+.CERT_detailbox { width:96.2%; height:50px; line-height:14px; background:url(../images/textbox.jpg) no-repeat; color:#666; overflow-y:auto; padding:2%; margin-bottom:2px;}
+.CERT_detailbox2 { width:94.2%; min-height:80px; height:280px; line-height:24px; background:url(../images/textbox.jpg) no-repeat; color:#454545; overflow-y:auto; padding:3%; margin-bottom:2px;}
+
+/*TEXTAREA STYLE*/
+textarea.CERT_02_ta { width:95%; height:90px; border:1px solid #b1c5d7; background:#fff; padding:5px; color:#333; overflow-y:auto;}
+textarea.CERT_06_ta {width:96.5%; height:50px; line-height:14px; background:url(../images/textbox.jpg) no-repeat; padding:2%; margin-bottom:2px; color:#555; border:0; overflow-y:auto;}
+textarea.CERT_07_ta {width:96%; height:220px; line-height:20px; background:url(../images/textbox.jpg) no-repeat; padding:2%; margin-bottom:8px; color:#555; border:0; overflow-y:auto;}
+textarea.CERT_04_ta { width:96%; height:90px; line-height:16px; background:url(../images/textbox.jpg) no-repeat; padding:2%; margin-bottom:10px; color:#555; border:0; overflow-y:auto;}
+textarea.CERT_11_ta {width:96%; height:80px; color:#eb0722; padding:2%; overflow-y:auto;}
+
+/*CERTIFICATE 04*/
+.CERT_t0401 { padding-bottom:10px;font-family:돋움;font-size:12px;}
+.CERT_t0402 { padding-bottom:10px;font-family:돋움;font-size:12px;}
+.CERT_inlinebox { width:96%; height:90px;font-family:돋움;font-size:12px; line-height:14px; background:url(../images/textbox.jpg) no-repeat; overflow-y:auto; padding:2%; margin-bottom:10px;}
+.CERT_inlinebox .CERT_in_ico { float:left; width:4%; background:none; color:#666;font-family:돋움;font-size:12px;}
+.CERT_inlinebox .CERT_in_answer { float:left; width:90%; background:none; color:#666;font-family:돋움;font-size:12px;}
+.CERT_inlinebox2 { width:96%; height:230px; line-height:20px; background:url(../images/textbox.jpg) no-repeat; overflow-y:auto; padding:2%; margin-bottom:8px;}
+
+/*CERTIFICATE 09*/
+.CERT_txt0901 { background:url(../images/img_cert.png) no-repeat; padding-left:45px;}
+.CERT_em {color:#eb0722;}
+.CERT_txt0901 .CERT_input_pw { padding-bottom:2px;}
+.CERT_txt0901 .CERT_input_pw > p { float:left; width:55%; line-height:28px;}
+.CERT_txt0901 .CERT_input_pw > .CERT_input_txt { width:35%;}
+.CERT_txt0901 .CERT_input_pw .CERT_checkbox_label { display:inline-block; color:#aaa;}
+.CERT_txt0901 .CERT_input_pw .CERT_checkbox_label_on { color:#454545; top:3px;}
+input.CERT_inputstyle1 {border:1px solid #a4a4a4; background:#eee;  color:#454545;}
+input.CERT_inputstyle2 {border:1px solid #a4a4a4;  color:#454545; }
+.CERT_dotline { position:relative; height:1px; background:url(../images/dotline2.jpg);}
+
+/*CERTIFICATE 10*/
+textarea.CERT_provision {width:96%; height: 220px;/*min-height:300px;*/ font-size:12px; padding:2%; background:url(../images/textbox.jpg) no-repeat; color:#666; border:none; color:#555;}
+.CERT_contWrap10 { width:95.6%; border:1px solid #b1c5d7; padding:2%; margin-top:10px; color:#111;}
+.CERT_contWrap10 > p:first-child { padding-bottom:10px;}
+
+/*CERTIFICATE 11*/
+.CERT_contWrap11 {width:96%; min-height:80px; border:1px solid #b1c5d7; background:#fff; padding:2%; overflow-y:auto;}
+.CERT_txt11 { font-size:11px; color:#666; padding-top:5px;}
+
+
+#dialog {padding:0 !important;}
+.CERT_dialog01_close { height:23px; background:url(../images/dialog_close_bg.jpg) left no-repeat;}
+.CERT_dialog01_btn { float:right; width:30px; height:23px; background:url(../images/dialog_close_btn.jpg); cursor:pointer;}
+.CERT_dialog01_body {padding:10px;}
+#dialog {font-family:'돋움'; font-size:12px;}
+#dialogCertMsg {font-family:'돋움'; font-size:12px;}
+#dialogCertTab {font-family:'돋움'; font-size:12px;}
+
+iframe {font-family:'돋움'; font-size:12px;}
+
+/*CERTIFICATE 12*/
+.CERT_usb_select {height:128px; overflow-y:auto; background:#e2e2e2;}
+.CERT_usb_select li { display:block; height:32px;}
+.CERT_usb_select li a { display:block; height:30px; line-height:30px; background:#fff; border-top:1px solid #fff; border-bottom:1px solid #cccccc; color:#252e36; padding:0 2%;  }
+.CERT_usb_select li a:hover { background:#3a95eb; color:#fff; }
+.CERT_usb_select li a span {padding-left:18px; padding-top:1px;}
+.CERT_usb_select li a.ico1_bullet span { background:url(../images/bullet_usb.png) no-repeat;}
+.CERT_usb_select li a.ico2_bullet span { background:url(../images/bullet_securitytoken.png) no-repeat;}
+.CERT_usb_select li a.ico3_bullet span { background:url(../images/bullet_savetoken.png) no-repeat;}
+.CERT_usb_select li a.ico4_bullet span { background:url(../images/bullet_harddisk.png) no-repeat;}
+.CERT_usb_select li a.ico5_bullet span { background:url(../images/bullet_search.png) no-repeat;}
+.CERT_usb_select li a.ico6_bullet span { background:url(../images/bullet_securityDisk.png) no-repeat;}
+.CERT_usb_select li a.ico7_bullet span { background:url(../images/bullet_mobile.png) no-repeat;}
+.CERT_usb_select li a.ico8_bullet span { background:url(../images/bullet_browser.png) no-repeat;}
+.CERT_usb_select li a.ico9_bullet span { background:url(../images/bullet_securityDisk.png) no-repeat;}
+.CERT_usb_select li a.ico10_bullet span { background:url(../images/bullet_mobile.png) no-repeat;}
+.CERT_usb_select li a.ico1_bullet:hover span { background:url(../images/bullet_usb_ov.png) no-repeat;}
+.CERT_usb_select li a.ico2_bullet:hover span { background:url(../images/bullet_securitytoken_ov.png) no-repeat;}
+.CERT_usb_select li a.ico3_bullet:hover span { background:url(../images/bullet_savetoken_ov.png) no-repeat;}
+.CERT_usb_select li a.ico4_bullet:hover span { background:url(../images/bullet_harddisk_ov.png) no-repeat;}
+.CERT_usb_select li a.ico5_bullet:hover span { background:url(../images/bullet_search_ov.png) no-repeat;}
+.CERT_usb_select li a.ico6_bullet:hover span { background:url(../images/bullet_securityDisk_ov.png) no-repeat;}
+.CERT_usb_select li a.ico7_bullet:hover span { background:url(../images/bullet_mobile_ov.png) no-repeat;}
+.CERT_usb_select li a.ico8_bullet:hover span { background:url(../images/bullet_browser_ov.png) no-repeat;}
+.CERT_usb_select li a.ico9_bullet:hover span { background:url(../images/bullet_securityDisk_ov.png) no-repeat;}
+.CERT_usb_select li a.ico10_bullet:hover span { background:url(../images/bullet_mobile_ov.png) no-repeat;}
+
+/*CERTIFICATE 13*/
+.CERT_txt1301 { background:url(../images/img_cert.png) no-repeat; padding-left:45px;}
+.CERT_txt1302 { padding:10px 0;}
+.CERT_txt1302 > div.CERT_txt1302_1 { float:left; width:74%;}
+.CERT_txt1302 > div.CERT_txt1302_2 { float:right; width:26%; text-align:right;}
+.CERT_txt1303 { padding-top:10px; color:#666;}
+
+/*CERTIFICATE 14*/
+.CERT_contWrap14 {width:100%; height:135px; border:1px solid #8b9eb0; background:#f4f4f4; color:#172532;}
+.CERT_contWrap14 > div {text-align:center; line-height:14px;}
+.CERT_14_box { width:100%; margin:0 auto; }
+.CERT_14_txt1 { background:#e9e9e9; padding:4px 0 5px 0; color:#454545;}
+.CERT_14_txt2 { background:#e9e9e9; padding:4px 0 5px 0; color:#454545;}
+.CERT_14_line1 { width:100%; height:1px; background:#bfc9d2; margin:0 auto;}
+.CERT_14_line2 { width:100%; height:1px; background:#fff; margin:0 auto;}
+.CERT_14_down { background:url(../images/CERT_14_down.png) left 7px no-repeat; padding-left:12px;}
+.CERT_14_info { background:url(../images/CERT_14_info.png) left 7px no-repeat; padding-left:12px;}
+.CERT_14_refresh { background:url(../images/CERT_14_refresh.png) left 7px no-repeat; padding-left:12px;}
+.CERT_14_search { background:url(../images/CERT_14_search.png) left 7px no-repeat; padding-left:12px;}
+
+/*CERTIFICATE 15*/
+.CERT_contWrap15 {width:400px; height:132px; border:1px solid #8b9eb0; background:#efefef;}
+.CERT_contWrap16 {width:400px; height:132px; border:1px solid #8b9eb0; cursor: pointer;}
+.CERT_15_txt { min-height:75px; background:url(../images/search_img.jpg) no-repeat; padding-left:110px; margin:10px 0 0 45px; line-height:20px; color:#555; }
+.CERT_15_info { background:url(../images/CERT_bul_info_gr.png) left 7px no-repeat; padding-left:12px; color:#969696; font-size:11px;}
+.CERT_15_search { background:url(../images/CERT_14_search.png) 40px 7px no-repeat; padding:0 40px 0 55px;}
+
+/* exportToWeb 2015-11-13추가내용이랍니다.*/
+.CERT_17 { width:399px;}
+.CERT_17 .CERT_17_1 { width:100%; border:1px solid #b1c5d7; background:#f8f8f8; padding:15px 0; margin-bottom:15px;}
+.CERT_17 .CERT_17_1 .CERT17_1_wrap { background:url(../images/img_ptom.png) 20px 5px no-repeat; margin-right:25px;}
+.CERT_17 .CERT_17_1 .CERT17_1_wrap td { vertical-align:top; line-height:20px; color:#454545;}
+.CERT_17 .CERT_17_1 .CERT17_1_wrap td.num { padding-left:125px; width:20px;}
+.CERT_17 h2 { font-size:14px; color:#015bbc; font-weight:bold; padding-bottom:5px;}
+.CERT_17 .CERT_17_2  { width:100%; border:1px solid #b1c5d7; padding:15px 0; margin-bottom:15px; text-align:center;}
+.CERT_17 input.CERT_inputStyle {border:1px solid #8b9eb0; text-align:center; color:#000; line-height:28px; font-size:14px; font-weight:bold; padding:auto 0;}
+
+.fileInputHidden {
+	font-size:23px;	
+	position:absolute;
+	top:0;
+	right:0;
+	opacity:0;	
+	filter: alpha(opacity=0);
+	-ms-filter:"alpha(opacity=0)";
+	-khtml-opacity:0;
+	-moz-opacity:0;	
+	cursor:pointer;
+	width: 189px;
+	left: 26%;
+}
+
+div.contentsBackGround {
+    position:absolute;
+    z-index:99;
+
+    background: url(../images/bg_white.png) repeat 0 0;
+}
+
+#flash_object { height: 20px; width: 127px}
+
+span.certificateListText {
+	padding-top: 55px;
+	line-height: 1em;
+	font-weight: bold;
+	text-align: center;
+	display: block;
+	font-size: 12px;
+}
+
+.CERT_titlebar {width: 430px; border: 0px;}
+.titleIcon {position: absolute; width: 37px; height: 22px; background: url(../images/pw_icon.png) 10px 13px no-repeat;}
+
+.inputter_h1 {border-bottom-width: 0px; border-top-width: 0px; font-weight: bold; font-size: 12px; color: #3c5a74; line-height: 38px; text-align: left; text-indent: 47px; height: 34px;}
+
+.inputter_btnClose { position:absolute; cursor: pointer; top:0; right:0; width:30px; height:34px; background:url(../images/close_btn_out.png) 3px 8px no-repeat; }
+.inputter_btnClose a { display:inline-block; width:21px; height:26px; }
+.inputter_btnClose a:hover { background:url(../images/close_btn_over.png) 3px 8px no-repeat; }
+
+.noticeIcon {position: relative; width: 100%; padding-bottom: 10px; background: url(../images/notice_icon.png) 0px 0px no-repeat;}
+
+.marginTextBox {background: url(../images/section_title_bg.png) 0px 0px no-repeat; width: 131px; height: 22px; position: fixed; padding-left: 13px; font-size: 11px; color: #3270a9; line-height: 23px;font-family: '돋움';}
+
+.notice_wrap {font-family: '돋움'; font-size: 11px; margin-bottom: 22px; background: #f2f6fa; width: 100%; height: 100%; border: 1px solid #d3dfea; color: #3b5973;}
+.noticieTitle { font-size: 12px; margin-left: 38px; color: #547797; font-size: 14px; line-height: 31px; font-family: '돋움'; font-weight: bold; }
+.noticieTitle2 {padding:15px; height: 100%; text-align: left;}
+.noticeTitle3 {margin-top: 10px; padding: 10px; border: 1px solid #d3dfea; background: white; color: #e46364;}
+
+.pw_wrap {margin-bottom: 6px;}
+.pw_wrap input {border-width: 1px; margin-left: 150px; width: 248px; height: 18px; background-color: #ffffff; border-color: #cbdbea;}
+.pw_wrap input:focus {background-color: #e4fafe; border-color: #0085ff;}
+.pw_wrap input:disabled {background-color: #e5edf5; border-color: #cbdbea;}
+
+.checkbox_unChecked {font-family: '돋움'; font-size: 11px; color: #3270a9; position: fixed; margin-top: 7px; background: url(../images/out_bg.png) 0px 0px no-repeat; width: 402px;}
+.checkbox_checked {font-family: '돋움'; font-size: 11px; color: #fff; position: fixed; margin-top: 7px; background: url(../images/click_bg.png) 0px 0px no-repeat; width: 402px;}
+.checkbox_disabled {font-family: '돋움'; font-size: 11px; color: #97b0c7; position: fixed; margin-top: 7px; background: url(../images/disable_bg.png) 0px 0px no-repeat; width: 402px;}
+
+.checkbox_unChecked > div {background: url(../images/checkbox_icon_out.png) 0px 0px no-repeat; margin: 4px 0px 7px 7px; padding-left: 20px;}
+.checkbox_checked > div {background: url(../images/checkbox_icon_click.png) 0px 0px no-repeat; margin: 4px 0px 7px 7px; padding-left: 20px;}
+.checkbox_disabled > div {background: url(../images/checkbox_icon_disable.png) 0px 0px no-repeat; margin: 4px 0px 7px 7px; padding-left: 20px;}
+
+.certWrap {padding: 13px 16px 14px 15px; border-left-width: 0px; border-right-width: 0px;}
+
+.titleText {text-overflow: ellipsis; overflow: hidden; white-space: nowrap; width:370px; margin-left:30px}
+
+.CERT_line{border-top:1px solid #5381ac; margin-top:45px}
+
+/* import from web */
+.CERT_16_txt { min-height:50px; margin:25px 0 0 0; line-height:20px; color:#555; text-align:center; vertical-align:middle;}
+.CERT_16_fileButton {margin-top:10px; }
+.CERT_16 { width:399px;}
+.CERT_16 .CERT_16_1 { width:100%; border:1px solid #b1c5d7; background:#f8f8f8; padding:15px 0; margin-bottom:15px; }
+.CERT_16 .CERT_16_1 .CERT16_1_wrap { background:url(../images/img_mtop.png) 25px 5px no-repeat; margin-right:25px;}
+.CERT_16 .CERT_16_1 .CERT16_1_wrap td { vertical-align:top; line-height:20px; color:#454545;}
+.CERT_16 .CERT_16_1 .CERT16_1_wrap td.num { padding-left:125px; width:20px;}
+.CERT_16 h2 { font-size:14px; color:#015bbc; font-weight:bold; padding-bottom:5px;}
+.CERT_16 .CERT_16_2  { width:100%; border:1px solid #b1c5d7; padding:15px 0; margin-bottom:15px; text-align:center;}
+.CERT_16 input.CERT_inputStyle {border:1px solid #8b9eb0; text-align:center; color:#111; background:#fff8ec; line-height:28px; font-size:14px; font-weight:bold; padding:auto 0;}
+
+/* browserCertificateDragAnddropImport */
+.dragAnddropImportP12_main_box {overflow: hidden;background: #e9edf8;}
+.dragAnddropImportP12_main_box .CERT_get_list {width:320px;padding:25px 42px 5px;}
+.dragAnddropImportP12_main_box .CERT_get_list li {text-align:center;letter-spacing: -0.05em;font-size:11px;}
+.dragAnddropImportP12_main_box .CERT_get_list li>p {color:#e95e00;}
+
+
+.dragAnddropImportP12_main_box .CERT_get_list div.BrowserCertificate_Import_Info { position: absolute;margin-top: 5px;margin-left: 142px;}
+.dragAnddropImportP12_main_box .CERT_get_list div.BrowserCertificate_Import_Info a{background: 0; display:inline}
+.dragAnddropImportP12_main_box .CERT_get_list div.BrowserCertificate_Import_Info a:hover{background: 0; display:inline}
+.dragAnddropImportP12_main_box .CERT_get_list div.BrowserCertificate_Import_Info_right{margin-left: 342px}
+
+.CERT_btnBg_mbtn3 { width:156px; float:left; background:url(../images/btnBg_right.jpg) right no-repeat; padding-right:3px; margin:0 3px;}
+.CERT_btnBg_mbtn3 a {display:inline-block; width:100%; padding-top:2px; height:26px; line-height:24px; background:url(../images/btnBg2.jpg); color:#326594 !important; }
+.CERT_btnBg_mbtn3 a:active {background:url(../images/btnBg_on.jpg);}
+
+.cert01_06 { width:399px;}
+.cert01_06 > h2 { float:left; width:100px;  padding-left:18px; padding-bottom:0 !important; line-height:14px;}
+.cert01_06 .input_pw {float:left; width:66%; } 
+
+/* 인증서 가져오기 */
+.certWrap2 {width:399px; margin:0 auto; border-top:1px solid #5381ac; padding:13px 15px 15px 15px;}
+.certWrap3 {width:399px; margin:0 auto; padding: 13px 16px 14px 15px; border-left-width: 0px; border-right-width: 0px; border-top: 1px dashed #5381ac;}
+.browTit {font-size:15px;font-weight:900;color:#000;line-height:25px;letter-spacing: -0.05em;}
+.certiBox {margin:0 0 20px;padding-bottom:25px;border-bottom: 1px dashed #dee4f5;}
+#certificateTit{background-color: #fff;padding: 10px 0;cursor:pointer;text-align: left;font-size:13px;text-indent:10px;color:#000000;border:0px solid #8b9eb0;font-weight:700;}  
+#certificateTxt {padding:12px 18px;border:1px solid #8b9eb0;background-color: #fff;}
+.dwIco {display:block;margin:15px auto 10px;width:180px; height:36px;line-height:36px;background-color:#afafaf;border:0px solid #afafaf;text-align:center;color:#fff !important;font-weight:700;}
+.dwIco>img {margin-right:7px;margin-top:14px;}
+
+.CERT_get_list3 {width:338px;margin:4px 0 ;padding:22px 30px 8px;height:95px;background:#e9edf8;border:1px solid #8b9eb0;text-align:center;color:#337bc9;font-weight:700;}
+.CERT_get_list3 li {letter-spacing: -0.1em;}
+.CERT_get_list3>li>img {margin-bottom:12px;}
+
+/*인증서 가져오기 비밀번호 인풋 css*/
+.certText {margin-top:18px; margin-bottom:10px;}
+.CERT_btns2 {margin:0 auto;position:relative; width:330px; text-align:center;}
+input.style2 {border:1px solid #547797; text-align:left; color:#454545; line-height:26px;}
+input.style3 {border:1px solid #8b9eb0; text-indent:10px; color:#454545; line-height:26px;}
+/*인증서 가져오기 인증서 파일 선택 창*/
+.CERT_contWrap17 {width:399px; height:125px; border:1px solid #8b9eb0; background:#efefef;}
+/* 인증서 가져오기 비밀번호 백그라운드 */
+.pwd_bg3 {margin-top: 0px; width: 399px; height: 28px; position: absolute; background-color: #BDBDBD; opacity: 0.7}
+.pwd_bg4 {margin-top: 0px; width: 399px; height: 48px; position: absolute; background-color: #BDBDBD; opacity: 0.7}
+
+/* 인증서 설치 페이지 */
+
+.CERT_btnBg_sbtn2:focus-within {border:1px solid #5381ac;}
+.CERT_get_list3:focus-within {border:2px solid #5381ac;}
+
+.drageAnddrop_pwd_bg {margin-top: 7px;z-index: 999;}
+.drageAnddrop_pwd_bg2 {margin-top: 0px;z-index: 999;}
+.drageAnddrop_content_bg{position: absolute; opacity: 0.7; height: 125px; background: #BDBDBD;z-index: 100;}
+.dragAnddropImportP12_main_box {overflow: hidden;background: #e9edf8;}
+.dragAnddropImportP12_main_box .CERT_get_list {width:320px;padding:25px 42px 5px;}
+.dragAnddropImportP12_main_box .CERT_get_list li {text-align:center;letter-spacing: -0.05em;font-size:11px;}
+.dragAnddropImportP12_main_box .CERT_get_list li>p {color:#e95e00;}
+
+
+.dragAnddropImportP12_main_box .CERT_get_list div.BrowserCertificate_Import_Info { position: absolute;margin-top: 5px;margin-left: 142px;}
+.dragAnddropImportP12_main_box .CERT_get_list div.BrowserCertificate_Import_Info a{background: 0; display:inline}
+.dragAnddropImportP12_main_box .CERT_get_list div.BrowserCertificate_Import_Info a:hover{background: 0; display:inline}
+.dragAnddropImportP12_main_box .CERT_get_list div.BrowserCertificate_Import_Info_right{margin-left: 342px}
+.dragAnddropImportP12_footer_box div.common_btn {margin-top:15px;}

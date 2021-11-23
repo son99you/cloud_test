@@ -1,0 +1,279 @@
+﻿@charset "utf-8";
+
+
+/************************************************************************************************************
+   Web Font
+************************************************************************************************************/
+
+
+@font-face {
+    font-family:"Noto Sans KR";
+    src: url("../../../statics/css/font/NotoSansKR-Bold.otf"),
+    url("../../../statics/css/font/NotoSansKR-Bold.eot"),
+    url("../../../statics/css/font/NotoSansKR-Bold.eot") format("eot"),
+    url("../../../statics/css/font/NotoSansKR-Bold.woff") format("woff"),
+    url("../../../statics/css/font/NotoSansKR-Bold.ttf") format("truetype");
+    font-weight:bold;
+    font-style:normal;
+
+}
+@font-face {
+    font-family:"Noto Sans KR";
+    src: url("../../../statics/css/font/NotoSansKR-Regular.otf"),
+    url("../../../statics/css/font/NotoSansKR-Regular.eot"),
+    url("../../../statics/css/font/NotoSansKR-Regular.eot") format("eot"),
+    url("../../../statics/css/font/NotoSansKR-Regular.woff") format("woff"),
+    url("../../../statics/css/font/NotoSansKR-Regular.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal;
+}
+
+@font-face {
+    font-family:"Noto Sans KR";
+    src: url("../../../statics/css/font/NotoSansKR-Medium.otf"),
+    url("../../../statics/css/font/NotoSansKR-Medium.eot"),
+    url("../../../statics/css/font/NotoSansKR-Medium.eot") format("eot"),
+    url("../../../statics/css/font/NotoSansKR-Medium.woff") format("woff"),
+    url("../../../statics/css/font/NotoSansKR-Medium.ttf") format("truetype");
+    font-weight:500;
+    font-style:normal;
+}
+
+@font-face {
+    font-family:"Noto Sans KR";
+    src: url("../../../statics/css/font/NotoSansKR-Light.otf"),
+    url("../../../statics/css/font/NotoSansKR-Light.eot"),
+    url("../../../statics/css/font/NotoSansKR-Light.eot") format("eot"),
+    url("../../../statics/css/font/NotoSansKR-Light.eot?#iefix") format("embedded-opentype"),
+    url("../../../statics/css/font/NotoSansKR-Light.woff") format("woff"),
+    url("../../../statics/css/font/NotoSansKR-Light.ttf") format("truetype");
+    font-weight:100;
+    font-style:normal;
+}
+
+/*************************************************************
+    기본설정
+ *************************************************************/
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight:normal;
+    box-sizing:border-box;
+    letter-spacing:-0.5px;
+    line-height:1em;
+}
+
+*:focus {
+    outline: none;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+    background-color: #F0F1F5;
+}
+
+body, p, h1, h2, h3, h4, h5, h6, ul, ol, li, dl, dt, dd, table, th, td, form, fieldset, legend, input, textarea, button, select {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    color: #000;
+}
+hr {border:none;}
+
+body {
+    font-size: 16px;
+    background-color: #F0F1F5;
+}
+
+header, footer, nav {
+    display: block;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+img, button {
+    border: 0 none;
+    font-family:'Noto Sans KR', sans-serif;
+    font-weight:normal;
+}
+
+table {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+label {
+    margin-bottom:0;
+}
+
+em {
+    font-style: normal;
+}
+
+a, u, a:hover {
+    text-decoration: none;
+    color: #000;
+}
+
+a {
+    outline: 0;
+}
+
+textarea {
+    resize: none;
+}
+
+input, select, textarea {
+    outline: none;
+    box-shadow: none;
+}
+
+button {
+    cursor: pointer;
+    background-color:#fff;
+}
+
+button:focus {
+    outline: none;
+}
+
+.swiper-slide {width:auto !important;}
+/*************************************************************
+    Header
+ *************************************************************/
+.layout-header {height:317px; background:url(../../../statics/images/opro/login/bg_header.png) no-repeat; background-size:100% auto;}
+.layout-header .wrap-header {width:1100px; margin:0 auto; overflow:hidden;}
+.layout-header .img-logo {display:inline-block; float:left; margin:42px 0 0 0; width:270px; height:49px; background:url(../../../statics/images/opro/login/img_logo.png)no-repeat;}
+.layout-header .header-menu {float:right;}
+.layout-header .list-menu {padding:58px 0 0 0;overflow:hidden;}
+.layout-header .list-menu li {float:left; padding-left:56px;}
+.layout-header .list-menu li a {display:inline-block;  font-size:16px; font-weight:500;color:#fff;}
+
+/*************************************************************
+    Contents
+ *************************************************************/
+.layout-contents {position:relative; margin:-168px auto 0 auto; width:1100px; }
+.layout-contents .ui-contents + .ui-contents {margin:21px 0 0 0;}
+.layout-contents .ui-contents:after {display:table; clear:both; content:'';}
+
+/*************************************************************
+    평가공고
+ *************************************************************/
+.box-noti {position:relative; float:left; width:750px; height:340px; padding:33px 48px 38px 49px; background: #FFFFFF; box-shadow: 0px 7px 14px rgba(0, 0, 0, 0.1);
+border-radius: 4px; overflow:hidden;}
+.box-noti .box-label {font-size:18px; color:#231F20; font-weight:700;}
+.box-noti .link-add {position:absolute; top:38px; right:51px; font-size:10px; color:#1455A9; font-weight:700;
+;}
+.txt-rolling {display:inline-block; margin:0 2px;padding:6px 10px;border:1px solid #D8DAE8; color:#222; font-size:12px; font-weight:400;border-radius: 4px; background: #EFF3FA;}
+.slider-category {padding:14px 30px 12px 30px;}
+.slider-category .txt-rolling.is-selected {border:1px solid #406AB2; background-color:#406AB2; color:#fff;}
+.slick-next {position:absolute; top:50%; right:0; margin-top:-13px; transform:rotate(180deg)}
+.slick-prev {position:absolute; top:50%; left:0; margin-top:-13px;}
+.slick-next,
+.slick-prev{display:inline-block; width:26px; height:26px; border: 1px solid #D8DAE8; text-indent:-300000px; z-index:1;}
+.slick-next.slick-disabled ,
+.slick-prev.slick-disabled {opacity:0.4; cursor:default;}
+.slick-prev:before,
+.slick-next:before {display:inline-block;position:absolute; top:50%; left:50%; margin:-5px 0 0 -3px;width:5px; height:10px; background:url(../../../statics/images/opro/login/icon_arrow.png) no-repeat; content:'';}
+.wrap-rolling {margin:15px 0 12px 0;}
+
+
+.ui-noti {display:none; overflow:hidden;}
+.area-noti {display:inline-block; float:left; padding:0 20px; width:211px; height:200px;border: 1px solid #D8DAE8; box-sizing: border-box; border-radius: 4px;}
+.area-noti + .area-noti {margin-left:10px;}
+.area-noti .txt-day {display:block; padding:23px 0 0 0;color:#878A8F; font-size:12px; font-weight:500;}
+.area-noti .txt-title {padding:9px 0 0 0; height:72px;color:#1F2020; font-weight:600; line-height:21px; font-size:14px;word-wrap: break-word; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow:hidden;}
+.area-noti .txt-date {padding:32px 0 0 0;}
+.area-noti .txt-date .txt-start {}
+.area-noti .txt-date .txt-date-tag {display:inline-block; padding:2px 5px; background: #E6F1FF;border-radius: 2px; font-size:11px; color: #1F2020;}
+.area-noti .txt-date .txt-date {padding-left:7px; color:#878A8F; font-size:12px;}
+.area-noti .txt-date .txt-end {padding:5px 0 0 0;}
+.area-noti .txt-date .txt-end .txt-date-tag {background-color:#FFF4EA;}
+
+
+
+/*************************************************************
+    로그인
+ *************************************************************/
+
+.box-login {display:inline-block; float:right; padding:50px 50px; width:330px; height:340px; background: #406BB3;
+    box-shadow: 0px 7px 14px rgba(0, 0, 0, 0.1);
+    border-radius: 4px; text-align:center;}
+.box-login .box-label {padding:0 0 18px 0;color:#fff; font-weight:700; font-size:24px;}
+.list-login-tab {margin:0 0 21px 0;background: #EFF3FA; border: 1px solid #FFFFFF; border-radius: 30px;overflow:hidden;}
+.list-login-tab li {float:left; width:50%;}
+.list-login-tab li a {display:block; padding:7px 0; color:#1F2020; font-size: 13px;}
+.list-login-tab li.is-selected a {margin:-1px; border: 1px solid #CCCCCC; border-radius: 30px; font-size:13px; color:#1455A9; font-weight:700; background-color:#fff;}
+.form-login .form-label {padding:8px 10px 10px 10px;font-size:14px; font-weight:700; color:#fff;}
+.form-login .input-login {display:block; width:100%; height:36px; background-color:#fff; border:none;}
+.form-login .input-login-h {width:95px; height:35px; background-color:#fff; border:none; float: left;}
+.btn-login {display:block; margin:24px 0 0 0;width:100%;padding:20px 0;background: #FF6B37; font-size:14px; color:#fff; text-align:center; font-weight:700; float: left;}
+span.hyphen{width: 40px; line-height: 30px; height: 36px; display: inline-block; color: #fff; float: left;}
+
+/*************************************************************
+    공지
+ *************************************************************/
+.box-board {position:relative; padding:0 49px 0 141px;width:540px; height:290px; float:left; background: #ECF5FF; box-shadow: 0px 7px 14px rgba(0, 0, 0, 0.1); border-radius: 4px; }
+.box-board .ui-title {position:absolute; top:0; left:0; padding:63px 0 0 0;width:141px; height:100%; text-align:center;}
+
+.box-board .box-label {display:block;padding:16px 0 0 0;font-size: 18px;
+    line-height: 25px; font-weight:700; color:#231F20; text-align:center;}
+.box-board .ui-title:before {display:inline-block; width:41px; height:41px;background:url(../../../statics/images/opro/login/icon_board.png) no-repeat; content:'';}
+.box-board .ui-title .link-add {display:inline-block; margin:17px 0 0 0;padding:0 9px; background: #FFFFFF;border-radius: 20px;font-size: 10px; line-height: 17px;color: #1455A9; font-weight: 600}
+ul.list-board { padding:56px 0 0 0;}
+ul.list-board li + li {padding:15px 0 0 0;}
+ul.list-board li a{display:block;}
+ul.list-board li a .txt-title {font-size: 14px; font-weight:500;line-height: 19px; color: #1F2020; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+ul.list-board li a .txt-date {display:block; font-weight: 500;
+    font-size: 12px;line-height: 16px; color: #878A8F;}
+
+
+/*************************************************************
+    자주하는 질문
+ *************************************************************/
+
+.box-qa {position:relative; padding:0 49px 0 141px;width:540px; height:290px; float:right; background: #F6F6F6; box-shadow: 0px 7px 14px rgba(0, 0, 0, 0.1); border-radius: 4px; }
+.box-qa .ui-title {position:absolute; top:0; left:0; padding:63px 0 0 0;width:141px; height:100%; text-align:center;}
+
+.box-qa .box-label {display:block;padding:16px 0 0 0;font-size: 18px; line-height: 25px; font-weight:700; color:#231F20; text-align:left; margin-left: 50px}
+.box-qa .ui-title:before {display:inline-block; width:41px; height:41px;background:url(../../../statics/images/opro/login/icon_qa.png) no-repeat; content:'';}
+.box-qa .ui-title .link-add {display:inline-block; margin:17px 0 0 0;padding:0 9px; background: #FFFFFF;
+    border-radius: 20px;font-size: 10px; line-height: 17px;color: #1455A9; font-weight: 600;}
+ul.list-qa {padding:55px 0 0 0;}
+ul.list-qa li + li {padding:15px 0 0 0;}
+ul.list-qa li a {display:block;}
+
+ul.list-qa li a .txt-qa {margin-right:2px; font-weight: bold; font-size: 17px;line-height: 23px; color: #1F2020;}
+ul.list-qa li a .txt-qa-title {display:block; white-space:nowrap; text-overflow:ellipsis; font-size: 14px; line-height: 19px;  color: #1F2020; overflow:hidden;}
+
+
+
+.layout-footer {width:1100px; margin:0 auto; padding:69px 0 50px 0; overflow:hidden;}
+
+.layout-footer .footer-logo {display:inline-block; float:left; margin-right:24px; width:196px; height:36px; background:url(../../../statics/images/opro/login/icon_footer_logo.png) no-repeat;mix-blend-mode: luminosity;}
+.txt-footer {float:left; font-weight: 500; font-size: 11px; line-height: 10px; color: #8D8B8B;}
+.txt-footer .txt-copy {margin:10px 0 0 0;}
+.btn-download {display:inline-block; margin:-20px 0 0 0;padding:20px 0; float:right;width: 190px;
+    background: #DFE8F9;border-radius: 4px;font-size: 13px; line-height: 10px;color: #1455A9; font-weight: 500;}
+.btn-download:before {display:inline-block; margin:-5px 7px 0 0; width:17px; height:18px; background:url(../../../statics/images/opro/login/icon_download.png) no-repeat; content:'';
+    vertical-align: top;}
+
+
+
+
+
+
+

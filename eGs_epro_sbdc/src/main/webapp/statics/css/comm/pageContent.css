@@ -1,0 +1,308 @@
+@charset "utf-8";
+/*LNB css*/
+@import url("lnbVerticalStyle.css");
+
+/*template*/
+@import url("template/calendar.css");
+@import url("template/tableStyle.css");
+@import url("template/formLayer.css");
+@import url("template/pagingPlace.css");
+@import url("template/imgBoard.css");
+
+body{
+    background-color:#ffffff ! important;
+}
+/*불렛*/
+.bul_circle{
+    font: 18px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+    padding-left: 20px;
+    background-image: url('../images/bul_lineCircle1.png');
+    background-repeat: no-repeat;
+    background-position: left center;
+    float:left;
+}
+
+/*경로*/
+#content .sub_path { float:right; margin:5px 0 5px 0; width:741px; height:22px; text-align:right; }
+#content .sub_path span{ font-family: "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;}
+/*h3*/
+#panelSubContent .subTitle{
+    font-size: 24px;
+    height:45px;
+    margin-bottom:0;
+    color:#000;
+    font: 23px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+}
+/*h4*/
+#panelSubContent .bulSubTitle {
+    width: auto;
+    float: left;
+    clear: both;
+    padding-left: 11px;
+    font-size: 18px;
+    background: url('../images/bullet_circle.png') 0 50% no-repeat;
+    margin-bottom: 8px;
+    color: #252525;
+}
+
+/*form info*/
+#panelSubContent .form_info{
+    float:right;
+    margin-top: 7px;
+}
+#panelSubContent .form_info.red{color: red;}
+#panelSubContent .form_info.no_margin{margin: 0;}
+
+/*다운로드 드랍박스 영역*/
+.downdLoadDropBox{
+    border: 1px solid #d9d9d9;
+    background-color: #F6F6F6;
+    width: 980px;
+    height: 100px;
+    float: left;
+    margin-bottom:15px;
+    clear: both;
+}
+.downdLoadList{
+    border: 1px solid #d9d9d9;
+    background-color: #F6F6F6;
+    width: 980px;
+    height: 100px;
+    float: left;
+    margin-bottom:15px;
+    clear: both;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/*프로세스 디자인*/
+div.processStep{clear:both;float:right;margin:10px 0;}
+div.processStep div{min-width:90px; padding-left:10px; padding-right:10px; height:38px;padding-top:22px;background:#dedede;border:1px solid #cfcfcf;border-radius:5px;text-align:center;font-size:15px;color:#252525;float:left; font-family: "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;}
+div.processStep div.on{background:#278ECC; border:1px solid #2983B9; color:#fff;}
+div.processStep div.on a{background:#278ECC; color:#fff;}
+div.processStep span{display: block;}
+div.processStep div.line_3{height:54px;padding-top:6px;line-height:12px;}
+div.processStep div.line_3 span.line_top{line-height:22px;}
+div.processStep div.line_3 span.f_normal{font-size:12px;}
+div.processStep img{padding:19px 4px 18px 2px;float:left;}
+
+.sectionTapArea .sectionTapBtns{
+    width: 438px;
+    float:left;
+    margin : 12px 0 20px;
+    clear: both;
+    border-bottom: 1px solid #30a1e5;
+    height: 34px;
+}
+.sectionTapArea .sectionTapBtns.perBtn button.tapBtn {
+    width: auto;
+    padding: 0 20px;
+}
+.sectionTapArea .sectionTapBtns.perBtn button.tapBtn.on ,.sectionTapArea .sectionTapBtns.perBtn button.tapBtn:hover{
+    background-position: 90% center;
+}
+.sectionTapArea .sectionTapBtns.w_980 {
+    width: 978px;
+}
+.sectionTapArea .sectionTapBtns.w_700 {
+    width: 700px;
+}
+.sectionTapArea .sectionTapBtns button.tapBtn{
+    border: 1px solid #dcdcdc;
+    border-bottom: 1px solid #30a1e5;
+    color: #5a5a5a;
+    text-align: center;
+    width: 110px;
+    height: 35px;
+    font: 14px "NanumGothicBold" , NanumGothicBold , Dotum, 'NanumGothic', Arial, sans-serif;
+    margin: 0;
+    float:left;
+}
+.sectionTapArea .sectionTapBtns button.tapBtn.on , .sectionTapArea .sectionTapBtns button.tapBtn:hover{
+    border:1px solid #30a1e5;
+    border-bottom: 1px solid white;
+    color: #017ac3;
+}
+.sectionTapArea .sectionTapBtns.perBtn button.tapBtn2 {
+    width: auto;
+    padding: 0 15px;
+}
+.sectionTapArea .sectionTapBtns.perBtn button.tapBtn2.on ,.sectionTapArea .sectionTapBtns.perBtn button.tapBtn2:hover{
+    background-position: 90% center;
+}
+.sectionTapArea .sectionTapBtns button.tapBtn2{
+    border: 1px solid #dcdcdc;
+    border-bottom: 1px solid #30a1e5;
+    color: #5a5a5a;
+    text-align: center;
+    width: 110px;
+    height: 35px;
+    font: 14px "NanumGothicBold" , NanumGothicBold , Dotum, 'NanumGothic', Arial, sans-serif;
+    margin: 0;
+    float:left;
+}
+.sectionTapArea .sectionTapBtns button.tapBtn2.on , .sectionTapArea .sectionTapBtns button.tapBtn2:hover{
+    border:1px solid #30a1e5;
+    border-bottom: 1px solid white;
+    color: #017ac3;
+}
+
+/*blue box*/
+.blueBox{
+    width: 940px;
+    border: 1px solid #cdcdcd;
+    background-color: #fbfbfb;
+    padding: 20px 18px;
+    float: left;
+    margin: 15px 0 0 0;
+}
+.blueBox p.blueBoxTitle{
+    color: #29587b;
+    font:14px NanumGothicBold , "NanumGothicBold" , Dotum, "NanumGothic", Arial, sans-serif;
+    margin-bottom: 15px;
+}
+.blueBox .blueTxt{
+    color: #555555;
+    font-size: 12px;
+    line-height: 20px;
+}
+.blueBox ul{
+    margin-left: 18px;
+}
+.blueBox ul li{
+    margin-top: 10px;
+}
+.blueBox ul.decimal li{
+    list-style: decimal;
+}
+.blueBox ul.disc li{
+    list-style: disc;
+}
+.colorBlue{
+    color: blue ! important;
+}
+.colorRed{
+    color: red ! important;
+}
+.mt_5{
+    margin-top: 5px;
+}
+.mb_5{
+    margin-bottom: 5px;
+}
+.fl{
+    float:left;
+}
+.fr{
+    float:right;
+}
+.cn{
+    clear: none ! important;
+}
+.contract_wrap .contract_title {
+    font-size: 30px;
+    text-align: center;
+}
+
+
+
+.contract_wrap .contract_title{
+    font-size: 30px;
+    text-align: center;
+}
+.contract_wrap .contract_text{
+    width:940px;
+    padding:20px;
+    font-size:12px;
+    max-height: 150px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border:1px solid #d9d9d9;
+    border-top:2px solid #7a7a7a;
+    float:left;
+    margin-bottom: 30px;
+}
+.contract_wrap{
+    float:left;
+    width:980px;
+    margin-bottom:30px;
+}
+.contract_wrap .contract_sign{
+    float: left;
+    width: 980px;
+    margin-bottom: 30px;
+}
+.contract_wrap .contract_sign p{
+    float: left;
+    font-size: 18px;
+    font-family: "NanumGothic", NanumGothic, Dotum, "NanumGothic", Arial, sans-serif;
+    margin-bottom: 7px;
+    margin-left: 330px;
+    width:400px
+}
+.contract_wrap .contract_sign input[type=text]{
+    width: 120px;
+    height: 28px;
+    margin-top:-1px;
+    text-align: center;
+    font-size: 18px;
+}
+/*
+	에러 페이지
+*/
+.errorBox{
+	display:table;
+	width:100%;
+	height:100%;
+}
+.errorBox .errorCont{
+	display:table-cell;
+	vertical-align:middle;
+}
+.errorBox .errorCont p {
+	padding: 20px;
+	width:688px;
+	margin:0 auto;
+	background:#f9f9f9 url('../images/ico_error.png') 100px 20px no-repeat;
+	border:1px solid #d9d9d9;
+	color:#000;
+	font-family:NanumGothicBold , "NanumGothicBold" , Dotum, "NanumGothic", Arial, sans-serif;
+	font-size:18px;
+	font-weight:bold;
+	text-align:center;
+	line-height:22px;
+}
+.errorBox .errorCont p .txt {
+	display:block;
+	text-align:left;
+	padding: 0 10px 0 255px;
+}
+.errorBox .errorCont p em {
+	display:block;
+	padding-right:30px;	
+	margin-left:255px;
+	color:#017ac3;
+	font-size:13px;
+	text-align:left;
+}
+.errorBox .goHome {
+	display:inline-block;
+	padding-left:26px;
+	margin-top:20px;
+	background-image: url('../images/ico_home02.png');
+	background-repeat:no-repeat;
+	background-position: 0 2px;
+}
+.errorBox.type1 .errorCont p {
+	padding: 45px;
+}
+.errorBox.type1 .errorCont p .txt{
+	padding: 0;
+	text-align:center;
+}
+.errorBox.type2 .errorCont p {
+	padding:45px 0;
+}
+.errorBox.type2 .goHome {
+	margin-left:160px;
+}

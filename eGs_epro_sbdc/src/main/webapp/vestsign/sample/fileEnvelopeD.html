@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+<script type="text/javascript" src="../library/json3.min.js?revision=e54ce34"></script>
+<script type="text/javascript" src="../library/iecompatibility.js?revision=e54ce34"></script>
+
+<script type="text/javascript" src="../vestsign.js?revision=e54ce34"></script>
+<SCRIPT language=javascript>
+
+    var option = {
+        encoding: 'base64',
+        charset: 'UTF-8'        // UTF-8, UTF-8 선택
+    };
+
+    var errorcallback = function (error) {
+        // error = { code, getReason() };
+        if(error.code != -9999)  // 취소 버튼 이벤트 error.code: -9999
+            alert(error.msg);
+    };
+
+    function fileEnvelope(infile, outfile) {
+
+        yettie.fileEnvelope(outfile, undefined, infile, option, function (result) {
+            document.getElementById('result2').value = result;
+        }, errorcallback);
+    };
+
+    function fileDeenvelope(infile, outfile) {
+
+        yettie.fileDeenvelope(outfile, undefined, infile, option, function (result) {
+            alert(result);
+        }, errorcallback);
+    };
+
+</SCRIPT>
+<br><br>
+
+<table border="1" align="center" width=50%>
+    <tr>
+        <td align="center"><br>
+            Envelope 할 파일경로 (c:\testFile): <input type="text" id="result"><br><br>
+            Envelope 결과를 저장 할 파일경로(c:\testFile): <input type="text" id="filePath"><br><br>
+            <input type=button
+                   onclick="fileEnvelope(document.getElementById('result').value, document.getElementById('filePath').value)"
+                   value="전자서명(file/file)" style="width:150"><br>
+            <br>
+        </td>
+    </tr>
+    <tr>
+        <td align="center"><br>
+            Deenvelope 할 파일경로 (c:\testFile) <input type="text" id="result2"><br><br>
+            Deenvelope 결과를 저장 할 파일경로(c:\testFile) <input type="text" id="filePath2"><br><br>
+            <!--검증 결과(원문)<br><textarea rows='10' style="width:100%" id="result2">c:\testFile</textarea><br><br>-->
+            <input type=button
+                   onclick="fileDeenvelope(document.getElementById('result2').value, document.getElementById('filePath2').value)"
+                   value="서명 검증(file/file)" style="width:150"><br>
+            <br>
+        </td>
+    </tr>
+</table>

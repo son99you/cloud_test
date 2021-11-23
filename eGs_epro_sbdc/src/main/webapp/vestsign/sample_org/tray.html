@@ -1,0 +1,31 @@
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+<script type="text/javascript" src="../library/json3.min.js"></script>
+<script type="text/javascript" src="../library/iecompatibility.js"></script>
+
+<script type="text/javascript" src="../vestsign.js"></script>
+<SCRIPT language=javascript>
+
+  var callback = function (result) {
+    alert("성공");
+  };
+
+  function trayON() {
+      yettie.trayOn(callback);
+  };
+
+  function trayOFF() {
+      yettie.trayOff(callback);
+  };
+
+</SCRIPT>
+<br><br><br>
+<table border="1" align="center" width=50%>
+    <tr>
+        <td align=center><br><br>
+            <input type=button onclick=trayON() value="트레이-ON" style="width:150">
+            <input type=button onclick=trayOFF() value="트레이-OFF" style="width:150"><br><br><br>
+        </td>
+    </tr>
+</table>

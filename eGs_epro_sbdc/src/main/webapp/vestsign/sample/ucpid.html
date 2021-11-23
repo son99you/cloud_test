@@ -1,0 +1,98 @@
+<html>
+<head>
+<meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+
+  <script type="text/javascript" src="/vestsign/vestsign.js"></script>
+</head>
+<body>
+    <div class="eleven columns omega fullwidth-bar left-only">
+      <div class="main-content clearfix">
+        <div class="post-fullwidth">
+          <section class="clearfix">
+          <div class="heading"><h2>UCPID</h2></div>
+            <form method='post' name='Reg_Form' id="Reg_Form" action='./UcpidVerify.jsp' >
+
+              <div>
+                	이름(realName) <input id="ucpid.realName" type="checkbox" checked="true"><br>
+               		생년월일 (birthDate) <input id="ucpid.birthDate" type="checkbox" checked="true"><br>
+               		성별 (gender) <input id="ucpid.gender" type="checkbox" checked="true"><br>
+                	국적(nationalInfo) <input id="ucpid.nationalInfo" type="checkbox" checked="true"><br><br>
+                
+                 	원문 : <textarea id="plain" value="UCPID">ucpid test</textarea>
+                 	서명문: <textarea name="signedMsg" id="signedMsg"></textarea><br>
+
+                <input type=button id="sign_btn" value="UCPID_PC">
+                <input type=button id="mSign_btn" value="UCPID_MOB">
+                <input type=submit value="전송"><BR><BR>
+              </div>
+            </form> 
+          </section>
+        </div>
+      </div>
+    </div>
+
+<script>
+    var option = {
+        encoding: 'Hex'    // 'Hex',
+    };
+
+    var config = {
+        btnId: '',
+        OID: '0'
+    };
+
+    var callback = function (result) {
+        document.getElementById('signedMsg').value = result.signature;
+    };
+
+    var errorcallback = function (error) {
+        document.getElementById('signedMsg').value = 'error:' + error;
+    };
+    
+    document.getElementById('sign_btn').onclick = function () {
+        yettie.init(config);
+        /**
+         yettie.signFormUCPID(userAgreement, realName, birthDate, gender, nationalInfo, option, callback, errorcallback)
+            userAgreement(string): ������������ �� Ȱ�뵿�� ���
+            realName(bool): �̸�
+            birthDate(bool): ����
+            gender(bool): ����
+            nationalInfo(bool): ����
+            option(object): ���� �ɼ�(���� ����ɼ� �״�� ����Ͻø�˴ϴ�.)
+            callback(function): ������ ������ �ݹ��Լ�
+            errorcallback(function): ������ ġ������ ������ �߻������� ������ �����ݹ�
+         */
+        yettie.signFormUCPID(document.getElementById('plain').value,
+                document.getElementById('ucpid.realName').checked,
+                document.getElementById('ucpid.birthDate').checked,
+                document.getElementById('ucpid.gender').checked,
+                document.getElementById('ucpid.nationalInfo').checked,
+                option, callback, errorcallback);
+    };
+    
+    document.getElementById('mSign_btn').onclick = function () {
+        yettie.init(config);
+        /**
+         yettie.signFormUCPID(userAgreement, realName, birthDate, gender, nationalInfo, option, callback, errorcallback)
+            userAgreement(string): ������������ �� Ȱ�뵿�� ���
+            realName(bool): �̸�
+            birthDate(bool): ����
+            gender(bool): ����
+            nationalInfo(bool): ����
+            option(object): ���� �ɼ�(���� ����ɼ� �״�� ����Ͻø�˴ϴ�.)
+            callback(function): ������ ������ �ݹ��Լ�
+            errorcallback(function): ������ ġ������ ������ �߻������� ������ �����ݹ�
+         */
+        yettie.mSignFormUCPID(document.getElementById('plain').value,
+                document.getElementById('ucpid.realName').checked,
+                document.getElementById('ucpid.birthDate').checked,
+                document.getElementById('ucpid.gender').checked,
+                document.getElementById('ucpid.nationalInfo').checked,
+                option, callback, errorcallback);
+    };
+    
+</script>
+</body>
+</html>

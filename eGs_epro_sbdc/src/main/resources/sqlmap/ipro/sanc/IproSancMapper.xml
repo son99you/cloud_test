@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- com.eunwoosoft.ipro.sanc.dao.IproSancDao
+	 2020-11-24
+	  결재관련 
+ -->
+<mapper namespace="com.eunwoosoft.ipro.sanc.dao.IproSancDao">
+
+	<insert id="apprPrInfoRegist" useGeneratedKeys="false">
+		MERGE INTO T_PR_APPR_CNTC
+			USING DUAL
+				ON ( PCRQ_NO = #{P_KEY1, jdbcType=VARCHAR}
+				 AND APPR_CNTC_KEY = #{P_APPR_CNTC_KEY, jdbcType=VARCHAR})
+			WHEN MATCHED THEN
+				UPDATE SET
+ 					 REGR_ID = #{P_REGR_ID , jdbcType=VARCHAR}
+					,REGR_NM = #{P_REGR_NM , jdbcType=VARCHAR}
+					,REG_DT = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+			WHEN NOT MATCHED THEN
+				INSERT 
+				(
+					  PCRQ_NO
+					, APPR_CNTC_KEY
+					, PCRQ_APPR_TSCD
+					, APPR_STCD
+					, APPR_DT
+					, APRP_ID
+					, APRP_NM
+					, REG_DT
+					, REGR_ID
+					, REGR_NM
+					, APPR_DOC_NO
+				)VALUES(
+					 #{P_KEY1		,jdbcType=VARCHAR}
+					,#{P_APPR_CNTC_KEY	,jdbcType=VARCHAR}
+					,#{P_APPR_CNTC_KEY	,jdbcType=VARCHAR}
+					,#{P_APPR_STCD	,jdbcType=VARCHAR}
+					,#{P_APPR_DT	,jdbcType=VARCHAR}
+					,#{P_APRP_ID	,jdbcType=VARCHAR}
+					,#{P_APRP_NM	,jdbcType=VARCHAR}
+					,#{P_REG_DT	,jdbcType=VARCHAR}
+					,#{P_REGR_ID	,jdbcType=VARCHAR}
+					,#{P_REGR_NM	,jdbcType=VARCHAR}
+					,#{P_APPR_DOC_NO	,jdbcType=VARCHAR}
+				)
+     </insert>
+     
+   <select id="selectApprInfo" resultType="dataEntity">
+   		SELECT PCRQ_NO
+				,APPR_CNTC_KEY
+				,PCRQ_APPR_TSCD
+				,APPR_STCD
+				,BODY_CNTN
+				,APPR_DT
+				,APRP_ID
+				,APRP_NM
+				,REG_DT
+				,REGR_ID
+				,REGR_NM
+				,APPR_DOC_NO
+   		FROM T_PR_APPR_CNTC
+   		WHERE PCRQ_NO =  #{P_KEY1		,jdbcType=VARCHAR}
+		  AND APPR_CNTC_KEY = #{P_APPR_CNTC_KEY	,jdbcType=VARCHAR}
+   </select>
+   
+     <insert id="apprBfInfoRegist" useGeneratedKeys="false">
+		MERGE INTO T_BI_BFAN_APPR_CNTC
+			USING DUAL
+				ON ( BFAN_NO = #{P_KEY1, jdbcType=VARCHAR}
+				 AND APPR_CNTC_KEY = #{P_APPR_CNTC_KEY, jdbcType=VARCHAR})
+			WHEN MATCHED THEN
+				UPDATE SET
+ 					 REGR_ID = #{P_REGR_ID , jdbcType=VARCHAR}
+					,REGR_NM = #{P_REGR_NM , jdbcType=VARCHAR}
+					,REG_DT = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+			WHEN NOT MATCHED THEN
+				INSERT 
+				(
+					  BFAN_NO
+					, APPR_CNTC_KEY
+					, BFAN_APPR_TSCD
+					, APPR_STCD
+					, APPR_DT
+					, APRP_ID
+					, APRP_NM
+					, REG_DT
+					, REGR_ID
+					, REGR_NM
+					, APPR_DOC_NO
+				)VALUES(
+					 #{P_KEY1		,jdbcType=VARCHAR}
+					,#{P_APPR_CNTC_KEY	,jdbcType=VARCHAR}
+					,#{P_APPR_CNTC_KEY	,jdbcType=VARCHAR}
+					,#{P_APPR_STCD	,jdbcType=VARCHAR}
+					,#{P_APPR_DT	,jdbcType=VARCHAR}
+					,#{P_APRP_ID	,jdbcType=VARCHAR}
+					,#{P_APRP_NM	,jdbcType=VARCHAR}
+					,#{P_REG_DT	,jdbcType=VARCHAR}
+					,#{P_REGR_ID	,jdbcType=VARCHAR}
+					,#{P_REGR_NM	,jdbcType=VARCHAR}
+					,#{P_APPR_DOC_NO	,jdbcType=VARCHAR}
+				)
+				
+				
+     </insert>
+     
+     <select id="selectBfApprInfo" resultType="dataEntity">
+   		SELECT BFAN_NO
+			,	APPR_CNTC_KEY
+			,	BFAN_APPR_TSCD
+			,	APPR_STCD
+			,	BODY_CNTN
+			,	APPR_DT
+			,	APRP_ID
+			,	APRP_NM
+			,	REG_DT
+			,	REGR_ID
+			,	REGR_NM
+			,	APPR_DOC_NO
+   		FROM T_BI_BFAN_APPR_CNTC
+   		WHERE BFAN_NO =  #{P_KEY1		,jdbcType=VARCHAR}
+		  AND APPR_CNTC_KEY = #{P_APPR_CNTC_KEY	,jdbcType=VARCHAR}
+   </select>
+     
+     <insert id="apprBiInfoRegist" useGeneratedKeys="false">
+		MERGE INTO T_BI_APPR_CNTC
+			USING DUAL
+				ON ( ANNC_NO = #{P_KEY1, jdbcType=VARCHAR}
+				 AND ANNC_NGR = #{P_KEY2, jdbcType=VARCHAR}
+				 AND APPR_CNTC_KEY = #{P_APPR_CNTC_KEY, jdbcType=VARCHAR})
+			WHEN MATCHED THEN
+				UPDATE SET
+ 					 REGR_ID = #{P_REGR_ID , jdbcType=VARCHAR}
+					,REGR_NM = #{P_REGR_NM , jdbcType=VARCHAR}
+					,REG_DT = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+			WHEN NOT MATCHED THEN
+				INSERT 
+				(
+					  ANNC_NO
+					, ANNC_NGR
+					, APPR_CNTC_KEY
+					, BID_APPR_TSCD
+					, APPR_STCD
+					, APPR_DT
+					, APRP_ID
+					, APRP_NM
+					, REG_DT
+					, REGR_ID
+					, REGR_NM
+					, APPR_DOC_NO
+				)VALUES(
+					 #{P_KEY1		,jdbcType=VARCHAR}
+					,#{P_KEY2		,jdbcType=VARCHAR}
+					,#{P_APPR_CNTC_KEY	,jdbcType=VARCHAR}
+					,#{P_APPR_CNTC_KEY	,jdbcType=VARCHAR}
+					,#{P_APPR_STCD	,jdbcType=VARCHAR}
+					,#{P_APPR_DT	,jdbcType=VARCHAR}
+					,#{P_APRP_ID	,jdbcType=VARCHAR}
+					,#{P_APRP_NM	,jdbcType=VARCHAR}
+					,#{P_REG_DT	,jdbcType=VARCHAR}
+					,#{P_REGR_ID	,jdbcType=VARCHAR}
+					,#{P_REGR_NM	,jdbcType=VARCHAR}
+					,#{P_APPR_DOC_NO	,jdbcType=VARCHAR}
+				)
+     </insert>
+     
+     <select id="selectBiApprInfo" resultType="dataEntity">
+   		SELECT ANNC_NO
+			,	ANNC_NGR
+			,	APPR_CNTC_KEY
+			,	BID_APPR_TSCD
+			,	APPR_STCD
+			,	BODY_CNTN
+			,	APPR_DT
+			,	APRP_ID
+			,	APRP_NM
+			,	REG_DT
+			,	REGR_ID
+			,	REGR_NM
+			,	APPR_DOC_NO
+   		FROM T_BI_APPR_CNTC
+   		WHERE ANNC_NO =  #{P_KEY1		,jdbcType=VARCHAR}
+   		  AND ANNC_NGR =  #{P_KEY2		,jdbcType=VARCHAR}
+		  AND APPR_CNTC_KEY = #{P_APPR_CNTC_KEY	,jdbcType=VARCHAR}
+   </select>
+   
+   
+     <insert id="apprCtInfoRegist" useGeneratedKeys="false">
+		MERGE INTO T_CT_APPR_CNTC
+			USING DUAL
+				ON ( CONT_NO = #{P_KEY1, jdbcType=VARCHAR}
+				 AND CHNG_NGR = #{P_KEY2, jdbcType=VARCHAR}
+				 AND APPR_CNTC_KEY = #{P_APPR_CNTC_KEY, jdbcType=VARCHAR})
+			WHEN MATCHED THEN
+				UPDATE SET
+ 					 REGR_ID = #{P_REGR_ID , jdbcType=VARCHAR}
+					,REGR_NM = #{P_REGR_NM , jdbcType=VARCHAR}
+					,REG_DT = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+			WHEN NOT MATCHED THEN
+				INSERT 
+				(
+					  CONT_NO
+					, CHNG_NGR
+					, APPR_CNTC_KEY
+					, CONT_APPR_TSCD
+					, APPR_STCD
+					, APPR_DT
+					, APRP_ID
+					, APRP_NM
+					, REG_DT
+					, REGR_ID
+					, REGR_NM
+					, APPR_DOC_NO
+				)VALUES(
+					 #{P_KEY1		,jdbcType=VARCHAR}
+					,#{P_KEY2		,jdbcType=VARCHAR}
+					,#{P_APPR_CNTC_KEY	,jdbcType=VARCHAR}
+					,#{P_APPR_CNTC_KEY	,jdbcType=VARCHAR}
+					,#{P_APPR_STCD	,jdbcType=VARCHAR}
+					,#{P_APPR_DT	,jdbcType=VARCHAR}
+					,#{P_APRP_ID	,jdbcType=VARCHAR}
+					,#{P_APRP_NM	,jdbcType=VARCHAR}
+					,#{P_REG_DT	,jdbcType=VARCHAR}
+					,#{P_REGR_ID	,jdbcType=VARCHAR}
+					,#{P_REGR_NM	,jdbcType=VARCHAR}
+					,#{P_APPR_DOC_NO	,jdbcType=VARCHAR}
+				)
+     </insert>
+     
+     <select id="selectCtApprInfo" resultType="dataEntity">
+   		SELECT CONT_NO
+				,CHNG_NGR
+				,APPR_CNTC_KEY
+				,CONT_APPR_TSCD
+				,APPR_STCD
+				,BODY_CNTN
+				,APPR_DT
+				,APRP_ID
+				,APRP_NM
+				,REG_DT
+				,REGR_ID
+				,REGR_NM
+				,APPR_DOC_NO
+   		FROM T_CT_APPR_CNTC
+   		WHERE CONT_NO =  #{P_KEY1		,jdbcType=VARCHAR}
+		  AND CHNG_NGR = #{P_KEY2	,jdbcType=VARCHAR}
+		  AND APPR_CNTC_KEY = #{P_APPR_CNTC_KEY	,jdbcType=VARCHAR}
+   </select>
+     
+    <select id="selectPrFileInfo" resultType="dataEntity">
+        SELECT PR.PCRQ_NO
+					, PR.PCRQ_FSCD
+					, PR.FILE_GRP_NO
+					, PR.RMK
+					, PR.DEL_AT
+					, MST.SYS_FILE_NM
+					, MST.FILE_SN
+					, MST.FILE_LCTN
+					, MST.SV_FILE_NM
+		FROM T_PR_FILE PR, T_MM_FILE_MST MST
+		WHERE  1 = 1
+		AND PR.DEL_AT = 'N'
+		AND MST.DEL_AT = 'N'
+		AND PR.PCRQ_NO = #{P_KEY1, jdbcType=VARCHAR}
+		AND PR.FILE_GRP_NO = MST.FILE_GRP_NO
+		AND PR.PCRQ_FSCD = MST.FILE_DOC_SECD
+		ORDER BY PCRQ_FSCD DESC
+	</select>
+	
+	
+	<select id="selectBfFileInfo" resultType="dataEntity">
+        SELECT BF.BFAN_NO
+					, BF.BFAN_FSCD
+					, BF.FILE_GRP_NO
+					, BF.RMK
+					, BF.DEL_AT
+					, MST.SYS_FILE_NM
+					, MST.FILE_SN
+					, MST.FILE_LCTN
+					, MST.SV_FILE_NM
+		FROM T_BI_BFAN_FILE BF, T_MM_FILE_MST MST
+		WHERE  1 = 1
+		AND BF.DEL_AT = 'N'
+		AND MST.DEL_AT = 'N'
+		AND BF.BFAN_NO = #{P_KEY1, jdbcType=VARCHAR}
+		AND BF.FILE_GRP_NO = MST.FILE_GRP_NO
+		AND BF.BFAN_FSCD = MST.FILE_DOC_SECD
+		ORDER BY BFAN_FSCD DESC
+	</select>
+	
+	<select id="selectBiFileInfo" resultType="dataEntity">
+        SELECT BI.ANNC_NO
+        		, BI.ANNC_NGR
+        		, BI.ROUND_NO
+					, BI.BID_FSCD
+					, BI.FILE_GRP_NO
+					, MST.SYS_FILE_NM
+					, MST.FILE_SN
+					, MST.FILE_LCTN
+					, MST.SV_FILE_NM
+		FROM T_BI_FILE BI, T_MM_FILE_MST MST
+		WHERE  1 = 1
+		AND BI.DEL_AT = 'N'
+		AND MST.DEL_AT = 'N'
+		AND BI.ANNC_NO = #{P_KEY1, jdbcType=VARCHAR}
+		AND BI.ANNC_NGR = #{P_KEY2, jdbcType=VARCHAR}
+		AND BI.ROUND_NO = '1'
+		AND BI.FILE_GRP_NO = MST.FILE_GRP_NO
+		AND BI.BID_FSCD = MST.FILE_DOC_SECD
+		ORDER BY BID_FSCD DESC
+	</select>
+	
+	<select id="selectCtFileInfo" resultType="dataEntity">
+        SELECT CT.CONT_NO
+        		, CT.CHNG_NGR
+					, CT.CONT_FSCD
+					, CT.FILE_GRP_NO
+					, CT.DEL_AT
+					, MST.SYS_FILE_NM
+					, MST.FILE_SN
+					, MST.FILE_LCTN
+					, MST.SV_FILE_NM
+		FROM T_CT_FILE CT, T_MM_FILE_MST MST
+		WHERE  1 = 1
+		AND CT.DEL_AT = 'N'
+		AND MST.DEL_AT = 'N'
+		AND CT.CONT_NO = #{P_KEY1, jdbcType=VARCHAR}
+		AND CT.CHNG_NGR = #{P_KEY2, jdbcType=VARCHAR}
+		<if test="P_CONT_FSCD != null and P_CONT_FSCD != '' ">
+			AND CT.CONT_FSCD != #{P_CONT_FSCD, jdbcType=VARCHAR}
+			AND MST.FILE_DOC_SECD != #{P_CONT_FSCD, jdbcType=VARCHAR}
+		</if>
+		AND CT.CONT_FSCD = MST.FILE_DOC_SECD
+		AND CT.FILE_GRP_NO = MST.FILE_GRP_NO
+		ORDER BY CONT_FSCD DESC
+	</select>
+	
+  <!--  <select id="selectFileInfo" resultType="dataEntity">
+        SELECT CF.CONT_NO
+					, CF.CHNG_NGR
+					, CF.CONT_FSCD
+					, CF.FILE_GRP_NO
+					, CF.RMK
+					, CF.DEL_AT
+					, MST.SYS_FILE_NM
+					, MST.FILE_SN
+					, MST.FILE_DOC_NM
+					, MST.FILE_LCTN
+					, MST.SV_FILE_NM
+					, REPLACE(MST.FILE_LCTN, '\','/')||'/'||SUBSTR(MST.SV_FILE_NM, 0, INSTR(MST.SV_FILE_NM, '.')-1) CHG_FILE_NN
+		FROM T_CT_FILE CF, T_MM_FILE_MST MST
+		WHERE  1 = 1
+		AND CF.DEL_AT = 'N'
+		AND MST.DEL_AT = 'N'
+		AND CF.CTDC_YN = 'N'
+		AND CF.CONT_NO = #{P_CONT_NO, jdbcType=VARCHAR}
+		AND CF.CHNG_NGR = #{P_CHNG_NGR, jdbcType=VARCHAR}
+		AND CF.FILE_GRP_NO = MST.FILE_GRP_NO
+		AND PR.CONT_FSCD = MST.FILE_DOC_SECD
+		ORDER BY CONT_FSCD DESC
+	</select> -->
+	
+	
+	<resultMap id="FrmCntn" type="dataEntity">
+		<result property="FRM_CNTN" column="FRM_CNTN" jdbcType="CLOB" javaType="java.lang.String" />
+	</resultMap>
+	
+	<select id="selectContForm" resultType="dataEntity" resultMap="FrmCntn">
+        SELECT FRM_NO
+                  , FRM_NM
+                  , FRM_CNTN
+                  , USE_YN
+                  , DEL_AT
+           FROM T_MM_FORM_MST
+        WHERE 1=1
+		    AND DEL_AT = 'N'
+		    AND USE_YN = 'Y'
+            AND CONT_SECD = #{P_CONT_SECD, jdbcType=VARCHAR}
+            AND CONT_KDCD = #{P_CONT_KDCD, jdbcType=VARCHAR}
+            AND CHNG_SECD = #{P_CHNG_SECD, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectContDetail" resultType="dataEntity">
+		SELECT	   A.CONT_NO
+				 , A.CHNG_NGR
+        		 , A.CONT_NM				
+                 , A.CONT_AMT				
+                 , A.CONT_DE				
+                 , A.CONT_STDE		
+                 , A.CONT_ENDE			
+                 , A.CONT_TE
+                 , A.CONT_MTCD
+                 , F_CDVAL_INQIRE('CONT_MTCD', A.CONT_MTCD) AS CONT_MTCD_NM			
+                 , A.PRVT_CONT_RSN
+                 , A.DLGD_PLC_NM
+                 , A.MNGR_CHRGR_NM
+                 , A.CHCK_CHRGR_NM
+                 , A.ETC_ITEM
+                 , A.CONT_GRNT_RT
+                 , A.STAX
+                 , A.SPLY_PRCE
+          FROM 	T_CT_MST A
+         WHERE 	A.CONT_NO =  #{P_CONT_NO, jdbcType=VARCHAR}
+         AND   	A.CHNG_NGR	=  #{P_CHNG_NGR, jdbcType=VARCHAR}
+         AND	NVL(A.DEL_AT, 'N') = 'N'
+	</select>
+	
+	<select id="selectVendList" resultType="dataEntity">
+		SELECT
+				  A.CONT_NO			
+				, A.BIZRNO
+				, A.VEND_REG_NO		
+				, A.CHNG_NGR		
+				, A.VEND_NM			
+				, A.RPRS_NM		
+				, A.VEND_ADDR
+				, A.VEND_DTL_ADDR	
+		FROM 	T_CT_VEND A
+		WHERE  	1=1
+		AND 	A.CONT_NO = #{P_CONT_NO, jdbcType=VARCHAR}
+       	AND   	A.CHNG_NGR	= #{P_CHNG_NGR, jdbcType=VARCHAR}
+		AND NVL(A.ORDR_AGNC_YN,'N') =  'N'
+		ORDER BY NVL(A.ORDR_AGNC_YN,'N') DESC
+	</select>	
+	
+	<select id="selectItemList" resultType="dataEntity">
+		SELECT	  A.CONT_NO			
+				, A.ITEM_SN			
+				, A.CHNG_NGR			
+				, A.ITEM_NO		
+				, A.ITEM_NM		
+				, A.ITEM_AMT			
+				, A.ITEM_DTL
+				, A.ITEM_UNCD
+				, A.ITEM_QTY
+				, A.ITEM_UPRC
+				, A.ITEM_AMT
+				, A.ACNT_NM
+		FROM 	T_CT_ITEM A
+		WHERE	1 = 1
+		AND A.CONT_NO =  #{P_CONT_NO, jdbcType=VARCHAR}
+		AND A.CHNG_NGR =  #{P_CHNG_NGR, jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="insertIfApprCntcFile">
+		<selectKey keyProperty="P_FILE_SN" resultType="int" order="BEFORE">
+			SELECT 	NVL(MAX(FILE_SN)+1,1) AS P_FILE_SN
+			  FROM T_IF_APPR_CNTC_FILE
+			 WHERE FILE_GRP_NO = #{P_FILE_GRP_NO, jdbcType=VARCHAR}
+		</selectKey>  
+		INSERT INTO T_IF_APPR_CNTC_FILE(
+			 FILE_GRP_NO
+			, FILE_SN
+			, ATCH_FSCD
+			, SV_FILE_NM
+			, SYS_FILE_NM
+			, FILE_SZ
+			, FILE_LCTN
+			, FILE_DOC_NM
+			, FILE_DESC
+			, OPEN_YN
+			, TSK_VKEY1
+			, TSK_VKEY2
+			, TSK_VKEY3
+			, RMK
+			, REGR_ID
+			, REGR_NM
+			, REG_DT
+			, MODR_ID
+			, MODR_NM
+			, MOD_DT
+			, DEL_AT
+		)VALUES(
+		     #{P_FILE_GRP_NO, jdbcType=VARCHAR}
+		    , #{P_FILE_SN, jdbcType=INTEGER}
+			, #{P_ATCH_FSCD, jdbcType=VARCHAR}
+			, #{P_SV_FILE_NM, jdbcType=VARCHAR}
+			, #{P_SYS_FILE_NM, jdbcType=VARCHAR}
+			, #{P_FILE_SZ, jdbcType=VARCHAR}
+			, #{P_FILE_LCTN, jdbcType=VARCHAR}
+			, #{P_FILE_DOC_NM, jdbcType=VARCHAR}
+			, #{P_FILE_DESC, jdbcType=VARCHAR}
+			, #{P_OPEN_YN, jdbcType=VARCHAR}
+			, #{P_TSK_VKEY1, jdbcType=VARCHAR}
+			, #{P_TSK_VKEY2, jdbcType=VARCHAR}
+			, #{P_TSK_VKEY3, jdbcType=VARCHAR}
+			, #{P_RMK, jdbcType=VARCHAR}
+			, #{P_REGR_ID, jdbcType=VARCHAR}
+			, #{P_REGR_NM, jdbcType=VARCHAR} 
+			, #{P_REG_DT, jdbcType=VARCHAR}
+			, #{P_REGR_ID, jdbcType=VARCHAR}
+			, #{P_REGR_NM, jdbcType=VARCHAR} 
+			, #{P_REG_DT, jdbcType=VARCHAR}
+			, 'N'
+		)
+	</insert>	
+	
+	<delete id="deleteIfApprCntcFile">
+		DELETE FROM T_IF_APPR_CNTC_FILE
+		WHERE FILE_GRP_NO = #{P_FILE_GRP_NO, jdbcType = VARCHAR}
+	</delete>
+	
+	<select id="selectApprFileData" resultType="dataEntity">
+        SELECT  FILE_GRP_NO
+				, FILE_SN
+				, ATCH_FSCD
+				, SV_FILE_NM
+				, SYS_FILE_NM
+				, FILE_SZ
+				, FILE_LCTN
+				, FILE_DOC_NM
+				, FILE_DESC
+				, OPEN_YN
+				, TSK_VKEY1
+				, TSK_VKEY2
+				, TSK_VKEY3
+				, RMK
+				, REGR_ID
+				, REGR_NM
+				, REG_DT
+				, MODR_ID
+				, MODR_NM
+				, MOD_DT
+				, DEL_AT
+		FROM T_IF_APPR_CNTC_FILE
+		WHERE  1 = 1
+		  AND  FILE_GRP_NO = #{P_FILE_GRP_NO , jdbcType=VARCHAR}
+	</select>
+</mapper>

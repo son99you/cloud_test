@@ -1,0 +1,103 @@
+@charset "utf-8";
+
+div.formLayer{
+    float:left;
+    position:relative;
+    width: 100%;
+    /*border-top: 2px solid #7a7a7a;*/
+    clear: both;
+    margin:0 0 15px 0;
+}
+div.formLayer.mt_10{
+	margin-top:10px
+}
+div.formLayer.m_n{
+	margin : 0;
+}
+div.formLayer.bt_blue{
+	border-top: 2px solid #017ac3;
+}
+div.formLayer.noBorder{
+    border-top: none;
+}
+div.formLayer .searchFormLayerLine .ml_5{margin-left: 5px;}
+div.formLayer .searchFormLayerLine .ml_10{margin-left: 10px;}
+div.formLayer .searchFormLayerLine .mr_5{margin-right: 5px;}
+div.formLayer .searchFormLayerLine .mr_10{margin-right: 10px;}
+div.formLayer .searchFormLayerLine{
+    float:left;
+    width:100%;
+    position: relative;
+    clear: both;
+    height:50px;
+    padding: 3px 0;
+    background-color: #f7f7f7;
+    padding: 9px 0; border: 1px solid #ccc; border-collapse: inherit;
+    
+}
+div.formLayer .searchFormLayerLine .search_bullet{
+    float: left;
+    background: url(../../images/icon/icon_dot.gif) no-repeat center left;
+    font: 13px;
+    padding-left:10px;
+    margin-top:8px;
+    margin-left:17px; 
+}
+div.formLayer .searchFormLayerLine .contents_search_bar{
+    float: left;
+    width: 1px;
+    height: 13px;
+    padding-right: 15px;
+    margin-left:15px;
+    margin-top: 10px;
+    background: url('../../images/template_bar_util15.png') no-repeat 0 0;
+}
+
+div.formLayer .searchFormLayerLine .lineTxt{
+    float: left;
+    height: 28px;
+    border: 1px solid #D4D4D4;
+}
+div.formLayer .searchFormLayerLine .T_btnLayer{
+    /*margin-top:-4px;*/
+    margin: 0;
+    margin-right: 14px;
+}
+div.formLayer .searchFormLayerLine .checkFormLayer{
+    float: left;
+    margin : 7px 0 0 16px;
+}
+div.formLayer .searchFormLayerLine .checkFormLayer label{
+    margin-right: 15px;
+    float: left;
+}
+div.formLayer .searchFormLayerLine .checkFormLayer input[type=checkbox]{
+    margin-right: 5px;
+    vertical-align: sub;
+}
+
+div.formLayer .selectLayer2{margin: 0px 10px 0 0;width: 200px; float: left;}
+div.formLayer .selectLayer2 ul{top: 30px;width:198px;}
+div.formLayer .selectLayer2 .myValue{height: 28px;line-height: 28px;}
+div.formLayer .selectLayer2 .ctrl{height: 28px; width: 28px}
+div.formLayer .selectLayer2 .ctrl .arrow{right: 10px;top: 12px;}
+
+
+div.formLayer .selectLayer2.w_120{margin: 0px 10px 0 0;width: 120px; float: left;}
+div.formLayer .selectLayer2.w_120 ul{top:30px;width:118px;}
+div.formLayer .selectLayer2.w_120 .myValue{height: 28px;line-height: 28px;}
+div.formLayer .selectLayer2.w_120 .ctrl{height: 28px; width: 28px}
+div.formLayer .selectLayer2.w_120 .ctrl .arrow{right: 10px;top: 12px;}
+
+
+div.formLayer .selectLayer2.w_80{margin: 0px 10px 0 0;width: 80px; float: left;}
+div.formLayer .selectLayer2.w_80 ul{top: 30px;width:78px;}
+div.formLayer .selectLayer2.w_80 .myValue{height: 28px;line-height: 28px;}
+div.formLayer .selectLayer2.w_80 .ctrl{height: 28px; width: 28px}
+div.formLayer .selectLayer2.w_80 .ctrl .arrow{right: 10px;top: 12px;}
+
+
+/*
+div.formLayer .searchFormLayerLine .T_btnLayer{
+    margin-top: 3px;
+}*/

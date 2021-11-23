@@ -1,0 +1,221 @@
+@charset "utf-8";
+
+body{
+    position: relative;
+    background-color:#ffffff;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+/*팝업의 크기는 w 740px*/
+#windowPopup{
+    position: relative;
+    width:700px;
+    padding : 20px 0 0 20px;
+    margin: 0 auto;
+}
+#windowPopup.w_1250{
+    width:1250px;
+}
+#windowPopup.w_980{
+    width:980px;
+}
+#windowPopup.w_500{
+	width:500px;
+}
+#windowPopup.w_92p{
+	width:92%;
+}
+/*테이블의 크기는 700입니다.*/
+#windowPopup .tableLayer table{
+    width: 100%;
+}
+#windowPopup.w_980 .tableLayer table{
+    width:980px;
+}
+#windowPopup.w_1250 .tableLayer table{
+    width:1250px;
+}
+#windowPopup.w_500 .tableLayer table{
+    width:500px;
+}
+
+#windowPopup.w_500 .paging_place{
+    width: 500px;
+}
+#windowPopup.w_980 .paging_place{
+    width:980px;
+}
+#windowPopup.w_1250 .paging_place{
+    width:1250px;
+}
+
+
+#windowPopup .paging_place{
+    width: 700px;
+    float: left;
+}
+#windowPopup .windowTitle{
+    padding-left: 11px;
+    font-size: 18px;
+    background: url('../../images/opro/main/bullet_circle.png') 0 50% no-repeat;
+    margin-bottom: 8px;
+    color: #252525;
+}
+#windowPopup .popSubTitle {
+	float: left;
+	/*width:100%;*/
+	clear: both;
+	font-size: 13px;
+	background: url('../../images/opro/main/bullet_popSubTitle.png') 0 5px no-repeat;
+	padding-left: 11px;
+	margin-left: 6px;
+	margin-bottom: 8px;
+	color: #252525;
+}
+
+/*넓이 500일떼*/
+#windowPopup.w_500 .paging_place .paging_wrap a{
+	width: 24px;
+	height: 24px;
+	line-height: 24px;
+}
+#windowPopup.w_500 .paging_place .paging_wrap a.pprev{
+	background-position: -5px -5px;
+}
+#windowPopup.w_500 .paging_place .paging_wrap a.prev{
+	background-position: -5px -39px;
+}
+#windowPopup.w_500 .paging_place .paging_wrap a.next{
+	background-position: -38px -39px;
+}
+#windowPopup.w_500 .paging_place .paging_wrap a.nnext{
+	background-position: -38px -5px;
+}
+#windowPopup.w_500 .paging_place .paging_wrap span a.active,
+#windowPopup.w_500 .paging_place .paging_wrap span a:hover{	
+	width: 26px;
+	height: 26px;
+	line-height: 26px;
+}
+
+/*내부포털 사용자 메모장 디자인*/
+body.memoPop{}
+body.memoPop #windowPopup{
+    position: relative;
+    width: 376px;
+    height: 406px;
+    border:2px solid #006eb0;
+    margin:0 auto;
+    padding: 5px;
+}
+body.memoPop #windowPopup .memoPopTitle{
+    width: 376px;
+    float:left;
+    clear: both;
+}
+body.memoPop .memoPopTitle p{
+    background-image: url('../../images/opro/main/bul_pop.png');
+    background-position: left center;
+    background-repeat: no-repeat;
+    font:18px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+    padding-left: 16px;
+    margin-top:5px;
+    float:left;
+}
+
+body.memoPop .memoPopTitle .printBtn{
+    width: 30px;
+    height: 30px;
+    background-image: url('../../images/opro/main/popPrintBtn.png');
+    background-position: left center;
+    background-repeat: no-repeat;
+    float:right;
+    text-indent: -999999px;
+}
+body.memoPop .memoPopTitle .popBtnLayer{
+    float: right;
+    margin-top:5px;
+}
+body.memoPop .memoPopTitle .newBtn{
+    width: 28px;
+    height: 28px;
+    background-image: url('../../images/opro/main/popNewBtn.png');
+    background-position: left center;
+    background-repeat: no-repeat;
+    float: left;
+    text-indent: -999999px;
+    margin-right: 5px;
+}
+body.memoPop .memoPopTitle .savetBtn{
+    width: 28px;
+    height: 28px;
+    background-image: url('../../images/opro/main/popSaveBtn.png');
+    background-position: left center;
+    background-repeat: no-repeat;
+    float: left;
+    text-indent: -999999px;
+}
+body.memoPop .memoPopBody textarea{
+    padding:10px 10px 0 10px;
+    width: 354px;
+    height: 330px;
+    float: left;
+    margin-top: 10px;
+    clear: both;
+    border: 1px solid #c6c6c6;
+}
+body.memoPop .memoPopBottom{
+    float: right;
+    margin-top:5px;
+}
+body.memoPop .memoPopBottom .checkBox{
+    float:left;
+    margin-right: 15px;
+    color:#434242;
+    font:14px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+}
+body.memoPop .memoPopBottom a.closeBtn{
+    float:left;
+    color:#434242;
+    margin-right: 5px;
+    font:14px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+}
+body.memoPop .memoPopBottom a.closeBtn:hover{
+    text-decoration: none;
+}
+
+
+/*트리메뉴 pop*/
+body.treePop #windowPopup{
+    position: relative;
+    width: 230px;
+    height: 350px;
+    margin:0 auto;
+    padding: 0;
+}
+body.treePop #windowPopup .treePopTitle{
+    background-color: #017ac3;
+    height:40px;
+	padding: 0 11px;
+	width: 100%;
+}
+body.treePop #windowPopup .treePopTitle p{
+    margin-top: 10px;
+    color: white;
+    font: 14px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+    margin-left: 10px;
+    float: left;
+}
+body.treePop #windowPopup .treePopBottom{	
+    background-color: #f5f5f5;
+    border: 1px solid #d9d9d9;	
+	border-top: none;
+	width: 100%;
+	height: 40px;
+	float: left;
+	padding: 0 10px;
+	
+}
+body.treePop #windowPopup .treePopBottom .T_btnLayer{
+    margin-right: 5px;
+}

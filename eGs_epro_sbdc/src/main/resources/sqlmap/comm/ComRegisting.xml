@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ComRegr">
+
+	<sql id="RegrColumnClause">
+		, REGR_ID
+		, REGR_NM
+		, REG_DT
+		, MODR_ID
+		, MODR_NM
+		, MOD_DT
+		, CONN_IP
+		, DEL_AT
+	</sql>
+	
+	<sql id="RegrValueClause">
+		, #{USR_ID, jdbcType=VARCHAR}
+		, #{USR_NM, jdbcType=VARCHAR}
+		, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+		, #{USR_ID, jdbcType=VARCHAR}
+		, #{USR_NM, jdbcType=VARCHAR}
+		, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+		, #{CONN_IP, jdbcType=VARCHAR}
+		, 'N'
+	</sql>
+	
+	<sql id="ModrSetClause">
+		, MODR_ID = #{USR_ID, jdbcType=VARCHAR}
+		, MODR_NM = #{USR_NM, jdbcType=VARCHAR}
+		, CONN_IP = #{CONN_IP , jdbcType=VARCHAR}
+	</sql>
+
+	<sql id="selectColumnClause">
+		, REGR_ID
+		, REGR_NM
+		, REG_DT
+		, MODR_ID
+		, MODR_NM
+		, MOD_DT
+		, CONN_IP
+		, DEL_AT
+	</sql>	
+
+</mapper>

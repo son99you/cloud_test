@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eunwoosoft.comm.file.dao.ComAtmaAtchFileHistDao"> 
+	
+	<!--  첨부파일이력 등록-->
+	<insert id="insertAtchFileHistRegist">
+		SELECT 1 FROM DUAL
+	</insert>
+	
+	<!--  첨부파일이력 등록 (파일이름으로)-->
+	<insert id="insertAtchFileHistByNmRegist">
+		SELECT 1 FROM DUAL
+	</insert>
+	
+	<!--  첨부파일이력목록조회_페이징-->
+	<select id="selectAtchFileHistListInqireWithPgng" resultType="dataEntity">
+		SELECT 1 FROM DUAL
+	</select>
+	
+	<!--  첨부파일이력목록조회 총건수-->
+	<select id="selectAtchFileHistListInqireTotcnt" resultType="long">
+		SELECT 1 FROM DUAL
+	</select>
+	
+	<!--  첨부파일이력상세조회-->
+	<select id="selectAtchFileHistDetailInqire" resultType="dataEntity">
+		SELECT 1 FROM DUAL
+	</select>
+	
+</mapper>

@@ -1,0 +1,54 @@
+@charset "utf-8";
+/* CSS Document */ 
+
+/* paging-btn */
+.paging-btn  { margin-top: 19px; text-align: center; }
+.paging-btn span { display: inline-block; width: 24px; height: 24px; border: 1px solid #22975c; line-height: 23px; font-size: 12px; font-weight: bold; background: #46b47d; color: #fff; }
+.paging-btn a { display: inline-block; width: 24px; height: 24px; border: 1px solid #dedede; line-height: 23px; font-size: 12px; font-weight: bold; color: #666; } 
+.paging-btn .first_Paging { background: url("../images/btn/btn_first.png") no-repeat center; }
+.paging-btn .prev_Paging { background: url("../images/btn/btn_pre.png") no-repeat center; }
+.paging-btn .next_Paging { background: url("../images/btn/btn_next.png") no-repeat center; }
+.paging-btn .last_Paging { background: url("../images/btn/btn_last.png") no-repeat center; }
+
+/* width */
+.w210 { width: 210px; height: 40px !important; }
+.w263 { width: 263px; !important; }
+.w282 { width: 282px; !important; }
+
+
+/* button */
+.btn {
+	display: inline-block;
+	margin-bottom: 0;
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+	border: 0;
+	white-space: nowrap;
+	font-weight: bold;
+	font-size: 15px;
+	letter-spacing: -0.5px;
+}
+
+/* button size */
+.btn_w210{width:210px; height: 48px;}
+
+/* button style */
+.btn_login { background: #ffd500; color: #333; border-radius: 4px;  }
+.btn_out { width: 64px; height: 24px;  background: #2b8f5d; color: #fff; font-weight: inherit; font-size: 12px; line-height: 24px; border-radius: 2px; }
+.btn_ask { width: 112px; line-height: 28px; border-radius: 4px; background: #22975c; color: #fff; font-weight: inherit; }
+.btn_search { width: 70px; height: 26px; padding-left: 15px; line-height: 24px; background: #2b8f5d url(../../images/opro/icon/icon_search.png) no-repeat 15px center; font-size: 13px; color: #fff; }
+.btn_search:hover { background-color: #206b46; }
+.btn_search02 { width: 32px; height: 28px; background: #a6a6a6 url(../../images/opro/icon/icon_search.png) no-repeat center; }
+/*.btn_search02 { width: 32px; height: 28px; background: #a6a6a6 url(../images/icon/icon_search02.png) no-repeat center; }*/ 
+.btn_del { width: 42px; line-height: 24px; border: 1px solid #bfc7c3; background: #fff; font-size: 13px; color: #818c87; font-weight: inherit; }
+.btn_plus { width: 42px; line-height: 24px; border: 1px solid #bfc7c3; background: #fff; font-size: 13px; color: #818c87; font-weight: inherit; }
+.btn_file { width: 75px; line-height: 24px; padding-left: 11px; border: 1px solid #c5c5c5; background: #eee url(../images/icon/icon_plus.png) no-repeat 9px center; font-size: 13px; color: #818c87; font-weight: inherit; letter-spacing: -0.5px;}
+.btn_2b8f5d {padding: 0 18px; line-height: 32px; color: #fff; background: #2b8f5d; }
+
+/* padding, margin */
+
+
+
+.ellipsis { display: inline-block; max-width: 72%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+

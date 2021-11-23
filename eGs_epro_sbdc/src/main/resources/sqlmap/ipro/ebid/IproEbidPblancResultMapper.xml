@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eunwoosoft.ipro.ebid.dao.IproEbidPblancResultDao">	
+
+   		<select id="selectBidPblancResultListWithPgng" resultType="dataEntity">
+			<include refid="ComPgng.pgngHeaderClause"/>
+			SELECT * FROM (
+				<include refid="bidPblancResultList"/>
+				<include refid="bidPblancResultListWhere"/>
+				ORDER BY REG_DT DESC, ANNC_NO DESC, ANNC_NGR DESC
+			) T1
+			WHERE 1 = 1
+			<include refid="ComPgng.pgngTailClause"/>
+		</select>
+		
+		<select id="selectBidPblancResultExcelList" resultType="dataEntity">
+			SELECT ROWNUM AS RNUM, R1.*
+			FROM (
+				SELECT * FROM (
+					<include refid="bidPblancResultList"/>
+					<include refid="bidPblancResultListWhere"/>
+					ORDER BY REG_DT DESC, ANNC_NO DESC, ANNC_NGR DESC
+				) T1
+			)R1
+		</select>
+		
+		<select id="selectBidPblancResultListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="bidPblancResultList"/>
+			<include refid="bidPblancResultListWhere"/>
+		) T1
+		WHERE 1 = 1		
+	</select>
+	
+	<sql id="bidPblancResultList">
+    SELECT * FROM	(
+        SELECT BM.ANNC_NO
+                  , BM.ANNC_NGR
+                  , BR.ROUND_NO
+                  , BM.BID_PSCD
+                  , F_CDVAL_INQIRE('BID_PSCD', BM.BID_PSCD) AS BID_PSCD_NM
+                  , BM.CONT_SECD
+                  , F_CDVAL_INQIRE('CONT_SECD', BM.CONT_SECD) AS CONT_SECD_NM
+                  , BM.SBID_MTCD
+                  , F_CDVAL_INQIRE('SBID_MTCD', BM.SBID_MTCD) AS SBID_MTCD_NM
+                  , BM.BID_NM
+                  , BR.ANNC_DT
+                  , BR.PRTC_APLY_ENDT
+                  , BM.CONT_MTCD
+                  , F_CDVAL_INQIRE('CONT_MTCD', BM.CONT_MTCD) AS CONT_MTCD_NM
+                  , BM.ESTT_AMT
+                  , BM.REG_DT
+                  , BM.PRCH_RQR_NO 
+                  , BM.PRCH_NO
+                  , BM.EMRG_YN
+                  , BM.FNGR_BID_YN
+                  , BM.ITNT_BID_YN
+                  , BM.ANNC_SECD
+                  , F_CDVAL_INQIRE('ANNC_SECD', BM.ANNC_SECD) AS ANNC_SECD_NM
+                  , BM.BSNS_BDG_AMT
+                  , BM.RQST_DEPT_NM
+                  , BM.CHRGR_ID
+                  , BM.CHRGR_NM
+                  , BR.BIDC_SBMT_STDT
+                  , BR.BIDC_SBMT_ENDT
+                  , BM.BID_MTCD
+                  , F_CDVAL_INQIRE('BID_MTCD', BM.BID_MTCD) AS BID_MTCD_NM 
+                  , BM.RQR_DE
+                  , BM.ARA_DEPT_CD
+           FROM T_BI_MST BM 
+                  , T_BI_ROUND BR
+        WHERE 1=1
+            AND BM.ANNC_NGR = ( SELECT MAX(ANNC_NGR) FROM T_BI_MST WHERE ANNC_NO = BM.ANNC_NO )
+            AND BM.ANNC_NO = BR.ANNC_NO
+            AND BM.ANNC_NGR = BR.ANNC_NGR
+            AND BR.ROUND_NO = (SELECT MAX(ROUND_NO) FROM T_BI_ROUND WHERE ANNC_NO = BR.ANNC_NO AND ANNC_NGR = BR.ANNC_NGR)
+            AND NVL(BM.DEL_AT, 'N') != 'Y'
+            AND BM.BID_PSCD IN (
+	            					SELECT CD_DTL_ID FROM T_MM_CODE_MST
+									WHERE 1=1
+									AND CD_ID = 'BID_PSCD'
+									AND ETC_VAL1 = 'B'
+								)
+		)
+		WHERE 1=1
+	</sql> 
+	
+	<sql id="bidPblancResultListWhere">
+		<if test='P_BID_NM_S != null and P_BID_NM_S != "" '>
+			AND BID_NM LIKE '%'||#{P_BID_NM_S}||'%'
+		</if>
+		<if test='P_ANNC_NO_S != null and P_ANNC_NO_S != "" '>
+			AND ANNC_NO LIKE '%'||#{P_ANNC_NO_S}||'%'
+		</if>
+		<if test='P_CONT_SECD_S != null and P_CONT_SECD_S != "" '>
+			AND CONT_SECD = #{P_CONT_SECD_S}
+		</if>
+		<if test='P_SBID_MTCD_S != null and P_SBID_MTCD_S != "" '>
+			AND SBID_MTCD = #{P_SBID_MTCD_S}
+		</if>
+		<if test='P_BID_PSCD_S != null and P_BID_PSCD_S != "" '>
+			AND BID_PSCD = #{P_BID_PSCD_S}
+		</if>
+		<if test='P_APPR_STCD_S != null and P_APPR_STCD_S != "" '>
+			AND APPR_STCD = #{P_APPR_STCD_S}
+		</if>
+		<if test='P_BID_MTCD_MAIN != null and P_BID_MTCD_MAIN != "" '>
+			AND BID_MTCD = #{P_BID_MTCD_MAIN}
+		</if>
+		<if test='P_ANNC_STDT_S != null and P_ANNC_STDT_S != "" '>
+			AND TO_CHAR(TO_DATE(ANNC_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') >= #{P_ANNC_STDT_S}
+		</if>
+		<if test='P_ANNC_ENDT_S != null and P_ANNC_ENDT_S != "" '>
+			AND TO_CHAR(TO_DATE(ANNC_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') &lt;= #{P_ANNC_ENDT_S}
+		</if>
+		<if test='P_CHRGR_ID_S != null and P_CHRGR_ID_S != "" '>
+			AND CHRGR_ID = #{P_CHRGR_ID_S}
+		</if>		
+		<if test='P_BIDC_SBMT_STDT_S != null and P_BIDC_SBMT_STDT_S != "" '>
+			AND TO_CHAR(TO_DATE(BIDC_SBMT_ENDT, 'yyyyMMddhh24miss'), 'yyyyMMdd') >= #{P_BIDC_SBMT_STDT_S}
+		</if>
+		<if test='P_BIDC_SBMT_ENDT_S != null and P_BIDC_SBMT_ENDT_S != "" '>
+			AND TO_CHAR(TO_DATE(BIDC_SBMT_ENDT, 'yyyyMMddhh24miss'), 'yyyyMMdd') &lt;= #{P_BIDC_SBMT_ENDT_S}
+		</if>
+		<if test='P_RQR_BEGIN_DT_S != null and P_RQR_BEGIN_DT_S != "" '>
+			AND TO_CHAR(TO_DATE(RQR_DE, 'yyyyMMdd'), 'yyyyMMdd') >= #{P_RQR_BEGIN_DT_S}
+		</if>
+		<if test='P_RQR_END_DT_S != null and P_RQR_END_DT_S != "" '>
+			AND TO_CHAR(TO_DATE(RQR_DE, 'yyyyMMdd'), 'yyyyMMdd') &lt;= #{P_RQR_END_DT_S}
+		</if>
+		<if test='P_ARA_DEPT_CD_S != null and P_ARA_DEPT_CD_S != "" '>
+			AND ARA_DEPT_CD = #{P_ARA_DEPT_CD_S}
+		</if>
+	</sql>
+	
+	
+</mapper>

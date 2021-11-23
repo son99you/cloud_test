@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * sqlmap.ipro.sytm
+ * IproSytmIfcMngeMapper.xml
+ * 
+ * @Author : jandi_Eun
+ * @Date   : 2019. 2. 28.
+ * 
+ -->
+<mapper namespace="com.eunwoosoft.ipro.sytm.dao.IproSytmIfcMngeDao">
+
+	<select id="selectIntfMngeListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="intfMngeList"/>
+			<include refid="intfMngeListWhere"/>
+		) T1
+		WHERE 1 = 1
+ 		ORDER BY REG_DT DESC
+ 		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<select id="selectIntfMngeListTotCnt" resultType="int">
+ 		SELECT COUNT(1) FROM (
+			<include refid="intfMngeList"/>
+			<include refid="intfMngeListWhere"/>
+		) T1
+ 	</select>
+	
+	<sql id="intfMngeList">
+        SELECT IF_NO
+                  , IF_NM
+                  , IF_CNTN
+                  , SNDR
+                  , DSTN
+                  , CMCT_MTHD
+                  , RMK
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+          FROM T_MM_IF_MST
+	</sql>
+	
+	<sql id="intfMngeListWhere">
+		<where>
+			AND DEL_AT = 'N'
+			<if test='P_IF_NM_S != null and P_IF_NM_S != "" '>
+				AND IF_NM LIKE '%'||#{P_IF_NM_S}||'%'
+			</if>
+		</where>
+	</sql>
+	
+	
+</mapper>

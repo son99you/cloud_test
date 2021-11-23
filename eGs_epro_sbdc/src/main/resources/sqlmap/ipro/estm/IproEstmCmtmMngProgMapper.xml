@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+ <mapper namespace="com.eunwoosoft.ipro.estm.dao.IproEstmCmtmMngProgDao">
+ 
+ 	<select id="selectCmtmMngProgList" resultType="dataEntity">
+        <include refid="ComPgng.pgngHeaderClause"/>
+        SELECT * FROM (
+		    <include refid="cmtmMngProgList"/>
+			<include refid="cmtmMngProgListWhere"/>
+			ORDER BY TO_NUMBER(ESTM_NO) DESC
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>   
+    </select>
+
+ 	<select id="selectCmtmMngProgExcelList" resultType="dataEntity">
+        SELECT ROWNUM RNUM, T1.* FROM (
+		    <include refid="cmtmMngProgList"/>
+			<include refid="cmtmMngProgListWhere"/>
+			ORDER BY TO_NUMBER(ESTM_NO) DESC
+		) T1
+		WHERE 1 = 1
+    </select>
+    
+    <select id="selectCmtmMngProgListTotCnt" resultType="int" > 
+		SELECT COUNT(1) FROM ( 
+			<include refid="cmtmMngProgList"/>
+			<include refid="cmtmMngProgListWhere"/>
+		) T1
+		WHERE 1 = 1
+	</select>
+    
+    
+    <sql id="cmtmMngProgList">
+        SELECT ESTM_NO
+                  , ESTM_SECD
+                  , ESTM_SENM
+                  , F_CDVAL_INQIRE('ESTM_SECD', ESTM_SECD) AS ESTM_SECD_NM
+                  , ESTM_PSCD
+                  , ESTM_PSNM
+                  , F_CDVAL_INQIRE('ESTM_PSCD', ESTM_PSCD) AS ESTM_PSCD_NM
+                  , ESTM_NM
+                  , TOTL_ESTM_ST_DT
+                  , TOTL_ESTM_END_DT
+                  , TO_CHAR(TO_DATE(TOTL_ESTM_ST_DT, 'yyyyMMddHH24miss'), 'yyyy-MM-dd HH:mi:ss') || '~' || TO_CHAR(TO_DATE(TOTL_ESTM_END_DT, 'yyyyMMddHH24miss'), 'yyyy-MM-dd HH:mi:ss') AS TOTL_ESTM_DT_ALL
+                  , ESTM_CHRG_DEPT_NM
+                  , 	REAL_ESTM_YN
+                  , DECODE(REAL_ESTM_YN, 'Y', '실제', 'N', '모의', '-') AS REAL_ESTM_NM
+                  , REG_DT
+                  , TO_CHAR(TO_DATE(REG_DT, 'yyyyMMddHH24miss'), 'yyyy-MM-dd') AS REG_DT_F
+                  , REGR_NM
+           FROM T_ESTM_MNG_MST
+	</sql>
+	
+	<sql id="cmtmMngProgListWhere">
+		<where>
+            AND DEL_AT = #{P_DEL_AT, jdbcType=VARCHAR}
+            AND ESTM_SECD IN ( 'E006' )
+            
+            <if test='P_ESTM_PSCD_GBN_S != null and P_ESTM_PSCD_GBN_S != "" '>
+                <if test='P_ESTM_PSCD_GBN_S.equals("ESTM_PROG")'>
+                AND ESTM_PSCD IN ( 'A001', 'A002', 'A003', 'A004', 'A0041', 'A005' ) 
+                </if>
+                <if test='P_ESTM_PSCD_GBN_S.equals("ESTM_CMPL")'>
+                AND ESTM_PSCD IN ( 'C001', 'C002' ) 
+                </if>
+            </if>
+            
+            <if test='P_ESTM_NO_S != null and P_ESTM_NO_S != "" '>
+	            AND ESTM_NO LIKE '%'|| #{P_ESTM_NO_S} || '%'
+            </if>
+            <if test='P_ESTM_NM_S != null and P_ESTM_NM_S != "" '>
+                AND ESTM_NM LIKE '%'|| #{P_ESTM_NM_S} || '%' 
+            </if>
+            <if test='P_ESTM_SECD_S != null and P_ESTM_SECD_S != "" '>
+                AND ESTM_SECD = #{P_ESTM_SECD_S}
+            </if>
+            <if test='P_ESTM_PSCD_S != null and P_ESTM_PSCD_S != "" '>
+                AND ESTM_PSCD = #{P_ESTM_PSCD_S}
+            </if>
+            <if test='P_ESTM_CHRG_DEPT_NO_S != null and P_ESTM_CHRG_DEPT_NO_S != "" '>
+                AND ESTM_CHRG_DEPT_NO = #{P_ESTM_CHRG_DEPT_NO_S}
+            </if>
+            <if test='P_REG_BEGIN_DT_S != null and P_REG_BEGIN_DT_S != "" '>
+                AND TO_CHAR(TO_DATE(REG_DT, 'yyyyMMddHH24miss'), 'yyyyMMdd') >= #{P_REG_BEGIN_DT_S}
+            </if>
+            <if test='P_REG_END_DT_S != null and P_REG_END_DT_S != "" '>
+                AND TO_CHAR(TO_DATE(REG_DT, 'yyyyMMddHH24miss'), 'yyyyMMdd') &lt;= #{P_REG_END_DT_S}
+            </if>
+            <if test='P_DEPT_NO != null and P_DEPT_NO != "" '>
+                AND ESTM_CHRG_DEPT_NO = #{P_DEPT_NO}
+            </if>
+		</where>
+	</sql>
+	
+	<insert id="insertEstmCmtmCntcObj">
+        INSERT INTO T_ESTM_OBJ (
+          ESTM_NO
+        , ESTM_OBJ_SEQ
+        , VEND_REG_NO
+        , BIZRNO
+        , VEND_NM
+        , ITEM_NO
+        , ITEM_NM
+        , ESTM_CMTM_NO
+        , ESTM_CMTM_NM
+        , ESTM_OBJ_PE_NO
+        , ESTM_OBJ_PE_NM
+        , EMPL_NO
+        , RSDN_NO
+        , TEL_NO
+        , EMAL
+        , FILE_GRP_NO
+        <include refid="ComRegr.RegrColumnClause"/>
+        ) SELECT #{P_ESTM_NO, jdbcType=VARCHAR}
+                    , ROWNUM AS ESTM_OBJ_SEQ
+                    , '' AS VEND_REG_NO
+                    , '' AS BIZRNO
+                    , '' AS VEND_NM
+                    , '' AS ITEM_NO
+                    , '' AS ITEM_NM
+                    , ESTM_CMTM_NO
+                    , ESTM_CMTM_NM
+                    , '' AS ESTM_OBJ_PE_NO
+                    , '' AS ESTM_OBJ_PE_NM
+                    , '' AS EMPL_NO
+                    , '' AS RSDN_NO
+                    , TEL_NO
+                    , EMAL
+                    , '' AS FILE_GRP_NO
+                    <include refid="ComRegr.RegrValueClause"/>
+             FROM V_ESTM_CMTM_MST_IF
+          	 WHERE 1=1
+             AND ESTM_CMTM_NO IN (SELECT ESTM_CMTM_NO FROM V_ESTM_ANNC_TPI_INT WHERE 1=1 AND ESTM_ANNC_NO = #{P_ESTM_INFO_CNTC_NO, jdbcType=VARCHAR})
+	</insert>
+	
+	
+	<select id="selectEstmCmtmPoolFileList" resultType="dataEntity">
+        SELECT 	 
+        		 ESTM_CMTM_NO
+        		,HFFC_PRODDF_FILE_STRE_COURS
+				,HFFC_PRODDF_WON_FILE_NM
+				,CRQFC_FILE_STRE_COURS
+				,CRQFC_WON_FILE_NM
+        FROM T_ESTM_CMTM_POOL_MST
+        WHERE 1=1
+        AND ESTM_CMTM_NO IN (SELECT ESTM_CMTM_NO FROM V_ESTM_ANNC_TPI_INT WHERE 1=1 AND ESTM_ANNC_NO = #{P_ESTM_INFO_CNTC_NO, jdbcType=VARCHAR})
+    </select>
+	
+	<insert id="insertEstmCmtmPoolMst">
+        INSERT INTO T_ESTM_CMTM_POOL_MST (
+          	 ESTM_CMTM_NO
+		<!-- 	,ESTM_CMTM_ID -->
+			,ESTM_CMTM_NM
+		<!-- 	,ESTM_CMTM_NM_CHNW -->
+			,INO_CMTM_SECD
+		 	,BRDT
+			,JOB
+			,JOB_NM
+			,FX_NO
+			,CP_NO
+			,TEL_NO
+			,EMAL
+			,ZIP
+			,ADDR_1
+			,ADDR_2
+			,ESTM_CMTM_BLNG_AGNC
+			,ESTM_CMTM_BLNG_DEPT
+			,ESTM_CMTM_OFPS
+			,BLNG_AGNC_BIZRNO
+			,BLNG_AGNC_ZIP
+			,BLNG_AGNC_ADDR_1
+			,BLNG_AGNC_ADDR_2
+			,BLNG_AGNC_HMPG_ADDR
+			,BLNG_AGNC_TEL_NO
+			,BLNG_AGNC_FX_NO
+			,HFFC_PROOF_FILE_ID
+			,HFFC_PRODDF_FILE_STRE_COURS
+			,HFFC_PRODDF_WON_FILE_NM
+			,CRQFC_FILE_STRE_COURS
+			,CRQFC_WON_FILE_NM
+			,CRQFC_FILE_ID
+			,CNTN_SECD <!-- 내역 -->
+			,CNTN_NM
+			,LLF_SECD <!-- 대분류-->
+			,LLF_NM
+			,SLF_SECD <!-- 소분류 -->
+			,SLF_NM
+			,MLF_SECD <!-- 중분류 -->
+			,MLF_NM
+        <include refid="ComRegr.RegrColumnClause"/>
+        ) 
+        SELECT
+			 ESTM_CMTM_NO
+			<!-- ,ESTM_CMTM_ID -->
+			,ESTM_CMTM_NM
+			<!-- ,ESTM_CMTM_NM_CHNW -->
+			,'OUT'
+			,BRDT
+			,JOB
+			,JOB_NM
+			,FX_NO
+			,CP_NO
+			,TEL_NO
+			,EMAL
+			,ZIP
+			,ADDR_1
+			,ADDR_2
+			,BLNG_AGNC
+			,BLNG_DEPT
+			,OFPS
+			,BLNG_AGNC_BIZRNO
+			,BLNG_AGNC_ZIP
+			,BLNG_AGNC_ADDR_1
+			,BLNG_AGNC_ADDR_2
+			,BLNG_AGNC_HMPG_ADDR
+			,BLNG_AGNC_TEL_NO
+			,BLNG_AGNC_FX_NO
+			,HFFC_PROOF_FILE_ID
+			,replace(HFFC_PRODDF_FILE_STRE_COURS, '/gfsdata/imstars/upload') AS HFFC_PRODDF_FILE_STRE_COURS
+			,HFFC_PRODDF_WON_FILE_NM
+			,replace(CRQFC_FILE_STRE_COURS, '/gfsdata/imstars/upload') AS CRQFC_FILE_STRE_COURS
+			,CRQFC_WON_FILE_NM
+			,CRQFC_FILE_ID
+			,EVL_MFCMM_SE_CODE <!-- 내역 -->
+			,EVL_MFCMM_SE_NM
+			,EVL_MFCMM_SE_LCLAS_CD <!-- 대분류-->
+			,EVL_MFCMM_SE_LCLAS_NM
+			,EVL_REALM_CODE <!-- 소분류 -->
+			,EVL_REALM_CODE_NM
+			,EVL_REAL_LCLAS_CD <!-- 중분류 -->
+			,EVL_REAL_LCLAS_NM
+			<include refid="ComRegr.RegrValueClause"/>
+	FROM V_ESTM_CMTM_MST_IF
+	WHERE 1=1
+	AND ESTM_CMTM_NO IN (SELECT ESTM_CMTM_NO FROM V_ESTM_ANNC_TPI_INT WHERE 1=1 AND ESTM_ANNC_NO = #{P_ESTM_INFO_CNTC_NO, jdbcType=VARCHAR})
+	</insert>
+	
+	
+	<insert id="insertEstmCmtmEduc">
+        INSERT INTO T_ESTM_CMTM_EDUC
+		(
+		
+			 ESTM_CMTM_NO
+			,EDUC_SEQ
+			,MSDG
+			,SHL
+			,SCCT
+			,TE_FROM
+			,TE_TO
+        	<include refid="ComRegr.RegrColumnClause"/>
+        ) 
+        SELECT
+			 ESTM_CMTM_NO
+			,EDUC_SEQ
+			,MSDG_NM
+			,SHL
+			,SCCT
+			,TE_FROM
+			,TE_TO
+			<include refid="ComRegr.RegrValueClause"/>
+		FROM V_ESTM_CMTM_EDUC_IF
+		WHERE 1=1
+		AND EDUC_SEQ IS NOT NULL
+		AND ESTM_CMTM_NO IN (SELECT ESTM_CMTM_NO FROM V_ESTM_ANNC_TPI_INT WHERE 1=1 AND ESTM_ANNC_NO = #{P_ESTM_INFO_CNTC_NO, jdbcType=VARCHAR})
+	</insert>
+	
+	
+	<insert id="insertEstmCmtmCare">
+        INSERT INTO T_ESTM_CMTM_CARE
+		(
+		
+			 ESTM_CMTM_NO
+			,CARE_SEQ
+			,BSNS_NM
+			,ESTM_SPHE
+			,RUN_YR
+			,AGNC_NM
+        	<include refid="ComRegr.RegrColumnClause"/>
+        ) 
+        SELECT
+			 ESTM_CMTM_NO
+			,CRQF_SEQ
+			,BSNS_NM
+			,ESTM_SPHE
+			,RUN_YR
+			,AGNC_NM
+			<include refid="ComRegr.RegrValueClause"/>
+		FROM V_ESTM_CMTM_CARE_IF
+		WHERE 1=1
+		AND CRQF_SEQ IS NOT NULL
+		AND ESTM_CMTM_NO IN (SELECT ESTM_CMTM_NO FROM V_ESTM_ANNC_TPI_INT WHERE 1=1 AND ESTM_ANNC_NO = #{P_ESTM_INFO_CNTC_NO, jdbcType=VARCHAR})
+	</insert>
+	
+	<insert id="insertEstmCmtmCrqf">
+        INSERT INTO T_ESTM_CMTM_CRQF
+		(
+		
+			 ESTM_CMTM_NO
+			,CRQF_SEQ
+			,CRQF_NM
+			,PBLS_AGNC
+			,ACQS_DE
+
+        	<include refid="ComRegr.RegrColumnClause"/>
+        ) 
+        SELECT
+			 ESTM_CMTM_NO
+			,CRQF_SEQ
+			,CRQF_NM
+			,PBLS_AGNC
+			,ACQS_DE
+			<include refid="ComRegr.RegrValueClause"/>
+		FROM V_ESTM_CMTM_CRQF_IF
+		WHERE 1=1
+		AND CRQF_SEQ IS NOT NULL
+		AND ESTM_CMTM_NO IN (SELECT ESTM_CMTM_NO FROM V_ESTM_ANNC_TPI_INT WHERE 1=1 AND ESTM_ANNC_NO = #{P_ESTM_INFO_CNTC_NO, jdbcType=VARCHAR})
+	</insert>
+	
+	<insert id="insertEstmCmtmOfcCare">
+        INSERT INTO T_ESTM_CMTM_OFC_CARE
+		(
+		
+			 ESTM_CMTM_NO
+			,OFC_CARE_SEQ
+			,OFC_NM
+			,WRK_DEPT_NM
+			,OPNM
+			,WRK_YEAR_CNT
+			,CHRG_TSK_ACPS
+
+        	<include refid="ComRegr.RegrColumnClause"/>
+        ) 
+        SELECT
+			 ESTM_CMTM_NO
+			,OFC_CARE_SEQ
+			,OFC_NM
+			,WRK_DEPT_NM
+			,OPNM
+			,WRK_YEAR_CNT
+			,CHRG_TSK_ACPS
+			<include refid="ComRegr.RegrValueClause"/>
+		FROM V_ESTM_CMTM_OFC_IF
+		WHERE 1=1
+		AND OFC_CARE_SEQ IS NOT NULL
+		AND ESTM_CMTM_NO IN (SELECT ESTM_CMTM_NO FROM V_ESTM_ANNC_TPI_INT WHERE 1=1 AND ESTM_ANNC_NO = #{P_ESTM_INFO_CNTC_NO, jdbcType=VARCHAR})
+	</insert>
+	
+	
+	
+	<delete id = "deleteEstmCmtmPool">
+		DELETE FROM T_ESTM_CMTM_POOL_MST
+		WHERE 1 = 1 
+		AND ESTM_CMTM_NO IN (SELECT ESTM_CMTM_NO FROM V_ESTM_ANNC_TPI_INT WHERE 1=1 AND ESTM_ANNC_NO = #{P_ESTM_INFO_CNTC_NO, jdbcType=VARCHAR})
+	</delete>
+	
+	<delete id = "deleteEstmCmtmEduc">
+		DELETE FROM T_ESTM_CMTM_EDUC
+		WHERE 1 = 1 
+		AND ESTM_CMTM_NO IN (SELECT ESTM_CMTM_NO FROM V_ESTM_ANNC_TPI_INT WHERE 1=1 AND ESTM_ANNC_NO = #{P_ESTM_INFO_CNTC_NO, jdbcType=VARCHAR})
+	</delete>
+	
+	<delete id = "deleteEstmCmtmCare">
+		DELETE FROM T_ESTM_CMTM_CARE
+		WHERE 1 = 1 
+		AND ESTM_CMTM_NO IN (SELECT ESTM_CMTM_NO FROM V_ESTM_ANNC_TPI_INT WHERE 1=1 AND ESTM_ANNC_NO = #{P_ESTM_INFO_CNTC_NO, jdbcType=VARCHAR})
+	</delete>
+	
+	<delete id = "deleteEstmCmtmCrqf">
+		DELETE FROM T_ESTM_CMTM_CRQF
+		WHERE 1 = 1 
+		AND ESTM_CMTM_NO IN (SELECT ESTM_CMTM_NO FROM V_ESTM_ANNC_TPI_INT WHERE 1=1 AND ESTM_ANNC_NO = #{P_ESTM_INFO_CNTC_NO, jdbcType=VARCHAR})
+	</delete>
+	
+	<delete id = "deleteEstmCmtmOfcCare">
+		DELETE FROM T_ESTM_CMTM_OFC_CARE
+		WHERE 1 = 1 
+		AND ESTM_CMTM_NO IN (SELECT ESTM_CMTM_NO FROM V_ESTM_ANNC_TPI_INT WHERE 1=1 AND ESTM_ANNC_NO = #{P_ESTM_INFO_CNTC_NO, jdbcType=VARCHAR})
+	</delete>
+	
+	<update id="updateEstmCmtmPoolMstFileGrpNoUpdt">
+		UPDATE	T_ESTM_CMTM_POOL_MST SET
+			 FILE_GRP_NO = #{P_FILE_GRP_NO, jdbcType=VARCHAR}
+			, MOD_DT = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+	        <include refid="ComRegr.ModrSetClause"/>
+		WHERE 1 = 1
+	    AND ESTM_CMTM_NO = #{P_ESTM_CMTM_NO, jdbcType=VARCHAR}
+	</update>
+	
+	<!-- <delete id="deleteEstmCmtmCrqf">
+		DELETE FROM T_ESTM_CMTM_CRQF
+		WHERE 1 = 1 
+		AND ESTM_CMTM_NO = #{P_ESTM_CMTM_NO, jdbcType=VARCHAR}
+	</delete> -->
+	
+	
+	<update id="updateEstmCmtmPoolSlctYn">
+        UPDATE T_ESTM_CMTM_POOL_MST
+              SET SLCT_YN = 'Y'
+                  , MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+                  <include refid="ComRegr.ModrSetClause"/>
+         WHERE ESTM_CMTM_NO = #{P_ESTM_CMTM_NO, jdbcType=VARCHAR}
+	</update>
+	
+ </mapper>

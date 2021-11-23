@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+ * 지번 우편번호 Mapper
+ *
+ * <pre>
+ * oda.com.cmcd.dao 
+ *    |_ ComCmcdRnZipMapper.xml
+ * 
+ * </pre>
+ * @date : 2015. 2. 13. 오전 11:20:08
+ * @version : 1.0
+ * @author : 야긴스텍 정윤교
+-->
+<mapper namespace="ew.com.cmcd.dao.ComCmcdRnZipDao">
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 도로명목록조회_페이징      
+     * 2. 처리내용 :
+     *  	TABLE : TMDM_ZICO(우편번호)
+     * </pre>
+     * @Query ID : selectRnZipListWithPgng
+     * @date : 2015. 2. 13
+     * @author :  야긴스텍 정윤교
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 2. 13.        야긴스텍 정윤교              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectRnZipListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		
+		SELECT <include refid="selectRnZipList_SelectClause"/> 
+		FROM TMDM_ZICO
+		<include refid="selectRnZipList_WhereClause"/>
+		ORDER BY ZIP_MGNO ASC
+		
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<select id="selectRnZipListTotcnt" resultType="int">		
+		SELECT COUNT(1) 
+		FROM TMDM_ZICO
+		<include refid="selectRnZipList_WhereClause"/>
+	</select>	
+	
+	
+	<!--
+		  마스터코드목록조회 Select 절
+	-->
+	<sql id="selectRnZipList_SelectClause">
+		NEW_ZIP 								<!-- 신규 우편번호 -->
+		, ZIP										<!-- 우편번호 -->
+		, CTPRVN_NM							<!-- 시/도 -->
+		, SIGNGU_NM							<!-- 시/군/구 -->
+		, ROAD_NM								<!-- 도로명 -->
+		, BDNBR_WEEK_LNM					<!-- 건물번호 주지번 -->
+		, BDNBR_FATHER_LNM				<!-- 건물번호 부지번 -->
+		, SIGNGU_BULD_NM					<!-- 건물명 -->
+		, MNTN_AT								<!-- 산 여부 -->
+		, EMD_NM								<!-- 읍면동 -->
+		, LEGALDONG_NM						<!-- 법정동 -->
+		, ADSTRD_NM							<!-- 행정동명 -->
+		, LNM_WEEK_LNM						<!-- 지번 주지번 -->
+		, LNM_FATHER_LNM					<!-- 지번 부지번 -->
+		, LI_NM
+
+		, SUBSTR (NEW_ZIP, 0, 3) || '-' || SUBSTR (NEW_ZIP, 4, 3) AS NEW_ZIP_NO
+  		, SUBSTR (ZIP, 0, 3) || '-' || SUBSTR (ZIP, 4, 3) AS ZIP_NO		
+		, CTPRVN_NM || ' ' || SIGNGU_NM || ' ' || NVL(NVL(EMD_NM, (
+                          CASE
+                            WHEN ADSTRD_NM <![CDATA[ <>]]> LEGALDONG_NM THEN ADSTRD_NM || '(' || LEGALDONG_NM ||' )'
+                            ELSE ADSTRD_NM
+                          END )) , LEGALDONG_NM)|| ' ' || DECODE(MNTN_AT, 1, '산', '') || ' ' || LNM_WEEK_LNM || DECODE(LNM_FATHER_LNM, 0, '', '-' || LNM_FATHER_LNM) AS ADRES
+		, CTPRVN_NM || ' ' || SIGNGU_NM || ' ' || ROAD_NM || ' ' || BDNBR_WEEK_LNM || DECODE(BDNBR_FATHER_LNM, 0, '', '-' || BDNBR_FATHER_LNM)  || ' ' || SIGNGU_BULD_NM AS ROAD_ADRES
+	</sql>
+	
+
+	<!--
+		  마스터코드목록조회 Where 절
+	-->
+	<sql id="selectRnZipList_WhereClause">
+		<where>			
+		 	<if test="P_CTPRVN_NM != null and P_CTPRVN_NM != ''">
+				AND CTPRVN_NM = #{P_CTPRVN_NM, jdbcType=VARCHAR, javaType=String}
+			</if>
+			<if test="P_SIGNGU_NM != null and P_SIGNGU_NM != ''">
+				AND SIGNGU_NM = #{P_SIGNGU_NM, jdbcType=VARCHAR, javaType=String}
+			</if>
+			
+			<if test="P_SEARCH_TYPE != null and P_SEARCH_TYPE != '' and P_SEARCH_TYPE == 1">
+				<if test="P_ROAD_NM != null and P_ROAD_NM != ''">
+					AND CONTAINS( ROAD_NM, #{P_ROAD_NM, jdbcType=VARCHAR, javaType=String} ||'%' ) > 0
+				</if>
+			</if>
+			
+			<if test="P_SEARCH_TYPE != null and P_SEARCH_TYPE != '' and P_SEARCH_TYPE == 2">
+				<if test="P_SIGNGU_BULD_NM != null and P_SIGNGU_BULD_NM != ''">
+					AND CONTAINS( SIGNGU_BULD_NM, #{P_SIGNGU_BULD_NM, jdbcType=VARCHAR, javaType=String} ||'%' ) > 0
+				</if>
+			</if>
+			
+		</where>
+	</sql>	
+</mapper>

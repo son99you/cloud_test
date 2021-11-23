@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * sqlmap.ipro.sytm
+ * IproSytmG2bCntcMapper.xml
+ * 
+ * @Author : jandi_Eun
+ * @Date   : 2019. 4. 22.
+ * 
+ -->
+<mapper namespace="com.eunwoosoft.ipro.sytm.dao.IproSytmG2bCntcDao">
+
+	<select id="selectG2bCntcHstyListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="g2bCntcHstyList"/>
+			<include refid="g2bCntcHstyListWhere"/>
+		) T1
+		WHERE 1 = 1
+ 		ORDER BY REG_DT DESC
+ 		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<select id="selectG2bCntcHstyListTotCnt" resultType="int">
+ 		SELECT COUNT(1) FROM (
+			<include refid="g2bCntcHstyList"/>
+			<include refid="g2bCntcHstyListWhere"/>
+		) T1
+ 	</select>
+	
+	<sql id="g2bCntcHstyList">
+        SELECT CNTC_SN
+                  , SND_RCV_SECD
+                  , F_CDVAL_INQIRE('SND_RCV_SECD', SND_RCV_SECD) AS SND_RCV_SECD_NM
+                  , CNTC_SECD
+                  , F_CDVAL_INQIRE('CNTC_SECD', CNTC_SECD) AS CNTC_SECD_NM
+                  , TTL
+                  <!-- , CNTN -->
+                  , CNTC_DT
+                  , CNTC_STCD
+                  , F_CDVAL_INQIRE('CNTC_STCD', CNTC_STCD) AS CNTC_STCD_NM
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+          FROM T_MM_G2B
+	</sql>
+	
+	<sql id="g2bCntcHstyListWhere">
+		<where>
+			AND DEL_AT = 'N'
+			<if test='P_CNTC_SECD_S != null and P_CNTC_SECD_S != "" '>
+				AND CNTC_SECD = #{P_CNTC_SECD_S}
+			</if>
+			<if test='P_SND_RCV_SECD_S != null and P_SND_RCV_SECD_S != "" '>
+				AND SND_RCV_SECD = #{P_SND_RCV_SECD_S}
+			</if>
+			<if test='P_TTL_S != null and P_TTL_S != "" '>
+				AND TTL LIKE '%'||#{P_TTL_S}||'%'
+			</if>
+			<if test='P_CNTC_BEGIN_DT_S != null and P_CNTC_BEGIN_DT_S != "" '>
+				AND TO_CHAR(TO_DATE(CNTC_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') >= #{P_CNTC_BEGIN_DT_S}
+			</if>
+			<if test='P_CNTC_END_DT_S != null and P_CNTC_END_DT_S != "" '>
+				AND TO_CHAR(TO_DATE(CNTC_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') &lt;= #{P_CNTC_END_DT_S}
+			</if>
+		</where>
+	</sql>
+	
+	
+	<resultMap id="cntn" type="dataEntity">
+		<result property="CNTN" column="CNTN" jdbcType="CLOB" javaType="java.lang.String" />
+	</resultMap>
+
+	<select id="selectG2bCntcHstyDetail" resultType="dataEntity" resultMap="cntn">
+        SELECT CNTC_SN
+                  , SND_RCV_SECD
+                  , F_CDVAL_INQIRE('SND_RCV_SECD', SND_RCV_SECD) AS SND_RCV_SECD_NM
+                  , CNTC_SECD
+                  , F_CDVAL_INQIRE('CNTC_SECD', CNTC_SECD) AS CNTC_SECD_NM
+                  , TTL
+                  , CNTN
+                  , CNTC_DT
+                  , CNTC_STCD
+                  , F_CDVAL_INQIRE('CNTC_STCD', CNTC_STCD) AS CNTC_STCD_NM
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+          FROM T_MM_G2B	
+       WHERE 1=1
+       <if test='P_CNTC_SN != null and P_CNTC_SN != "" '>
+			AND CNTC_SN = #{P_CNTC_SN}
+		</if>
+	</select>
+	
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * sqlmap.ipro.sytm
+ * IproSytmBatchMngeMapper.xml
+ * 
+ * @Author : jandi_Eun
+ * @Date   : 2019. 4. 02.
+ * 
+ -->
+<mapper namespace="com.eunwoosoft.ipro.sytm.dao.IproSytmBatchMngeDao">
+
+	<select id="selectSytmBatchFormListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="batchFormList"/>
+			<include refid="batchFormListWhere"/>
+		) T1
+		WHERE 1 = 1
+ 		ORDER BY REG_DT DESC
+ 		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<select id="selectSytmBatchFormListTotCnt" resultType="int">
+ 		SELECT COUNT(1) FROM (
+			<include refid="batchFormList"/>
+			<include refid="batchFormListWhere"/>
+		) T1
+ 	</select>
+	
+	<sql id="batchFormList">
+        SELECT BTCH_NO
+                  , BTCH_NM
+                  , BTCH_CNTN
+                  , BTCH_TM
+                  , BTCH_CYCL
+                  , RMK
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MOD_DT
+                  , MODR_NM
+                  , CONN_IP
+                  , DEL_AT
+          FROM T_MM_BTCH_MST
+	</sql>
+	
+	<sql id="batchFormListWhere">
+		<where>
+			AND DEL_AT = 'N'
+			<if test='P_BTCH_NM_S != null and P_BTCH_NM_S != "" '>
+				AND BTCH_NM LIKE '%'||#{P_BTCH_NM_S}||'%'
+			</if>
+		</where>
+	</sql>
+	
+</mapper>

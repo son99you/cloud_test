@@ -1,0 +1,33 @@
+/* 키패드 전체 배경 */
+#vikie {
+    background-color: #707070;
+}
+
+/* 쿼티 문자 버튼 배경 */
+.QwertyButton {
+    background-color: white;
+    border-color: white;
+}
+
+/* 숫자 버튼 배경 */
+.NumberButton {
+    background-color: #d2d4d6 !important;
+    border-color: #d2d4d6 !important;
+}
+
+/* 확인 버튼 배경 */
+.OKButton {
+    background-color: #f04f00;
+}
+
+/* 특수키 버튼 배경 */
+.BackspaceButton, .SpecialCharacterButton, .SpaceButton,
+.ShiftButton, .RearrangeButton {
+    background-color: #d2d4d6 !important;
+    border-color: #d2d4d6 !important;
+}
+/* 입력된 키 배경 & font color */
+#pfq {
+    background-color: transparent;
+    fill: black;
+}

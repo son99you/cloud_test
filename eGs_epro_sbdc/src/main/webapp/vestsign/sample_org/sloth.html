@@ -1,0 +1,227 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+    <style type='text/css'>
+        .sin {
+            width: 38px;
+            margin-left: 0px;
+        }
+        .p4 {
+            border: 1px solid gray;
+            border-spacing: 0px;
+        }
+        td {
+            border: 1px solid black;
+            padding: 10px 10px 10px 10px;
+        }
+        textarea {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+<!--<script src="js/jsrose_crypto.min.js"></script>-->
+<!--<script src="js/jsrose.min.js"></script>-->
+<!--<script type="text/javascript" src="js/Sloth.js">-->
+<script src="../library/jsrose_crypto.js"></script>
+<script src="../library/jsrose.js"></script>
+<script src="../library/Sloth.js"></script>
+</script>
+
+<script>
+    var p12 = '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';
+    var p12pwd = 'test1234';
+
+    p12 = ytcrypto.util.decode64(p12);
+</script>
+
+
+
+<hr/>
+<table class='p4'>
+    <tr>
+        <td align='center'>단계</td>
+        <td align='center' width='300px'>보내는 사람</td>
+        <td align='center' width='300px'>받는 사람</td>
+    </tr>
+    <tr>
+        <td align='right'>1. 시작</td>
+        <td bgcolor='gray'></td>
+        <td>
+            <button onclick='create()'>1. 시작</button>
+        </td>
+    </tr>
+    <tr>
+        <td align='right'>결과</td>
+        <td colspan='2' id='result_r_1'></td>
+    </tr>
+    <tr>
+        <td align='right'>2. 보내기</td>
+        <td>
+            <button onclick='update()'>2. 보내기</button>
+            <br/>
+            <br/>SIN
+            <br/>
+            <input class='sin' id='sin_0' value='' />-
+            <input class='sin' id='sin_1' value='' />-
+            <input class='sin' id='sin_2' value='' />-
+            <input class='sin' id='sin_3' value='' />
+            <br/>
+            <br/>보낼 p12
+            <br/>
+            <textarea id='p12_forSend'></textarea>
+        </td>
+        <td bgcolor='gray'></td>
+    </tr>
+    <tr>
+        <td align='right'>결과</td>
+        <td colspan='2' id='result_r_2'></td>
+    </tr>
+    <tr>
+        <td align='right'>3. 받기</td>
+        <td bgcolor='gray'></td>
+        <td>
+            <button onclick='read()'>3. 받기</button>
+            <br/>받은 p12
+            <br/>
+            <textarea id='p12_fromSender'></textarea>
+        </td>
+    </tr>
+    <tr>
+        <td align='right'>결과</td>
+        <td colspan='2' id='result_r_3'></td>
+    </tr>
+    <tr>
+        <td align='right'>x. 서버에서 삭제</td>
+        <td bgcolor='gray'>
+            <button onclick='dropSession_sender()'>서버에서 강제 삭제</button>
+        </td>
+        <td bgcolor='gray'>
+            <button onclick='dropSession_receiver()'>서버에서 강제 삭제</button>
+        </td>
+    </tr>
+    <tr>
+        <td align='right'>결과</td>
+        <td colspan='2' id='result_r_4'></td>
+    </tr>
+</table>
+
+
+<hr/>
+
+<script>
+    var PFXServerURL = '/sloth';
+    var sender = new Sloth(PFXServerURL);
+    var receiver = new Sloth(PFXServerURL);
+
+    function succ(s) {
+        return '<font color="green">' + s + '</font>';
+    }
+
+    function fail(s) {
+        return '<font color="red">' + s + '</font>';
+    }
+
+    function create() {
+        receiver.create(function(r) {
+            var obj = document.getElementById('result_r_1');
+            var v;
+            if (r instanceof yt.error) {
+                v = r.getReason();
+                v = fail(v);
+            } else {
+                v = '성공 :<br/> 전송번호(' + r + ')';
+                v = succ(v);
+
+                document.getElementById('sin_0').value = r[0];
+                document.getElementById('sin_1').value = r[1];
+                document.getElementById('sin_2').value = r[2];
+                document.getElementById('sin_3').value = r[3];
+            }
+
+            obj.innerHTML = v;
+        });
+    }
+
+    function update() {
+        var obj = document.getElementById('result_r_1');
+        var p12;
+        var sin = [];
+        sin.push(document.getElementById('sin_0').value);
+        sin.push(document.getElementById('sin_1').value);
+        sin.push(document.getElementById('sin_2').value);
+        sin.push(document.getElementById('sin_3').value);
+
+        p12 = ytcrypto.util.decode64(document.getElementById('p12_forSend').value);
+
+        sender.update(sin, p12, function(r) {
+            var obj = document.getElementById('result_r_2');
+            var v;
+            if (r instanceof yt.error) {
+                v = r.getReason();
+                v = fail(v);
+            } else {
+                v = '성공';
+                v = succ(v);
+            }
+
+            obj.innerHTML = v;
+        });
+    }
+
+    function dropSession(obj) {
+        obj.dropSession(function(r) {
+            var obj = document.getElementById('result_r_4');
+            var v;
+            if (r instanceof yt.error) {
+                v = r.getReason();
+                v = fail(v);
+            } else {
+                v = '성공';
+                v = succ(v);
+            }
+
+            obj.innerHTML = v;
+        });
+    }
+
+    function dropSession_sender() {
+        dropSession(sender);
+    }
+
+    function dropSession_receiver() {
+        dropSession(receiver);
+    }
+
+    function read() {
+        receiver.read(function(r) {
+            var obj = document.getElementById('result_r_3');
+            var v;
+            if (r instanceof yt.error) {
+                v = '[' + r.code + '] ' + r.getReason();
+                v = fail(v);
+            } else {
+                v = '성공';
+                v = succ(v);
+                document.getElementById('p12_fromSender').value = ytcrypto.util.encode64(r.p12);
+            }
+
+            obj.innerHTML = v;
+
+            dropSession_receiver();
+        });
+    }
+</script>
+
+
+<script>
+    document.getElementById('p12_forSend').innerHTML = ytcrypto.util.encode64(p12);
+</script>
+</body>
+
+</html>

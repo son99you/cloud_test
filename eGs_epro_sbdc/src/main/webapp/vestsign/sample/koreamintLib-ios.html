@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta charset="UTF-8">
+    <title>전자서명</title>
+    <script type="text/javascript" src="../styles/js/jquery-1.11.0.min.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../vestsign.js?revision=e54ce34"></script>
+    <!--<script>-->
+        <!--var iosTest = {};-->
+    <!--</script>-->
+    <!--<script type="text/javascript" src="../library/koreamint-ios.js"></script>-->
+    <script>
+        var testDn = "cn=20170911_01,ou=테스트지점,ou=테스트회사,ou=테스트업종,o=SignKorea,c=KR";
+        var testOldPin = "12qwaszx23!";
+        var testNewPin = "12qwaszx23!@";
+        var testCert = "MIIFnzCCBIegAwIBAgIDB8MMMA0GCSqGSIb3DQEBCwUAMFUxCzAJBgNVBAYTAktSMRIwEAYDVQQKDAlTaWduS29yZWExFTATBgNVBAsMDEFjY3JlZGl0ZWRDQTEbMBkGA1UEAwwSU2lnbktvcmVhIFRlc3QgQ0E0MB4XDTE3MDkxMTA0MzQ1MloXDTE5MDkxMTE0NTk1OVowgYUxCzAJBgNVBAYTAktSMRIwEAYDVQQKDAlTaWduS29yZWExGDAWBgNVBAsMD+2FjOyKpO2KuOyXheyihTEYMBYGA1UECwwP7YWM7Iqk7Yq47ZqM7IKsMRgwFgYDVQQLDA/thYzsiqTtirjsp4DsoJAxFDASBgNVBAMMCzIwMTcwOTExXzAxMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAp1w8/oaUIy3P0mwavZqJm8z8rhXiTVQvjEzwW+37WD9NStUIQ577TWRRn8xeiPaQ308N/tuIAraXaDaSXBQjjJo6OrtswcjbJFzXe5OYWlUXf/AxbcnM6XviIMwi09R2Y6puaLjnD2lXc2xZJOI9q4KpPg70YQmbdq5kPSMmBusVQuSit4QFw4go/5C2Mo9nlB+tJmy01UNoBBgQ9QCzYa7X7WWDjdg/S2yGzMI03JWpN3dTizIyOtcHirWF0voLmY6a80rwA+ntrleOkArn5HyHxROuHi0g90jLsqyrlrWEPs741NpWQMdiLV2D2b2yDg6Q1nWo9VQinM78OleCjQIDAQABo4ICRTCCAkEwgZMGA1UdIwSBizCBiIAUNkPglTCMV+5YwNtEhtcStYbueLmhbaRrMGkxCzAJBgNVBAYTAktSMQ0wCwYDVQQKDARLSVNBMS4wLAYDVQQLDCVLb3JlYSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eSBDZW50cmFsMRswGQYDVQQDDBJLaXNhIFRlc3QgUm9vdENBIDaCAQUwHQYDVR0OBBYEFN7vxA87ysTaS+FYMzk+quDWVhMHMA4GA1UdDwEB/wQEAwIGwDB7BgNVHSABAf8EcTBvMG0GCiqDGoyaRAUBAQcwXzAtBggrBgEFBQcCARYhaHR0cDovL3d3dy5zaWdua29yZWEuY29tL2Nwcy5odG1sMC4GCCsGAQUFBwICMCIeIMd0ACDHeMmdwRwAIMLc1djGqQAgx3jJncEcx4WyyLLkMGoGA1UdEQRjMGGgXwYJKoMajJpECgEBoFIwUAwLMjAxNzA5MTFfMDEwQTA/BgoqgxqMmkQKAQEBMDEwCwYJYIZIAWUDBAIBoCIEIEoBxKFjQfSVzSgb0iqWgLRtFgTyD4WSo5wH8vsJpZxlMFUGA1UdHwROMEwwSqBIoEaGRGxkYXA6Ly8yMTEuMTc1LjgxLjEwMjo2ODkvb3U9ZHAxMHAxLG91PUFjY3JlZGl0ZWRDQSxvPVNpZ25Lb3JlYSxjPUtSMDoGCCsGAQUFBwEBBC4wLDAqBggrBgEFBQcwAYYeaHR0cDovLzIxMS4xNzUuODEuMTAxL29jc3AucGhwMA0GCSqGSIb3DQEBCwUAA4IBAQAGzvkDgXHahOGlPOeU8L570+x6eRG/D0ILFN6ixkJKbsvD0WVgfz35dUyw1wV+nSCr2ieGpEMktaYGqZoMiwJN+Mcb8AT4HIHAg9CupoCadrul8/1XYmueKKbf0pE8auWBJVowCyavwKMQfegHBQagrMJnFSS/tCCz6b2Wvi937MXx0SH86E6rPOlgLvdkmxv1aTXyd3wmNEFv1AkRo2tx6sZJy2CWEO9KfFqiZ+JbQIggkktyyiqPo9H4M62l9dqHmKWqBHEmPUsuzDgFA6QGZZlmcIN4g0s49Rg+46Q6uENPxrjkBR85w/+nKywsqv8m74UFU9dxifBiGNerdKRe";
+        var testKey = "MIIFPjBIBgkqhkiG9w0BBQ0wOzAbBgkqhkiG9w0BBQwwDgQIOcUZ+o7D+nUCAggAMBwGCCqDGoyaRAEEBBB1W0W4YlN3PanZicyfndJ5BIIE8OVonp0bN5/7KlrZUbCNFSHnRnJlGOcVDxfmt6ZaXmuKqO+P9LUi+eJjEDphECRSliQyY4CN9CBks5jON3qcOzP62TQjm3FmP8XYq9u+JRPExB+98LM9EZ0x3/J5gCvw2wugpL3KePpbveipjZPb6PWmbfbhRmfYrgGNHBpWdKPZfStEaAEoBY5etKTMTfBvb3GPxyw7aY9Os/SWU+u3B1smM8/U2ruX04v5e9TQT2FXgAzpsdcpRLf5qI1vfYMYG69UpUtApXg48j0kvHalshxKeg0mdImLiL++UiV3zDTculzPu8j2Aie7hA/z2cAZQzi5cRydPok59LvI2PzlvaTEwxpWyMu5tAxWK1hoRwfNg11y4EPv3Q2feEXzLhji2j9cdF5a5w8LHxqK1qnZiSS6mls25UX/dHD+GxtzE034iB9l7HiS6+Zpn9dusgFd6KAvoyJFZNtsrxtKWj0SwUDNL7MPfGA92lySGZT8t95TmQmRXZH7XL4tsEIMfIgXGdzlY7wiRkITux3rj+iTQwLyNUUVLHNhoc0QevV8K6VPTPd0t+2ZH5d44qulhF/WMDEfbqu8Ei6PaGRKlhwROg+o8qN+FLbJbBUHu27bm4TGmeREmTnJxukzHXMK3IrnLI0k5+yERvxRThOXwYDGCIrI2OyoqDUXNjhW2ZkmCGfV7YUdMRzwNAKFGk8DDS/OfrSpYk5HWNoejKPk2tpLtdKujy8ZzHViXyeDQawPfZrw5EqB1Jmx2zbREC3DVjqeThPwe5+MEeBkMTMBqnD3L5lpbN6rtuthrU4UgWQsPVl8d/GXeiopPXiyDYL8y2MpR4Gc+WgcIBZ3EV97ZfQ2AY9VAfefEP/9CgTveRoTzIjhnRmcTexQMqYXlGcQfL+8nuYD+HYr0IVLrxJUQDO+CAU6eOF0ICSRCZovaFzYEPQ+35EkvmD4eMFTPHx8O56yw0nXTF9NFLI2qSjtT2v9VRtsrPO1vrPvdeH/qhPWJqfCZDd7+hIhM94SxE4w+hhscEaSiKrf5kIV8qRvHDGckgXQXqicso2v2OtT7NeU2zVgo+AnQJd0hzLmC/GNFaM66NIxkfp1wveM3XotxfY2e3SV4aHL6YTR+5hohZsokxDJzjI1IASuAFzX8THc/8S3Kjh6yEnTIANO0G77+lt9GpnAWqtiMpbR2fBzWLUKpwjsPZ3/Xi1LdgCDX4AUyG4PfOIVtmStKz6BXTWsIo0vd703Ey1388e0CzS/qbzERz5Z4kgvBdi/Nedwtb+55b3CV/mIXXRyHN6NXYTXvyqma4QmBLstNawBzzGyip5wQKu0gwYQOmWi2psce82JxB2K6gjFIvZZziJRHNDH0DyKyl8IKPpfQvwZDeNTrUmchwehdDIn6y0BTgxeS0H6yyo/pZG6zfmlY8Hp9NSZPkXuuV/HEpiBkuBgFa7tddN3YnQBwXPZbwq9u9eL9MPlhH8rcybsnRI4xvtSH8+Zy42cK/Wk9NwEezYIXX8XIBYDdJbn+A16vR11K3giXeYs4o6Hj+Pnqm1nXuKQQS0gLnVeNP9GO0WuW3cWM1vBlH6dIoJ0GBlGsjuZc/SyrF5b5UoNnRp09Djnf7u3grIwG6g5v0cmLQc2mb4ZbYt6RmlUNeWyDdpzzcLqUYQM3E462q7dN+hiaOS8PfidcVYcMbViEYI=";
+        var testKmCert = "MIIE0jCCA7qgAwIBAgIDB8MNMA0GCSqGSIb3DQEBCwUAMFUxCzAJBgNVBAYTAktSMRIwEAYDVQQKDAlTaWduS29yZWExFTATBgNVBAsMDEFjY3JlZGl0ZWRDQTEbMBkGA1UEAwwSU2lnbktvcmVhIFRlc3QgQ0E0MB4XDTE3MDkxMTA0MzQ1MloXDTE5MDkxMTE0NTk1OVowgYUxCzAJBgNVBAYTAktSMRIwEAYDVQQKDAlTaWduS29yZWExGDAWBgNVBAsMD+2FjOyKpO2KuOyXheyihTEYMBYGA1UECwwP7YWM7Iqk7Yq47ZqM7IKsMRgwFgYDVQQLDA/thYzsiqTtirjsp4DsoJAxFDASBgNVBAMMCzIwMTcwOTExXzAxMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4OZPHDyjzZWNZJdEAHrB1Y94wdlw8//T0ie+iBqnxj/HCUDhPdjwkk8QL1cZ6ZedjroSOM1rLP4zFlXqAaTb0fvepCsItU5JtiUmKITdgda0ekmotc3ckx1whQ9fd3gws2SgR+Dwt9IFQl7O5mPSmWsxfF7wKARr0bu0kpLs5aTlCRGPooXK2Opnrmixk2K5N8m1353pxfyuZNff16TFWyC7/ZYitRiqMRZNhJxorhe+ItICk+PJTojdHTiCu2XWJhmW0JHR1D/71joSZQ7xbbQAbsTfNJp0iwdVXeguNk3+UtFwvaU74iuY1FTkmloOVn9erBkOJ+NLkSkDWDRuZQIDAQABo4IBeDCCAXQwgZMGA1UdIwSBizCBiIAUNkPglTCMV+5YwNtEhtcStYbueLmhbaRrMGkxCzAJBgNVBAYTAktSMQ0wCwYDVQQKDARLSVNBMS4wLAYDVQQLDCVLb3JlYSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eSBDZW50cmFsMRswGQYDVQQDDBJLaXNhIFRlc3QgUm9vdENBIDaCAQUwHQYDVR0OBBYEFG5opFvcBsjV3quY2YT2plQFF0HOMA4GA1UdDwEB/wQEAwIFIDAaBgNVHSABAf8EEDAOMAwGCiqDGoyaRAUBAQ0wVQYDVR0fBE4wTDBKoEigRoZEbGRhcDovLzIxMS4xNzUuODEuMTAyOjY4OS9vdT1kcDEwcDEsb3U9QWNjcmVkaXRlZENBLG89U2lnbktvcmVhLGM9S1IwOgYIKwYBBQUHAQEELjAsMCoGCCsGAQUFBzABhh5odHRwOi8vMjExLjE3NS44MS4xMDEvb2NzcC5waHAwDQYJKoZIhvcNAQELBQADggEBAGvNbgcuzUg1gCjlXkHJFfY9LboOsHu79M7E1IltJnn6D0mhtQY2nBUhQzdvNpNlm1ZTxruhjYRmdYiD9Jy5wIjPZEEZPrAVS2SO1sMa3OSn/WlobxvcL+aG0cY9xC3HMVf5lRii46WpHTR2FGXsOmALXe36jmvw/+pYVyELahW3Qf4FOAun1XqBMQ1+iQ+EIpzsqeGC1KQ4NspNag/Z6s9pkU3RFFtKG3y7KO0fEsft+42Kx8FGPzT/6ugEGLG8y9ine+SCqlf5lKwcbdgIrfF033MxdJIHDRq1pXz4XUypG+SFdOmCqjQD4UK7YWcbzq9mNuGUh6bdIFa+mD8QxW4=";
+        var testKmKey = "MIIFHjBIBgkqhkiG9w0BBQ0wOzAbBgkqhkiG9w0BBQwwDgQIK/wofWRvWWcCAggAMBwGCCqDGoyaRAEEBBBc0wZBGDm6zdWBU5KKDzoXBIIE0My1PstdNI9e1CG92TwRT11ao7L/yBFAxPUh6Vg3DIcUeqvWHJsAEI9hfLoJGPklC9+KqKgjg6BjA2NqXb1U4L826w6+1cOGuygesfKBpUiGzuqP+q2e/UK17SLwYBRqer/QF9SE687u8d4UrP4hTprtRvbm1knNQgGxduL2vyVmQ3+ma1SmPPeDFUkbBg0JZ7i9kEUNa3vhxZXddUXRjjFokCQZvREBN4nxhZvy/Pp1mNeDNCQB7N7A8bPHTq0HcdR7y/GtP6kU9OCmzZ3IwCevbGKndjx7IWUqdrW/XfarPN85KgwseMSMHFZ1T6BkTI9+Y/S5MFHGe6e6v/udsCzehiXDaSMuLaTJX6kH0kcMVRPKT16atsiJdlt9IS8m2r0zd2euiFjUHOe12ss7mpzlOVxiSLC6/glTNJa3PekCX0esYgv62rSZ3DROy2j/JgZIOe7qh0v4QVuprUgpQy+BD8ipJ35AP/PsHiAj/eEbgaGe1iYuNYCJvXrvJ8TL0zKOEreCt+QQRdziFXhBO8XE8PfYBYsKcQEzjVUMWVgnbksv5JWSqOEndOim6oPOgF8//mZRFMPkVzrgUnBFCsH9aYnnDRr+2fRtXR1WLMP6tCqsyH9fiheEy1hk6dJnI95Ttln3KsULbnMyFANLQOxUl0MW2P9lN2Q/vKAl4v/kyCuEfFs2/kryUPupB7YVQla5YshrMTc8uA5DFSS/AHjxqRZi43sP3GfcvNgqEmaepMo6svXQgmkZkFYbWzOPrFQ5UDDvT1Kq1IJG9YQumRu0kYBeGLYS6R/MVqjf9SC12JxmoE68gsZX5Aj29US1eT61QVo+X859H91KqwpQSj7V4un0zU78y/nk4otruP+Ix/fuBKfEgBH6yCQy5/QMq2RS3dBtxL2U+CVbVUpyQblxYyFyONvRTlLRQavZtJo0ANYO4mbpn0FDcswaPr55G3bnSvWbdaOVEVDZcfDqakxdjJTyVdZfZO08iZGClZ8/Lt2KaZo8EC4amSjydfr6o/5VWJlgqkY3jVUg6Ye8kLaI2Kdy5FdFTZztzGoGMi3VYvv0K7iKNFJdB3j9oUkmjAY77lLKppRMg8Sxq8CU1WNTcVa8XPkvmHfEAJHSvAgTiE+RsTQ63aldDtYHkXeTCbPIrRjEqt+lpJMgX0ylZZWxX86fqT7MDIUWmfUleN2LdbKiyPp1JIDM6TwkusoN7yjYRTCLFhN686hyT1j3r3OpD7+gDkHpPwhe529JUefj0keFwTNhu6HaLaNdkphCkqpja++DCd+GiUgQ7eZIfcEP8xOd4rxsD3wf6CApWyZS3mYWorRCQ3TXhpy1cvK7QTviy78xSec/nKkXbcL5iSPaQhfKDIJn/O9chtuP2aXFtQwGgKocnhC0X4cRNwdLC43hBr7VyY+Ogk/sDmE7kCzmHHjbeBzf93HSTWQ64uykK/ixTn0onER6bvVcysv1KzV0GYP0gZUD5L4oEcS9fvH6l4pZyd1cHgs4Vj9ImDmU98wMq22kvfMECBvoZPhH+CTJ975m3MRw9ByMCyEySlDhfB9JEawwzYMqml79tI0e27M1Hzdxsz8hrs+Zver2+yZ3Zz8sndWi8pyu/GZ8EBpm+DZl6WqfzBflovtyPeRA";
+
+    </script>
+    <script>
+        function init() {
+            alert('init');
+            document.getElementById('init').innerText = typeof(vest.iosKoreamintLib.isIOS);
+            if(vest.iosKoreamintLib.isIOS()) {
+                document.getElementById('init').innerText = "true";
+            }else {
+                document.getElementById('init').innerText = "false";
+            };
+        }
+
+        function getCertificateList() {
+            var options = {};
+
+            document.getElementById('init').innerText = 'start getCertificateList: ' + typeof(vest.iosKoreamintLib.getCertificateList);
+
+            vest.iosKoreamintLib.getCertificateList(options, function(res) {
+                document.getElementById('getCertificateList').innerText = 'ok: ' + res;
+            }, function(error) {
+                document.getElementById('getCertificateList').innerText = 'error: ' + error.code;
+            });
+        }
+
+        function getCertificate(dn) {
+            var options = {};
+
+            document.getElementById('init').innerText = 'start getCertificate: ' + typeof(vest.iosKoreamintLib.getCertificate);
+
+            vest.iosKoreamintLib.getCertificate(dn, options, function(res) {
+                document.getElementById('getCertificate').innerText = 'ok: ' + res;
+            }, function(error) {
+                document.getElementById('getCertificate').innerText = 'error: ' + error.code;
+            });
+        }
+
+        function getPrivateKey(dn, pin) {
+            var options = {};
+
+            document.getElementById('init').innerText = 'start getPrivateKey: ' + typeof(vest.iosKoreamintLib.getPrivateKey);
+
+            vest.iosKoreamintLib.getPrivateKey(dn, pin, options, function(res) {
+                document.getElementById('getPrivateKey').innerText = 'ok: ' + res;
+            }, function(error) {
+                document.getElementById('getPrivateKey').innerText = 'error: ' + error.code;
+            });
+        }
+
+        function changePassword(dn, oldPin, newPin) {
+            var options = {};
+
+            document.getElementById('init').innerText = 'start changePassword: ' + typeof(vest.iosKoreamintLib.changePassword);
+
+            vest.iosKoreamintLib.changePassword(dn, oldPin, newPin, options, function(res) {
+                document.getElementById('changePassword').innerText = 'ok: ' + res.result;
+            }, function(error) {
+                document.getElementById('changePassword').innerText = 'error: ' + error.code;
+            });
+        }
+
+        function importCertificate(cert, key, kmCert, kmKey) {
+            var options = {};
+
+            document.getElementById('init').innerText = 'start importCertificate: ' + typeof(vest.iosKoreamintLib.importCertificate);
+
+            vest.iosKoreamintLib.importCertificate(cert, key, kmCert, kmKey, options, function(res) {
+                document.getElementById('importCertificate').innerText = 'ok: ' + res.result;
+            }, function(error) {
+                document.getElementById('importCertificate').innerText = 'error: ' + error.code;
+            });
+        }
+
+        function deleteCertificate(dn) {
+            var options = {};
+
+            document.getElementById('init').innerText = 'start deleteCertificate: ' + typeof(vest.iosKoreamintLib.deleteCertificate);
+
+            vest.iosKoreamintLib.deleteCertificate(dn, options, function(res) {
+                document.getElementById('deleteCertificate').innerText = 'ok: ' + res.result;
+            }, function(error) {
+                document.getElementById('deleteCertificate').innerText = error.code;
+            });
+        }
+
+        function verifyPin(dn, pin) {
+            var options = {};
+
+            document.getElementById('init').innerText = 'start verifyPin: ' + typeof(vest.iosKoreamintLib.verifyPin);
+
+            vest.iosKoreamintLib.verifyPin(dn, pin, options, function(res) {
+                document.getElementById('verifyPin').innerText = 'ok: ' + res.result;
+            }, function(error) {
+                document.getElementById('verifyPin').innerText = error.code;
+            });
+        }
+    </script>
+</head>
+<body align="center">
+    <br><br><br>
+    <div id="res1">res1</div><br>
+    <div id="res2">res2</div><br>
+    <br>=============================================<br>
+    <div id="init">@@@@@@@@@@@@@@</div>
+    <input type="button" onclick="init()" value ="init"><br>
+    <br>=============================================<br>
+    <div id="getCertificateList">getCertificateList</div>
+    <input type="button" onclick="getCertificateList()" value ="getCertificateList"><br>
+    <br>=============================================<br>
+    <div id="getCertificate">getCertificate</div>
+    <input type="button" onclick="getCertificate(testDn)" value ="getCertificate"><br>
+    <br>=============================================<br>
+    <div id="getPrivateKey">getPrivateKey</div>
+    <input type="button" onclick="getPrivateKey(testDn, testOldPin)" value ="getPrivateKey"><br>
+    <br>=============================================<br>
+    <div id="changePassword">changePassword</div>
+    <input type="button" onclick="changePassword(testDn, testOldPin, testNewPin)" value ="changePassword"><br>
+    <br>=============================================<br>
+    <div id="importCertificate">importCertificate</div>
+    <input type="button" onclick="importCertificate(testCert, testKey, testKmCert, testKmKey)" value ="importCertificate"><br>
+    <br>=============================================<br>
+    <div id="deleteCertificate">deleteCertificate</div>
+    <input type="button" onclick="deleteCertificate(testDn)" value ="deleteCertificate"><br>
+    <br>=============================================<br>
+    <div id="verifyPin">verifyPin</div>
+    <input type="button" onclick="verifyPin(testDn, testOldPin)" value ="verifyPin"><br>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<script type="text/javascript" src="../styles/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="../vestsign.js"></script>
+<script>
+    var s = '\n';
+    s += '-----BEGIN CERTIFICATE-----\n';
+    s += 'MIIFeDCCBGCgAwIBAgIDP1JiMA0GCSqGSIb3DQEBCwUAMFcxCzAJBgNVBAYTAmtyMRAwDgYDVQQK\n';
+    s += 'DAd5ZXNzaWduMRUwEwYDVQQLDAxBY2NyZWRpdGVkQ0ExHzAdBgNVBAMMFnllc3NpZ25DQS1UZXN0\n';
+    s += 'IENsYXNzIDIwHhcNMTQxMTA0MTUwMDAwWhcNMTUxMTA1MTQ1OTU5WjB0MQswCQYDVQQGEwJrcjEQ\n';
+    s += 'MA4GA1UECgwHeWVzc2lnbjEPMA0GA1UECwwGc2VydmVyMRAwDgYDVQQLDAd5ZXNzaWduMRMwEQYD\n';
+    s += 'VQQLDAp5ZXR0aWVzb2Z0MRswGQYDVQQDDBJkZXYueWV0dGllc29mdC5jb20wggEiMA0GCSqGSIb3\n';
+    s += 'DQEBAQUAA4IBDwAwggEKAoIBAQC3G4D5dTMLfc55pvyXeG01GvDf6hhb02fIFctkD1CmlihvC5BP\n';
+    s += '5hJUeGrr2mnh1QDp7UM/GpMyLSsi1H8PcJL4cZMHAu+AhxwrZxe0DnCFW9L8tsKhU14NnHmkP77j\n';
+    s += 'XZsugl5Hd1Lin2qGBY5M0e1qFxRsqHtRsnxPf6kGQhc/VrWxmkg0LpDVwmho1LgD66zVHgAHm5uZ\n';
+    s += 'k2VdrggdmIv861wTcghE9q8BiCdreU0jSzu+8k1OE99w6s1P78HhM+YXjocGdNwwx9mLgAtuD6HD\n';
+    s += 'b8WVmZOgxoMuxFndYPKwMTyqzC1FjmXw9WyN1khkkkfOWQPwNVqKDbHiw2iZFsvrAgMBAAGjggIu\n';
+    s += 'MIICKjCBkwYDVR0jBIGLMIGIgBQUj6BKC6Xz5vfMJkaxkNJdgJzS9KFtpGswaTELMAkGA1UEBhMC\n';
+    s += 'S1IxDTALBgNVBAoMBEtJU0ExLjAsBgNVBAsMJUtvcmVhIENlcnRpZmljYXRpb24gQXV0aG9yaXR5\n';
+    s += 'IENlbnRyYWwxGzAZBgNVBAMMEktpc2EgVGVzdCBSb290Q0EgNYIBJTAdBgNVHQ4EFgQUWMJuTpim\n';
+    s += 'VBVqjqsVuNO0Irps6zUwDgYDVR0PAQH/BAQDAgbAMH4GA1UdIAEB/wR0MHIwcAYJKoMajJpFAQED\n';
+    s += 'MGMwMAYIKwYBBQUHAgIwJB4ix3QAIMd4yZ3BHLKUACDC3NXYxqkAIMd4yZ3BHMeFssiy5DAvBggr\n';
+    s += 'BgEFBQcCARYjaHR0cDovL3Nub29weS55ZXNzaWduLm9yLmtyL2Nwcy5odG0wLgYDVR0RBCcwJaAj\n';
+    s += 'BgkqgxqMmkQKAQGgFjAUDBJkZXYueWV0dGllc29mdC5jb20wdQYDVR0fBG4wbDBqoGigZoZkbGRh\n';
+    s += 'cDovL3Nub29weS55ZXNzaWduLm9yLmtyOjYwMjAvb3U9ZHAxNnA0NixvdT1BY2NyZWRpdGVkQ0Es\n';
+    s += 'bz15ZXNzaWduLGM9a3I/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdDA8BggrBgEFBQcBAQQwMC4w\n';
+    s += 'LAYIKwYBBQUHMAGGIGh0dHA6Ly9zbm9vcHkueWVzc2lnbi5vci5rcjo0NjEyMA0GCSqGSIb3DQEB\n';
+    s += 'CwUAA4IBAQCTYqgA2iJv25cp2hqDgQrOYlzunckdbY/fXquULINt+af4LYYBiRm7909HyalUmT22\n';
+    s += '5ALCdsWfkMFv5g2ZBxDlzzCnWqRB36GxYcjcYvToTDa/CMhtMw96yUhtBGkrwHDICRhVNmPJ0XK1\n';
+    s += 'S20/O3bTUvNsPgsgTDdkQLCGozryIU5mFbMW9mX5Oewu/O9Ysr3QgSRkPM9zVTX4tc0BxgjighPs\n';
+    s += 'dL4ZT+EwLnac0sqoX3MxpsClC8DHSu9UQDy7g8CV9EUS8gPSbb8rBxqGYqycl4cjDMr9s27GJVBr\n';
+    s += 'RQtcSrt+iYp8/C2D+FmWoeKITtjtSDlKQTN8kmSb2R1Sjdvh\n';
+    s += '-----END CERTIFICATE-----\n';
+    s += '';
+
+
+    var option = {
+        encoding: 'hex',
+        charset: 'UTF-8'
+    };
+
+    var mSign = function (plain) {
+        var idn = document.getElementById('idn').value;
+        if (idn != '' && typeof idn !== 'undefined') {
+            option.vid = {
+                idn: document.getElementById('idn').value,
+                recipientCertificate: s
+            }
+        }
+
+        yettie.mSign(plain, option, function (result) {
+            document.getElementById('result').value = result.signature;
+            document.getElementById('idn_result').value = result.vidMessage;
+        }, function (error) {
+            console.log(error);
+            alert(error.getReason());
+        });
+    };
+
+    // var callbackXecure = function (result) {
+    var mSign_vid = function (plain, signed_msg) {
+        var f = document.Reg_Form;
+        f.plain.value = plain;
+        f.signed_msg.value = signed_msg;
+
+        var vid_res = document.getElementById('idn_result').value;
+        // if (vid_res != '' && vid_res != 'undefined') {
+        f.vid_msg.value = vid_res;
+        f.idn.value = document.getElementById('idn').value;
+        // }
+
+        document.Reg_Form.action = "./mSignVerify.jsp";     // 경로 수정해야됨
+        document.Reg_Form.submit();
+    };
+
+    function isisisis() {
+        yettie.loadingLibrary(function () {
+            vest.secureCertificateStorage.isSupportBrowser(function (result) {
+                document.getElementById('supportText').innerHTML = ('지원 O / 정보: ' + window.navigator.userAgent);
+            }, function (error) {
+                document.getElementById('supportText').innerHTML = ('지원 X / 정보: ' + window.navigator.userAgent);
+                mSign = function () {
+                    alert('지원안함');
+                }
+            });
+        });
+    }
+
+    function deleteDB() {
+        window.indexedDB.deleteDatabase("secureCertificateStorage");
+    }
+
+    function isSupport() {
+        yettie.mobile.isSupportBrowser(function (res) {
+            alert(res.support);
+        }, function (err) {
+            alert(res.suppor);
+        });
+    }
+
+</script>
+<body>
+<form method="post" name="Reg_Form" id="Reg_Form" autocomplete="off" action="">
+    <table border="1" align="center" width=50%>
+        <tr>
+            <td align="center"><br>
+                원문<br><textarea rows='10' style="width:100%" id="plain" name="plain">signature test</textarea><br><br>
+                서명문(hex)<br><textarea rows='10' style="width:100%" id="result" name="signed_msg"></textarea><br><br>
+            </td>
+        </tr>
+        <tr>
+            <td align="center"><br>
+                식별번호(VID): <input type="password" id="idn" name="idn"/><br>
+                <textarea rows='10' style="width:100%" id="idn_result" name="vid_msg"></textarea>
+                <br><br></td>
+        </tr>
+        <tr>
+            <td align="center" style="height: 20px"><br>
+                <input type=button onclick="mSign(document.getElementById('plain').value)" value="서명"
+                       style="width:200px"/>
+                <input type="button"
+                       onclick="mSign_vid(document.getElementById('plain').value, document.getElementById('result').value)"
+                       value="검증" style="width: 200px"><br><br>
+                <input type=button onclick="deleteDB();" value="인덱스db 제거" style="width:200px"/>
+                <input type=button onclick="isSupport();" value="지원여부 체크" style="width:200px"/>
+                <br><br></td>
+        </tr>
+    </table>
+    <input type=password value="테스트" style="width:200px" onfocus="this.blur()" readonly/>
+</form>
+<center>
+    <p id="supportText">
+        확인중... / 정보:
+        <script>document.write(window.navigator.userAgent)</script>
+    </p>
+</center>
+</body>
+<script>
+    //    setTimeout(function() {
+    isisisis();
+    //    }, 1000);
+</script>
+</html>

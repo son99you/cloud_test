@@ -1,0 +1,279 @@
+@charset "utf-8";
+/* 
+	Copyright(c) 2018 Onlinepowers
+	http://www.onlinepowers.com
+*/
+
+/* -------- margin -------- */
+.m0 {margin: 0 !important;}
+.mt10 {margin-top: 10px;}
+.mt30 {margin-top: 30px;}
+.mr50 {margin-right: 50px;}
+.mr55 {margin-right: 55px;}
+.mb30 {margin-bottom: 30px !important;}
+
+
+/* -------- padding -------- */
+.pr5 {padding-right: 5px !important;}
+.pr9 {padding-right: 9px;}
+.pr18 {padding-right: 18px;}
+.pr20 {padding-right: 20px;}
+.pl5 {padding-left: 5px !important;}
+.pl9 {padding-left: 9px;}
+.pl14 {padding-left: 14px !important;}
+.pl20 {padding-left: 20px;}
+.pl30 {padding-left: 30px;}
+
+
+/* -------- width -------- */
+.w50 {width: 50px !important;}
+.w80 {width: 80px !important;}
+.w90 {width: 90px !important;}
+.w100 {width: 100px !important;}
+.w120 {width: 120px !important;}
+.w150 {width: 150px !important;}
+.w160 {width: 160px !important;}
+.w170 {width: 170px !important;}
+.w180 {width: 180px !important;}
+.w192 {width: 192px !important;}
+.w217 {width: 217px !important;}
+.w250 {width: 250px !important;}
+.w280 {width: 280px !important;}
+.w322 {width: 322px !important;}
+.w338 {width: 338px !important;}
+
+.w80p {width: 80% !important;}
+.w85p {width: 85% !important;}
+.w90p {width: 90% !important;}
+.w95p {width: 95% !important;}
+
+/* -------- text-align -------- */
+.txtc {text-align: center !important;}
+.txtr {text-align: right !important;}
+.txtl {text-align: left !important;}
+.txtlNonPd{text-align:left !important; padding:0px !important;}
+.txtcNonPd{text-align:center !important; padding:0px !important;}
+.txtrNonPd{text-align:right !important; padding:0px !important;}
+
+/* -------- vertical-align -------- */
+.vert {vertical-align: top !important;}
+
+
+/* -------- 버튼 -------- */
+.btn_wrap {
+	font-size: 0;
+	text-align: center;
+	vertical-align: middle;
+}
+.btn_wrap:after {
+	display: block;
+	content: '';
+	clear: both;
+}
+
+.btn {
+	display: inline-block;
+	font-weight: 500;
+	letter-spacing: 0;
+	text-align: center;
+	vertical-align: middle;
+	margin : 0px 2px 0px 2px;
+}
+.btn_wrap .btn:last-child {
+	margin-right: 0 !important;
+}
+
+
+
+/* 버튼사이즈 */
+.btn_s1 {
+	width: 132px;
+	height: 35px;
+	font-size: 15px;
+	line-height: 35px;
+}
+.btn_s2 {
+	margin-right: 4px;
+	width: 84px;
+	height: 30px;
+	font-size: 12px;
+	line-height: 30px;
+}
+.btn_s3 {
+	width: 265px;
+	height: 60px;
+}
+.btn_s4 {
+	width: 90px;
+	height: 70px;
+}
+.btn_s5 {
+	height: 30px;
+	font-size: 13px;
+	line-height: 28px;
+	font-weight: 400;
+}
+
+.btn_s6 {
+	width: 65px;
+	height: 30px;
+	font-size: 13px;
+	line-height: 28px;
+	font-weight: 400;
+}
+
+.btn_s {
+	width: 50px;
+	font-size: 13px;
+	line-height: 28px;
+}
+.btn_m {
+	padding: 0 19px;
+	height: 30px;
+	font-size: 13px;
+	line-height: 28px;
+}
+
+/* 버튼색깔 */
+.btn_c1 {
+	color: #fff;
+	background: #f6a10d
+}
+.btn_c2 {
+	color: #fff;
+	background: #98a9bb;
+}
+.btn_down {
+	color: #666;
+	border: 1px solid #e0e0e0;
+	background: #fff url(../../../statics/images/opro/keri/btn_icon01.png) no-repeat 11px center;
+}
+.btn_sch {
+	color: #888;
+	border: 1px solid #d9d9d9;
+	background: #f5f5f5;
+}
+.btn_orange {
+	color: #fff;
+	background: #f6a10d;
+}
+.btn_del {
+	color: #666;
+	border: 1px solid #d9d9d9;
+	background: #fff;
+}
+
+
+/* 버튼위치 */
+.btn_right {
+	float: right;
+}
+
+
+
+
+/* ============================ 달력 ============================ */
+.ui-datepicker{
+	margin-top:1px;
+	width:255px;
+	font-family: 'Roboto';
+	letter-spacing: 0;
+	text-align:center;
+	background: #fff;
+}
+.ui-datepicker .ui-datepicker-header{
+	position:relative;
+	padding:15px 0;
+	background:#fff;
+	border: 1px solid #a9b6c5;
+	border-bottom: 0;
+}
+.ui-datepicker .ui-datepicker-title{
+	font-size:18px;
+	line-height: 18px;
+	font-weight:500;
+	color:#333;
+}
+.ui-datepicker .ui-datepicker-title span{font:inherit;}
+.ui-datepicker .ui-datepicker-prev,
+.ui-datepicker .ui-datepicker-next{
+	position: absolute;
+	top:17px;
+	width:9px;
+	height:14px;
+	text-indent:-99999px;
+}
+.ui-datepicker .ui-datepicker-prev{
+	left: 74px;
+	background:url(../../../statics/images/opro/keri/calendar_arrow_prev.png) no-repeat;
+}
+.ui-datepicker .ui-datepicker-next{
+	right: 74px;
+	background:url(../../../statics/images/opro/keri/calendar_arrow_next.png) no-repeat;
+}
+.ui-datepicker table{
+	padding: 5px;
+	border: 1px solid #a9b6c5;
+	border-top-color: #eee;
+	border-collapse:inherit;
+	background:#fff;
+}
+.ui-datepicker th{
+	padding: 12px 0 8px;
+	font-size: 12px;
+	font-weight: 700;
+	color:#333;
+}
+.ui-datepicker th span{font:inherit;}
+.ui-datepicker td{
+	position:relative;
+	background:#fff;
+}
+.ui-datepicker td span,
+.ui-datepicker td a{
+	display:block;
+	width:35px;
+	height:35px;
+	font-size: 12px;
+	line-height:35px;
+	color:#333;
+	background:#fff;
+}
+.ui-datepicker-calendar td:first-child a {
+	color: #c63d3d;
+}
+/* .ui-datepicker-calendar td:last-child a {
+	color: #1069c2;
+} */
+.ui-state-highlight, 
+.ui-widget-content .ui-state-highlight, 
+.ui-widget-header .ui-state-highlight{
+	background: #e7ecf1;
+}
+.ui-datepicker .ui-datepicker-other-month span{color:#ccc;}
+
+.calendar_box {
+	font-size: 0;
+}
+.calendar_box .ui-datepicker-trigger {
+	margin-top: -1px;
+}
+.calendar_box input {
+	width: 21%;
+}
+.calendar_box .wave {
+	display: inline-block;
+	width: 25px;
+	height: 30px;
+	font-size: 13px;
+	line-height: 30px;
+	font-weight: 500;
+	letter-spacing: 0;
+	color: #777;
+	text-align: center;
+	vertical-align: middle;
+}
+/*테이블 bullet*/
+.view_area table th.bullet_orange{
+    background: url('../../../statics/images/opro/main/bullet_orange.png') #fafbfc 10px 50% no-repeat;
+}

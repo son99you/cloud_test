@@ -1,0 +1,69 @@
+<!Doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>휴대폰에서 인증서 가져오기</title>
+
+    <link type="text/css" rel="stylesheet" href="../styles/css/mCommon.css?revision=e54ce34"/>
+    <link type="text/css" rel="stylesheet" href="../styles/css/jquery-ui.css?revision=e54ce34">
+
+    <script type="text/javascript" src="../styles/js/jquery-1.11.0.min.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../styles/js/jquery-ui.js?revision=e54ce34"></script>
+
+    <script type="text/javascript" src="../scripts/__GobalValue__.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../languages/mImportFromPhoneWebApp.js?revision=e54ce34"></script>
+
+</head>
+<body>
+<div class="IMPORT_webappNo">
+    <!-- Top -->
+    <div class="CERT_title">
+        <div class="TITLE_div">
+            <p id="title">
+                <script>document.write(mFromPhoneWebLang(4));</script>
+            </p>
+        </div>
+        <div class="xBtn" id="x_btn" alt="닫기">닫기</div>
+    </div>
+
+    <div class="titleDivision_div">
+        <div class="titleDivisionLine"></div>
+    </div>
+
+    <!-- middle -->
+    <div class="CERT_contents webApp_contents noServer">
+        <!--<div style="height: 97px;">-->
+            <div class="PHONE_pw_img"></div>
+            <div class="PHONE_pw_info webApp_info noServer">
+                <!--<script>document.write(mFromPhoneWebLang(5));</script>-->
+                인증서를 가져오는 중입니다.
+            </div>
+        <!--</div>-->
+
+        <!-- 확인 취소 버튼 -->
+        <div class="BTN_webappNo">
+            <div id="commonBtn" class="commonForm">
+                <div class="confirm_btn" id="importToWeb_btn">
+                    <p>
+                        <script>document.write(mFromPhoneWebLang(6));</script>
+                    </p>
+                </div>
+                <div class="cancel_btn" id="pre_btn">
+                    <p>
+                        <script>document.write(mFromPhoneWebLang(7));</script>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <div class="copyright">
+        Copyright 2016 By YETTIESOFT.ALL right reserved.
+    </div>
+</div>
+</body>
+
+<script type="text/javascript" src="../scripts/mImportFromPhoneWebAppNoServer.js?revision=e54ce34"></script>
+<!-- <script type="text/javascript" src="../library/dragiframe.js"></script> -->
+</html>

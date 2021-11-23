@@ -1,0 +1,112 @@
+@charset "utf-8";
+
+.commentLayer{
+   width: 980px;
+   float: left;
+   margin-bottom:20px;
+}
+
+.commentLayer .cb_comment_area{
+    background-color:#f8f8f8;
+    padding:10px;
+    float:left;
+    clear: both;
+    border-bottom: 1px dashed #4d4d4d;
+}
+.commentLayer .cb_comment_area .commentHeadTxt{
+    float:left;
+}
+.commentLayer .cb_comment_area .commentHeadBtn{
+    margin-left:15px;
+    float:right;
+}
+.commentLayer .cb_comment_area .commentHeadBtn .commentHeadBtnStyle{
+    color: white;
+    font-size: 11px;
+    width: 33px;
+    height: 17px;
+    text-align: center;
+    background-color: #7a7a7a;
+}
+.commentLayer .cb_comment_area .commentHeadTxt{
+    font: 14px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+    color:#121212;
+    line-height: 20px;
+}
+.commentLayer .cb_comment_area .commentHeadTxt span{
+    font: 12px "NanumGothic", NanumGothic, Dotum, "NanumGothic", Arial, sans-serif;
+    color:#808080;
+    margin:0 10px;
+}
+.commentLayer .cb_comment_area .commentBody{
+    margin-top:10px;
+    width:960px;
+    clear: both;
+    float:left;
+}
+.commentList .cb_comment_area{
+    background-color: #f8f8f8;
+}
+.commentLayer .cd_comment_txt{
+    padding:10px;
+    float:left;
+    clear: both;
+    width:960px;
+    background-image: url('../../images/template_commentArrow.png');
+    background-repeat: no-repeat;
+    background-position: 4px 10px;
+    background-color:#f8f8f8;
+    border-bottom: 1px dashed #4d4d4d;
+    /*template_commentArrow.png*/
+}
+.commentLayer .cd_comment_txt textarea{
+    width: 840px;
+    height: 40px;
+    margin-left: 15px;
+    float: left;
+}
+.commentLayer .cd_comment_txt .T_btnLayer{
+    margin : 0;
+    margin-left: 15px;
+    margin-top : -5px;
+}
+.subCommentList .cb_comment_area{
+    background-color: #f8f8f8;
+    padding-left:27px;
+    background-image: url('../../images/template_commentArrow.png');
+    background-repeat: no-repeat;
+    background-position: 4px 10px;
+}
+.subCommentList .cb_comment_area .commentBody{
+    width: 943px;
+}
+.commentLayer .commentTxt{
+    background-color:#f8f8f8;
+    padding:10px;
+    float:left;
+    clear: both;
+    width:960px;
+}
+.commentLayer .commentTxt textarea{
+    width:855px;
+    height:40px;
+    float:left;
+}
+.commentLayer .commentTxt .T_btnLayer{
+    margin : 0;
+    margin-left: 15px;
+    margin-top : -5px;
+}
+
+.movPlayerLayerWrap{
+    width:980px;
+    float: left;
+    clear: both;
+    margin-top: 20px;
+}
+.movPlayerLayerWrap .movPlayerLayer{
+    width: 500px;
+    height: 370px;
+    border: 2px solid #cacaca;
+    margin: 0 auto;
+}

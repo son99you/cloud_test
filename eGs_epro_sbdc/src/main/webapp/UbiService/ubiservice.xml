@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UbiService port="16996">
+	<!-- TaskInfo property value : MINUTE,HOUR,DAY,WEEK,MONTH,YEAR -->
+	<TaskInfo taskResId="UBIHTML" taskPeriod="1" taskPeriodType="DAY" delPeriod="1" delPeriodType="DAY" />
+	<LogInfo logPath=""
+		backupStyle="date"
+		backupPattern="yyyy-MM-dd"
+		backupSize="30" />
+	<S3Info useS3="false"
+		bucketName=""
+		accessKey=""
+		secretKey="" />
+	<Resources>
+		<Resource id="UBIHTML"
+			isLocalFile="true"
+			jrfDir="D:/edata1/form/"
+			resultDir="D:/kto/workspace/eGs_epro_kto_dev/src/main/webapp/UbiService/results/"
+			ubiserverUrl="http://localhost:8080/UbiServer"
+			servletRoot="http://localhost:8080"
+			fileUrl="http://localhost:8080/ubi4"
+			resource="true"
+			dataSource="egs_sdbc"
+			useLog="true" />
+	</Resources>
+</UbiService>

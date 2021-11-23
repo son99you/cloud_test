@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<!-- <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page import="com.yettiesoft.vestsign.external.*" %>
+<%@ page import="com.yettiesoft.vestsign.util.*" %> -->
+
+<html>
+	<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    
+    <script type="text/javascript" src="../vestsign.js?revision=e54ce34"></script>
+<script>
+// <%
+// 	VidVerifier vid = new VidVerifier();  
+// 	out.println(vid.writeServerCertScript("s"));		// 식별번호 암호화를 위한 서버 인증서	
+// %>
+var s = '\n';
+  s += '-----BEGIN CERTIFICATE-----\n';
+  s += 'MIIFeDCCBGCgAwIBAgIDP1JiMA0GCSqGSIb3DQEBCwUAMFcxCzAJBgNVBAYTAmty\n';
+  s += 'MRAwDgYDVQQKDAd5ZXNzaWduMRUwEwYDVQQLDAxBY2NyZWRpdGVkQ0ExHzAdBgNV\n';
+  s += 'BAMMFnllc3NpZ25DQS1UZXN0IENsYXNzIDIwHhcNMTQxMTA0MTUwMDAwWhcNMTUx\n';
+  s += 'MTA1MTQ1OTU5WjB0MQswCQYDVQQGEwJrcjEQMA4GA1UECgwHeWVzc2lnbjEPMA0G\n';
+  s += 'A1UECwwGc2VydmVyMRAwDgYDVQQLDAd5ZXNzaWduMRMwEQYDVQQLDAp5ZXR0aWVz\n';
+  s += 'b2Z0MRswGQYDVQQDDBJkZXYueWV0dGllc29mdC5jb20wggEiMA0GCSqGSIb3DQEB\n';
+  s += 'AQUAA4IBDwAwggEKAoIBAQC3G4D5dTMLfc55pvyXeG01GvDf6hhb02fIFctkD1Cm\n';
+  s += 'lihvC5BP5hJUeGrr2mnh1QDp7UM/GpMyLSsi1H8PcJL4cZMHAu+AhxwrZxe0DnCF\n';
+  s += 'W9L8tsKhU14NnHmkP77jXZsugl5Hd1Lin2qGBY5M0e1qFxRsqHtRsnxPf6kGQhc/\n';
+  s += 'VrWxmkg0LpDVwmho1LgD66zVHgAHm5uZk2VdrggdmIv861wTcghE9q8BiCdreU0j\n';
+  s += 'Szu+8k1OE99w6s1P78HhM+YXjocGdNwwx9mLgAtuD6HDb8WVmZOgxoMuxFndYPKw\n';
+  s += 'MTyqzC1FjmXw9WyN1khkkkfOWQPwNVqKDbHiw2iZFsvrAgMBAAGjggIuMIICKjCB\n';
+  s += 'kwYDVR0jBIGLMIGIgBQUj6BKC6Xz5vfMJkaxkNJdgJzS9KFtpGswaTELMAkGA1UE\n';
+  s += 'BhMCS1IxDTALBgNVBAoMBEtJU0ExLjAsBgNVBAsMJUtvcmVhIENlcnRpZmljYXRp\n';
+  s += 'b24gQXV0aG9yaXR5IENlbnRyYWwxGzAZBgNVBAMMEktpc2EgVGVzdCBSb290Q0Eg\n';
+  s += 'NYIBJTAdBgNVHQ4EFgQUWMJuTpimVBVqjqsVuNO0Irps6zUwDgYDVR0PAQH/BAQD\n';
+  s += 'AgbAMH4GA1UdIAEB/wR0MHIwcAYJKoMajJpFAQEDMGMwMAYIKwYBBQUHAgIwJB4i\n';
+  s += 'x3QAIMd4yZ3BHLKUACDC3NXYxqkAIMd4yZ3BHMeFssiy5DAvBggrBgEFBQcCARYj\n';
+  s += 'aHR0cDovL3Nub29weS55ZXNzaWduLm9yLmtyL2Nwcy5odG0wLgYDVR0RBCcwJaAj\n';
+  s += 'BgkqgxqMmkQKAQGgFjAUDBJkZXYueWV0dGllc29mdC5jb20wdQYDVR0fBG4wbDBq\n';
+  s += 'oGigZoZkbGRhcDovL3Nub29weS55ZXNzaWduLm9yLmtyOjYwMjAvb3U9ZHAxNnA0\n';
+  s += 'NixvdT1BY2NyZWRpdGVkQ0Esbz15ZXNzaWduLGM9a3I/Y2VydGlmaWNhdGVSZXZv\n';
+  s += 'Y2F0aW9uTGlzdDA8BggrBgEFBQcBAQQwMC4wLAYIKwYBBQUHMAGGIGh0dHA6Ly9z\n';
+  s += 'bm9vcHkueWVzc2lnbi5vci5rcjo0NjEyMA0GCSqGSIb3DQEBCwUAA4IBAQCTYqgA\n';
+  s += '2iJv25cp2hqDgQrOYlzunckdbY/fXquULINt+af4LYYBiRm7909HyalUmT225ALC\n';
+  s += 'dsWfkMFv5g2ZBxDlzzCnWqRB36GxYcjcYvToTDa/CMhtMw96yUhtBGkrwHDICRhV\n';
+  s += 'NmPJ0XK1S20/O3bTUvNsPgsgTDdkQLCGozryIU5mFbMW9mX5Oewu/O9Ysr3QgSRk\n';
+  s += 'PM9zVTX4tc0BxgjighPsdL4ZT+EwLnac0sqoX3MxpsClC8DHSu9UQDy7g8CV9EUS\n';
+  s += '8gPSbb8rBxqGYqycl4cjDMr9s27GJVBrRQtcSrt+iYp8/C2D+FmWoeKITtjtSDlK\n';
+  s += 'QTN8kmSb2R1Sjdvh\n';
+  s += '-----END CERTIFICATE-----\n';
+</script>
+
+<SCRIPT language=javascript>
+
+
+	var config = {
+		type: 'iframe',
+		certificateClass: '0',	// 0 – 없음,  1 – 개인 범용,  16 – 법인 범용,  256 – 증권 전용 개인
+	};
+	
+    var option = {
+        encoding: 'hex',
+        charset: 'UTF-8'
+    };
+    var _config = vestSign.getConfig();
+    _config.useMobileNPKI = false;
+    _config.useApp = true;
+    
+
+ 	// 정상처리 callback
+    function signvidcallback(result) {
+		document.getElementById('signedMsg').value = result.signature;
+		document.getElementById('vidMsg').value = result.vidMessage;
+		
+		// signedMsg : 전자서명 값 
+		// vidMsg :식별번호 검증 메세지
+    }
+    
+ 	// 에러 callback
+    function getError(error) {
+        // error = { code, getReason() };
+        if(error.code == -9999) console.log(error.code);  // 취소 버튼 이벤트 error.code: -9999
+        else alert(error.msg);
+    }
+
+	// 전자서명 함수 호출
+    function makeSignature(plain) {
+        option.signtype = 2;
+        option.signprotocol = 0;
+   		var type;
+    	var device = document.getElementsByName('deviceType');
+   		 
+	    for (var i = 0, ii = device.length; i < ii; ++i) {
+	        if (device[i].checked)  type = device[i].value;
+	      }
+	    yettie.init(config);	// 초기화
+		option.vid = {
+				recipientCertificate: s
+		    };
+	    
+    	if(type=='mobile'){         
+    		yettie.mSign(plain, option, signvidcallback, getError);	// 전자서명
+    	}else{
+    		yettie.sign(plain, option, signvidcallback, getError);	// 전자서명	
+    	} 
+    };
+    
+    function exportToWeb() {
+        var option = {
+            encoding: 'base64',
+            charset: 'UTF-8'
+        };
+
+        yettie.exportToWeb(option, function(res){
+//            console.log(res);
+        }, function(error) {
+//            console.log(error.msg);
+        });
+    }
+
+
+</SCRIPT>
+
+<form name="signform" method="post" action="p7_vid_result.jsp">
+<table border="1" align="center" width=50%>
+    <tr>
+        <td align="center"><br>
+            원문<br><textarea rows='10' style="width:100%" name="plain" id="plain">test</textarea><br><br>
+            서명문(hex)<br><textarea rows='10' style="width:100%" name="signedMsg" id="signedMsg"></textarea><br><br>
+            식별번호메세지<br><textarea rows='10' style="width:100%" name="vidMsg" id="vidMsg"></textarea><br><br>
+        </td>
+    </tr>
+    <tr>
+    <tr>
+        <td align="center"><br>
+            주민등록번호 : <input type="text" name="idn" id="idn" value="8502061812715"><br><br>
+        </td>
+    </tr>
+
+        <td align="center"><br>
+            <input type="radio" name="deviceType" value="pc" checked="true"  />PC
+			<input type="radio" name="deviceType" value="mobile" />Mobile<br><br>
+			<input type="button" onclick="makeSignature(document.getElementById('plain').value)" value="전자서명" style="width:150"><br><br>
+			<input type="button" onclick="exportToWeb()" value="인증서 복사" style="width:150"><br><br>
+			<input type="submit" value="검증" style="width:150"><br><br>
+        </td>
+    </tr>
+</table>
+</form>
+
+</html>

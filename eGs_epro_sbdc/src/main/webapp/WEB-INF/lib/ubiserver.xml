@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UbiServer version="4.0.0000.0000">
+	<Environment licensePath=""
+		admin="YWRtcEBzc3dkIQ=="
+		adminImgUri="./ubi4/js/images"
+		xslPath=""
+		osCharset="KSC5601" />
+	<LogInfo logPath="D:/kto/workspace/eGs_epro_kto_dev/src/main/webapp/ubi4/logs"
+		timeZone="GMT+9"
+		rowSize="5"
+		backupStyle="date"
+		backupSize="30"
+		backupPattern="yyyy-MM-dd"
+		useLog="true"
+		useDebug="true"
+		info="true" />
+	<Resources>
+		<DataSource id="SAMPLE_DB1" type="lookup" dataSourceName="jdbc/tutorial" charset="KSC5601" />
+		<DataSource id="SAMPLE_DB2" type="nonlookup" dataSourceName="jdbc/oradb" charset="KSC5601" />
+		<DataSource id="egs_sdbc"
+			type="direct" 
+			vendor="Oracle"
+			driverClassName="oracle.jdbc.driver.OracleDriver"
+			url="jdbc:oracle:thin:@106.250.181.107:1521:orcl"
+			charset="KSC5601"
+			username="egs_sdbc"
+			password="egs_sdbc" /> 
+		<DataSource id="Tutorial"
+			type="direct" 
+			vendor="Access"
+			driverClassName="sun.jdbc.odbc.JdbcOdbcDriver"
+			url="jdbc:odbc:UbiReport40"
+			charset="KSC5601"
+			username=""
+			password="" />
+	</Resources>
+	<UbiServiceInfo urftype="normal" connectionTime="1800000">
+		<UbiService ip="localhost" port="16996" />
+	</UbiServiceInfo>
+</UbiServer>

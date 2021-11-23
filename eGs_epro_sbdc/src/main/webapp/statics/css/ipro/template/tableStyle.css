@@ -1,0 +1,796 @@
+@charset "utf-8";
+.tableLayer{
+    float:left;
+    width:100%;
+    clear: both;
+    margin-bottom: 15px;
+}
+.tableLayer.fl{
+    float: left;
+}
+.tableLayer table .T_btnLayer{
+    /*margin-top: 4px;*/
+}
+.tableLayer table input[type=text]{
+    border: 1px solid #D4D4D4;
+    height: 28px;
+    margin-top:1px;
+}
+
+
+/* <th>인 경우 앞에 첨자 이미지 제거 */
+.tableLayer table .thNoneStyle{
+	background-image: url(''); 
+	padding-left: 0px;
+}
+
+input.tr{
+    text-align: right;
+    padding-right:2px;
+}
+table td.center_T{
+    text-align: center ! important;
+}
+.tableLayer table input[type=text].fl{float:left;}
+.tableLayer table input[type=text].fr{float:right;}
+table .cb{
+    clear: both;
+    width:100% ! important;
+}
+table .colorRed{
+    color: red;
+}
+table td{
+    position: relative;
+    word-break:break-all;
+}
+table.tableList td.left_T{
+    text-align: left;
+}
+
+table.contableList td.left_T{
+    text-align: left;
+}
+
+table.table.no_bul td.left_T{
+    text-align: left;
+}
+table td.right_T{
+    text-align: right ! important;
+}
+table.tableList td.color_o{
+    color : #e36a46;
+}
+table .lineOrange td , table .lineOrange th{
+    font-weight: bold;
+    color:#f26100;
+}
+.tableLayer table .ml_5{
+    margin-left: 5px;
+}
+.tableLayer table .ml_10{
+    margin-left: 10px;
+}
+
+.tableLayer table .mr_5{
+    margin-right: 5px;
+}
+.tableLayer table .mr_10{
+    margin-right: 10px;
+}
+.tableLayer table .mr_20{
+    margin-right: 20px;
+}
+.tableLayer table .boldT{
+    font-family:"NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+}
+.tableLayer table.m_n{
+    margin: 0;
+}
+.tableLayer table.mt_15{
+    margin-top: 15px ! important;
+}
+.tableLayer table.ml_0{
+    margin-left: 0 ! important;
+}
+table textarea.w_100per{
+    width:100%;
+    height:75px;
+}
+
+/*테이블 bullet*/
+.tableLayer table th.bullet_orange{
+    background: url('../../images/bullet_orange.png') #F6F6F6 10px 50% no-repeat;
+}
+/* 부모의 width값을 받는 테이블 */
+table.autoTable{
+    width: 100%;
+    text-align: center;
+}
+table.autoTable.b_none th , table.autoTable.b_none td{
+    border: none;
+    text-overflow: ellipsis;
+}
+table.autoTable .line{
+    border-top:2px solid #7a7a7a;
+}
+table.autoTable .brNone{
+    border-left: none;
+}
+table.autoTable thead th{
+    text-align: center;
+    font-weight: bold;
+    background-color:#f6f6f6;
+    border: 1px solid #d9d9d9;
+    line-height: 1.5em;
+    height:35px;
+    border-right: none;
+}
+table.autoTable tbody th{
+    text-align: left;
+    background-color:#f6f6f6;
+    background-image: url('../../images/template_bullet_square.png');
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    font:12px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+    text-indent: 10px;
+    padding :  0 8px;
+    border: 1px solid #d9d9d9;
+    border-right: none;
+    line-height: 1.5em;
+    height:35px;
+}
+table.autoTable td{
+    padding : 0 8px;
+    border: 1px solid #d9d9d9;
+    border-right: none;
+    height:35px;
+}
+table.autoTable td.left_T{
+    text-align: left;
+}
+
+/* 일반적인 data table */
+.tableLayer table.table.b_none th , .tableLayer table.table.b_none td{
+    border: none;
+    text-overflow: ellipsis;
+}
+table.table{
+    width:980px;
+    font:12px "NanumGothic", NanumGothic, Dotum, "NanumGothic", Arial, sans-serif;
+    text-align: left;
+    color:#505050 ! important;
+}
+.tableLayer.w_485 table.table , .tableLayer.w_485{
+    width:485px;
+}
+table.table .line{
+    border-top:2px solid #7a7a7a;
+}
+table.table th{
+    text-align: left;
+    background-color:#f6f6f6;
+    background-image: url('../../images/template_bullet_square.png');
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    font:12px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+    padding :  0 8px;
+    border: 1px solid #d9d9d9;
+    text-indent: 10px;
+    line-height: 1.5em;
+    height:35px;
+}
+table.table.no_bul th{
+    background-image: none;
+    text-align: center;
+    text-indent: 0;
+}
+table.table.no_bul td{
+    text-align: center;
+}
+table.table td{
+    padding : 0 8px;
+    border: 1px solid #d9d9d9;
+    height:35px;
+}
+.tableLayer table.table textarea{
+    width:100%;
+    border: 1px solid #ccc;
+    height: 67px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 4px 0 0 0;
+    color: #666;
+    font: 12px "나눔고딕", NanumGothic;
+    background: #fff;
+    vertical-align: top;
+    line-height: 20px;
+    resize: vertical;
+}
+
+.fileViewer{
+    width:100%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/*data table style2*/
+table.table.type1{
+    text-align: center;
+    border: none;
+    border-bottom: 1px solid #d9d9d9;
+}
+table.table.type1 th{
+    text-align: center;
+    background-image: none;
+    text-indent: 0;
+    border: none;
+    border-left: 1px solid #d9d9d9;
+    border-top: 1px solid #d9d9d9;
+}
+table.table.type1 td{
+    border: none;
+    border-left: 1px solid #d9d9d9;
+    border-top: 1px solid #d9d9d9;
+}
+table.table.type1 .no_border{
+    border-left: none;
+}
+table.table.type1 td.left_T{
+    text-align: left;
+}
+table.table .left_T{
+    text-align: left ! important;
+}
+/*스타일3*/
+table.table.type2{
+    text-align: center;
+    border: none;
+    border-left: 1px solid #d9d9d9;
+    border-bottom: 1px solid #d9d9d9;
+}
+table.table.type2 th{
+    text-align: center;
+    background-image: none;
+    text-indent: 0;
+    border: none;
+    border-left: 1px solid #d9d9d9;
+    border-top: 1px solid #d9d9d9;
+}
+table.table.type2 td{
+    border: none;
+    border-left: 1px solid #d9d9d9;
+    border-top: 1px solid #d9d9d9;
+}
+table.table.type2 td.left_T{
+    text-align: left;
+}
+
+.tableLayer table.table{
+    /*border-top:2px solid #017ac3;*/
+}
+.tableLayer table.table.contentTable{
+    width: 935px;
+    margin-left: 25px;
+    border-top: 2px solid #7a7a7a;
+    margin-top: 0;
+}
+.tableLayer table.table.contentTable tr:hover td{
+    background-color: inherit;
+}
+.tableLayer table.table.contentTable .c_999{
+    font-size: 11px;
+    color: #999;
+}
+
+
+/*
+    일반적인 list table
+*/
+table.tableList{
+    width:980px;
+    font:12px "NanumGothic", NanumGothic, Dotum, "NanumGothic", Arial, sans-serif;
+    border-collapse : inherit;
+}
+table.tableList tr:hover > td{
+    background-color:#f8f8f8;
+}
+table.tableList th{
+    padding : 10px 0 ;
+    font:12px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+}
+.tableLayer table.tableList thead tr th{
+    border-top:2px solid #017ac3;
+}
+.tableLayer table.tableList tbody.line{
+    border-top:2px solid #017ac3;
+}
+table.tableList thead th{
+    background-color: #f6f6f6;
+    background-image: url('../../images/template_bar_util15.png');
+    background-repeat: no-repeat;
+    background-position: left center;
+    text-align: center;
+    font:12px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+	border-bottom: 1px solid #DCDCDC;
+}
+table.tableList thead th:nth-child(1){
+    background-image: none;
+}
+table.tableList thead th.noBg{
+    background-image: none;
+}
+table.tableList tbody td{
+    padding : 0 8px;
+    height:35px;
+    text-align: center;
+    border-bottom: 1px solid #DCDCDC;
+    background-color: white;
+}
+
+/*다른 스타일*/
+table.tableList.type1{
+    width:980px;
+    font:12px "NanumGothic", NanumGothic, Dotum, "NanumGothic", Arial, sans-serif;
+    border: none;
+    text-align: left;
+    margin-top: 35px;
+}
+table.tableList.type1 th{
+    padding : 10px 0 10px 20px;
+    font:12px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+    background-image: url('../../images/template_bar_util15.png');
+    background-repeat: no-repeat;
+    background-position: right 10px;
+    text-indent: 5px;
+    vertical-align: top;
+}
+table.tableList.type1 th.noBg{
+    background-image: none;
+}
+table.tableList.type1 tbody td{
+    padding : 0 8px 0 20px;
+    height:35px;
+    border: none;
+    text-align: left;
+}
+table.tableList.type1 tbody td textarea{
+    width: 780px;
+    height: 50px;
+    margin: 10px 0;
+}
+table.tableList.type1 tbody td.textWrap{
+    padding: 25px;
+}
+table.tableList.type1 tbody td.textWrap div{
+    min-height: 160px;
+}
+table.tableList.type1 tr:hover td{
+    background-color: white;
+}
+table.tableList.type1 tbody tr.line{
+    border-top:2px solid #017ac3;
+}
+table.tableList.type1 tbody tr.lineB{
+    border-bottom: 1px solid #7a7a7a;
+}
+table.tableList.type1 tbody tr{
+    border-bottom: 1px solid #DCDCDC;
+}
+/*
+ class = tableChart
+ 수평 바그래프 차트
+*/
+table.tableChart{
+    width: 960px;
+}
+table.tableChart th , table.tableChart td{
+    background-color:white;
+}
+table.tableChart thead th{
+    font: 16px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+    height: 50px;
+    text-align: left;
+    text-indent: 17px;
+    background-image: none;
+    border: none;
+}
+table.tableChart tbody td{
+    height: 40px;
+    border: none;
+}
+table.tableChart tbody td.chartTitle span{
+    float:left;
+    background-color: #c2c9cf;
+    border-radius: 12px;
+    text-align: center;
+    width: 24px;
+    height: 24px;
+    font: 16px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+    line-height: 23px;
+    margin : 0 17px;
+}
+table.tableChart tbody td.chartTitle{
+    font: 14px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+    line-height: 23px;
+}
+table.tableChart tbody td .barChartWrap{
+    height: 9px;
+    display:block;
+    width:100%;
+    background-color: #c8c8c8;
+    overflow:hidden;
+    position:relative;
+}
+table.tableChart tbody td .barChartWrap .bar{
+    position:absolute;
+    display:block;
+    top:0px;
+    left:0px;
+    height:9px;
+    background-color: #d04f86;
+}
+.barChartWrap{
+    height: 9px;
+    display:block;
+    width:100%;
+    background-color: #c8c8c8;
+    overflow:hidden;
+    position:relative;
+}
+.barChartWrap .bar{
+    position:absolute;
+    display:block;
+    top:0px;
+    left:0px;
+    height:9px;
+    background-color: #d04f86;
+}
+
+
+table.tableChart tbody td.chartText{
+    text-align: center;
+}
+table.tableAnswer{
+    width: 960px;
+    background-color: white;
+}
+table.tableAnswer thead th{
+    font: 16px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+    height: 50px;
+    text-align: left;
+    text-indent: 17px;
+    border: none;
+    background:none;
+}
+table.tableAnswer tbody td{
+    height: 40px;
+    font: 14px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+    line-height: 23px;
+    border: none;
+}
+table.tableAnswer tbody td span{
+    float:left;
+    background-color: #c2c9cf;
+    border-radius: 12px;
+    text-align: center;
+    width: 24px;
+    height: 24px;
+    font: 16px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+    line-height: 23px;
+    margin : 0 17px;
+}
+table.tableAnswer tbody td.bottomLine a {
+    float: right;
+}
+
+/*테이블 인풋 스타일*/
+/*공통 지시문 스타일*/
+table .pollRadio p , table .pollTxt p , table .pollCheck p{
+    width:100%;
+    font: 12px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+    color: #505050;
+    float:left;
+    clear: both;
+    margin-bottom : 5px;
+}
+table .pollRadio , table .pollTxt , table .pollDirective , table .pollCheck{
+    margin: 10px ;
+    float: left;
+}
+/*라디오*/
+table .pollRadio input[type=radio]{
+    margin-right: 5px;
+}
+table .pollRadio label{
+    width: 50%;
+    float:left;
+    margin-top: 5px;
+}
+/*텍스트*/
+table .pollTxt textarea{
+    margin-top:5px;
+    float: left;
+    height: 67px;
+    padding: 4px 0 0 0;
+    color: #666;
+    font: 12px "나눔고딕", NanumGothic;
+    background: #fff;
+    vertical-align: top;
+    line-height: 20px;
+    resize: vertical;
+}
+/*지시문*/
+table .pollDirective p{
+    width:100%;
+    font: 12px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+    color: #505050;
+    float:left;
+    clear: both;
+    text-indent: 15px;
+    background-image:url('../../images/template_bul_LnbOver.png');
+    background-position: left center;
+    background-repeat: no-repeat;
+}
+/*체크박스 스타일*/
+table .pollCheck input[type=checkbox]{
+    margin-right: 5px;
+}
+table .pollCheck label{
+    width: 50%;
+    float:left;
+    margin-top: 5px;
+    line-height: 15px;
+}
+
+/*테이블 안에 공통요소 style*/
+
+
+/*특이 케이스 input*/
+table.table td.lineInput , table.tableList td.lineInput{
+    padding: 5px 8px ! important;
+}
+table.table td.lineInput label, table.tableList td.lineInput label{
+    float:left;
+}
+table.table td.lineInput input[type=text],
+table.tableList td.lineInput input[type=text]{
+    height: 28px;
+    border: 1px solid #D4D4D4;
+    width: 850px;
+    margin: 1px 5px 0;
+}
+
+/*테이블 코멘트*/
+.tableComment{
+    float: left;
+    width: 100%;    
+    clear: both;
+}
+.tableComment input{
+    height: 25px ! important;
+}
+.tableComment.w_935{
+    width: 935px;
+    margin-left: 25px;
+}
+.tableComment.m_15{
+    margin: 0 0 15px;
+}
+.tableComment.mt_15{
+    margin-top:15px;
+}
+.tableComment .ml_15{
+    margin-left: 15px;
+}
+.tableComment .list_count{
+    float: left;
+}
+.tableComment .list_count span{
+    color:#f7901e;
+}
+.tableComment .T_btnlayer{
+    margin-top: -10px ! important;
+    margin-right: 12px ! important;
+}
+.tableComment .bul_round{
+    background-image: url('../../images/bullet_circle.png');
+    margin-left: 5px;
+    text-indent: 14px;
+    padding-left:0;
+}
+
+/*layer popup table style1*/
+.tableLayerPop{
+    position:absolute;
+    top:0px;
+    right:40px;
+    width:286px;
+    background-color: white;
+}
+.tableLayerPop .tableLayerPopHead{
+    position: relative;
+    background-color: #017ac3;
+    height: 21px;
+}
+.tableLayerPop .tableLayerPopHead p.popHead{
+    position: absolute;
+    top: 0px;
+    left: 9px;
+    color: white;
+    background-color: transparent;
+}
+.tableLayerPop .tableLayerPopHead button{
+    position: absolute;
+    top:2px;
+    right: 3px;
+    background-image: url('../../images/template_layerPopClose.png');
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    width: 18px;
+    height: 17px;
+    text-indent: -999999px;
+}
+table.popTable.style1{
+    text-align: center;
+}
+table.popTable.style1 td{
+    border: 1px solid #b3b3b3;
+    border-top: none;
+    padding:2px 0;
+    color:#000000;
+}
+
+/*
+tableLayerPop
+tableLayerPopHead p button
+table popTable style1*/
+
+/*테이블안 select 크기 조절*/
+table .selectLayer2.w_120{margin: 0 ;width: 120px;}
+table .selectLayer2.w_120 ul{top:30px;width:118px;}
+table .selectLayer2.w_120 .myValue{height: 28px;line-height: 29px;}
+table .selectLayer2.w_120 .ctrl{height: 28px; width: 28px}
+table .selectLayer2.w_120 .ctrl .arrow{right: 10px;top: 12px;}
+
+table .selectLayer2.mr10{margin-right: 10px;}
+
+table .selectLayer2{margin: 0px 10px 0 0; float: left;}
+table .selectLayer2 ul{top: 30px;width:198px;}
+table .selectLayer2 .myValue{height: 28px;line-height: 28px;}
+table .selectLayer2 .ctrl{height: 28px; width: 28px}
+table .selectLayer2 .ctrl .arrow{right: 10px;top: 12px;}
+
+
+/*테이블안의 아이콘*/
+table .btn_before,table .btn_ing,table .btn_sign{	
+	height: 19px;
+	line-height: 21px;
+	margin: 0 auto;
+	text-align: center;
+	border-radius: 2px;
+	color: #fff;
+	font-family: Dotum, 'NanumGothic', Arial, sans-serif;
+	font-size: 12px;
+	padding: 0 8px;
+	display: inline-block;
+}
+table .btn_before{background:#068699;}
+table .btn_ing{background:#05659f;}
+table .btn_sign{background:#017ac3;}
+
+table .overflow_y table.mobile_exposed{width: 630px;}
+table .overflow_y table.mobile_exposed.w_100per{width: 100% ! important;}
+table .overflow_y table.mobile_exposed td{color:#5e5e5e;border:0;border-left:1px solid #fff;border-right:1px solid #fff;border-bottom:1px solid #fff;padding:0;height: auto;}
+table .overflow_y table.mobile_exposed td input[type=checkbox]{margin-right: 10px;}
+table .mobile_exposedWrap .T_btnLayer{
+    margin-top:75px;
+    margin-left:10px;
+}
+table .overflow_y{
+    height:76px;
+    float: left;
+    margin: 7px 0;
+    overflow-y: scroll;
+    border: 1px solid #cecece;
+    padding: 3px 3px 10px 3px;
+}
+table .overflow_y.w_100per{
+    width:100%;
+}
+table .tableUlList{
+    margin:10px 0;
+}
+table .tableUlList li{
+    float:left;
+    background-image: url('../../images/bul_arrow.png');
+    background-repeat: no-repeat;
+    background-position: left center;
+    margin-bottom: 5px;
+    padding-left:13px;
+    clear: both;
+}
+/*외부 포털에 쓰는 레이어*/
+.horizonChart{
+    width:930px;
+    padding:20px;
+    float:left;
+    margin-top: 20px;
+    margin-left: 5px;
+    border: 1px solid #d9d9d9;
+}
+.horizonChart table{
+    width:930px;
+    margin-top: 30px;
+}
+table.tableChart.typeBlue td{
+    height:25px;
+}
+table.tableChart.typeBlue td.chartTitle{
+    color: #252525;
+    font:12px "NanumGothic", NanumGothic, Dotum, "NanumGothic", Arial, sans-serif;
+    text-align: right;
+    border-right: 1px solid #afafaf;
+    padding-right: 10px;
+}
+table.tableChart.typeBlue .barChartWrap{
+    background-color: transparent;
+}
+table.tableChart.typeBlue .barChartWrap .bar{
+    background-color: #90bbe4;
+    text-indent: -9999px;
+}
+table.tableChart.typeBlue .lastLine{
+    border-bottom: 1px solid #afafaf;
+}
+
+/*리스트 테이블 이미지 형태 style*/
+table.tableList a.imgList img.listTitleImg{
+    width: 148px;
+    height: 84px;
+    float:left;
+    margin: 5px 15px;
+}
+table.tableList a.imgList dt ,table.tableList a.imgList dd{
+    float:left;
+    text-align: left;
+    width:630px;
+}
+table.tableList a.imgList dt{
+    font-family: NanumGothicBold , "NanumGothicBold" , Dotum, "NanumGothic", Arial, sans-serif;
+    font-size: 12px;
+    color:#656565;
+    margin: 10px 0;
+}
+
+table.tableList a:hover{
+    text-decoration: none;
+}
+/*테이블 인풋*/
+input.w_55{ width: 55px ! important; }
+input.w_100per{width: 100% ! important;}
+
+
+/* mini table */
+div.table_mini{
+    float: right;
+    font-size: 13px;
+    border-top:2px solid #7a7a7a;
+    margin-top: -36px;
+    margin-bottom: 5px;
+}
+div.table_mini th{
+    width: 87px;
+    border: 1px solid #d9d9d9;
+    background: url('../images/bullet_square.png') #F6F6F6 15px 50% no-repeat;
+    text-align: left;
+    font-size: 13px;
+    color: #505050;
+    padding: 7px 10px 7px 22px;
+}
+div.table_mini td{
+    border: 1px solid #d9d9d9;
+    text-align: left;
+    padding: 7px 10px ;
+    width: 158px;
+}

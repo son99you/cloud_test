@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge;"/>
+    <title>인증서 선택</title>
+
+    <link type="text/css" rel="stylesheet" href="../styles/css/common.css?revision=e54ce34"/>
+    <link type="text/css" rel="stylesheet" href="../styles/css/jquery-ui.css?revision=e54ce34">
+    <!--[if IE 7]>
+    <link rel="stylesheet" type="text/css" href="../styles/css/ie7Debug.css"/>
+    <![endif]-->
+    <script type="text/javascript" src="../styles/js/jquery-1.11.0.min.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../styles/js/jquery-ui.js?revision=e54ce34"></script>
+    
+    <script type="text/javascript" src="../scripts/__GobalValue__.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../languages/manageLang.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../languages/policiesLang.js?revision=e54ce34"></script>
+
+    <style type="text/css">
+        html {
+            overflow: hidden;
+        }
+    </style>
+    
+    <script type="text/javascript">
+
+        // 상세보기에서 리스트 클릭시 스타일 적용 & 이벤트처리(click)
+        $(function () {
+            $(document).on("click", "#dialogCertTab_attrList li ul", function () {
+                if ($(this).hasClass("on")) return;
+                $("#dialogCertTab_attrList li ul").removeClass("on");
+                $(this).addClass("on");
+
+                $("#dialogCertTab_text").val($("#dialogCertTab_attrList li ul:eq(" + $(this).parent().index() + ") li:eq(1)").text());
+            });
+        });
+
+    </script>
+</head>
+<body>
+<form id="passwordForm" name="passwordForm" method="post" onsubmit="return false;">
+<div class="CERT_titlebar">
+    <h1><ul><li id="titleText" tabindex="1"></li></ul></h1>
+    <div class="CERT_util_btnClose" id="x_btn">
+        <a tabindex="2" title="닫기"></a>
+    </div>
+</div>
+<div class="certWrap">
+    <div class="cert_topimg"><img src="../styles/images/topbanner_yettiesoft.jpg" alt="VestSign Banner"></div>
+    <dl class="tab1">
+        <dt class="cert01_01 clfix">
+        <div id="button_slide_wrap" class="clfix">
+            <button class="prev"></button>
+            <div>
+                <ul class="icos" id="menu_btn" style="left:2px;"></ul>
+            </div>
+            <button class="next"></button>
+        </div>
+        </dt>
+        <dd>
+            <div id="mainContent">
+                <div id="mainCertList">
+                    <div class="cert01_02" id="subCertList">
+                        <ul class="list_cate">
+                            <li><script>document.write(jsLang(82));</script></li>
+                            <li><script>document.write(jsLang(83));</script></li>
+                            <li><script>document.write(jsLang(84));</script></li>
+                            <li><script>document.write(jsLang(85));</script></li>
+                        </ul>
+                        <ul id="outCertList" class="listWrap"></ul>
+                    </div>
+                    <!--<div id="importBrowserBtn" style="text-align: center;height: 20px;border: 1px solid #8b9eb0; display:none">인증서 가져오기</div>-->
+                    <div class="CERT_get_btn" id="importBrowserBtn" style="display:none">
+                        <a href="#"><script>document.write(jsLang(161));</script></a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="CERT_contWrap14" id="mainInfo" style="display: none">
+                <div class="CERT_14_box">
+                    <div class="CERT_14_txt1"><script>document.write(jsLang(92));</script></div>
+                    <div class="CERT_btns_common mt10 mb10">
+                        <p class="CERT_btnBg_sbtn2"><a><span class="CERT_14_info vestCertInfo" tabindex="11"><script>document.write(jsLang(93));</script></span></a></p>
+
+                        <p class="CERT_btnBg_sbtn2"><a><span class="CERT_14_down vestCertSetup" tabindex="12"><script>document.write(jsLang(94));</script></span></a>
+                        </p>
+
+                        <p class="CERT_btnBg_sbtn2"><a><span class="CERT_14_refresh refresh" tabindex="13"><script>document.write(jsLang(95));</script></span></a>
+                        </p>
+                    </div>
+                </div>
+                <!-- IE 9 미만일때 나타나지 않음 -->
+                <div>
+                    <div class="CERT_14_line1"></div>
+                    <div class="CERT_14_line2"></div>
+                    <div class="CERT_14_box">
+                        <div class="CERT_14_txt2"><script>document.write(jsLang(96));</script></div>
+                        <div class="CERT_btns_common mt10">
+                            <p class="CERT_btnBg_sbtn2"><a><span
+                                    class="CERT_14_info certificateFileManaual" tabindex="14"><script>document.write(jsLang(97));</script></span></a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="CERT_contWrap14" id="mainInfoIE9" style="display: none">
+                <div class="CERT_14_box">
+                    <div class="CERT_14_txt1"><script>document.write(jsLang(92));</script></div>
+                    <div class="CERT_btns_common mt10 mb10">
+                        <p class="CERT_btnBg_sbtn2"><a><span class="CERT_14_info vestCertInfo"><script>document.write(jsLang(93));</script></span></a></p>
+
+                        <p class="CERT_btnBg_sbtn2"><a><span class="CERT_14_down vestCertSetup"><script>document.write(jsLang(94));</script></span></a>
+                        </p>
+
+                        <p class="CERT_btnBg_sbtn2"><a><span class="CERT_14_refresh refresh"><script>document.write(jsLang(95));</script></span></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="CERT_contWrap15" id="P12" style="display: none">
+                <div class="contentsBackGround CERT_contWrap15" style="display:none"></div>
+                <div class="CERT_15_txt">
+                    <p id="p12txt"><script>document.write(jsLang(98));</script></p>
+
+                    <p class="CERT_btnBg_sbtn3"><a id="certificateFileManaual"><span class="CERT_15_info certificateFileManaual"><script>document.write(jsLang(97));</script></span></a>
+                    </p>
+                </div>
+                <div class="CERT_btns_common">
+                    <div id="fileselect" style="display:none">
+                        <p class="CERT_btnBg_sbtn2" id="fileInputSearchBtn"><a id="fileInputBtn"><span class="CERT_15_search"><script>document.write(jsLang(99));</script></span></a>
+                        </p>
+                        <input type="file" class="fileInputHidden" id="fileInputHidden" title="파일 가져오기" />
+                        <label for="fileInputHidden"></label>
+                    </div>
+                    <div id="flashselect" style="left: -200%">
+                        <p class="CERT_btnBg_sbtn2" id="flashInputDivId"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="CERT_contWrap16" id="imgview" style="display: none"> </div>
+
+            <div id="importBrowserView" style="display:none">
+                <div class="contentsBackGround CERT_contWrap15" style=""></div>
+                <div id="importBrowserViewDefault">
+                    <input id="browserCertificateImportPFXFile" type="file" style="display:none">
+                    <input id="browserCertificateImportNPKIFile" type="file" multiple="multiple" style="display:none">
+                    <ul class="CERT_get_list">
+                        <li id="browserCertificateImportPFXBtn">
+                            <a href="#"><script>document.write(jsLang(162));</script></a>
+                            <!--<a href="#"><object data="../library/VestSign.swf" type="application/x-shockwave-flash" name="flash_object" id="flash_object"><param name="movie" value=".././library/VestSign.swf"><param name="allowScriptAccess" value="always"></object></a>-->
+                        </li>
+                        <li id="browserCertificateImportNPKIBtn">
+                            <a href="#"><script>document.write(jsLang(163));</script></a>
+                        </li>
+                        <div class="BrowserCertificate_Import_Info">
+                            <p class="CERT_btnBg_sbtn3" style="background: 0;">
+                                <a href="#">
+                                    <span class="CERT_15_info certificateFileManaual">info</span>
+                                </a>
+                            </p>
+                        </div>
+                        <div class="BrowserCertificate_Import_Info BrowserCertificate_Import_Info_right">
+                            <p class="CERT_btnBg_sbtn3" style="background: 0;">
+                                <a href="#">
+                                    <span class="CERT_15_info certificateFileManaual">info</span>
+                                </a>
+                            </p>
+                        </div>
+                    </ul>
+                </div>
+                <div id="importBrowserViewIE9" style="display:none">
+                    <ul class="CERT_get_list CERT_get_list_flash">
+                        <li>
+                            <div id="importBrowserViewIE9FlashDiv"></div>
+                            <!--<a href="#"><object data="../library/VestSign.swf" type="application/x-shockwave-flash" name="flash_object" id="flash_object"><param name="movie" value=".././library/VestSign.swf"><param name="allowScriptAccess" value="always"></object></a>-->
+                        </li>
+                        <div class="BrowserCertificate_Import_Info BrowserCertificate_Import_Info_right">
+                            <p class="CERT_btnBg_sbtn3" style="background: 0;">
+                                <a href="#">
+                                    <span class="CERT_15_info certificateFileManaual">info</span>
+                                </a>
+                            </p>
+                        </div>
+                    </ul>
+                </div>
+                <div class="CERT_get_btn2" id="browserCertListBtn">
+                    <a href="#"><script>document.write(jsLang(160));</script></a>
+                </div>
+            </div>
+        </dd>
+    </dl>
+    <div class="cert01_04 clfix">
+        
+        <div class="cert01_06" id="btnList" style="padding:0; height:28px; display:none; margin-bottom:4px;">
+            <div class="CERT_btnBg_btn"><a href="#" id="certImport_btn" tabindex="9995" style="width: 64px; text-align: center;"><script>document.write(jsLang(165));</script></a></div>
+            <!-- <div style="width:300px; font-size: 11px;"><p>인증서/개인키 쌍 혹은 pfx, p12 파일을 선택해 주세요.</p></div> -->
+            <input type="text" readonly id="certImport_guide" style="width:276px; font-size:11px; border:none; margin-left:14px;" value="인증서/개인키 쌍 혹은 pfx, p12 파일을 선택해 주세요."/>
+            
+        </div>
+        <div class="CERT_010401">
+            <div class="CERT_btnBg_btn"><a id="certDetail_btn" tabindex="9996"><script>document.write(jsLang(86));</script></a></div>
+            <div class="CERT_btnBg_btn"><a id="certDelete_btn" tabindex="9997"><script>document.write(jsLang(87));</script></a></div>
+        </div>
+        <div class="CERT_010402 clfix">
+            <input type="text" readonly id="outCertComment" class="CERT_01_detail mb5"  title="선택한 인증서 DN표시" />
+            <label for="outCertComment"></label>
+
+            <h2 id="passwordText"><script>document.write(jsLang(88));</script></h2>
+
+            <p class="CERT_0104_q"><img src="../styles/images/CERT_01_q.jpg" alt=""></p>
+
+            <p>
+                <input type="password" id="hiddenPasswordInput" class="style1 CERT_01_pw" style="display:none;" title="인증서파일 비밀번호 입력" />
+                <label for="hiddenPasswordInput"></label>
+
+                <input type="password" id="passwordInput" autocomplete="off" class="style1 CERT_01_pw" tabindex="9997" title="비밀번호 입력" />
+                <input type="password" id="browserCertificatePasswordInput" autocomplete="off" class="style1 CERT_01_pw" tabindex="9997" title="비밀번호 입력" />
+                <label for="passwordInput"></label>
+            </p>
+        </div>
+        <div class="CERT_0104_q_pop" style="display:none;">
+            <p id="pinHint"></p>
+        </div>
+
+    </div>
+    <div class="CERT_btns_common clfix">
+        <p class="CERT_btnBg_mbtn"><a id="submit_btn" tabindex="9998"><script>document.write(jsLang(90));</script></a></p>
+
+        <p class="CERT_btnBg_mbtn"><a id="cancel_btn" tabindex="9999"><script>document.write(jsLang(91));</script></a></p>
+    </div>
+</div>
+
+<!-- 저장토큰 클릭 -> 핀 입력창 다이얼로그 -->
+<div id="saveTokenWrapper" style="display: none">
+    <div class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-draggable" tabindex="-1" role="dialog"
+         aria-describedby="tokenInputDialog" aria-labelledby="ui-id-1"
+         style="height: auto; top: 144.5px; display: block; z-index: 101; width: 430px; left: 0px; overflow: hidden;">
+        <div class="Wrapper ui-dialog-content ui-widget-content" id="tokenInputDialog"
+             style="width: auto; min-height: 117px; max-height: none; height: auto;">
+            <div class="CERT_titlebar">
+                <div class="titleIcon"></div>
+                <h1 class="inputter_h1">
+                    <ul><li id="tokenInputTitle"><script>document.write(jsLang(152));</script></li></ul>
+                </h1>
+                <div class="inputter_btnClose" id="tokenInputX_btn"></div>
+            </div>
+            <div class="certWrap">
+                <dl class="tab1">
+                    <dd>
+                        <div class="notice_wrap">
+                            <div class="noticieTitle2">
+                                <p id="infoMsg"><script>document.write(jsLang(153));</script></p>
+                            </div>
+                        </div>
+
+                        <div class="pw_wrap">
+                            <div class="marginTextBox" style="font-weight: bold; padding-left: 22px;">
+                                <p id="pwMsg"><script>document.write(jsLang(154));</script></p>
+                            </div>
+
+                            <input type="password" id="tokenPin" class="CERT_inputStyle" name="tokenPin" title="토큰 핀번호 입력">
+                            <label for="tokenPin"></label>
+                        </div>
+                    </dd>
+                </dl>
+            </div>
+            <div class="CERT_btns_common" id="tokenInput_btns" style="margin-bottom: 11px;">
+                <p class="CERT_btnBg_mbtn"><a href="javascript:void(0)" id="tokenInputDialog_confirmBtn">
+                    <script>document.write(jsLang(90));</script></a></p>
+
+                <p class="CERT_btnBg_mbtn"><a href="javascript:void(0)" id="tokenInputDialog_cancelBtn">
+                    <script>document.write(jsLang(91));</script></a></p>
+            </div>
+        </div>
+    </div>
+    <div class="ui-widget-overlay ui-front" style="z-index: 100;"></div>
+</div>
+</form>
+
+<!-- 저장매체 클릭 -> 상세리스트 다이얼로그 -->
+<div class="Wrapper" id="dialog" style="display:none;">
+    <div style="width:324px;">
+        <div class="CERT_titlebar_common">
+            <h1><script>document.write(jsLang(103));</script></h1>
+
+            <div class="CERT_util_btnClose" id="dialog_xBtn"></div>
+        </div>
+        <div class="CERT_certWrapper2">
+            <ul class="CERT_usb_select" id="dialog_list"></ul>
+        </div>
+    </div>
+</div>
+
+<!-- 인증서내용보기 버튼클릭 -> 메세지 다이얼로그 -->
+<div class="Wrapper" id="dialogCertMsg" style="display:none;">
+    <div style="width:357px;">
+        <div class="CERT_titlebar_common">
+            <h1><script>document.write(jsLang(100));</script></h1>
+
+            <div class="CERT_util_btnClose" id="dialogCertMsg_xBtn">
+                <a href="#"></a>
+            </div>
+        </div>
+        <div class="CERT_certWrapper">
+            <div>
+                <textarea id="dialogCertMsg_text" class="CERT_02_ta" style="resize:none;wrap:hard;" readonly title="상세보기 다이얼로그 표시"></textarea>
+                <label for="dialogCertMsg_text"></label>
+
+                <div class="CERT_btns_common">
+                    <p class="CERT_btnBg_mbtn"><a href="#" id="dialogCertMsg_confirmBtn"><script>document.write(jsLang(90));</script></a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="Wrapper" id="dialogCertTab" style="display:none;">
+    <div style="width:382px;">
+        <div class="CERT_titlebar_common">
+            <h1><script>document.write(jsLang(100));</script></h1>
+
+            <div class="CERT_util_btnClose" id="dialogCertTab_xBtn">
+                <a href="#"></a>
+            </div>
+        </div>
+        <div class="CERT_certWrapper">
+            <dl class="CERT_tab2">
+                <dt class="clfix">
+                <div class="CERT_tabm clfix">
+                    <ul id="dialogCertTab_tab_ul"></ul>
+                </div>
+                </dt>
+                <dd>
+                    <div class="CERT_contWrap">
+                        <div class="CERT_linebox">
+                            <ul class="CERT_list_cate">
+                                <li><script>document.write(jsLang(101));</script></li>
+                                <li><script>document.write(jsLang(102));</script></li>
+                            </ul>
+                            <ul class="CERT_listWrap" id="dialogCertTab_attrList"></ul>
+                        </div>
+                        <textarea id="dialogCertTab_text" class="CERT_06_ta" style="resize:none;wrap:hard;"
+                                  readonly title="상세보기 선택한 내용 표시"></textarea>
+                        <label for="dialogCertTab_text"></label>
+
+                        <div id="dialogCertTab_tab_subBtn_div" class="CERT_btns_right mt5 clfix"></div>
+                    </div>
+                </dd>
+            </dl>
+            <div class="CERT_btns_common">
+                <p class="CERT_btnBg_mbtn"><a href="#"a id="dialogCertTab_confirmBtn"><script>document.write(jsLang(90));</script></a></p>
+
+                <p class="CERT_btnBg_mbtn"><a href="#" id="dialogCertTab_cancelBtn"><script>document.write(jsLang(91));</script></a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--인증서 검증-->
+<div class="Wrapper" id="dialogCertVid" style="display:none;">
+    <div style="width:328px;">
+        <div class="CERT_titlebar_common">
+            <h1><script>document.write(jsLang(104));</script></h1>
+
+            <div class="CERT_util_btnClose" id="dialogCertVid_xBtn"></div>
+        </div>
+        <div class="CERT_certWrapper">
+            <dl class="CERT_tab3">
+                <dt class="clfix">
+                <div class="CERT_tab_comm clfix">
+                    <ul>
+                        <li class="CERT_on"><p class="CERT_on2"><script>document.write(jsLang(116));</script></p></li>
+                    </ul>
+                </div>
+                </dt>
+                <dd>
+                    <div class="CERT_contWrap">
+                        <div class="CERT_inlinebox2">
+                            <pre id="dialogCertVid_text"></pre>
+                        </div>
+                    </div>
+                </dd>
+            </dl>
+            <div class="CERT_btns_common">
+                <p class="CERT_btnBg_mbtn"><a href="#" id="dialogCertVid_confirmBtn"><script>document.write(jsLang(90));</script></a></p>
+
+                <p class="CERT_btnBg_mbtn"><a href="#" id="dialogCertVid_cancelBtn"><script>document.write(jsLang(91));</script></a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--해쉬값 검증-->
+<div class="Wrapper" id="dialogCertHash" style="display:none;">
+    <div style="width:382px;">
+        <div class="CERT_titlebar_common">
+            <h1><script>document.write(jsLang(105));</script></h1>
+
+            <div class="CERT_util_btnClose" id="dialogCertHash_xBtn">
+                <a href="#"></a>
+            </div>
+        </div>
+        <div class="CERT_certWrapper">
+            <p class="CERT_t0401"><script>document.write(jsLang(106));</script></p>
+
+            <div class="CERT_inlinebox">
+                <p class="CERT_in_answer" id="dialogCertHash_text"></p>
+            </div>
+            <p class="CERT_t0402 pb20"><script>document.write(jsLang(107));</script></p>
+
+            <div class="CERT_btn_center pb10"><a href="https://rootca.kisa.or.kr/kcac/cert/potency.html" target="_blank"><img
+                    src="../styles/images/btn_sitelink.jpg" alt="KISA 홈페이지 확인"></a>
+            </div>
+            <div class="CERT_btns_common">
+                <p class="CERT_btnBg_mbtn"><a href="#" id="dialogCertHash_confirmBtn"><script>document.write(jsLang(90));</script></a></p>
+
+                <p class="CERT_btnBg_mbtn"><a href="#" id="dialogCertHash_cancelBtn"><script>document.write(jsLang(91));</script></a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 인증서창 layer처리 -->
+<div id="ytLayer" style="display: none; opacity: 0.72; position: fixed; top: 50%; left: 50%; width: 100%; height: 100%; margin-top: -248px; margin-left: -215px; z-index: 10000; background: #000000 no-repeat center center url(../styles/images/loading-animation-6.gif); ">
+</div>
+
+</body>
+
+<script type="text/javascript" src="../library/json3.min.js?revision=e54ce34"></script>
+<script type="text/javascript" src="../library/iecompatibility.js?revision=e54ce34"></script>
+<script type="text/javascript" src="../library/webAccess.js"></script>
+
+<script type="text/javascript" src="../library/policies.js?revision=e54ce34"></script>
+<script type="text/javascript" src="../library/keySafer.js?revision=e54ce34"></script>
+
+<script type="text/javascript" src="../scripts/manage.js?revision=e54ce34"></script>
+
+<script type="text/javascript" src="../library/dragiframe.js?revision=e54ce34"></script>
+</html>

@@ -1,0 +1,134 @@
+<!Doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>PC에서 인증서 가져오기</title>
+
+    <link type="text/css" rel="stylesheet" href="../styles/css/mCommon.css?revision=e54ce34" />
+    <link type="text/css" rel="stylesheet" href="../styles/css/jquery-ui.css?revision=e54ce34">
+
+    <script type="text/javascript" src="../styles/js/jquery-1.11.0.min.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../styles/js/jquery-ui.js?revision=e54ce34"></script>
+
+    <script type="text/javascript" src="../scripts/__GobalValue__.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../languages/mExportFromPC.js?revision=e54ce34"></script>
+</head>
+
+<body>
+    <div>
+        <!-- Top -->
+        <div class="CERT_title">
+            <div class="TITLE_div">
+                <p id="title">
+                    <script>document.write(mFromPCLang(3));</script>
+                </p>
+            </div>
+            <div class="xBtn" id="x_btn" alt="닫기">닫기</div>
+        </div>
+
+        <div class="titleDivision_div">
+            <div class="titleDivisionLine"></div>
+        </div>
+
+        <!-- middle -->
+        <div class="CERT_contents">
+            <!-- middle 상단 -->
+            <div class="PC_title1">
+                <p>
+                    <script>document.write(mFromPCLang(4));</script>
+                </p>
+            </div>
+            <div class="PC_inputbox">
+                <input type="text" id="num1" maxlength="4"/>
+                <input type="text" id="num2" maxlength="4" class="CENTER_margin" />
+                <input type="text" id="num3" maxlength="4"/>
+            </div>
+            <div class="PC_inputInfo">
+                <div class="PC_infoImg"></div>
+                <p>
+                    <script>document.write(mFromPCLang(5));</script>
+                </p>
+            </div>
+
+            <!-- middle 하단 -->
+            <div class="PC_title2">
+                <p>
+                    <script>document.write(mFromPCLang(6));</script>
+                </p>
+            </div>
+            <div class="PC_useInfo">
+                <div class="INFO_contents">
+                    <div class="number_box">1</div>
+                    <p>
+                        <script>document.write(mFromPCLang(7));</script>
+                    </p>
+                </div>
+
+                <div class="INFO_contents">
+                    <div class="number_box">2</div>
+                    <p>
+                        <script>document.write(mFromPCLang(8));</script>
+                    </p>
+                </div>
+            </div>
+            <hr class="contDivisionLine">
+
+            <!-- 비밀번호 입력창 -->
+            <div class="FORM_wrap">
+                <div class="PW_div importPC_margin" id="passwordBox">
+
+                </div>
+            </div>
+            </form>
+
+            <!-- 확인 취소 버튼 -->
+            <div class="BTN_common">
+                <div id="commonBtn" class="commonForm">
+                    <div class="confirm_btn" id="confirm_btn">
+                        <p>
+                            <script>document.write(mFromPCLang(9));</script>
+                        </p>
+                    </div>
+                    <div class="cancel_btn" id="cancel_btn">
+                        <p>
+                            <script>document.write(mFromPCLang(10));</script>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- footer -->
+        <div class="copyright">
+            Copyright 2016 By YETTIESOFT.ALL right reserved.
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript" src="../scripts/mExportFromPC.js"></script>
+<script>
+    function onlyNumber(event) {
+        var key = window.event ? event.keyCode : event.which;
+        if ((event.shiftKey == false) && ((key > 47 && key < 58) || (key > 95 && key < 106)
+            || key == 35 || key == 36 || key == 37 || key == 39	//좌우방향키,home,end
+            || key == 8 || key == 46 || key == 9) //del,backSpace,tab
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    $(document).on("keyup", "#num1,#num2,#num3", function () {
+
+        var mch = $(this).val().match(/[0-9]/g);
+        if (mch != null && mch.length == 4) {
+            if ($(this).attr("id") == "num1") $("#num2").focus();
+            else if ($(this).attr("id") == "num2") $("#num3").focus();
+            // else if ($(this).attr("id") == "num3") $("#confirm_btn").focus();
+        }
+    });
+</script>
+
+</html>

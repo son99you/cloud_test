@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * 전자입찰 > 입찰공고 Mapper
+ *
+ * <pre>
+ * sqlmap.oda.iep.elbi 
+ *    |_ IepElbiBidPblancMapper.xml
+ * 
+ * </pre>
+ * @date : 2015. 01. 14. 오전 11:41:04
+ * @version : 1.0
+ * @author : 은우소프트 하성윤
+-->
+<mapper namespace="com.eunwoosoft.ipro.ebid.dao.IproMyEbidPblancDao">	
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰공고목록조회_페이징 
+     * 2. 처리내용 :
+     *  	TABLE : T_BI_MST(입찰계획마스터)
+     					,T_BI_ROUND(입찰시간정보)
+     * </pre>
+     * @Query ID : selectMyBidPblancListWithPgng
+     * @date : 2015. 02. 10.
+     * @author : 은우소프트 하성윤
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 02. 10.       은우소프트 하성윤              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectMyBidPblancListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="bidPblancList"/>
+			<include refid="BidPblancWhere"/>
+			ORDER BY A.REG_DT DESC, A.ANNC_NO DESC, A.ANNC_NGR DESC
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰공고목록총건수조회 
+     * 2. 처리내용 :
+     *  	TABLE : T_BI_MST(입찰계획마스터)
+     					,T_BI_ROUND(입찰시간정보)
+     * </pre>
+     * @Query ID : selectBidPblancListTotcnt
+     * @date : 2015. 02. 10.
+     * @author : 은우소프트 하성윤
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 02. 10.       은우소프트 하성윤              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectMyBidPblancListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="bidPblancList"/>
+			<include refid="BidPblancWhere"/>
+		) T1
+		WHERE 1 = 1		
+	</select>
+	
+	<sql id="bidPblancList">
+		SELECT 	A.ANNC_NO
+					,A.ANNC_NGR
+					,B.ROUND_NO
+					,A.BID_NM
+					,A.ANNC_SECD
+					,A.BID_PSCD
+					,F_CDVAL_INQIRE('BID_PSCD', A.BID_PSCD) AS BID_PSCD_NM
+					,A.CONT_SECD
+					,F_CDVAL_INQIRE('CONT_SECD', A.CONT_SECD) AS CONT_SECD_NM
+					,A.BID_BRFS_YN
+					,A.ESTPC_SECD
+					,A.BASE_AMT
+					,B.ANNC_DT
+					,A.BRFS_DT
+					,B.BIDC_SBMT_STDT
+					,B.BIDC_SBMT_ENDT
+					,B.OPNG_DT
+		FROM	T_BI_MST A
+					,T_BI_ROUND B
+		WHERE	A.ANNC_NO = B.ANNC_NO
+		AND		A.ANNC_NGR = B.ANNC_NGR
+		AND		A.BID_PSCD != 'PF02'	
+		AND		NVL(A.DEL_AT, 'N') != 'Y'
+		AND		A.REGR_ID = #{P_USR_ID}
+	</sql>
+	
+	<sql id="BidPblancWhere">
+		<if test='P_BID_NM_S != null and P_BID_NM_S != "" '>
+			AND A.BID_NM LIKE '%'||#{P_BID_NM_S}||'%'
+		</if>
+		<if test='P_ANNC_NO_S != null and P_ANNC_NO_S != "" '>
+			AND A.ANNC_NO = #{P_ANNC_NO_S}
+		</if>
+		<if test='P_CONT_SECD_S != null and P_CONT_SECD_S != "" '>
+			AND A.CONT_SECD = #{P_CONT_SECD_S}
+		</if>
+		<if test='P_BID_PSCD_S != null and P_BID_PSCD_S != "" '>
+			AND A.BID_PSCD = #{P_BID_PSCD_S}
+		</if>
+		<if test='P_ANNC_STDT_S != null and P_ANNC_STDT_S != "" '>
+			AND TO_CHAR(TO_DATE(ANNC_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') >= #{P_ANNC_STDT_S}
+		</if>
+		<if test='P_ANNC_ENDT_S != null and P_ANNC_ENDT_S != "" '>
+			AND TO_CHAR(TO_DATE(ANNC_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') &lt;= #{P_ANNC_ENDT_S}
+		</if>
+	</sql>
+	
+</mapper>

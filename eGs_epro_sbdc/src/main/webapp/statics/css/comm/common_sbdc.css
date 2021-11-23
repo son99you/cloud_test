@@ -1,0 +1,266 @@
+@charset "utf-8";
+
+
+/*****************************************************************************************
+   Web Font
+**************************************************************************************/
+
+/* noto-sans-kr-regular - korean */
+@font-face {
+  font-family: 'Noto Sans KR';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../../../statics/css/font/NotoSans-Regular.eot'); /* IE9 Compat Modes */
+  src: local(''),
+       url('../../../statics/css/font/NotoSans-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../../../statics/css/font/NotoSans-Regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../../../statics/css/font/NotoSans-Regular.woff') format('woff'), /* Modern Browsers */
+       url('../../../statics/css/font/NotoSans-Regular.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('../../../statics/css/font/NotoSans-Regular.svg#NotoSansKR') format('svg'); /* Legacy iOS */
+}
+/* noto-sans-kr-300 - korean */
+@font-face {
+  font-family: 'Noto Sans KR';
+  font-style: normal;
+  font-weight: 300;
+  src: url('../../../statics/css/font/NotoSans-Regular.eot'); /* IE9 Compat Modes */
+  src: local(''),
+       url('../../../statics/css/font/NotoSans-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../../../statics/css/font/NotoSans-Regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../../../statics/css/font/NotoSans-Regular.woff') format('woff'), /* Modern Browsers */
+       url('../../../statics/css/font/NotoSans-Regular.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('../../../statics/css/font/NotoSans-Regular.svg#NotoSansKR') format('svg'); /* Legacy iOS */
+}
+/* noto-sans-kr-500 - korean */
+@font-face {
+  font-family: 'Noto Sans KR';
+  font-style: normal;
+  font-weight: 500;
+  src: url('../../../statics/css/font/NotoSans-Medium.eot'); /* IE9 Compat Modes */
+  src: local(''),
+       url('../../../statics/css/font/NotoSans-Medium.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../../../statics/css/font/NotoSans-Medium.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../../../statics/css/font/NotoSans-Medium.woff') format('woff'), /* Modern Browsers */
+       url('../../../statics/css/font/NotoSans-Medium.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('../../../statics/css/font/NotoSans-Medium.svg#NotoSansKR') format('svg'); /* Legacy iOS */
+}
+/* noto-sans-kr-700 - korean */
+@font-face {
+  font-family: 'Noto Sans KR';
+  font-style: bold;
+  font-weight: 700;
+  src: url('../../../statics/css/font/NotoSans-Bold.eot'); /* IE9 Compat Modes */
+  src: local(''),
+       url('../../../statics/css/font/NotoSans-Bold.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../../../statics/css/font/NotoSans-Bold.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../../../statics/css/font/NotoSans-Bold.woff') format('woff'), /* Modern Browsers */
+       url('../../../statics/css/font/NotoSans-Bold.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('../../../statics/css/font/NotoSans-Bold.svg#NotoSansKR') format('svg'); /* Legacy iOS */
+}
+
+
+/*************************************************************
+    기본설정
+ *************************************************************/
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight:normal;
+    box-sizing:border-box;
+    letter-spacing:-0.5px;
+    line-height:1em;
+}
+
+*:focus {
+    outline: none;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+    background-color: #F0F1F5;
+}
+
+body, p, h1, h2, h3, h4, h5, h6, ul, ol, li, dl, dt, dd, table, th, td, form, fieldset, legend, input, textarea, button, select {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    color: #000;
+}
+hr {border:none;}
+
+body {
+    font-size: 16px;
+    background-color: #F0F1F5;
+}
+
+header, footer, nav {
+    display: block;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+img, button {
+    border: 0 none;
+    font-family:'Noto Sans KR', sans-serif;
+    font-weight:normal;
+}
+
+table {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+label {
+    margin-bottom:0;
+}
+
+em {
+    font-style: normal;
+}
+
+a, u, a:hover {
+    text-decoration: none;
+    color: #000;
+}
+
+a {
+    outline: 0;
+}
+
+textarea {
+    resize: none;
+}
+
+input[type="radio"] {
+	margin: 0;
+}
+input, select, textarea {
+    outline: none;
+    box-shadow: none;
+}
+select::-ms-expand{ display:none;}
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+button {outline:0;}
+
+button {
+    cursor: pointer;
+    background-color:#fff;
+}
+
+button:focus {
+    outline: none;
+}
+
+br {
+    opacity:0;
+}
+
+/*************************************************************
+    Header
+ *************************************************************/
+.layout-header {height:317px; background:url(../../../statics/images/comm/bg_header.png) no-repeat; background-size:100% auto;}
+.layout-header .wrap-header {width:1300px; margin:0 auto; overflow:hidden;}
+.layout-header .img-logo {display:inline-block; float:left; margin:42px 0 0 0; width:271px; height:49px; background:url(../../../statics/images/comm/img_logo.png)no-repeat;}
+.layout-header .header-menu {float:right;}
+.layout-header .list-menu {padding:58px 0 0 0;overflow:hidden;}
+.layout-header .list-menu li {float:left; padding-left:56px;}
+.layout-header .list-menu li a {display:inline-block;  font-size:16px; font-weight:500;color:#fff;}
+.layout-header .list-menu li .on {color: #469EFF;}
+.layout-header .list-menu li a:hover {color: #469EFF;}
+
+
+/*************************************************************
+    Header-main
+ *************************************************************/
+.layout-mheader {height:317px; background:url(../../../statics/images/comm/bg_header.png) no-repeat; background-size:100% auto;}
+.layout-mheader .wrap-header {width:1100px; margin:0 auto; overflow:hidden;}
+.layout-mheader .img-logo {display:inline-block; float:left; margin:42px 0 0 0; width:271px; height:49px; background:url(../../../statics/images/comm/img_logo.png)no-repeat;}
+.layout-mheader .header-menu {float:right;}
+.layout-mheader .list-menu {padding:58px 0 0 0;overflow:hidden;}
+.layout-mheader .list-menu li {float:left; padding-left:56px;}
+.layout-mheader .list-menu li a {display:inline-block;  font-size:16px; font-weight:500;color:#fff;}
+
+/*************************************************************
+    Contents
+ *************************************************************/
+.layout-contents {position:relative; margin:-168px auto 0 auto; width:1300px; }
+.layout-contents .ui-contents + .ui-contents {margin:21px 0 0 0;}
+.layout-contents .ui-contents:after {display:table; clear:both; content:'';}
+
+
+/*************************************************************
+    Contents-main
+ *************************************************************/
+.layout-mcontents {position:relative; margin:-168px auto 0 auto; width:1100px; }
+.layout-mcontents .ui-contents + .ui-contents {margin:21px 0 0 0;}
+.layout-mcontents .ui-contents:after {display:table; clear:both; content:'';}
+
+
+/*************************************************************
+    popup
+ *************************************************************/
+.layout-pop {padding: 20px; min-width: 500px;}
+.layout-pop .pop_header {padding-bottom: 6px; border-bottom: 1px solid #231f20; margin-bottom: 30px;}
+.layout-pop .pop_header .title {font-size: 18px; line-height: 24px; font-weight: 600; color: #231F20;}
+
+.txt_file {margin-right:2px; font-size: 17px;line-height: 23px; font-size: 13px;color: #231F20;}
+
+/*************************************************************
+    Footer
+ *************************************************************/
+.layout-footer {width:1300px; margin:0 auto; padding:69px 0 50px 0; overflow:hidden;}
+.layout-footer .footer-logo {display:inline-block; float:left; margin-right:24px; width:196px; height:36px; background:url(../../../statics/images/comm/icon_footer_logo.png) no-repeat;mix-blend-mode: luminosity;}
+.txt-footer {float:left; font-weight: 500; font-size: 11px; line-height: 10px; color: #8D8B8B;}
+.txt-footer .txt-copy {margin:10px 0 0 0;}
+.btn-download {display:inline-block; margin:-20px 0 0 0;padding:20px 0; float:right; width: 190px;
+    background: #DFE8F9;border-radius: 4px;font-size: 13px; line-height: 10px;color: #1455A9; font-weight: 500;}
+.btn-download:before {display:inline-block; margin:-5px 7px 0 0; width:17px; height:18px; background:url(../../../statics/images/comm/icon_download.png) no-repeat; content:'';
+    vertical-align: top;}
+
+
+/*************************************************************
+    Footer-main
+ *************************************************************/
+
+.layout-footer {width:1100px; margin:0 auto; padding:69px 0 50px 0; overflow:hidden;}
+.layout-footer .footer-logo {display:inline-block; float:left; margin-right:24px; width:196px; height:36px; background:url(../../../statics/images/comm/icon_footer_logo.png) no-repeat;mix-blend-mode: luminosity;}
+.txt-footer {float:left; font-weight: 500; font-size: 11px; line-height: 10px; color: #8D8B8B;}
+.txt-footer .txt-copy {margin:10px 0 0 0;}
+.btn-download {display:inline-block; margin:-20px 0 0 0;padding:20px 0; float:right; width: 190px;
+    background: #DFE8F9;border-radius: 4px;font-size: 13px; line-height: 10px;color: #1455A9; font-weight: 500;}
+.btn-download:before {display:inline-block; margin:-5px 7px 0 0; width:17px; height:18px; background:url(../../../statics/images/comm/icon_download.png) no-repeat; content:'';
+    vertical-align: top;}
+
+
+
+/*************************************************************
+    상세보기 필터 모양추가
+ *************************************************************/
+.filter_sch {position:relative;margin-top:60px;}
+.filter_sch > dl {display:none;}
+.filter_sch > dl.first,
+.filter_sch.view > dl {display:flex;}
+.filter_sch .filter_btn {position:absolute;right:0;top:-30px;font-size:14px;color:#c20073;line-height:20px;}
+.filter_sch .filter_btn:before {content:"";display:inline-block;width:20px;height:20px;margin-right:5px;background:url(../../../statics/images/icon/ico_filter.png) no-repeat left center;vertical-align:top;transition:background 0.4s;}
+.filter_sch.view .filter_btn:before {background:url(../../../statics/images/icon/ico_filter_on.png) no-repeat left center;}
+.filter_sch > dl > dt {width:11%;}
+.filter_sch > dl > dd {width:calc(67%/3);}
+.filter_sch > dl > dd.date {width:39%;}
+
+
+

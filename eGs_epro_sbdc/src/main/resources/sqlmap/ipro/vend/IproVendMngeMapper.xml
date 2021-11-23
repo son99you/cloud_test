@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * sqlmap.ipro.vend
+ * IproVendMngeMapper.xml
+ * 
+ * @Author : jandi_Eun
+ * @Date   : 2018. 2. 19.
+ * 
+ -->
+ 
+ <mapper namespace="com.eunwoosoft.ipro.vend.dao.IproVendMngeDao">
+ 
+ 	<!-- 
+	 * 1. 개요 : 협력사현황 목록
+	 * 2. 처리내용 : 
+	 *  	
+	 * @Query ID : selectVendMngeListInqireWithPgng
+	 * @date : 2018. 2. 20.
+	 * @author : jandi_Eun
+	 -->
+ 	<select id="selectVendMngeListInqireWithPgng" resultType="dataEntity">
+ 		<include refid="ComPgng.pgngHeaderClause"/>
+		
+		SELECT * FROM (
+		<include refid="vendMngeList"/>
+		<include refid="vendMngeListWhere"/>
+		ORDER BY PRTNR_KOREAN_NM
+		) T1
+		WHERE 1 = 1
+ 		
+ 		<include refid="ComPgng.pgngTailClause"/>
+ 	</select>
+ 	
+ 	<!-- 
+	 * 1. 개요 : 협력사현황 목록 총 건수
+	 * 2. 처리내용 : 
+	 *  	
+	 * @Query ID : selectVendMngeListTotcnt
+	 * @date : 2018. 2. 20.
+	 * @author : jandi_Eun
+	 -->
+ 	<select id="selectVendMngeListTotcnt" resultType="int">
+ 		SELECT COUNT(1) FROM (
+			<include refid="vendMngeList"/>
+			<include refid="vendMngeListWhere"/>
+		) T1
+ 	</select>
+ 	
+ 	<sql id="vendMngeList">
+	 	SELECT * FROM (
+	 		SELECT PRTNR_KOREAN_NM
+					, BIZRNO
+					, ENTRPS_REGIST_NO
+					, RPRSNTV_NM
+					, REGIST_DT
+					, CRTFC_AT
+					, VALID_END_DE
+					, CCN_SPHE
+					, SUBSTR(CCN_SPHE, 1, 1) AS CCN_SPHE_1
+					, SUBSTR(CCN_SPHE, 2, 1) AS CCN_SPHE_2
+					, SUBSTR(CCN_SPHE, 3, 1) AS CCN_SPHE_3
+					, SUBSTR(CCN_SPHE, 4, 1) AS CCN_SPHE_4
+					, SUBSTR(CCN_SPHE, 5, 1) AS CCN_SPHE_5
+			FROM TMUR_ENPA
+		)
+ 	</sql>
+ 	
+ 	<sql id="vendMngeListWhere">
+ 		<where>
+ 			<if test='P_PRTNR_KOREAN_NM_S != null and P_PRTNR_KOREAN_NM_S != "" '>
+				AND PRTNR_KOREAN_NM LIKE '%'||#{P_PRTNR_KOREAN_NM_S}||'%'
+			</if>
+ 			<if test='P_BIZRNO_S != null and P_BIZRNO_S != "" '>
+				AND BIZRNO LIKE '%'||#{P_BIZRNO_S}||'%'
+			</if>
+			<if test='P_REGIST_BEGIN_DT_S != null and P_REGIST_BEGIN_DT_S != "" '>
+				AND TO_CHAR(TO_DATE(REGIST_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') >= #{P_REGIST_BEGIN_DT_S}
+			</if>
+			<if test='P_REGIST_END_DT_S != null and P_REGIST_END_DT_S != "" '>
+				AND TO_CHAR(TO_DATE(REGIST_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') &lt;= #{P_REGIST_END_DT_S}
+			</if>
+			
+			<if test='P_CCN_SPHE_1_S != null and P_CCN_SPHE_1_S != "" '>
+				AND CCN_SPHE_1 = #{P_CCN_SPHE_1_S}
+			</if>
+			<if test='P_CCN_SPHE_2_S != null and P_CCN_SPHE_2_S != "" '>
+				AND CCN_SPHE_2 = #{P_CCN_SPHE_2_S}
+			</if>
+			<if test='P_CCN_SPHE_3_S != null and P_CCN_SPHE_3_S != "" '>
+				AND CCN_SPHE_3 = #{P_CCN_SPHE_3_S}
+			</if>
+			<if test='P_CCN_SPHE_4_S != null and P_CCN_SPHE_4_S != "" '>
+				AND CCN_SPHE_4 = #{P_CCN_SPHE_4_S}
+			</if>
+			<if test='P_CCN_SPHE_5_S != null and P_CCN_SPHE_5_S != "" '>
+				AND CCN_SPHE_5 = #{P_CCN_SPHE_5_S}
+			</if>
+ 		</where>
+ 	</sql>
+ 	
+ 	<!-- 
+	 * 1. 개요 : 업체등록번호 조회
+	 * 2. 처리내용 : 
+	 *  	
+	 * @Query ID : selectEntrpsRegistNoMax
+	 * @date : 2018. 2. 20.
+	 * @author : jandi_Eun
+	 -->
+ 	<select id="selectEntrpsRegistNoMax" resultType="dataEntity">
+ 		SELECT TO_CHAR(SYSDATE, 'yyyy')||'-'||LPAD(NVL(MAX(SUBSTR(ENTRPS_REGIST_NO,6,4)),0)+1, 4,0)  AS ENTRPS_REGIST_NO
+		FROM TMUR_ENPA
+		WHERE TO_CHAR(SYSDATE, 'yyyy') = SUBSTR(ENTRPS_REGIST_NO, 0, 4)
+ 	</select>
+ 	
+ 	<select id="selectSgCodeName" resultType="dataEntity">
+ 		SELECT CD_VALUE_NM
+		FROM TMDM_CODECO
+		WHERE CD_ID = 'N00001'
+		AND CD_VALUE = #{P_GET_SG_CODE , jdbcType=VARCHAR}
+ 	</select>
+ 
+	 <!-- 
+	 * 1. 개요 : 협력사등록
+	 * 2. 처리내용 : 
+	 *  	
+	 * @Query ID : insertVendMngeRegist
+	 * @date : 2018. 2. 19.
+	 * @author : jandi_Eun
+	 -->
+	 <insert id="insertVendMngeRegist">
+	 	INSERT INTO TMUR_ENPA ( 
+ 				BIZRNO
+				, INSTT_CD
+				, ENTRPS_TY_CD
+				, ENTRPS_CHARCT_CD
+				, BSNS_STLE_CD
+				, OPBIZ_DE
+				, JURIRNO
+				, CPR_FOND_DE
+				, BIZCND_NM
+				, INDUTY_NM
+				, RPRSNTV_NM
+				, FAX_TELNO
+				, HMPG_URL
+				, REGISTER_ID
+				, REGIST_DT
+				, UPDUSR_ID
+				, UPDT_DT
+				, DELETE_AT
+				, PRTNR_TY_SE_CD
+				, PRTNR_KOREAN_NM
+				, PRTNR_ENG_NM
+				, TELNO
+				, EMAIL_ADRES
+				, EMAIL_RECPTN_AT
+				, ZIP
+				, RN_ADRES
+				, LNM_ADRES
+				, DETAIL_ADRES
+				, CONFM_DE
+				, CONFMER_ID
+				, CRTFC_AT
+				, CRTFC_TY_CD
+				, CRTFCT_ESNTL_VALUE
+				, ATCHMNFL_GROUP_NO
+				, VALID_BEGIN_DE
+				, VALID_END_DE
+				, ENTRPS_REGIST_NO 
+				, CRDT_RNK
+				, MMBR_CNT
+				, CMP_LCTN
+				, CRDT_ESTM_CMPY
+				, CCN_SPHE
+				, TCHN_SPHE
+				
+	 	) VALUES (
+	 				#{P_BIZRNO, jdbcType=VARCHAR}
+				, #{P_INSTT_CD, jdbcType=VARCHAR}
+				, #{P_ENTRPS_TY_CD, jdbcType=VARCHAR}
+				, #{P_ENTRPS_CHARCT_CD, jdbcType=VARCHAR}
+				, #{P_BSNS_STLE_CD, jdbcType=VARCHAR}
+				, #{P_OPBIZ_DE, jdbcType=VARCHAR}
+				, #{P_JURIRNO, jdbcType=VARCHAR}
+				, #{P_CPR_FOND_DE, jdbcType=VARCHAR}
+				, #{P_BIZCND_NM, jdbcType=VARCHAR}
+				, #{P_INDUTY_NM, jdbcType=VARCHAR}
+				, #{P_RPRSNTV_NM, jdbcType=VARCHAR}
+				, #{P_FAX_TELNO, jdbcType=VARCHAR}
+				, #{P_HMPG_URL, jdbcType=VARCHAR}
+				, #{P_REGISTER_ID, jdbcType=VARCHAR}
+				, #{P_REGIST_DT, jdbcType=VARCHAR}
+				, #{P_UPDUSR_ID, jdbcType=VARCHAR}
+				, #{P_UPDT_DT, jdbcType=VARCHAR}
+				, #{P_DELETE_AT, jdbcType=VARCHAR}
+				, #{P_PRTNR_TY_SE_CD, jdbcType=VARCHAR}
+				, #{P_PRTNR_KOREAN_NM, jdbcType=VARCHAR}
+				, #{P_PRTNR_ENG_NM, jdbcType=VARCHAR}
+				, #{P_TELNO, jdbcType=VARCHAR}
+				, #{P_EMAIL_ADRES, jdbcType=VARCHAR}
+				, #{P_EMAIL_RECPTN_AT, jdbcType=VARCHAR}
+				, #{P_ZIP, jdbcType=VARCHAR}
+				, #{P_RN_ADRES, jdbcType=VARCHAR}
+				, #{P_LNM_ADRES, jdbcType=VARCHAR}
+				, #{P_DETAIL_ADRES, jdbcType=VARCHAR}
+				, #{P_CONFM_DE, jdbcType=VARCHAR}
+				, #{P_CONFMER_ID, jdbcType=VARCHAR}
+				, #{P_CRTFC_AT, jdbcType=VARCHAR}
+				, #{P_CRTFC_TY_CD, jdbcType=VARCHAR}
+				, #{P_CRTFCT_ESNTL_VALUE, jdbcType=VARCHAR}
+				, #{P_ATCHMNFL_GROUP_NO, jdbcType=VARCHAR}
+				, #{P_VALID_BEGIN_DE, jdbcType=VARCHAR}
+				, #{P_VALID_END_DE, jdbcType=VARCHAR}
+				, #{P_ENTRPS_REGIST_NO, jdbcType=VARCHAR}
+				, #{P_CRDT_RNK, jdbcType=VARCHAR}
+				, #{P_MMBR_CNT, jdbcType=INTEGER}
+				, #{P_CMP_LCTN, jdbcType=VARCHAR}
+				, #{P_CRDT_ESTM_CMPY, jdbcType=VARCHAR}
+				, #{P_CCN_SPHE, jdbcType=VARCHAR}
+				, #{P_TCHN_SPHE, jdbcType=VARCHAR}
+	 	)
+	 </insert>
+	 
+	 <insert id="insertVendMngeBankRegist">
+	 	INSERT INTO T_CO_BANK (
+	 		ENTRPS_REGIST_NO
+			, BNK_SN
+			, ACNO
+			, BNK_NM
+			, BRNC_NM
+			, DPSO_NM
+	 	) VALUES (
+	 		#{P_ENTRPS_REGIST_NO, jdbcType=VARCHAR}
+			, #{P_BNK_SN, jdbcType=INTEGER}
+			, ENCRYPT_VAR('AES256', #{P_ACNO, jdbcType=VARCHAR}, '')
+			, #{P_BNK_NM, jdbcType=VARCHAR}
+			, #{P_BRNC_NM, jdbcType=VARCHAR}
+			, #{P_DPSO_NM, jdbcType=VARCHAR}
+		 	)
+	 </insert>
+	 
+	 <insert id="insertVendMngeSgCodeRegist">
+		 INSERT INTO T_CO_VENDOR_SG (
+		 		ENTRPS_REGIST_NO
+				, SG_SEQ
+				, SG_CODE
+				, SG_NAME
+				, MAIN_SG
+		) VALUES (
+			#{P_ENTRPS_REGIST_NO, jdbcType=VARCHAR}
+			, #{P_SG_SEQ, jdbcType=INTEGER}
+			, #{P_SG_CODE, jdbcType=VARCHAR}
+			, #{P_SG_NAME, jdbcType=VARCHAR}
+			, #{P_MAIN_SG, jdbcType=VARCHAR}
+		)
+	 </insert>
+	 
+	 <insert id="insertVendMngeUserRegist">
+	 	<selectKey keyProperty="P_USER_ID" resultType="int" order="BEFORE">
+			SELECT NVL(MAX(TO_NUMBER(USER_ID))+1, 1)
+			FROM T_CO_VENDOR_USER
+		</selectKey>
+	 	INSERT INTO T_CO_VENDOR_USER (
+	 			USER_ID
+				, ENTRPS_REGIST_NO
+				, USER_PWD
+				, USER_NAME
+				, USER_TEL
+				, USER_HP
+				, USER_EMAIL
+				, USER_TYPE
+				, DEPT_NAME
+				, USER_POSITION
+				, GROUP_ID
+	 	) VALUES (
+ 			#{P_USER_ID, jdbcType=VARCHAR}
+			, #{P_ENTRPS_REGIST_NO, jdbcType=VARCHAR}
+			, #{P_USER_PWD, jdbcType=VARCHAR}
+			, #{P_USER_NAME, jdbcType=VARCHAR}
+			, #{P_USER_TEL, jdbcType=VARCHAR}
+			, #{P_USER_HP, jdbcType=VARCHAR}
+			, #{P_USER_EMAIL, jdbcType=VARCHAR}
+			, #{P_USER_TYPE, jdbcType=VARCHAR}
+			, #{P_DEPT_NAME, jdbcType=VARCHAR}
+			, #{P_USER_POSITION, jdbcType=VARCHAR}
+			, #{P_GROUP_ID, jdbcType=INTEGER}
+	 	)
+	 </insert>
+	 
+	 <insert id="insertVendMngeItemRegist">
+	 	INSERT INTO T_CO_ITEM(
+	 			ENTRPS_REGIST_NO
+				, ITEM_SN
+				, ITEM_NO
+				, LLF_NM
+				, MLF_NM
+				, SLF_NM
+				, ITEM_NM
+				, PRICE
+	 	) VALUES (
+		 	#{P_ENTRPS_REGIST_NO, jdbcType=VARCHAR}
+			, #{P_ITEM_SN, jdbcType=INTEGER}
+			, #{P_ITEM_NO, jdbcType=VARCHAR}
+			, #{P_LLF_NM, jdbcType=VARCHAR}
+			, #{P_MLF_NM, jdbcType=VARCHAR}
+			, #{P_SLF_NM, jdbcType=VARCHAR}
+			, #{P_ITEM_NM, jdbcType=VARCHAR}
+			, #{P_PRICE, jdbcType=INTEGER}
+	 	)
+	 </insert>
+	 
+	 <insert id="insertVendMngeCttAcqsRegist">
+	 	INSERT INTO T_CO_CTT_ACQS(
+	 			ENTRPS_REGIST_NO
+				, ACQS_SN
+				, CTT_NM
+				, ACQS_DE
+				, ACQS_AGNC
+	 	) VALUES (
+	 		#{P_ENTRPS_REGIST_NO, jdbcType=VARCHAR}
+			, #{P_ACQS_SN, jdbcType=INTEGER}
+			, #{P_CTT_NM, jdbcType=VARCHAR}
+			, #{P_ACQS_DE, jdbcType=VARCHAR}
+			, #{P_ACQS_AGNC, jdbcType=VARCHAR}
+	 	)
+	 </insert>
+	 
+	 <insert id="insertVendMngeFileRegist">
+	 	INSERT INTO T_CO_VENDOR_FILE(
+		 		ENTRPS_REGIST_NO
+				, DOC_SE_CD
+				, ATCHMNFL_GROUP_NO
+				, DOC_NM
+	 	) VALUES (
+		 	#{P_ENTRPS_REGIST_NO, jdbcType=VARCHAR}
+			, #{P_DOC_SE_CD, jdbcType=VARCHAR}
+			, #{P_ATCHMNFL_GROUP_NO, jdbcType=VARCHAR}
+			, #{P_DOC_NM, jdbcType=VARCHAR}
+	 	)
+	 </insert>
+	 
+	 <select id="selectVendMngeDetail" resultType="dataEntity">
+		 SELECT T.BIZRNO
+				 	, SUBSTR(T.BIZRNO, 1, 3) AS BIZRNO_1
+					, SUBSTR(T.BIZRNO, 4, 2) AS BIZRNO_2
+					, SUBSTR(T.BIZRNO, 6, 5) AS BIZRNO_3
+					, T.INSTT_CD
+					, T.ENTRPS_TY_CD
+					, T.ENTRPS_CHARCT_CD
+					, T.BSNS_STLE_CD
+					, T.OPBIZ_DE
+					, T.JURIRNO
+					, T.CPR_FOND_DE
+					, T.BIZCND_NM
+					, T.INDUTY_NM
+					, T.RPRSNTV_NM
+					, T.FAX_TELNO
+					, T.HMPG_URL
+					, T.REGISTER_ID
+					, T.REGIST_DT
+					, T.UPDUSR_ID
+					, T.UPDT_DT
+					, T.DELETE_AT
+					, T.PRTNR_TY_SE_CD
+					, F_CDVAL_INQIRE(20005, T.PRTNR_TY_SE_CD ) AS PRTNR_TY_SE_NM 
+					, T.PRTNR_KOREAN_NM
+					, T.PRTNR_ENG_NM
+					, T.TELNO
+					, T.EMAIL_ADRES
+					, T.EMAIL_RECPTN_AT
+					, T.ZIP
+					, T.RN_ADRES
+					, T.LNM_ADRES
+					, T.DETAIL_ADRES
+					, T.CONFM_DE
+					, T.CONFMER_ID
+					, T.CRTFC_AT
+					, T.CRTFC_TY_CD
+					, T.CRTFCT_ESNTL_VALUE
+					, T.ATCHMNFL_GROUP_NO
+					, T.VALID_BEGIN_DE
+					, T.VALID_END_DE
+					, T.ENTRPS_REGIST_NO
+					, T.CRDT_RNK
+					, T.MMBR_CNT
+					, T.CMP_LCTN
+					, T.CRDT_ESTM_CMPY
+					, T.CCN_SPHE
+					, SUBSTR(T.CCN_SPHE, 1, 1) AS CCN_SPHE_1
+					, SUBSTR(T.CCN_SPHE, 2, 1) AS CCN_SPHE_2
+					, SUBSTR(T.CCN_SPHE, 3, 1) AS CCN_SPHE_3
+					, SUBSTR(T.CCN_SPHE, 4, 1) AS CCN_SPHE_4
+					, SUBSTR(T.CCN_SPHE, 5, 1) AS CCN_SPHE_5
+					, T.TCHN_SPHE
+					, SUBSTR(T.TCHN_SPHE, 1, 1) AS TCHN_SPHE_1
+					, SUBSTR(T.TCHN_SPHE, 2, 1) AS TCHN_SPHE_2
+					, SUBSTR(T.TCHN_SPHE, 3, 1) AS TCHN_SPHE_3
+					, SUBSTR(T.TCHN_SPHE, 4, 1) AS TCHN_SPHE_4
+					, SUBSTR(T.TCHN_SPHE, 5, 1) AS TCHN_SPHE_5
+					, SUBSTR(T.TCHN_SPHE, 6, 1) AS TCHN_SPHE_6
+					, SUBSTR(T.TCHN_SPHE, 7, 1) AS TCHN_SPHE_7
+					, SUBSTR(T.TCHN_SPHE, 8, 1) AS TCHN_SPHE_8
+					, SUBSTR(T.TCHN_SPHE, 9, 1) AS TCHN_SPHE_9
+					, SUBSTR(T.TCHN_SPHE, 10, 1) AS TCHN_SPHE_10
+					, SUBSTR(T.TCHN_SPHE, 11, 1) AS TCHN_SPHE_11
+					, SUBSTR(T.TCHN_SPHE, 12, 1) AS TCHN_SPHE_12
+					, SUBSTR(T.TCHN_SPHE, 13, 1) AS TCHN_SPHE_13
+					, SUBSTR(T.TCHN_SPHE, 14, 1) AS TCHN_SPHE_14
+					, SUBSTR(T.TCHN_SPHE, 15, 1) AS TCHN_SPHE_15
+					, SUBSTR(T.TCHN_SPHE, 16, 1) AS TCHN_SPHE_16
+					, SUBSTR(T.TCHN_SPHE, 17, 1) AS TCHN_SPHE_17
+					, SUBSTR(T.TCHN_SPHE, 18, 1) AS TCHN_SPHE_18
+					, DECRYPT_VAR('AES256', B.ACNO, '') AS ACNO
+					, B.BNK_NM
+					, B.BRNC_NM
+					, B.DPSO_NM
+		FROM TMUR_ENPA T
+				, T_CO_BANK B
+		WHERE T.ENTRPS_REGIST_NO = B.ENTRPS_REGIST_NO(+)
+		AND T.ENTRPS_REGIST_NO = #{P_ENTRPS_REGIST_NO , jdbcType=VARCHAR}
+	 </select>
+	 
+	 <select id="selectVendMngeSgCodeList" resultType="dataEntity">
+	 	SELECT SG_SEQ
+				 	, SG_CODE
+				 	, SG_NAME
+	 				, MAIN_SG
+	 	FROM T_CO_VENDOR_SG
+	 	WHERE ENTRPS_REGIST_NO = #{P_ENTRPS_REGIST_NO , jdbcType=VARCHAR}
+	 </select>
+	 
+	 <select id="selectVendMngeUserList" resultType="dataEntity">
+		 SELECT USER_ID
+				, ENTRPS_REGIST_NO
+				, USER_PWD
+				, USER_NAME
+				, USER_TEL
+				, USER_HP
+				, USER_EMAIL
+				, USER_TYPE
+				, DEPT_NAME
+				, USER_POSITION
+				, GROUP_ID
+		FROM T_CO_VENDOR_USER
+		WHERE ENTRPS_REGIST_NO = #{P_ENTRPS_REGIST_NO , jdbcType=VARCHAR}
+	 </select>
+	 
+	 <select id="selectVendMngeItemList" resultType="dataEntity">
+	 	SELECT ENTRPS_REGIST_NO
+					, ITEM_SN
+					, ITEM_NO
+					, LLF_NM
+					, MLF_NM
+					, SLF_NM
+					, ITEM_NM
+					, PRICE
+		FROM T_CO_ITEM
+		WHERE ENTRPS_REGIST_NO = #{P_ENTRPS_REGIST_NO , jdbcType=VARCHAR} 
+	 </select>
+	 
+	 <select id="selectVendMngeCttAcqsList" resultType="dataEntity">
+	 	SELECT ENTRPS_REGIST_NO
+					, ACQS_SN
+					, CTT_NM
+					, ACQS_DE
+					, ACQS_AGNC
+		FROM T_CO_CTT_ACQS
+		WHERE ENTRPS_REGIST_NO = #{P_ENTRPS_REGIST_NO , jdbcType=VARCHAR}
+	 </select>
+	 
+	 <select id="selectVendMngeFile" resultType="dataEntity">
+	 	SELECT ATCHMNFL_GROUP_NO
+	 	FROM T_CO_VENDOR_FILE
+	 	WHERE ENTRPS_REGIST_NO = #{P_ENTRPS_REGIST_NO , jdbcType=VARCHAR}
+	 	AND DOC_SE_CD = #{P_DOC_SE_CD , jdbcType=VARCHAR}
+	 </select>
+	 
+	 <select id="selectVendMngeCntrctList" resultType="dataEntity">
+	 	SELECT M.CNTRCT_NO
+					, M.CHANGE_ODR
+					, M.CNTRCT_NM
+					, M.CNTRCT_AMOUNT
+					, M.CNTRCT_DE
+					, M.CNTRCTPD_BEGIN_DE
+					, M.CNTRCTPD_END_DE
+		FROM TECT_COMA M
+				, TECT_COEN C
+		WHERE 1=1
+		AND M.CNTRCT_NO = C.CNTRCT_NO
+		AND M.CHANGE_ODR = C.CHANGE_ODR
+		AND C.ENTRPS_REGIST_NO = #{P_ENTRPS_REGIST_NO , jdbcType=VARCHAR}
+	 </select>
+	 
+	 <select id="selectVendMngeEbidList" resultType="dataEntity">
+	 	SELECT B.PBLANC_NO
+					, B.PBLANC_ODR
+					, B.BID_NM
+					, T.PBLANC_DT
+					, E.ENTRPS_REGIST_NO
+					, E.SCSBID_AT
+		FROM TEBI_BIPLMA B
+				, TEBI_ENOP E 
+				, TEBI_BITI T
+		WHERE 1=1
+		AND B.PBLANC_NO = E.PBLANC_NO
+		AND B.PBLANC_ODR = E.PBLANC_ODR   
+		AND B.PBLANC_NO = T.PBLANC_NO
+		AND B.PBLANC_ODR = T.PBLANC_ODR   
+		AND E.ENTRPS_REGIST_NO = #{P_ENTRPS_REGIST_NO , jdbcType=VARCHAR}
+	 </select>
+	 
+	 <update id="updateVendMngeUpdt">
+	 	UPDATE TMUR_ENPA 
+	 	SET INSTT_CD = #{P_INSTT_CD, jdbcType=VARCHAR}
+			, ENTRPS_TY_CD = #{P_ENTRPS_TY_CD, jdbcType=VARCHAR}
+			, ENTRPS_CHARCT_CD  = #{P_ENTRPS_CHARCT_CD, jdbcType=VARCHAR}
+			, BSNS_STLE_CD = #{P_BSNS_STLE_CD, jdbcType=VARCHAR}
+			, OPBIZ_DE = #{P_OPBIZ_DE, jdbcType=VARCHAR}
+			, JURIRNO = #{P_JURIRNO, jdbcType=VARCHAR}
+			, CPR_FOND_DE = #{P_CPR_FOND_DE, jdbcType=VARCHAR}
+			, BIZCND_NM = #{P_BIZCND_NM, jdbcType=VARCHAR}
+			, INDUTY_NM = #{P_INDUTY_NM, jdbcType=VARCHAR}
+			, RPRSNTV_NM = #{P_RPRSNTV_NM, jdbcType=VARCHAR}
+			, FAX_TELNO = #{P_FAX_TELNO, jdbcType=VARCHAR}
+			, HMPG_URL = #{P_HMPG_URL, jdbcType=VARCHAR}
+			, UPDUSR_ID = #{P_UPDUSR_ID, jdbcType=VARCHAR}
+			, UPDT_DT = #{P_UPDT_DT, jdbcType=VARCHAR}
+			, DELETE_AT = #{P_DELETE_AT, jdbcType=VARCHAR}
+			, PRTNR_TY_SE_CD = #{P_PRTNR_TY_SE_CD, jdbcType=VARCHAR}
+			, PRTNR_ENG_NM = #{P_PRTNR_ENG_NM, jdbcType=VARCHAR}
+			, TELNO = #{P_TELNO, jdbcType=VARCHAR}
+			, EMAIL_ADRES = #{P_EMAIL_ADRES, jdbcType=VARCHAR}
+			, EMAIL_RECPTN_AT = #{P_EMAIL_RECPTN_AT, jdbcType=VARCHAR}
+			, ZIP = #{P_ZIP, jdbcType=VARCHAR}
+			, RN_ADRES = #{P_RN_ADRES, jdbcType=VARCHAR}
+			, LNM_ADRES = #{P_LNM_ADRES, jdbcType=VARCHAR}
+			, DETAIL_ADRES = #{P_DETAIL_ADRES, jdbcType=VARCHAR}
+			, CONFM_DE = #{P_CONFM_DE, jdbcType=VARCHAR}
+			, CONFMER_ID = #{P_CONFMER_ID, jdbcType=VARCHAR}
+			, CRTFC_AT = #{P_CRTFC_AT, jdbcType=VARCHAR}
+			, CRTFC_TY_CD = #{P_CRTFC_TY_CD, jdbcType=VARCHAR}
+			, CRTFCT_ESNTL_VALUE = #{P_CRTFCT_ESNTL_VALUE, jdbcType=VARCHAR}
+			, ATCHMNFL_GROUP_NO = #{P_ATCHMNFL_GROUP_NO, jdbcType=VARCHAR}
+			, VALID_BEGIN_DE = #{P_VALID_BEGIN_DE, jdbcType=VARCHAR}
+			, VALID_END_DE = #{P_VALID_END_DE, jdbcType=VARCHAR}
+			, CRDT_RNK = #{P_CRDT_RNK, jdbcType=VARCHAR}
+			, MMBR_CNT = #{P_MMBR_CNT, jdbcType=INTEGER}
+			, CMP_LCTN = #{P_CMP_LCTN, jdbcType=VARCHAR}
+			, CRDT_ESTM_CMPY = #{P_CRDT_ESTM_CMPY, jdbcType=VARCHAR}
+			, CCN_SPHE = #{P_CCN_SPHE, jdbcType=VARCHAR}
+			, TCHN_SPHE = #{P_TCHN_SPHE , jdbcType=VARCHAR}
+	 	WHERE ENTRPS_REGIST_NO = #{P_ENTRPS_REGIST_NO , jdbcType=VARCHAR}
+	 </update>
+	 
+	 <delete id="deleteVendMngeBank">
+	 	DELETE FROM T_CO_BANK
+		WHERE ENTRPS_REGIST_NO = #{P_ENTRPS_REGIST_NO , jdbcType=VARCHAR}
+	 </delete>
+	 
+	 <delete id="deleteVendMngeSgCode">
+	 	DELETE FROM T_CO_VENDOR_SG
+		WHERE ENTRPS_REGIST_NO = #{P_ENTRPS_REGIST_NO , jdbcType=VARCHAR}
+	 </delete>
+	 
+	 <delete id="deleteVendMngeUser">
+	 	DELETE FROM T_CO_VENDOR_USER
+		WHERE ENTRPS_REGIST_NO = #{P_ENTRPS_REGIST_NO , jdbcType=VARCHAR}
+	 </delete>
+	 
+	 <delete id="deleteVendMngeItem">
+	 	DELETE FROM T_CO_ITEM
+		WHERE ENTRPS_REGIST_NO = #{P_ENTRPS_REGIST_NO , jdbcType=VARCHAR}
+	 </delete>
+	 
+	 <delete id="deleteVendMngeCttAcqs">
+	 	DELETE FROM T_CO_CTT_ACQS
+		WHERE ENTRPS_REGIST_NO = #{P_ENTRPS_REGIST_NO , jdbcType=VARCHAR}
+	 </delete>
+	 
+	 
+ 
+ </mapper>

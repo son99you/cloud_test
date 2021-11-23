@@ -1,0 +1,1429 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * 전자입찰 > 입찰결과 Mapper
+ *
+ * <pre>
+ * sqlmap.oda.iep.elbi 
+ *    |_ IepElbiBidResultMapper.xml
+ * 
+ * </pre>
+ * @date : 2015. 04. 02. 오후 1:34:33
+ * @version : 1.0
+ * @author : 은우소프트 손연우
+-->
+<mapper namespace="com.eunwoosoft.ipro.ebid.dao.IproEbidResultDao">	
+
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰결과 목록조회_페이징 
+     * 2. 처리내용 :
+     *  	
+     * </pre>
+     * @Query ID : selectBidResultListWithPgng
+     * @date : 2015. 04. 02.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 04. 02.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectBidResultListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="bidResultList"/>
+			<include refid="bidResultWhere"/>
+			ORDER BY OPNG_DT DESC, ANNC_NO DESC, ANNC_NGR DESC
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰결과 목록총건수조회 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectBidResultListTotcnt
+     * @date : 2015. 04. 02.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 04. 02.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectBidResultListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="bidResultList"/>
+			<include refid="bidResultWhere"/>
+		) T1
+		WHERE 1 = 1		
+	</select>
+
+	<sql id="bidResultList">
+    SELECT * FROM (
+        SELECT BIPLMA.ANNC_NO
+                  , BIPLMA.ANNC_NGR
+                  , BITI.ROUND_NO
+                  , BIPLMA.BID_NM
+                  , BIPLMA.ANNC_SECD
+                  , F_CDVAL_INQIRE('ANNC_SECD', BIPLMA.ANNC_SECD) AS ANNC_SECD_NM
+                  , BIPLMA.CONT_SECD
+                  , F_CDVAL_INQIRE('CONT_SECD', BIPLMA.CONT_SECD) AS CONT_SECD_NM
+                  , BIPLMA.BID_PSCD
+                  , F_CDVAL_INQIRE('BID_PSCD', BIPLMA.BID_PSCD) AS BID_PSCD_NM
+                  , BIPLMA.CONT_MTCD
+                  , F_CDVAL_INQIRE('CONT_MTCD', BIPLMA.CONT_MTCD) AS CONT_MTCD_NM
+                  , BIPLMA.SBID_MTCD
+                  , F_CDVAL_INQIRE('SBID_MTCD', BIPLMA.SBID_MTCD) AS SBID_MTCD_NM
+                  , BIPLMA.BID_MTCD
+                  , F_CDVAL_INQIRE('BID_MTCD', BIPLMA.BID_MTCD) AS BID_MTCD_NM
+                  , BITI.ANNC_DT
+                  , BITI.OPNG_DT
+                  , ENOP.SBID_DT
+                  , NVL(ENOP.VEND_NM, DATP.VEND_NM) AS VEND_NM
+                  , BIPLMA.EMRG_YN
+                  , ENOP.SBID_AMT
+                  , BIPLMA.CHRGR_ID
+                  , BIPLMA.CHRGR_NM
+                  , ( SELECT COUNT(*)
+                         FROM T_BI_VEND_MST VM
+                      WHERE BITI.ANNC_NO  = VM.ANNC_NO
+                          AND BITI.ANNC_NGR = VM.ANNC_NGR
+                          AND BITI.ROUND_NO = VM.ROUND_NO ) AS OPEN_CNT
+           FROM T_BI_MST BIPLMA
+                  , T_BI_ROUND BITI
+                  , ( SELECT ENOP.ANNC_NO
+                                , ENOP.ANNC_NGR
+                                , ENOP.ROUND_NO
+                                , ENOP.VEND_REG_NO
+                                , PRCOEN.VEND_NM
+                                , ENOP.SBID_AMT
+                                , ENOP.SBID_DT
+                         FROM T_BI_VEND_BIOP ENOP
+                                , T_CU_MST PRCOEN
+                       WHERE ENOP.SBID_YN = 'Y'
+                           AND ENOP.VEND_REG_NO = PRCOEN.VEND_REG_NO ) ENOP
+                  , ( SELECT DATP.ANNC_NO
+                                , DATP.ANNC_NGR
+                                , DATP.ROUND_NO
+                                , DATP.VEND_REG_NO
+                                , PRCOEN.VEND_NM
+                                , DATP.SBID_AMT
+                                , DATP.SBID_DT
+                         FROM T_BI_DATP_MST DATP
+                                , T_CU_MST PRCOEN
+                       WHERE DATP.SBID_YN = 'Y'
+                           AND DATP.VEND_REG_NO = PRCOEN.VEND_REG_NO ) DATP
+        WHERE	1=1
+            AND BIPLMA.ANNC_NGR = ( SELECT MAX(ANNC_NGR) FROM T_BI_MST WHERE ANNC_NO = BIPLMA.ANNC_NO )
+            AND BIPLMA.ANNC_NO = BITI.ANNC_NO
+            AND BIPLMA.ANNC_NGR = BITI.ANNC_NGR
+            AND BITI.ROUND_NO = ( SELECT MAX(ROUND_NO) FROM T_BI_ROUND WHERE  ANNC_NO = BIPLMA.ANNC_NO AND ANNC_NGR = BIPLMA.ANNC_NGR)
+            AND BITI.ANNC_NO = ENOP.ANNC_NO(+)
+            AND BITI.ANNC_NGR = ENOP.ANNC_NGR(+)
+            AND BITI.ROUND_NO = ENOP.ROUND_NO(+)
+            AND BITI.ANNC_NO = DATP.ANNC_NO(+)
+            AND BITI.ANNC_NGR = DATP.ANNC_NGR(+)
+            AND BITI.ROUND_NO = DATP.ROUND_NO(+)
+            AND BIPLMA.BID_PSCD IN ('PF41','PF60','PF61','PF63','PF99')
+            AND NVL(BIPLMA.DEL_AT,'N') != 'Y'
+            AND BIPLMA.BID_MTCD IN ('BID', 'OFF')
+		)
+		WHERE 1=1
+	</sql>
+	
+	<sql id="bidResultWhere">
+		<if test='P_VEND_NM_S != null and P_VEND_NM_S != "" '>
+			AND VEND_NM LIKE '%' || #{P_VEND_NM_S} || '%'
+		</if>
+		<if test='P_ANNC_NO_S != null and P_ANNC_NO_S != "" '>
+			AND ANNC_NO LIKE '%'||#{P_ANNC_NO_S}||'%'
+		</if>		
+		<if test='P_BID_NM_S != null and P_BID_NM_S != "" '>
+			AND BID_NM LIKE '%'||#{P_BID_NM_S}||'%'
+		</if>
+		<if test='P_CONT_SECD_S != null and P_CONT_SECD_S != "" '>
+			AND CONT_SECD = #{P_CONT_SECD_S}
+		</if>
+		<if test='P_BID_PSCD_S != null and P_BID_PSCD_S != "" '>
+			AND BID_PSCD = #{P_BID_PSCD_S}
+		</if>
+		<if test='P_CONT_MTCD_S != null and P_CONT_MTCD_S != "" '>
+			AND CONT_MTCD = #{P_CONT_MTCD_S}
+		</if>
+		<if test='P_SBID_MTCD_S != null and P_SBID_MTCD_S != "" '>
+			AND SBID_MTCD = #{P_SBID_MTCD_S}
+		</if>
+		<if test='P_ANNC_STDT_S != null and P_ANNC_STDT_S != "" '>
+			AND TO_CHAR(TO_DATE(ANNC_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') >= #{P_ANNC_STDT_S}
+		</if>
+		<if test='P_ANNC_ENDT_S != null and P_ANNC_ENDT_S != "" '>
+			AND TO_CHAR(TO_DATE(ANNC_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') &lt;= #{P_ANNC_ENDT_S}
+		</if>
+		<if test='P_OPNG_STDT_S != null and P_OPNG_STDT_S != "" '>
+			AND TO_CHAR(TO_DATE(OPNG_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') >= #{P_OPNG_STDT_S}
+		</if>
+		<if test='P_OPNG_ENDT_S != null and P_OPNG_ENDT_S != "" '>
+			AND TO_CHAR(TO_DATE(OPNG_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') &lt;= #{P_OPNG_ENDT_S}
+		</if>
+		<if test='P_CHRGR_ID_S != null and P_CHRGR_ID_S != "" '>
+			AND CHRGR_ID = #{P_CHRGR_ID_S}
+		</if>				
+	</sql>
+	
+	
+	<select id="selectBidResultList" resultType="dataEntity">
+			SELECT
+							 ROWNUM AS RNUM
+							,BIPLMA.ANNC_NO
+							,BIPLMA.ANNC_NGR
+							,BIPLMA.CONT_SECD
+							,F_CDVAL_INQIRE('C00001', BIPLMA.CONT_SECD) AS PRCURE_SE_NM
+							,BIPLMA.BID_NM
+							,BIPLMA.BID_PSCD
+							,F_CDVAL_INQIRE('BID_PSCD', BIPLMA.BID_PSCD) AS BID_PROGRS_STTUS_NM
+							,BIPLMA.CHRGR_NM
+							,BIPLMA.CONT_MTCD
+							,F_CDVAL_INQIRE('CONT_MTCD', BIPLMA.CONT_MTCD) AS CNTRCT_MTH_NM
+							,BIPLMA.SBID_MTCD
+							,F_CDVAL_INQIRE('C00006', BIPLMA.SBID_MTCD) AS SCSBID_MTH_NM
+							,TO_CHAR(TO_DATE(BITI.ANNC_DT, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD') AS ANNC_DT
+							,TO_CHAR(TO_DATE(BITI.OPNG_DT, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD') AS OPNG_DT
+							,TO_CHAR(TO_DATE(ENOP.SBID_DT, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD') AS SBID_DT
+							,(SELECT VEND_NM FROM VECI_PRCOEN2 PRCOEN WHERE ENOP.VEND_REG_NO = PRCOEN.VEND_REG_NO )AS VEND_NM
+				
+			FROM		 T_BI_MST BIPLMA
+						,T_BI_ROUND BITI
+						,(SELECT 	 ENOP.ANNC_NO
+										,ENOP.ANNC_NGR
+										,PRCOEN.VEND_NM
+										,ENOP.SBID_AMT
+										,ENOP.SBID_DT
+										,ENOP.VEND_REG_NO
+						FROM 		T_BI_VEND_BIOP ENOP
+							 			,VECI_PRCOEN2 PRCOEN
+						WHERE 		SBID_YN = 'Y'
+						AND 			ENOP.VEND_REG_NO = PRCOEN.VEND_REG_NO) ENOP
+			WHERE 	BIPLMA.ANNC_NO = BITI.ANNC_NO
+			AND		BIPLMA.ANNC_NGR = BITI.ANNC_NGR
+			AND		BIPLMA.ANNC_NO = ENOP.ANNC_NO(+)
+			AND		BIPLMA.ANNC_NGR = ENOP.ANNC_NGR(+)
+			AND		BIPLMA.BID_PSCD IN ('PF40','PF50','PF60','PF99')
+			<include refid="bidResultWhere"/>
+			ORDER BY ANNC_NO DESC ,ANNC_NGR DESC
+	</select>
+	
+	
+	
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰정보 상세
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectBidInfoDetail
+     * @date : 2015. 04. 03.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 04. 03.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+	<select id="selectBidInfoDetail" resultType="dataEntity">
+	
+		SELECT
+				 BIPLMA.ANNC_NO
+				,BIPLMA.ANNC_NGR
+				,BIPLMA.BID_NM
+				,BIPLMA.CONT_SECD
+				,F_CDVAL_INQIRE('C00001', BIPLMA.CONT_SECD) AS PRCURE_SE_NM
+				,BIPLMA.CONT_DECD
+				,F_CDVAL_INQIRE('C00026', BIPLMA.CONT_DECD) AS PRCURE_DETAIL_SE_NM
+				,BIPLMA.BID_RNG_CNTN
+<!-- 				,BIPLMA.CNTRCTPD_CN -->
+				,BIPLMA.CONT_MTCD
+				,BIPLMA.ESTPC_SECD
+				,F_CDVAL_INQIRE('22079', BIPLMA.ESTPC_SECD) AS ESTPC_SECD_NM
+				,BIPLMA.ESTPC_SECD
+				,F_CDVAL_INQIRE('CONT_MTCD', BIPLMA.CONT_MTCD) AS CNTRCT_MTH_NM
+				,BIPLMA.SBID_MTCD
+				,F_CDVAL_INQIRE('C00006', BIPLMA.SBID_MTCD) AS SCSBID_MTH_NM
+				,BIPLMA.BID_PSCD
+				,F_CDVAL_INQIRE('BID_PSCD', BIPLMA.BID_PSCD) AS BID_PSCD_NM
+				,BIPLMA.ESTT_AMT
+				,FEBI_NUMTOKOR(BIPLMA.ESTT_AMT) AS ESTT_AMT_KOR
+				<if test='P_BID_PSCD != "PF40" '>
+					,PRBI.BASE_ESTPC_AMT
+					,FEBI_NUMTOKOR(PRBI.BASE_ESTPC_AMT) AS BASE_ESTPC_AMT_KOR
+					,PRBI.SCH_PRCE_AMT
+					,FEBI_NUMTOKOR(PRBI.SCH_PRCE_AMT) AS ESTPC_AMT_KOR
+				</if>
+
+				<if test='P_BID_PSCD == "PF40" or P_BID_PSCD == "PF99" '>
+					,CASE WHEN PUNO.BID_PSCD IN ('NOT04','NOT02') THEN  PUNO.PROC_RSN
+					 END AS NTCN_RESN_CN
+					,CASE WHEN PUNO.BID_PSCD IN ('NOT04','NOT02') THEN F_CDVAL_INQIRE('BID_PSCD',PUNO.BID_PSCD)
+					 END AS FIB_STEP_CD
+				</if>
+				<if test='P_BID_PSCD == "PF60" '>
+					,COMA.CONT_DE
+				</if>
+		
+		
+		FROM		 T_BI_MST BIPLMA
+		<if test='P_BID_PSCD == "PF40" or P_BID_PSCD == "PF99" '>
+				,(	SELECT 
+								 
+								 ANNC_NO
+								,ANNC_NGR
+								,ROUND_NO
+								,HSTY_SN
+								,BID_PSCD
+								,PROC_RSN
+								,PROC_DT
+					FROM 	T_BI_PROG_HIST PUNO
+					WHERE 	PUNO.BID_PSCD IN ('NOT02','NOT04')
+				) PUNO
+		</if>
+		<if test='P_BID_PSCD == "PF60" '>
+				,T_CT_MST COMA
+		</if>
+		<if test='P_BID_PSCD != "PF40" '>
+				,T_BI_ESTC_MST PRBI
+		</if>
+		<where>
+			<if test='P_BID_PSCD != "PF40" '>
+				AND 	   	BIPLMA.ANNC_NO = PRBI.ANNC_NO(+)
+				AND		BIPLMA.ANNC_NGR = PRBI.ANNC_NGR(+)
+			</if>
+			<if test='P_BID_PSCD == "PF40" or P_BID_PSCD == "PF99" '>
+				AND		BIPLMA.ANNC_NO = PUNO.ANNC_NO(+)
+				AND		BIPLMA.ANNC_NGR = PUNO.ANNC_NGR(+)
+			</if>
+			<if test='P_BID_PSCD == "PF60" '>
+				AND		BIPLMA.ANNC_NO = COMA.ANNC_NO(+)
+				AND		BIPLMA.ANNC_NGR = COMA.ANNC_NGR(+)
+				AND      COMA.CHNG_NGR(+) = 1
+			</if>			
+			AND		BIPLMA.ANNC_NO = #{P_ANNC_NO}
+			AND		BIPLMA.ANNC_NGR = #{P_ANNC_NGR}
+		</where>			
+	
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 복수예가 목록 조회
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectCompnoPrdprcList
+     * @date : 2015. 03. 23.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 23.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+	
+	<select id="selectCompnoPrdprcList" resultType="dataEntity">
+	
+		SELECT	 COPR.ANNC_NO
+					,COPR.ANNC_NGR
+					,COPR.ROUND_NO
+					,COPR.PLR_ESTPC_NO
+					,COPR.PREP_PRCE_AMT
+					,COPR.DRLT_CNT
+					,COPR.SLCT_YN
+					,COPR.ESTPC_RNK
+		FROM		 T_BI_PLRL_ESTC COPR
+		WHERE		COPR.ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR}
+		AND		COPR.ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER}
+		
+	
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 최저 낙찰자 목록 조회
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectLwetScsbidPrearngerList
+     * @date : 2015. 03. 23.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 23.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+	<select id="selectLwetScsbidPrearngerList" resultType="dataEntity">
+	
+		SELECT
+					 ROWNUM AS RNUM
+					,(SELECT BIZRNO FROM VECI_PRCOEN2 WHERE VEND_REG_NO = NINE.VEND_REG_NO) AS BIZRNO
+					,(SELECT VEND_NM FROM VECI_PRCOEN2 WHERE VEND_REG_NO = NINE.VEND_REG_NO) AS VEND_NM
+					,(SELECT RPRS_NM FROM VECI_PRCOEN2 WHERE VEND_REG_NO = NINE.VEND_REG_NO) AS RPRS_NM
+					,NINE.TNDR_AMT
+					,(SELECT SUM(KOICA_EVL_SCORE) FROM  TEBI_PRJUEV WHERE VEND_REG_NO = NINE.VEND_REG_NO) AS KOICA_EVL_SCORE
+					, CASE WHEN ONE.ESTPC_SECD = '180002' THEN SUBSTR(ROUND((NINE.TNDR_AMT/ONE.ESTT_AMT)* 100,3), 0, DECODE(INSTR(ROUND((NINE.TNDR_AMT/ONE.ESTT_AMT)* 100,3), '.'),0,LENGTH(ROUND((NINE.TNDR_AMT/ONE.ESTT_AMT)* 100,3)),INSTR(ROUND((NINE.TNDR_AMT/ONE.ESTT_AMT)* 100,3), '.')))||DECODE(INSTR(ROUND((NINE.TNDR_AMT/ONE.ESTT_AMT)* 100,3), '.'),0,'.000',RPAD(SUBSTR(ROUND((NINE.TNDR_AMT/ONE.ESTT_AMT)* 100,3), INSTR(ROUND((NINE.TNDR_AMT/ONE.ESTT_AMT)* 100,3), '.')+1, LENGTH(ROUND((NINE.TNDR_AMT/ONE.ESTT_AMT)* 100,3))), 3, '0'))
+						ELSE SUBSTR(ROUND((NINE.TNDR_AMT/PRBI.SCH_PRCE_AMT)* 100,3), 0, DECODE(INSTR(ROUND((NINE.TNDR_AMT/PRBI.SCH_PRCE_AMT)* 100,3), '.'),0,LENGTH(ROUND((NINE.TNDR_AMT/PRBI.SCH_PRCE_AMT)* 100,3)),INSTR(ROUND((NINE.TNDR_AMT/PRBI.SCH_PRCE_AMT)* 100,3), '.')))||DECODE(INSTR(ROUND((NINE.TNDR_AMT/PRBI.SCH_PRCE_AMT)* 100,3), '.'),0,'.000',RPAD(SUBSTR(ROUND((NINE.TNDR_AMT/PRBI.SCH_PRCE_AMT)* 100,3), INSTR(ROUND((NINE.TNDR_AMT/PRBI.SCH_PRCE_AMT)* 100,3), '.')+1, LENGTH(ROUND((NINE.TNDR_AMT/PRBI.SCH_PRCE_AMT)* 100,3))), 3, '0'))
+							END AS BDDPR_RT
+					,BID_VEND_PSCD
+					,VEND_REG_NO
+					,(SELECT SBID_YN FROM T_BI_VEND_BIOP ENOP WHERE NINE.ANNC_NO = ENOP.ANNC_NO AND NINE.ANNC_NGR = ENOP.ANNC_NGR
+						AND NINE.VEND_REG_NO = ENOP.VEND_REG_NO) AS SBID_YN
+					,NINE.NT_ELGB_RSN
+					,(SELECT OPNG_RSN FROM T_BI_VEND_BIOP ENOP WHERE NINE.ANNC_NO = ENOP.ANNC_NO AND NINE.ANNC_NGR = ENOP.ANNC_NGR
+						AND NINE.VEND_REG_NO = ENOP.VEND_REG_NO) AS OPNG_RSN
+					
+		FROM	 T_BI_VEND_MST NINE
+				,T_BI_MST ONE
+				,T_BI_ESTC_MST	PRBI
+		WHERE	NINE.ANNC_NO = ONE.ANNC_NO
+		AND		NINE.ANNC_NGR = ONE.ANNC_NGR
+		AND		NINE.ANNC_NO = PRBI.ANNC_NO(+)
+		AND		NINE.ANNC_NGR = PRBI.ANNC_NGR(+)
+		AND		NINE.ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR}
+		AND	  	NINE.ANNC_NGR = #{P_ANNC_NGR, jdbcType=VARCHAR}
+		ORDER BY CASE WHEN BID_ELCD = 'T' THEN 1 ELSE 2 END ASC
+					 ,TNDR_AMT ASC
+					 <if test='P_SBID_MTCD="31" '>
+					 ,(SELECT SUM(KOICA_EVL_SCORE) FROM  TEBI_PRJUEV WHERE VEND_REG_NO = NINE.VEND_REG_NO) DESC
+					 </if>
+	
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 협상 낙찰 예정자 목록
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectNtatScsbidPrearngerList
+     * @date : 2015. 03. 16.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 16.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+	<select id="selectNtatScsbidPrearngerList" resultType="dataEntity">
+	
+		SELECT   ROWNUM AS RNUM
+					,PRCOEN.BIZRNO
+					,PRCOEN.VEND_NM
+					,PRCOEN.VEND_REG_NO
+					,PRCOEN.RPRS_NM
+					,ENPAMA.TNDR_AMT
+					,ENPAMA.BID_VEND_PSCD
+					, CASE WHEN BIPLMA.ESTPC_SECD = '180002' THEN SUBSTR(ROUND((ENPAMA.TNDR_AMT/BIPLMA.ESTT_AMT)* 100,3), 0, DECODE(INSTR(ROUND((ENPAMA.TNDR_AMT/BIPLMA.ESTT_AMT)* 100,3), '.'),0,LENGTH(ROUND((ENPAMA.TNDR_AMT/BIPLMA.ESTT_AMT)* 100,3)),INSTR(ROUND((ENPAMA.TNDR_AMT/BIPLMA.ESTT_AMT)* 100,3), '.')))||DECODE(INSTR(ROUND((ENPAMA.TNDR_AMT/BIPLMA.ESTT_AMT)* 100,3), '.'),0,'.000',RPAD(SUBSTR(ROUND((ENPAMA.TNDR_AMT/BIPLMA.ESTT_AMT)* 100,3), INSTR(ROUND((ENPAMA.TNDR_AMT/BIPLMA.ESTT_AMT)* 100,3), '.')+1, LENGTH(ROUND((ENPAMA.TNDR_AMT/BIPLMA.ESTT_AMT)* 100,3))), 3, '0'))
+						ELSE SUBSTR(ROUND((ENPAMA.TNDR_AMT/PRBI.SCH_PRCE_AMT)* 100,3), 0, DECODE(INSTR(ROUND((ENPAMA.TNDR_AMT/PRBI.SCH_PRCE_AMT)* 100,3), '.'),0,LENGTH(ROUND((ENPAMA.TNDR_AMT/PRBI.SCH_PRCE_AMT)* 100,3)),INSTR(ROUND((ENPAMA.TNDR_AMT/PRBI.SCH_PRCE_AMT)* 100,3), '.')))||DECODE(INSTR(ROUND((ENPAMA.TNDR_AMT/PRBI.SCH_PRCE_AMT)* 100,3), '.'),0,'.000',RPAD(SUBSTR(ROUND((ENPAMA.TNDR_AMT/PRBI.SCH_PRCE_AMT)* 100,3), INSTR(ROUND((ENPAMA.TNDR_AMT/PRBI.SCH_PRCE_AMT)* 100,3), '.')+1, LENGTH(ROUND((ENPAMA.TNDR_AMT/PRBI.SCH_PRCE_AMT)* 100,3))), 3, '0'))
+							END AS BDDPR_RT
+<!-- 					,NEPRJUDI.NTAT_PROPER_DSPTH_SE_CD -->
+					,ENOP.NEGO_DT
+					,ENPAMA.NT_ELGB_RSN
+					,ENOP.SBID_YN
+			        ,ENOP.OPNG_RSN
+			        ,ENPAMA.ESTM_SCR
+			        ,ENPAMA.PRCE_SCR
+			        ,(ENPAMA.ESTM_SCR+ENPAMA.PRCE_SCR) AS TOT_SCORE
+		 FROM T_BI_VEND_BIOP ENOP
+				,T_BI_VEND_MST ENPAMA
+<!-- 				,T_BI_VEND_BIOP NEPRJUDI -->
+				,VECI_PRCOEN2 PRCOEN
+				,T_BI_ESTC_MST PRBI
+				,T_BI_MST BIPLMA
+		WHERE  	ENOP.VEND_REG_NO = PRCOEN.VEND_REG_NO
+		AND		ENOP.VEND_REG_NO = ENPAMA.VEND_REG_NO
+		AND		ENOP.ANNC_NO = ENPAMA.ANNC_NO
+		AND 		ENOP.ANNC_NGR = ENPAMA.ANNC_NGR
+<!-- 		AND		ENOP.VEND_REG_NO = NEPRJUDI.VEND_REG_NO(+) -->
+<!-- 		AND		ENOP.ANNC_NO = NEPRJUDI.ANNC_NO(+) -->
+<!-- 		AND		ENOP.ANNC_NGR = NEPRJUDI.ANNC_NGR(+) -->
+		AND		ENOP.ANNC_NO = PRBI.ANNC_NO
+		AND		ENOP.ANNC_NGR = PRBI.ANNC_NGR
+		AND		ENOP.ANNC_NO = BIPLMA.ANNC_NO
+		AND		ENOP.ANNC_NGR = BIPLMA.ANNC_NGR
+		AND		ENOP.ANNC_NO = #{P_ANNC_NO}
+		AND		ENOP.ANNC_NGR = #{P_ANNC_NGR}
+		ORDER BY CASE WHEN BID_ELCD = 'T' THEN 1 ELSE 2 END ASC
+		             , NVL(OPNG_RNK, 999) ASC
+					 ,TNDR_AMT ASC
+					 ,(ENPAMA.ESTM_SCR) DESC
+	
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 업체정보 상세
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectEntrpsInfoDetail
+     * @date : 2015. 03. 16.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 16.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+	<select id="selectEntrpsInfoDetail" resultType="dataEntity">
+	
+		SELECT	 PRCOEN.VEND_REG_NO
+					,PRCOEN.VEND_NM
+					,ENPAMA.NT_ELGB_RSN
+					
+		FROM		 VECI_PRCOEN2 PRCOEN
+					,T_BI_VEND_MST ENPAMA
+		WHERE	PRCOEN.VEND_REG_NO = #{P_VEND_REG_NO}
+		AND		PRCOEN.VEND_REG_NO = ENPAMA.VEND_REG_NO
+		AND		ENPAMA.ANNC_NO = #{P_ANNC_NO}
+		AND		ENPAMA.ANNC_NGR = #{P_ANNC_NGR}
+	
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 적격심사 평가등록 폼 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectProperJdgmnEntrpsDetail
+     * @date : 2015. 03. 13.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 13.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+	<select id="selectProperJdgmnEntrpsDetail" resultType="dataEntity">
+	
+		SELECT
+				 BIPLMA.ANNC_NO
+				,BIPLMA.ANNC_NGR
+				,BIPLMA.BID_NM
+				,BIPLMA.CONT_SECD
+				,BIPLMA.CONT_DECD
+				,BIPLMA.ESTT_AMT
+				,PRBI.SCH_PRCE_AMT
+				,ENPAMA.TNDR_AMT
+				,PRCOEN.VEND_NM
+				,FEBI_GET_QUAL_PRICE_SCORE(#{P_ANNC_NO}, #{P_ANNC_NGR}, #{P_VEND_REG_NO}) AS BID_PC
+		 		,PRCOEN.RPRS_NM
+		FROM	 T_BI_MST BIPLMA
+				,VECI_PRCOEN2 PRCOEN
+				,T_BI_ESTC_MST PRBI
+				,T_BI_VEND_MST ENPAMA
+		WHERE 1=1
+		AND		BIPLMA.ANNC_NO = PRBI.ANNC_NO
+		AND		BIPLMA.ANNC_NGR = PRBI.ANNC_NGR
+		AND		BIPLMA.ANNC_NO = ENPAMA.ANNC_NO
+		AND		BIPLMA.ANNC_NGR = ENPAMA.ANNC_NGR
+		AND		ENPAMA.VEND_REG_NO = PRCOEN.VEND_REG_NO
+		AND		BIPLMA.ANNC_NO = #{P_ANNC_NO}
+		AND		BIPLMA.ANNC_NGR = #{P_ANNC_NGR}
+		AND		PRCOEN.VEND_REG_NO = #{P_VEND_REG_NO}
+	
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 주요사업 목록 조회
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectMainBnsnList
+     * @date : 2015. 03. 20.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 20.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+	<select id="selectMainBnsnList" resultType="dataEntity">
+		
+<!-- 		SELECT INDUTY_NM -->
+<!-- 		FROM TECI_ENLI ENLI -->
+<!-- 		WHERE 	ENLI.VEND_REG_NO = #{P_VEND_REG_NO} -->
+<!-- 		AND		REPRSNT_INDUTY_AT = 'Y' -->
+		SELECT 	CTT_NM AS INDUTY_NM
+		FROM 	T_CO_CTT_ACQS ENLI
+		WHERE 	ENLI.VEND_REG_NO = #{P_VEND_REG_NO}
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 사업참여이력 목록 조회 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectBsnsPartcptnHistList
+     * @date : 2015. 03. 20.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 20.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+	<select id="selectBsnsPartcptnHistList" resultType="dataEntity">
+	
+		SELECT 	 
+					 ROWNUM AS RNUM
+					,BIPLMA.ANNC_NO
+					,BIPLMA.ANNC_NGR
+					,BIPLMA.BID_NM
+					,ENOP.SBID_YN
+					,CASE WHEN COMA.CONT_SECD = 'CT80' THEN 'Y'
+							 ELSE 'N' 
+							 END AS CNTRCT_COMPT_AT
+		FROM  	 T_BI_VEND_BIOP ENOP
+					,T_BI_MST BIPLMA
+					,T_CT_MST COMA
+		WHERE 	BIPLMA.ANNC_NO = ENOP.ANNC_NO
+		AND		BIPLMA.ANNC_NGR = ENOP.ANNC_NGR
+		AND		BIPLMA.ANNC_NO = COMA.ANNC_NO(+)
+		AND		BIPLMA.ANNC_NGR = COMA.ANNC_NGR(+)
+		AND		ENOP.VEND_REG_NO = #{P_VEND_REG_NO}
+	
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 낙찰자선정 결격사유 등록 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : updateSucbidrSlctnBrdoResnRegist
+     * @date : 2015. 03. 16.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 16.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+	<update id="updateSucbidrSlctnBrdoResnRegist">
+	
+		UPDATE T_BI_VEND_MST SET
+			NT_ELGB_RSN = #{P_NT_ELGB_RSN}
+		WHERE 	ANNC_NO = #{P_ANNC_NO}
+		AND		ANNC_NGR = #{P_ANNC_NGR}
+		AND		VEND_REG_NO = #{P_VEND_REG_NO}
+	
+	</update>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 업체 심사 평가 목록 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectEntrpsJdgmnEvlList
+     * @date : 2015. 03. 20.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 20.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+<!-- 	<select id="selectEntrpsJdgmnEvlList" resultType="dataEntity"> -->
+	
+<!-- 		SELECT    -->
+<!-- 					 ROWNUM AS RNUM -->
+<!-- 					,EVL_SN -->
+<!-- 					,EVL_CN -->
+<!-- 					,ALLOT_LMT_CN -->
+<!-- 					,ENTRPS_EVL_SCORE -->
+<!-- 					,KOICA_EVL_SCORE -->
+<!-- 		FROM TEBI_PRJUEV -->
+<!-- 		WHERE ANNC_NO = #{P_ANNC_NO} -->
+<!-- 		AND		ANNC_NGR = #{P_ANNC_NGR} -->
+<!-- 		AND		VEND_REG_NO = #{P_VEND_REG_NO} -->
+	
+<!-- 	</select> -->
+	
+	<!--  
+     * <pre>
+     * 1. 개요 :  이메일전송대상 등록 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : updateEntrpsPartcptnPrstUpdt
+     * @date : 2015. 03. 20.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 20.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+	<update id="updateEntrpsPartcptnPrstUpdt">
+	
+		UPDATE 	T_BI_VEND_MST SET
+					BID_VEND_PSCD = #{P_BID_VEND_PSCD}
+					,MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+					<include refid="ComRegr.ModrSetClause"/>
+		WHERE 	ANNC_NO =#{P_ANNC_NO}
+		AND	  	ANNC_NGR = #{P_ANNC_NGR}
+		AND	  	VEND_REG_NO = #{P_VEND_REG_NO}
+	
+	</update>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 :  적격심사평가내용 등록 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : insertProperJdgmnEvlCnRegist
+     * @date : 2015. 03. 19.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 19.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+<!-- 	<insert id="insertProperJdgmnEvlCnRegist"> -->
+		
+<!-- 		INSERT INTO TEBI_PRJUEV -->
+<!-- 		( -->
+<!-- 			 ANNC_NO -->
+<!-- 			,ANNC_NGR -->
+<!-- 			,VEND_REG_NO -->
+<!-- 			,EVL_SN -->
+<!-- 			,EVL_CN -->
+<!-- 			,ALLOT_LMT_CN -->
+		
+<!-- 		)VALUES -->
+<!-- 		( -->
+<!-- 			 #{P_ANNC_NO} -->
+<!-- 			,#{P_ANNC_NGR} -->
+<!-- 			,#{P_VEND_REG_NO} -->
+<!-- 			,#{P_EVL_SN} -->
+<!-- 			,#{P_EVL_CN} -->
+<!-- 			,#{P_ALLOT_LMT_CN} -->
+<!-- 		) -->
+	
+<!-- 	</insert> -->
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 적격심사 평가 등록
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : updateProperJdgmnEvlRegist
+     * @date : 2015. 03. 20.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 20.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+<!-- 	<update id="updateProperJdgmnEvlRegist"> -->
+<!-- 		UPDATE TEBI_PRJUEV SET -->
+<!-- 					KOICA_EVL_SCORE = #{P_KOICA_EVL_SCORE} -->
+<!-- 		WHERE 	ANNC_NO = #{P_ANNC_NO} -->
+<!-- 		AND	 	ANNC_NGR = #{P_ANNC_NGR} -->
+<!-- 		AND		VEND_REG_NO = #{P_VEND_REG_NO} -->
+<!-- 		AND		EVL_SN = #{P_EVL_SN} -->
+<!-- 	</update> -->
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 예가선택업체 조회
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectBidResultPrdprcChoiseEntrpsInqire
+     * @date : 2015. 03. 23.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 23.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+	<select id="selectBidResultPrdprcChoiseEntrpsInqire" resultType="dataEntity">
+		SELECT
+				 ROWNUM AS RNUM
+				,PRCOEN.VEND_NM
+				,PRCOEN.RPRS_NM
+				,PRCOEN.BIZRNO
+		FROM T_BI_VEND_ESSE ENDRPR
+			,VECI_PRCOEN2 PRCOEN
+		WHERE ENDRPR.VEND_REG_NO = PRCOEN.VEND_REG_NO
+		AND	  ENDRPR.ANNC_NO = #{P_ANNC_NO}
+		AND	  ENDRPR.ANNC_NGR = #{P_ANNC_NGR}
+		AND	  ENDRPR.PLR_ESTPC_NO = #{P_PLR_ESTPC_NO}
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 협상 적격 심사 통보 등록
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : insertNtatProperJdgmnDspthRegist
+     * @date : 2015. 03. 24.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 24.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+<!-- 	<insert id="insertNtatProperJdgmnDspthRegist"> -->
+	
+<!-- 		INSERT INTO T_BI_VEND_BIOP -->
+<!-- 		( -->
+<!-- 			 ANNC_NO -->
+<!-- 			,ANNC_NGR -->
+<!-- 			,VEND_REG_NO -->
+<!-- 			,NEGO_CNTN -->
+<!-- 			,NEGO_DT -->
+<!-- 		) -->
+<!-- 		VALUES -->
+<!-- 		( -->
+<!-- 			  #{P_ANNC_NO} -->
+<!-- 			 ,#{P_ANNC_NGR} -->
+<!-- 			 ,#{P_VEND_REG_NO} -->
+<!-- 			 ,#{P_NEGO_CNTN} -->
+<!-- 			 ,#{P_NEGO_DT} -->
+<!-- 		) -->
+<!-- 	</insert> -->
+<!-- 			 ,#{P_NTAT_PROPER_DSPTH_SE_CD} -->
+<!-- 			,NTAT_PROPER_DSPTH_SE_CD -->
+	
+	
+	<!--  
+     * <pre>
+     * 1. 개요 :입찰보증정보 삭제
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : deleteBidAssrncInfo
+     * @date : 2015. 03. 24.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 24.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+	<delete id="deleteBidAssrncInfo">
+	
+		DELETE FROM T_BI_VEND_GRNT
+		WHERE 	ANNC_NO = #{P_ANNC_NO}
+		AND		ANNC_NGR = #{P_ANNC_NGR}
+		AND		VEND_REG_NO = #{P_VEND_REG_NO}
+	
+	</delete>
+	
+	
+<!-- 	<insert id="insertBidAssrncInfoRegist"> -->
+	
+<!-- 		INSERT INTO T_BI_VEND_GRNT -->
+<!-- 		( -->
+<!-- 			ANNC_NO -->
+<!-- 			,ANNC_NGR -->
+<!-- 			,ROUND_NO -->
+<!-- 			,VEND_REG_NO -->
+<!-- 			,GRNT_SN -->
+<!-- 			,BIDGR_SECD -->
+<!-- 			,BIDGR_NO -->
+<!-- 			,BIDGR_AMT -->
+<!-- 			,FILE_GRP_NO -->
+<!-- 			,RMK -->
+<!-- 			<include refid="ComRegr.RegrColumnClause"/> -->
+<!-- 		) -->
+<!-- 		VALUES -->
+<!-- 		( -->
+<!-- 			 #{P_ANNC_NO, jdbcType=VARCHAR} -->
+<!-- 			,#{P_ANNC_NGR, jdbcType=INTEGER} -->
+<!-- 			,#{P_ROUND_NO, jdbcType=INTEGER} -->
+<!-- 			,#{P_VEND_REG_NO, jdbcType=VARCHAR} -->
+<!-- 			,#{P_GRNT_SN, jdbcType=INTEGER} -->
+<!-- 			,#{P_BIDGR_SECD, jdbcType=VARCHAR} -->
+<!-- 			,#{P_BIDGR_NO, jdbcType=VARCHAR} -->
+<!-- 			,#{P_BIDGR_AMT, jdbcType=INTEGER} -->
+<!-- 			,#{P_FILE_GRP_NO, jdbcType=VARCHAR} -->
+<!-- 			,#{P_RMK, jdbcType=VARCHAR} -->
+<!-- 			<include refid="ComRegr.RegrValueClause"/> -->
+<!-- 		) -->
+	
+<!-- 	</insert> -->
+	
+	
+	<select id="selectFibScsBidPrearngerList" resultType="dataEntity">
+	
+		SELECT
+				 ROWNUM AS RNUM
+				,ENPADEnENPAMA.ANNC_NO
+				,ENPADEnENPAMA.ANNC_NGR
+				,ENPADEnENPAMA.TPI_DT
+				,ENPADEnENPAMA.VEND_REG_NO
+				,ENPADEnENPAMA.BID_VEND_PSCD
+				,PRCOEN.BIZRNO
+				,PRCOEN.VEND_NM
+				,PRCOEN.RPRS_NM
+		
+		FROM
+				 VECI_PRCOEN2 PRCOEN
+				,(
+				  	SELECT 	ANNC_NO
+								,ANNC_NGR
+								,VEND_REG_NO
+								,BID_VEND_PSCD
+								,(
+									SELECT	TPI_DT
+									FROM		T_BI_VEND_DTL
+									WHERE 	BID_TPI_SECD = 'OP03'
+									AND 		ANNC_NO = ENPAMA.ANNC_NO
+									AND 		ANNC_NGR = ENPAMA.ANNC_NGR
+									AND		VEND_REG_NO = ENPAMA.VEND_REG_NO
+								)  AS TPI_DT 
+				  	FROM 	T_BI_VEND_MST ENPAMA
+			  	) ENPADEnENPAMA
+		WHERE 	PRCOEN.VEND_REG_NO = ENPADEnENPAMA.VEND_REG_NO
+		AND		ENPADEnENPAMA.ANNC_NO = #{P_ANNC_NO}
+		AND		ENPADEnENPAMA.ANNC_NGR = #{P_ANNC_NGR}
+		
+	
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰결과 상세 - 품목별 세부입찰 내역 조회
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectPrdlstAcctoDetailBidDtlsInqire
+     * @date : 2015. 08. 18.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 08. 18.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+	<select id="selectPrdlstAcctoDetailBidDtlsInqire" resultType="dataEntity">
+	
+		SELECT 
+					 PRCOEN.VEND_REG_NO
+					,PRCOEN.VEND_NM
+					,PRCOEN.BIZRNO
+					,PRCOEN.RPRS_NM
+					,PRCOEN.TEL_NO
+		
+		FROM 	 VECI_PRCOEN2 PRCOEN
+		
+		WHERE	PRCOEN.VEND_REG_NO = #{P_VEND_REG_NO}
+	
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 제안 요약서 다운로드
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectEnatpaDownInqire
+     * @date : 2017. 08. 18.
+     * @author : 은우소프트 전상훈
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2017. 08. 18.     은우소프트 전상훈              최초 작성 
+     *  =======================================================   
+     -->
+	
+	<select id="selectEnatpaDownInqire" resultType="dataEntity">
+		SELECT 	PRCOEN.VEND_REG_NO
+					,ENATPA.FILE_GRP_NO
+		FROM 	 VECI_PRCOEN2 PRCOEN
+					,T_BI_VEND_FILE ENATPA
+		WHERE	PRCOEN.VEND_REG_NO = #{P_VEND_REG_NO}
+		AND		PRCOEN.VEND_REG_NO = ENATPA.VEND_REG_NO
+		AND		ENATPA.BID_SBMT_FSCD = #{P_BID_SBMT_FSCD}
+		AND		ENATPA.ANNC_NO = #{P_ANNC_NO}
+		AND		ENATPA.ANNC_NGR = #{P_ANNC_NGR}
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰 물품 목록
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectBidThngList
+     * @date : 2015. 08. 18.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 08. 18.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+	<select id="selectBidThngList" resultType="dataEntity">
+	
+		SELECT 	 	 BIPR.ITEM_NM
+						,BIPR.ITEM_UNNM
+						,BIPR.ITEM_QTY
+						,BPPR.ITEM_UNIT_AMT
+		
+		FROM 	 T_BI_ITEM BIPR
+					,T_BI_TNDR_ITEM BPPR
+		
+		WHERE BPPR.ANNC_NO = #{P_ANNC_NO}
+		AND   BPPR.ANNC_NGR = #{P_ANNC_NGR}
+	    AND   BPPR.VEND_REG_NO = #{P_VEND_REG_NO}
+		AND   BIPR.ANNC_NO = BPPR.ANNC_NO
+		AND   BIPR.ANNC_NGR = BPPR.ANNC_NGR
+	
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰정보 수동저장 
+     * 2. 처리내용 :
+     *  	TABLE : T_BI_MST(입찰계획마스터)
+     					,T_BI_ROUND(입찰시간정보)
+     *  	
+	 * @Query ID : insertG2BVendInfoMst
+	 * @date : 2018. 10. 12.
+	 * @author : 맹경열
+	 -->	
+	<insert id="insertG2BVendInfoMst">
+		INSERT
+		INTO		T_BI_VEND_MST
+		(
+			ANNC_NO
+			, ANNC_NGR
+			, ROUND_NO
+			, VEND_REG_NO
+			, BID_VEND_PSCD
+			, TNDR_AMT
+			, TNDR_AMT_ENC
+			, SSN_VKEY
+			, PRCE_SCR
+			, ESTM_SCR
+			, ESTM_ELCD
+			, BID_ELCD
+			, NT_ELGB_RSN
+			, BID_ABND_YN
+			, BID_ABND_SPCD
+			, BID_ABND_RSN
+			, ASSO_SPDM_CD
+			, ASSO_SPDM_AGRE_DT
+			, RMK
+			, RE_TNDR_YN
+			, FILE_ONOF_YN		
+			<include refid="ComRegr.RegrColumnClause"/>
+		)
+		VALUES
+		(
+			#{P_ANNC_NO, jdbcType=VARCHAR}
+			, #{P_ANNC_NGR, jdbcType=INTEGER}
+			, #{P_ROUND_NO, jdbcType=INTEGER}
+			, #{P_VEND_REG_NO, jdbcType=VARCHAR}
+			, #{P_BID_VEND_PSCD, jdbcType=VARCHAR}
+			, #{P_TNDR_AMT, jdbcType=INTEGER}
+			, #{P_TNDR_AMT_ENC, jdbcType=VARCHAR}
+			, #{P_SSN_VKEY, jdbcType=VARCHAR}
+			, #{P_PRCE_SCR, jdbcType=INTEGER}
+			, #{P_ESTM_SCR, jdbcType=INTEGER}
+			, #{P_ESTM_ELCD, jdbcType=VARCHAR}
+			, #{P_BID_ELCD, jdbcType=VARCHAR}
+			, #{P_NT_ELGB_RSN, jdbcType=VARCHAR}
+			, #{P_BID_ABND_YN, jdbcType=VARCHAR}
+			, #{P_BID_ABND_SPCD, jdbcType=VARCHAR}
+			, #{P_BID_ABND_RSN, jdbcType=VARCHAR}
+			, #{P_ASSO_SPDM_CD, jdbcType=VARCHAR}
+			, #{P_ASSO_SPDM_AGRE_DT, jdbcType=VARCHAR}
+			, #{P_RMK, jdbcType=VARCHAR}
+			, #{P_RE_TNDR_YN, jdbcType=VARCHAR}
+			, #{P_FILE_ONOF_YN, jdbcType=VARCHAR}
+		<include refid="ComRegr.RegrValueClause"/>
+		)
+	</insert>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰정보 수동저장 
+     * 2. 처리내용 :
+     *  	TABLE : T_BI_MST(입찰계획마스터)
+     					,T_BI_ROUND(입찰시간정보)
+     *  	
+	 * @Query ID : insertG2BVendInfoMst
+	 * @date : 2018. 10. 12.
+	 * @author : 맹경열
+	 -->	
+	<insert id="insertG2BVendBiopInfo">
+		INSERT
+		INTO		T_BI_VEND_BIOP
+		(
+			ANNC_NO
+			, ANNC_NGR
+			, ROUND_NO
+			, VEND_REG_NO
+			, SBID_YN
+			, SBID_AMT
+			, SBID_DT
+			, OPNG_RNK
+			, TCHN_ESTM_SCR
+			, ELGB_ESTM_SCR
+			, ELGB_CD
+			, SBID_ABND_YN
+			, SBID_ABND_RSN
+			, ABND_PROC_IP
+			, NEGO_NTFC_YN
+			, NEGO_DT
+			, NEGO_CNTN
+			, OPNG_RSN
+			, FILE_GRP_NO
+			, OPNG_IP
+			, RMK
+			<include refid="ComRegr.RegrColumnClause"/>
+		)			
+		VALUES
+		(
+			#{P_ANNC_NO, jdbcType=VARCHAR}
+			, #{P_ANNC_NGR, jdbcType=INTEGER}
+			, #{P_ROUND_NO, jdbcType=INTEGER}
+			, #{P_VEND_REG_NO, jdbcType=VARCHAR}
+			, #{P_SBID_YN, jdbcType=VARCHAR}
+			, #{P_SBID_AMT, jdbcType=VARCHAR}
+			, #{P_SBID_DT, jdbcType=VARCHAR}
+			, #{P_OPNG_RNK, jdbcType=INTEGER}
+			, #{P_TCHN_ESTM_SCR, jdbcType=INTEGER}
+			, #{P_ELGB_ESTM_SCR, jdbcType=INTEGER}
+			, #{P_ELGB_CD, jdbcType=VARCHAR}
+			, #{P_SBID_ABND_YN, jdbcType=VARCHAR}
+			, #{P_SBID_ABND_RSN, jdbcType=VARCHAR}
+			, #{P_ABND_PROC_IP, jdbcType=VARCHAR}
+			, #{P_NEGO_NTFC_YN, jdbcType=VARCHAR}
+			, #{P_NEGO_DT, jdbcType=VARCHAR}
+			, #{P_NEGO_CNTN, jdbcType=VARCHAR}
+			, #{P_OPNG_RSN, jdbcType=VARCHAR}
+			, #{P_FILE_GRP_NO, jdbcType=VARCHAR}
+			, #{P_OPNG_IP, jdbcType=VARCHAR}
+			, #{P_RMK, jdbcType=VARCHAR}
+			<include refid="ComRegr.RegrValueClause"/>
+		)
+	</insert>		 
+	
+	<!-- 	업체 개찰 삭제 -->
+	<delete id="deleteBiVendBiop">
+		DELETE T_BI_VEND_BIOP
+		WHERE	ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR}
+		AND		ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER}
+		AND		ROUND_NO = #{P_ROUND_NO, jdbcType=INTEGER}
+	</delete>
+	
+	<!-- 	예가 마스터 등록 및 수정 -->
+	<insert id="insertResultBiEstcMstRegist">
+		MERGE INTO T_BI_ESTC_MST
+		USING	DUAL
+		ON ( 	ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR}
+		AND	ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER}
+		AND	ROUND_NO = #{P_ROUND_NO, jdbcType=INTEGER} )
+		WHEN MATCHED THEN
+			UPDATE SET
+			SCH_PRCE_AMT = #{P_SCH_PRCE_AMT, jdbcType=INTEGER} 
+		WHEN NOT MATCHED THEN
+			INSERT(
+				ANNC_NO
+				,ANNC_NGR
+				,ROUND_NO
+				,SCH_PRCE_AMT
+			)VALUES(
+				#{P_ANNC_NO, jdbcType=VARCHAR}
+				,#{P_ANNC_NGR, jdbcType=INTEGER}
+				,#{P_ROUND_NO, jdbcType=INTEGER}
+				,#{P_SCH_PRCE_AMT, jdbcType=INTEGER}
+			)
+	</insert>
+	
+	<!-- 	역경매 업체 삭제 -->
+	<delete id="deleteDatpMst">
+		DELETE	T_BI_DATP_MST
+		WHERE	ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR}
+		AND		ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER}
+		AND		ROUND_NO = #{P_ROUND_NO, jdbcType=INTEGER}
+	</delete>
+	
+	<!-- 	역경매 업체 등록 -->
+	<insert id="insertDatpMst">
+		<selectKey keyProperty="P_TPI_SN" resultType="int" order="BEFORE">
+			SELECT 	NVL(MAX(TO_NUMBER(TPI_SN))+1, 1)
+			FROM 	T_BI_DATP_MST
+			WHERE	ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR}
+			AND		ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER}
+			AND		ROUND_NO = #{P_ROUND_NO, jdbcType=INTEGER}
+		</selectKey>
+		INSERT INTO T_BI_DATP_MST(
+			ANNC_NO
+			,ANNC_NGR
+			,ROUND_NO
+			,TPI_SN
+			,VEND_REG_NO_ENC
+			,VEND_REG_NO
+			,BID_VEND_PSCD
+			,TNDR_AMT
+			,SBID_YN
+			,SBID_AMT
+			,SBID_DT
+			,OPNG_IP
+			,OPNG_RNK
+			,FILE_GRP_NO
+			, REGR_ID
+			, REGR_NM
+			, REG_DT
+			, MODR_ID
+			, MODR_NM
+			, MOD_DT
+			, CONN_IP
+		)VALUES(
+			#{P_ANNC_NO, jdbcType=VARCHAR}
+			,#{P_ANNC_NGR, jdbcType=INTEGER}
+			,#{P_ROUND_NO, jdbcType=INTEGER}
+			,#{P_TPI_SN, jdbcType=INTEGER}
+			,#{P_VEND_REG_NO_ENC, jdbcType=VARCHAR}
+			,#{P_VEND_REG_NO, jdbcType=VARCHAR}
+			,#{P_BID_VEND_PSCD, jdbcType=VARCHAR}
+			,#{P_TNDR_AMT, jdbcType=INTEGER}
+			,#{P_SBID_YN, jdbcType=VARCHAR}
+			,#{P_SBID_AMT, jdbcType=INTEGER}
+			,#{P_SBID_DT, jdbcType=VARCHAR}
+			,#{P_OPNG_IP, jdbcType=VARCHAR}
+			,#{P_OPNG_RNK, jdbcType=VARCHAR}
+			,#{P_FILE_GRP_NO, jdbcType=VARCHAR}
+			, #{USR_ID, jdbcType=VARCHAR}
+			, #{USR_NM, jdbcType=VARCHAR}
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+			, #{USR_ID, jdbcType=VARCHAR}
+			, #{USR_NM, jdbcType=VARCHAR}
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+			, #{CONN_IP, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="selectGrntDetail" resultType="dataEntity">
+		SELECT	DTL.ANNC_NO
+					,DTL.ANNC_NGR
+					,DTL.ROUND_NO
+					,DTL.VEND_REG_NO
+					,DTL.BID_TPI_SECD
+					,DTL.SIGN_DT
+					,VEND.VEND_NM
+					,VEND.RPRS_NM
+		FROM	T_BI_VEND_DTL DTL
+					,T_CU_MST VEND
+		WHERE	DTL.VEND_REG_NO = VEND.VEND_REG_NO
+		AND		DTL.ANNC_NO = #{P_ANNC_NO}
+		AND		DTL.ANNC_NGR = #{P_ANNC_NGR}
+		AND		DTL.ROUND_NO = #{P_ROUND_NO}
+		AND		DTL.VEND_REG_NO = #{P_VEND_REG_NO}
+		AND		DTL.BID_TPI_SECD = 'OP0303'
+	</select>
+	
+	<select id="selectCleanDetail" resultType="dataEntity">
+		SELECT	DTL.ANNC_NO
+					,DTL.ANNC_NGR
+					,DTL.ROUND_NO
+					,DTL.VEND_REG_NO
+					,DTL.BID_TPI_SECD
+					,DTL.SIGN_DT
+					,VEND.VEND_NM
+					,VEND.RPRS_NM
+		FROM	T_BI_VEND_DTL DTL
+					,T_CU_MST VEND
+		WHERE	DTL.VEND_REG_NO = VEND.VEND_REG_NO
+		AND		DTL.ANNC_NO = #{P_ANNC_NO}
+		AND		DTL.ANNC_NGR = #{P_ANNC_NGR}
+		AND		DTL.ROUND_NO = #{P_ROUND_NO}
+		AND		DTL.VEND_REG_NO = #{P_VEND_REG_NO}
+		AND		DTL.BID_TPI_SECD = 'OP0301'
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰라운드정보 확인 
+     * 2. 처리내용 :
+     *  	
+     * </pre>
+     * @Query ID : selectBidRoundList
+     * @date : 2019. 03. 05.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2019. 03. 05.       은우소프트 맹경열              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectBidRoundList" resultType="dataEntity">
+    	SELECT	RND.ANNC_NO
+					, RND.ANNC_NGR
+					, RND.ROUND_NO
+					, RND.BID_PSCD
+					, RND.APPR_STCD
+					, RND.ANNC_DT
+					, RND.PRTC_APLY_STDT
+					, RND.PRTC_APLY_ENDT
+					, RND.BIDC_SBMT_STDT
+					, RND.BIDC_SBMT_ENDT
+					, RND.PRPDC_SBMT_STDT
+					, RND.PRPDC_SBMT_ENDT
+					, RND.OPNG_DT
+					, RND.ESTPC_AMT
+					, RND.ENC_ESTPC_AMT
+					, RND.ROUND_RSN
+					, ESTC.SCH_PRCE_AMT
+    	FROM		T_BI_ROUND RND
+    				, T_BI_ESTC_MST ESTC
+    	WHERE	1=1
+    	AND		RND.ANNC_NO = ESTC.ANNC_NO
+    	AND		RND.ANNC_NGR = ESTC.ANNC_NGR
+    	AND		RND.ROUND_NO = ESTC.ROUND_NO
+    	AND		RND.ANNC_NO = #{P_ANNC_NO}
+    	AND		RND.ANNC_NGR = #{P_ANNC_NGR}
+    	ORDER BY RND.ROUND_NO DESC
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰마스터 리스트
+     * 2. 처리내용 :
+     *  	
+     * </pre>
+     * @Query ID : selectBidVendMstList
+     * @date : 2019. 03. 05.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2019. 03. 05.       은우소프트 맹경열              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectBidVendMstList" resultType="dataEntity">
+		SELECT	*
+		FROM		(
+	    	SELECT	ANNC_NO
+						, ANNC_NGR
+						, ROUND_NO
+						, VEND_REG_NO
+						, BID_VEND_PSCD
+						, TNDR_AMT
+						, TNDR_AMT_ENC
+						, SSN_VKEY
+						, PRCE_SCR
+						, ESTM_SCR
+						, ESTM_ELCD
+						, BID_ELCD
+						, NT_ELGB_RSN
+						, ROW_NUMBER() OVER (ORDER BY (C.ESTM_SCR + C.PRCE_SCR) DESC, TNDR_AMT) AS RANK
+	    	FROM		T_BI_VEND_MST
+	    	WHERE	1=1
+	    	AND		ANNC_NO = #{P_ANNC_NO}
+	    	AND		ANNC_NGR = 	#{P_ANNC_NGR}
+	    	AND		ROUND_NO = #{P_ROUND_NO}
+					)
+		WHERE	1=1
+    	ORDER BY	RANK
+	</select>
+	
+	<select id="selectBidRoundDetail" resultType="dataEntity">
+    	SELECT	RND.ANNC_NO
+					, RND.ANNC_NGR
+					, RND.ROUND_NO
+					, RND.BID_PSCD
+					, RND.APPR_STCD
+					, RND.ANNC_DT
+					, RND.PRTC_APLY_STDT
+					, RND.PRTC_APLY_ENDT
+					, RND.BIDC_SBMT_STDT
+					, RND.BIDC_SBMT_ENDT
+					, RND.PRPDC_SBMT_STDT
+					, RND.PRPDC_SBMT_ENDT
+					, RND.OPNG_DT
+					, RND.ESTPC_AMT
+					, RND.ENC_ESTPC_AMT
+					, RND.ROUND_RSN
+					, ESTC.SCH_PRCE_AMT
+    	FROM		T_BI_ROUND RND
+    				, T_BI_ESTC_MST ESTC
+    	WHERE	1=1
+    	AND		RND.ANNC_NO = ESTC.ANNC_NO
+    	AND		RND.ANNC_NGR = ESTC.ANNC_NGR
+    	AND		RND.ROUND_NO = ESTC.ROUND_NO
+    	AND		RND.ANNC_NO = #{P_ANNC_NO}
+    	AND		RND.ANNC_NGR = #{P_ANNC_NGR}
+   		AND		RND.ROUND_NO = #{P_ROUND_NO_S}
+    	ORDER BY RND.ROUND_NO DESC
+	</select>
+	
+	<select id="selectTndrItemAmtList" resultType="dataEntity">
+    SELECT A.ANNC_NO
+              , A.ANNC_NGR
+              , B.ROUND_NO
+              , B.VEND_REG_NO
+              , B.ITEM_SN
+              , A.ITEM_NO
+              , A.ITEM_NM
+              , A.STND_NM
+              , B.ITEM_UNIT_AMT
+              , A.ITEM_QTY
+              , A.PCRQ_NO
+              , A.PCRQ_ITEM_SN
+       FROM T_BI_ITEM A
+              , T_BI_TNDR_ITEM B
+    WHERE 1=1
+        AND A.ANNC_NO = B.ANNC_NO
+        AND A.ANNC_NGR = B.ANNC_NGR
+        AND A.ITEM_SN = B.ITEM_SN
+        AND A.ANNC_NO = #{P_ANNC_NO}
+        AND A.ANNC_NGR = #{P_ANNC_NGR}
+        AND B.ROUND_NO = #{P_ROUND_NO}
+        AND B.VEND_REG_NO = #{P_VEND_REG_NO}
+    ORDER BY ITEM_SN
+	</select>
+     	
+</mapper>

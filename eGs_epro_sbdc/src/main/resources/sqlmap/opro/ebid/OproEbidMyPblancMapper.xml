@@ -1,0 +1,1113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * 전자입찰 > 나의 입찰공고 Mapper
+ *
+ * <pre>
+ * sqlmap.oda.oep.elbi 
+ *    |_ OepElbiMyBidPblancMapper.xml
+ * 
+ * </pre>
+ * @date : 2015. 03. 10. 오후 05:43:21
+ * @version : 1.0
+ * @author : 은우소프트 하성윤
+-->
+<mapper namespace="com.eunwoosoft.opro.ebid.dao.OproEbidMyPblancDao">	
+	<!--  
+     * <pre>
+     * 1. 개요 : 나의 입찰공고 목록 조회_페이징 
+     * 2. 처리내용 :
+     *  	TABLE : T_BI_MST(입찰계획마스터)
+     					,T_BI_ROUND(입찰시간정보)
+     * </pre>
+     * @Query ID : selectMyBidPblancListWithPgng
+     * @date : 2015. 03. 10.
+     * @author : 은우소프트 하성윤
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 10.       은우소프트 하성윤              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectMyBidPblancListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="bidPblancList"/>
+			<include refid="BidPblancWhere"/>
+			ORDER BY REG_DT DESC, ANNC_NO DESC, ANNC_NGR DESC
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 나의 입찰공고 목록 총건수조회 
+     * 2. 처리내용 :
+     *  	TABLE : T_BI_MST(입찰계획마스터)
+     					,T_BI_ROUND(입찰시간정보)
+     * </pre>
+     * @Query ID : selectMyBidPblancListTotcnt
+     * @date : 2015. 03. 10.
+     * @author : 은우소프트 하성윤
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 10.       은우소프트 하성윤              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectMyBidPblancListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="bidPblancList"/>
+			<include refid="BidPblancWhere"/>
+		) T1
+		WHERE 1 = 1		
+	</select>
+	
+	<sql id="bidPblancList">
+			SELECT * 
+			FROM (
+						SELECT	A.ANNC_NO
+									,A.ANNC_NGR
+									,B.ROUND_NO
+									,A.BID_PSCD
+									, CASE
+										WHEN	A.BID_PSCD = 'PF20'
+										THEN		
+											CASE
+												WHEN	( TO_DATE(B.BIDC_SBMT_ENDT,'yyyyMMddHH24MISS') > SYSDATE )	
+												THEN		F_CDVAL_INQIRE('BID_PSCD', A.BID_PSCD)
+												ELSE		
+													CASE
+														WHEN	( TO_DATE(B.PRPDC_SBMT_ENDT,'yyyyMMddHH24MISS') > SYSDATE )
+														THEN		F_CDVAL_INQIRE('BID_PSCD', A.BID_PSCD)
+														ELSE		'공고마감'
+													END
+											END	
+										ELSE		F_CDVAL_INQIRE('BID_PSCD', A.BID_PSCD)
+									  END AS BID_PSCD_NM
+									, A.CONT_SECD
+									, F_CDVAL_INQIRE('CONT_SECD', A.CONT_SECD) AS CONT_SECD_NM
+									, A.BID_NM
+									, B.ANNC_DT
+									, B.BIDC_SBMT_ENDT
+									, A.CONT_MTCD
+									, F_CDVAL_INQIRE('CONT_MTCD', A.CONT_MTCD) AS CONT_MTCD_NM
+									, A.REG_DT
+									, A.EMRG_YN
+									, 'N' AS CHCK_YN
+									, (	SELECT 	COUNT(1) 
+										FROM 	T_BI_VEND_DTL 
+										WHERE ANNC_NO = B.ANNC_NO
+										AND		ANNC_NGR = B.ANNC_NGR
+										AND		ROUND_NO = B.ROUND_NO
+										AND		VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+										AND		BID_TPI_SECD = 'OP03') AS BIDC_SBMT_CNT
+						FROM 	T_BI_MST A
+									, T_BI_ROUND B
+									, T_BI_VEND_MST C
+						WHERE	A.ANNC_NO = B.ANNC_NO
+						AND		A.ANNC_NGR = B.ANNC_NGR
+						AND		B.ROUND_NO = ( SELECT MAX(ROUND_NO) FROM T_BI_ROUND WHERE ANNC_NO = A.ANNC_NO AND ANNC_NGR = A.ANNC_NGR ) 
+						AND		A.ANNC_NO = C.ANNC_NO
+						AND		A.ANNC_NGR = C.ANNC_NGR
+						AND		B.ROUND_NO = C.ROUND_NO
+						AND		NVL(A.DEL_AT, 'N') != 'Y'
+						AND		A.BID_PSCD IN ('PF20', 'PF30','PF50','PF60')
+				 		AND		(A.CONT_MTCD = '10001' OR ( A.CONT_MTCD != '10001' AND NVL(C.BID_VEND_PSCD,'OP00') != 'OP01'))
+				 		AND TO_CHAR(SYSDATE, 'yyyyMMddHH24MI') >= NVL(TO_CHAR(TO_DATE(B.ANNC_DT, 'yyyyMMddhh24miss'), 'yyyyMMddHH24MI'),TO_CHAR(SYSDATE, 'yyyyMMddHH24MI'))
+						AND		C.VEND_REG_NO = #{P_VEND_REG_NO}
+						AND A.BID_MTCD IN ( 'BID' )
+						
+				 		UNION
+				 		
+				 		SELECT	A.ANNC_NO
+									,A.ANNC_NGR
+									,B.ROUND_NO
+									,A.BID_PSCD
+									, F_CDVAL_INQIRE('BID_PSCD', A.BID_PSCD) AS BID_PSCD_NM
+									, A.CONT_SECD
+									, F_CDVAL_INQIRE('CONT_SECD', A.CONT_SECD) AS CONT_SECD_NM
+									, A.BID_NM
+									, B.ANNC_DT
+									, B.BIDC_SBMT_ENDT
+									, A.CONT_MTCD
+									, F_CDVAL_INQIRE('CONT_MTCD', A.CONT_MTCD) AS CONT_MTCD_NM
+									, A.REG_DT
+									, A.EMRG_YN
+									, 'Y' AS CHCK_YN
+									, (	SELECT 	COUNT(1) 
+										FROM 	T_BI_VEND_DTL 
+										WHERE ANNC_NO = B.ANNC_NO
+										AND		ANNC_NGR = B.ANNC_NGR
+										AND		ROUND_NO = B.ROUND_NO
+										AND		VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+										AND		BID_TPI_SECD = 'OP03') AS BIDC_SBMT_CNT
+						FROM 	T_BI_MST A
+									, T_BI_ROUND B
+									, T_BI_CONC_BID D
+						WHERE	A.ANNC_NO = B.ANNC_NO
+						AND		A.ANNC_NGR = B.ANNC_NGR
+						AND		B.ROUND_NO = ( SELECT MAX(ROUND_NO) FROM T_BI_ROUND WHERE ANNC_NO = A.ANNC_NO AND ANNC_NGR = A.ANNC_NGR )
+						AND		A.ANNC_NO = D.ANNC_NO
+						AND		A.ANNC_NGR = D.ANNC_NGR
+						AND		NVL(A.DEL_AT, 'N') != 'Y'
+						AND		D.VEND_REG_NO = #{P_VEND_REG_NO}
+						AND 		A.BID_PSCD IN ('PF20', 'PF30','PF50','PF60')
+						AND A.BID_MTCD IN ( 'BID' )
+						AND TO_CHAR(SYSDATE, 'yyyyMMddHH24MI') >= NVL(TO_CHAR(TO_DATE(B.ANNC_DT, 'yyyyMMddhh24miss'), 'yyyyMMddHH24MI'),TO_CHAR(SYSDATE, 'yyyyMMddHH24MI'))
+						AND     A.ANNC_NO||A.ANNC_NGR||B.ROUND_NO NOT IN (	SELECT 	ANNC_NO||ANNC_NGR||ROUND_NO
+									                                                                        FROM   	T_BI_VEND_MST
+									                                                                        WHERE  VEND_REG_NO = #{P_VEND_REG_NO}
+									                                                                        AND     (A.CONT_MTCD = '10001' OR ( A.CONT_MTCD != '10001' AND NVL(BID_VEND_PSCD,'OP00') != 'OP01')))    
+					)
+	</sql>
+	
+	<sql id="BidPblancWhere">
+			WHERE 1=1
+		<if test='P_BID_NM_S != null and P_BID_NM_S != "" '>
+			AND BID_NM LIKE '%'||#{P_BID_NM_S}||'%'
+		</if>
+		<if test='P_ANNC_NO_S != null and P_ANNC_NO_S != "" '>
+			AND ANNC_NO LIKE '%'||#{P_ANNC_NO_S}||'%'
+		</if>
+		<if test='P_CONT_SECD_S != null and P_CONT_SECD_S != "" '>
+			AND CONT_SECD = #{P_CONT_SECD_S}
+		</if>
+		<if test='P_BID_PSCD_S != null and P_BID_PSCD_S != "" '>
+			AND BID_PSCD = #{P_BID_PSCD_S}
+		</if>
+		<if test='P_ANNC_STDT_S != null and P_ANNC_STDT_S != "" '>
+			AND TO_CHAR(TO_DATE(ANNC_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd')  >= #{P_ANNC_STDT_S}
+		</if>
+		<if test='P_ANNC_ENDT_S != null and P_ANNC_ENDT_S != "" '>
+			AND TO_CHAR(TO_DATE(ANNC_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') &lt;= #{P_ANNC_ENDT_S}
+		</if>
+	</sql>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 나의 입찰공고 상세
+     * 2. 처리내용 :
+     *  	TABLE : T_BI_MST(입찰계획)
+     					,T_BI_ROUND(입찰시간정보)
+     * </pre>
+     * @Query ID : selectMyBidPblancDetail
+     * @date : 2015. 03. 10.
+     * @author : 은우소프트 하성윤
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 01. 16.       은우소프트 하성윤              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectMyBidPblancDetail" resultType="dataEntity">
+		SELECT A.ANNC_NO
+					, A.ANNC_NGR
+					, A.BID_NM
+					, A.EMRG_YN
+					, FEBI_GET_CPRAT( A.EMRG_YN) AS EMRG_YN_NM
+					, A.FNGR_BID_YN
+					, FEBI_GET_CPRAT( A.FNGR_BID_YN) AS FNGR_BID_YN_NM
+<!-- 					,  CARE_ESSNTL_AT -->
+					, A.CONT_SECD
+					, F_CDVAL_INQIRE('C00001', A.CONT_SECD) AS CONT_SECD_NM
+					, A.CONT_DECD
+					, F_CDVAL_INQIRE('C00026', A.CONT_DECD) AS CONT_DECD_NM
+					, A.APTS_INC_YN
+					, FEBI_GET_CPRAT( A.APTS_INC_YN) AS APTS_INC_YN_NM
+					, A.ESTT_AMT
+					, A.BID_RNG_CNTN
+<!-- 					, A.CNTRCTPD_CN -->
+					, A.ITNT_BID_YN
+					, FEBI_GET_CPRAT( NVL(A.ITNT_BID_YN, 'N')) AS ITNT_BID_YN_NM
+					, A.G2B_NTFY_YN
+					, FEBI_GET_CPRAT( A.G2B_NTFY_YN) AS G2B_NTFY_YN_NM
+					, A.CONT_MTCD
+					, F_CDVAL_INQIRE('CONT_MTCD', A.CONT_MTCD) AS CONT_MTCD_NM
+					, A.SBID_MTCD
+					, F_CDVAL_INQIRE('C00006', A.SBID_MTCD) AS SBID_MTCD_NM
+					, A.ESTPC_SECD
+					, F_CDVAL_INQIRE('22079', A.ESTPC_SECD) AS ESTPC_SECD_NM
+					, A.BRFS_SECD
+					, F_CDVAL_INQIRE('22420', A.BRFS_SECD) AS BRFS_SECD_NM
+					, A.ASSO_SPDM_CD
+					, F_CDVAL_INQIRE('22035', A.ASSO_SPDM_CD) AS ASSO_SPDM_CD_NM
+					, A.BRFS_PLC_NM
+<!-- 					, A.PRTC_QLF_CNTN -->
+<!-- 					, A.PRPR_MTH_CD -->
+<!-- 					, F_CDVAL_INQIRE(22421, A.PRPR_MTH_CD) AS PRPR_MTH_CD_NM -->
+<!-- 					, A.ONPR_ESSNTL_AT -->
+<!-- 					, CASE WHEN A.ONPR_ESSNTL_AT = 'Y' THEN '필수' ELSE '필수아님' END AS ONPR_ESSNTL_AT_NM -->
+					, A.ESTM_CHRGR_NM
+					, A.CPDF_RT
+<!-- 					, A.FLAW_FLFL_GTN_RT -->
+<!-- 					, A.CRYMY_RT -->
+					, A.ITEM_DRCD
+					, F_CDVAL_INQIRE('C00013', A.ITEM_DRCD) AS ITEM_DRCD_NM
+					, A.SUM_RTCD
+					, F_CDVAL_INQIRE('SUM_RTCD', A.SUM_RTCD) AS SUM_RTCD_NM
+					, A.DLGD_PLC_NM
+					, A.DLGD_TE_CNTN
+<!-- 					, A.INSTL_TMLMT_CN -->
+					, A.BID_PSCD
+					, A.SBID_LWST_RT
+					, A.PRCH_RQR_NO
+					, A.REGR_ID
+					, A.RQSTR_ID
+					, A.CHRGR_NM
+					, A.CHRGR_DEPT_NM	
+					, A.CHRGR_EMAL<!-- 암호화 -->
+					, A.RQSTR_ID
+					, A.RQSTR_NM
+					, A.RQST_DEPT_NO
+					, A.RQST_DEPT_NM
+					, A.RQSTR_EMAL<!-- 암호화 -->
+					, B.ANNC_DT
+					, A.BRFS_DT
+					, B.PRTC_APLY_STDT
+					, B.PRTC_APLY_ENDT
+					, B.BIDC_SBMT_STDT
+					, B.BIDC_SBMT_ENDT
+			        , B.OPNG_DT
+			        <if test='P_CONT_MTCD == "10001" '>
+			        , C.BID_VEND_PSCD
+			        </if>
+			        , D.BASE_ESTPC_AMT
+			        , D.SCH_PRCE_AMT
+<!-- 			        , A.BDDPR_DTSTMN_PRESENTN_AT -->
+		FROM 	T_BI_MST A
+					, T_BI_ROUND B
+					
+					<if test='P_CONT_MTCD == "10001" '>
+					, (SELECT 
+									 ANNC_NO
+		                			,ANNC_NGR
+									,VEND_REG_NO
+									,BID_VEND_PSCD
+						FROM T_BI_VEND_MST
+						WHERE VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+					) C
+					</if>
+					, T_BI_ESTC_MST D
+					
+		WHERE	A.ANNC_NO = B.ANNC_NO
+		AND		A.ANNC_NGR = B.ANNC_NGR
+		<if test='P_CONT_MTCD == "10001" '>
+		AND		A.ANNC_NO = C.ANNC_NO(+)
+		AND		A.ANNC_NGR = C.ANNC_NGR(+)
+		<!-- AND		C.VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR} -->
+		</if>
+		AND		A.ANNC_NO = D.ANNC_NO(+)
+		AND		A.ANNC_NGR = D.ANNC_NGR(+)
+		AND		A.ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR}
+		AND		A.ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER}
+	</select>
+	
+			
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰품목 목록 조회
+     * 2. 처리내용 :
+     *  	TABLE : T_BI_ITEM(입찰품목)
+     * </pre>
+     * @Query ID : selectBidPrdlstList
+     * @date : 2015. 03. 10.
+     * @author : 은우소프트 하성윤
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 10.       은우소프트 하성윤              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectBidPrdlstList" resultType="dataEntity">
+		SELECT	ANNC_NO
+					, ANNC_NGR
+					, ITEM_SN
+					, ITEM_NO
+					, ITEM_NM
+					, ITEM_UNNM
+					, ITEM_QTY
+<!-- 					, PRDLST_REFRN_CN -->
+		FROM		T_BI_ITEM
+		WHERE	ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR}
+		AND		ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER}
+	</select>
+	
+		<!--  
+     * <pre>
+     * 1. 개요 : 입찰 첨부문서 조회
+     * 2. 처리내용 :
+     *  	TABLE : T_BI_FILE(입찰첨부문서)
+     * </pre>
+     * @Query ID : selectBidAtchDocList
+     * @date : 2015. 03. 10.
+     * @author : 은우소프트 하성윤
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 10.       은우소프트 하성윤              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectBidAtchDocList" resultType="dataEntity">
+		SELECT  ANNC_NO
+					, ANNC_NGR
+					, BID_FSCD
+					, FILE_GRP_NO
+		FROM		T_BI_FILE
+		WHERE	ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR}
+		AND		ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER}
+		AND		BID_FSCD = #{P_BID_FSCD, jdbcType=VARCHAR}
+	</select>
+
+	<!--  
+     * <pre>
+     * 1. 개요 : 공고알림정보 목록
+     * 2. 처리내용 :
+     *  	TABLE : TEBI_PUNO(공고알림정보)
+     * </pre>
+     * @Query ID : selectPblancNtcnInfoList
+     * @date : 2015. 03. 10.
+     * @author : 은우소프트 하성윤
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 10.       은우소프트 하성윤              최초 작성 
+     *  =======================================================   
+     -->
+<!-- 	<select id="selectPblancNtcnInfoList" resultType="dataEntity"> -->
+<!-- 		SELECT	ROWNUM -->
+<!-- 					,ANNC_NO -->
+<!-- 					, ANNC_NGR -->
+<!-- 					, NTCN_SN -->
+<!-- 					, BID_CHANGE_NTCN_CD -->
+<!-- 					, NTCN_DE -->
+<!-- 					, NTCN_RESN_CN -->
+<!-- 					, REGR_ID -->
+<!-- 					, REG_DT -->
+<!-- 					, MODR_ID -->
+<!-- 					, MOD_DT -->
+<!-- 					, DEL_AT -->
+<!-- 					, FIB_STEP_CD -->
+<!-- 		FROM		TEBI_PUNO -->
+<!-- 		WHERE	ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR} -->
+<!-- 		AND		ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER} -->
+<!-- 		AND		BID_CHANGE_NTCN_CD = #{P_BID_CHANGE_NTCN_CD, jdbcType=VARCHAR} -->
+<!-- 		AND		ROWNUM = 1 -->
+<!-- 		ORDER BY NTCN_SN DESC -->
+<!-- 	</select> -->
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰계획 진행상태 수정
+     * 2. 처리내용 :
+     *  	TABLE : T_BI_MST(입찰계획마스터)
+     * </pre>
+     * @Query ID : updatebidPlanProgrsSttusUpdt
+     * @date : 2015. 03. 10.
+     * @author : 은우소프트 하성윤
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 10.       은우소프트 하성윤              최초 작성 
+     *  =======================================================   
+     -->
+	<update id="updatebidPlanProgrsSttusUpdt">
+		UPDATE 	T_BI_MST
+		SET		BID_PSCD = #{P_BID_PSCD, jdbcType=VARCHAR}
+					,MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+					<include refid="ComRegr.ModrSetClause"/>
+		WHERE	ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR}
+		AND		ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER}
+	</update>
+		
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰공고의견정보 목록
+     * 2. 처리내용 :
+     *  	TABLE : T_BI_OPNN(입찰공고의견정보)
+     * </pre>
+     * @Query ID : selectBidPblancOpinionInfoList
+     * @date : 2015. 03. 10.
+     * @author : 은우소프트 하성윤
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 10.       은우소프트 하성윤              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectBidPblancOpinionInfoList" resultType="dataEntity">
+		SELECT	ANNC_NO
+					, ANNC_NGR
+					, OPNN_SN
+					, VEND_REG_NO
+					, OPNN_TTL_NM
+					, OPNNR_NM
+					, OPNNR_EMAL
+					, OPNN_CNTN
+					, OPNN_SV_DT
+					, RPLY_TTL_NM
+					, RPLYR_ID
+					, RPLYR_EMAL
+					, RPLY_CNTN
+					, RPLY_SV_DT
+					, DEL_AT
+					, CASE WHEN NVL(RPLY_TTL_NM, 'N') = 'N' THEN '아니오' ELSE '예' END RPLY_YN_NM
+		FROM		T_BI_OPNN
+		WHERE	ANNC_NO = #{P_ANNC_NO}
+		AND		ANNC_NGR = #{P_ANNC_NGR}
+		AND		NVL(DEL_AT, 'N') != 'Y'
+		ORDER BY OPNN_SN 
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰공고의견정보 목록 총건수조회 
+     * 2. 처리내용 :
+     *  	TABLE : T_BI_OPNN(입찰공고의견정보)
+     * </pre>
+     * @Query ID : selectBidPblancOpinionInfoListTotcnt
+     * @date : 2015. 03. 10.
+     * @author : 은우소프트 하성윤
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 10.       은우소프트 하성윤              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectBidPblancOpinionInfoListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			SELECT	ANNC_NO
+						, ANNC_NGR
+						, OPNN_SN
+						, VEND_REG_NO
+						, OPNN_TTL_NM
+						, OPNNR_NM
+						, OPNNR_EMAL
+						, OPNN_CNTN
+						, OPNN_SV_DT
+						, RPLY_TTL_NM
+						, RPLYR_ID
+						, RPLYR_EMAL
+						, RPLY_CNTN
+						, RPLY_SV_DT
+						, DEL_AT
+						, CASE WHEN NVL(RPLY_TTL_NM, 'N') = 'N' THEN '아니오' ELSE '예' END RPLY_YN_NM
+			FROM		T_BI_OPNN
+			WHERE	ANNC_NO = #{P_ANNC_NO}
+			AND		ANNC_NGR = #{P_ANNC_NGR}
+			AND		NVL(DEL_AT, 'N') != 'Y'
+			ORDER BY OPNN_SN 
+		) T1
+		WHERE 1 = 1		
+	</select>
+		
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰공고의견정보 상세
+     * 2. 처리내용 :
+     *  	TABLE : T_BI_OPNN(입찰공고의견정보)
+     * </pre>
+     * @Query ID : selectBidPblancOpinionInfoDetail
+     * @date : 2015. 03. 10.
+     * @author : 은우소프트 하성윤
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 10.       은우소프트 하성윤              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectBidPblancOpinionInfoDetail" resultType="dataEntity">
+		SELECT	ANNC_NO
+					, ANNC_NGR
+					, OPNN_SN
+					, VEND_REG_NO
+					, OPNN_TTL_NM
+					, OPNNR_NM
+					, OPNNR_EMAL<!-- 암호화 -->
+					, OPNN_CNTN
+					, OPNN_SV_DT
+					, TO_CHAR(TO_DATE(substr(OPNN_SV_DT, 0, 8), 'YYYY-MM-DD'), 'YYYY-MM-DD') AS OPNN_SV_DT_F
+					, RPLY_TTL_NM
+					, RPLYR_ID
+					, (SELECT EMPL_NM FROM TMUR_KOEM WHERE EMPL_NO = RPLYR_ID) AS ANSWER_REGISTER_NM
+					, RPLYR_EMAL<!-- 암호화 -->
+					, RPLY_CNTN
+					, RPLY_SV_DT
+					, DEL_AT
+		FROM		T_BI_OPNN
+		WHERE	ANNC_NO = #{P_ANNC_NO}
+		AND		ANNC_NGR = #{P_ANNC_NGR}
+		AND		OPNN_SN = #{P_OPNN_SN}
+		AND		NVL(DEL_AT, 'N') != 'Y'
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰공고 의견 수정
+     * 2. 처리내용 :
+     *  	TABLE : T_BI_OPNN(입찰공고의견정보)
+     * </pre>
+     * @Query ID : updateBidPblancOpinionUpdt
+     * @date : 2015. 03. 10.
+     * @author : 은우소프트 하성윤
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 10.       은우소프트 하성윤              최초 작성 
+     *  =======================================================   
+     -->
+	<update id="updateBidPblancOpinionUpdt">
+		UPDATE	T_BI_OPNN
+		SET		OPNN_CNTN = #{P_OPNN_CNTN , jdbcType=VARCHAR}
+					, OPNN_SV_DT = #{P_OPNN_SV_DT , jdbcType=VARCHAR}
+					, OPNNR_NM = #{P_OPNNR_NM , jdbcType=VARCHAR}
+					, OPNNR_EMAL = #{P_OPNNR_EMAL , jdbcType=VARCHAR}<!-- 암호화 -->
+					, OPNN_TTL_NM = #{P_OPNN_TTL_NM , jdbcType=VARCHAR}
+					, DEL_AT = #{P_DEL_AT , jdbcType=VARCHAR}
+					,MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+					<include refid="ComRegr.ModrSetClause"/>
+		WHERE	ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR}
+		AND		ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER}
+		AND		OPNN_SN = #{P_OPNN_SN, jdbcType=INTEGER}
+	</update>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰공고 의견 등록
+     * 2. 처리내용 :
+     *  	TABLE : T_BI_OPNN(입찰공고의견정보)
+     * </pre>
+     * @Query ID : insertBidPblancOpinionRegist
+     * @date : 2015. 03. 10.
+     * @author : 은우소프트 하성윤
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 10.       은우소프트 하성윤              최초 작성 
+     *  =======================================================   
+     -->
+	<insert id="insertBidPblancOpinionRegist">
+		<selectKey keyProperty="P_OPNN_SN" resultType="string" order="BEFORE">
+			SELECT NVL(MAX(OPNN_SN), 0) + 1
+			FROM 	T_BI_OPNN
+			WHERE	ANNC_NO = #{P_ANNC_NO}
+			AND		ANNC_NGR = #{P_ANNC_NGR}
+		</selectKey>
+		INSERT INTO T_BI_OPNN
+		(
+			ANNC_NO
+			,ANNC_NGR
+			,OPNN_SN
+			,VEND_REG_NO
+			,OPNN_TTL_NM
+			,OPNNR_NM
+			,OPNNR_EMAL
+			,OPNN_CNTN
+			,OPNN_SV_DT
+			,OPNN_CONN_IP
+			,RPLY_TTL_NM
+			,RPLYR_ID
+			,RPLYR_NM
+			,RPLYR_EMAL
+			,RPLY_CNTN
+			,RPLY_SV_DT
+			,RPLY_YN
+			,RPLY_CONN_IP
+			<include refid="ComRegr.RegrColumnClause"/>
+		)
+		VALUES
+		(
+			#{P_ANNC_NO, jdbcType=VARCHAR}
+			, #{P_ANNC_NGR, jdbcType=INTEGER}
+			, #{P_OPNN_SN, jdbcType=INTEGER}
+			, #{P_VEND_REG_NO, jdbcType=VARCHAR}
+			, #{P_OPNN_TTL_NM, jdbcType=VARCHAR}
+			, #{P_OPNNR_NM, jdbcType=VARCHAR}
+			, #{P_OPNNR_EMAL, jdbcType=VARCHAR}
+			, #{P_OPNN_CNTN, jdbcType=VARCHAR}
+			, #{P_OPNN_SV_DT, jdbcType=VARCHAR}
+			, #{P_OPNN_CONN_IP, jdbcType=VARCHAR}
+			, #{P_RPLY_TTL_NM, jdbcType=VARCHAR}
+			, #{P_RPLYR_ID, jdbcType=VARCHAR}
+			, #{P_RPLYR_NM, jdbcType=VARCHAR}
+			, #{P_RPLYR_EMAL, jdbcType=VARCHAR}
+			, #{P_RPLY_CNTN, jdbcType=VARCHAR}
+			, #{P_RPLY_SV_DT, jdbcType=VARCHAR}
+			, #{P_RPLY_YN, jdbcType=VARCHAR}
+			, #{P_RPLY_CONN_IP, jdbcType=VARCHAR}
+			<include refid="ComRegr.RegrColumnClause"/>
+		)
+	</insert>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 업체 정보 조회
+     * 2. 처리내용 :
+     *  	TABLE : VECI_PRCOEN2(조달협력업체)
+     *					T_CU_RPRS(대표자)
+     * </pre>
+     * @Query ID : selectEntrpsinfoinqire
+     * @date : 2015. 03. 10.
+     * @author : 은우소프트 하성윤
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 10.       은우소프트 하성윤              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectEntrpsinfoinqire" resultType="dataEntity">
+		SELECT 	A.VEND_REG_NO
+					, A.BIZRNO
+					, A.VEND_NM
+			        , CASE WHEN B.RPRS_NM IS NULL THEN A.RPRS_NM ELSE B.RPRS_NM END AS RPRS_NM
+			        , A.ZIP
+					, A.ADDR_NM
+					, A.ADDR_DENM
+					, A.TEL_NO
+					, A.FX_NO
+					, B.RPRS_EMAL <!-- 암호화 -->
+					, A.BTNM
+					, A.BCNM
+		FROM		T_CU_MST A
+					, T_CU_RPRS B
+		WHERE	A.VEND_REG_NO = B.VEND_REG_NO(+)
+		AND      B.DLGT_YN(+) = 'Y'
+		AND		A.VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 공동 수급 여부 체크
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectCopertnSpldmdAtCeck
+     * @date : 2015. 09. 02.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 09. 02.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectCopertnSpldmdAtCeck" resultType="dataEntity">
+		SELECT	ANNC_NO
+					,ANNC_NGR
+					,ROUND_NO
+					,VEND_REG_NO
+					,ASSO_SPDM_CD
+					,F_CDVAL_INQIRE('ASSO_SPDM_CD',ASSO_SPDM_CD) AS ASSO_SPDM_CD_NM
+					,ASSO_SPDM_AGRE_DT
+		FROM 	T_BI_VEND_MST ENPAMA
+		WHERE 	ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR}
+		AND	  	ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER}
+		AND		ROUND_NO = #{P_ROUND_NO, jdbcType=INTEGER}
+		AND		VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 업체 참여 정보 등록
+     * 2. 처리내용 :
+     *  	TABLE : T_BI_VEND_MST(업체참여정보)
+     * </pre>
+     * @Query ID : insertEntrpsPartcptnInfoRegist
+     * @date : 2015. 03. 10.
+     * @author : 은우소프트 하성윤
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 10.       은우소프트 하성윤              최초 작성 
+     *  =======================================================   
+     -->
+	<insert id="insertEntrpsPartcptnInfoRegist">
+		INSERT INTO T_BI_VEND_MST(
+			ANNC_NO
+			,ANNC_NGR
+			,ROUND_NO
+			,VEND_REG_NO
+			,BID_VEND_PSCD
+			,TNDR_AMT
+			,TNDR_AMT_ENC
+			,SSN_VKEY
+			,PRCE_SCR
+			,ESTM_SCR
+			,ESTM_ELCD
+			,BID_ELCD
+			,NT_ELGB_RSN
+			,BID_ABND_YN
+			,BID_ABND_SPCD
+			,BID_ABND_RSN
+			,ASSO_SPDM_CD
+			,ASSO_SPDM_AGRE_DT
+			,RMK
+			<include refid="ComRegr.RegrColumnClause"/>
+		)VALUES(
+			#{P_ANNC_NO , jdbcType=VARCHAR}
+			,#{P_ANNC_NGR , jdbcType=INTEGER}
+			,#{P_ROUND_NO , jdbcType=INTEGER}
+			,#{P_VEND_REG_NO , jdbcType=VARCHAR}
+			,#{P_BID_VEND_PSCD , jdbcType=VARCHAR}
+			,#{P_TNDR_AMT , jdbcType=INTEGER}
+			,#{P_TNDR_AMT_ENC , jdbcType=VARCHAR}
+			,#{P_SSN_VKEY , jdbcType=VARCHAR}
+			,#{P_PRCE_SCR , jdbcType=INTEGER}
+			,#{P_ESTM_SCR , jdbcType=INTEGER}
+			,#{P_ESTM_ELCD , jdbcType=VARCHAR}
+			,#{P_BID_ELCD , jdbcType=VARCHAR}
+			,#{P_NT_ELGB_RSN , jdbcType=VARCHAR}
+			,#{P_BID_ABND_YN , jdbcType=VARCHAR}
+			,#{P_BID_ABND_SPCD , jdbcType=VARCHAR}
+			,#{P_BID_ABND_RSN , jdbcType=VARCHAR}
+			,#{P_ASSO_SPDM_CD , jdbcType=VARCHAR}
+			,#{P_ASSO_SPDM_AGRE_DT , jdbcType=VARCHAR}
+			,#{P_RMK , jdbcType=VARCHAR}
+			<include refid="ComRegr.RegrValueClause"/>
+		)
+	</insert>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 업체 참여 상세 등록
+     * 2. 처리내용 :
+     *  	TABLE : T_BI_VEND_DTL(업체참여상세)
+     * </pre>
+     * @Query ID : insertEntrpsPartcptnDetailRegist
+     * @date : 2015. 03. 10.
+     * @author : 은우소프트 하성윤
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 10.       은우소프트 하성윤              최초 작성 
+     *  =======================================================   
+     -->
+	<insert id="insertEntrpsPartcptnDetailRegist">
+		INSERT INTO T_BI_VEND_DTL
+		(
+			ANNC_NO
+			,ANNC_NGR
+			,ROUND_NO
+			,VEND_REG_NO
+			,BID_TPI_SECD
+			<if test='P_TPI_DT != null and P_TPI_DT != "" '>
+			,TPI_DT
+			</if>
+			,TPI_IP
+			,CHRGR_NM
+			,TEL_NO
+			,CP_NO
+			,EMAL_ADDR
+			,CERT_INHR_VAL
+			,ORG_VAL
+			,SIGN_VAL
+			,SSN_VKEY
+			,ORG_HASH_VAL
+			,CERT_DN
+			<if test='P_SIGN_DT != null and P_SIGN_DT != "" '>
+			,SIGN_DT
+			</if>
+			,SIGN_IP
+			,RMK
+			<include refid="ComRegr.RegrColumnClause"/>
+		)
+		VALUES
+		(
+			#{P_ANNC_NO, jdbcType=VARCHAR}
+			,#{P_ANNC_NGR, jdbcType=INTEGER}
+			,#{P_ROUND_NO, jdbcType=INTEGER}
+			,#{P_VEND_REG_NO, jdbcType=VARCHAR}
+			,#{P_BID_TPI_SECD, jdbcType=VARCHAR}
+			<if test='P_TPI_DT != null and P_TPI_DT != "" '>
+			,TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+			</if>
+			,#{P_TPI_IP, jdbcType=VARCHAR}
+			,#{P_CHRGR_NM, jdbcType=VARCHAR}
+			,#{P_TEL_NO, jdbcType=VARCHAR}
+			,#{P_CP_NO, jdbcType=VARCHAR}
+			,#{P_EMAL_ADDR, jdbcType=VARCHAR}
+			,#{P_CERT_INHR_VAL, jdbcType=VARCHAR}
+			,#{P_ORG_VAL, jdbcType=VARCHAR}
+			,#{P_SIGN_VAL, jdbcType=VARCHAR}
+			,#{P_SSN_VKEY, jdbcType=VARCHAR}
+			,#{P_ORG_HASH_VAL, jdbcType=VARCHAR}
+			,#{P_CERT_DN, jdbcType=VARCHAR}
+			<if test='P_SIGN_DT != null and P_SIGN_DT != "" '>
+			,TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+			</if>
+			,#{P_SIGN_IP, jdbcType=VARCHAR}
+			,#{P_RMK, jdbcType=VARCHAR}
+			<include refid="ComRegr.RegrValueClause"/> 
+		)
+	</insert>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 업체 제재 여부 확인
+     * 2. 처리내용 :
+     *  	TABLE : TECI_ENPU(업체제재)
+     * </pre>
+     * @Query ID : selectEntrpsPunshAtCnfirm
+     * @date : 2015. 09. 02.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 09. 02.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+	<select id="selectEntrpsPunshAtCnfirm" resultType="dataEntity">
+		SELECT 	SNCT_STCD 
+		FROM 	T_CU_SNCT
+		WHERE 	VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+		AND   	SNCT_SN = (SELECT MAX(SNCT_SN) FROM T_CU_SNCT WHERE VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR})
+	    AND   	SNCT_ENDE > TO_CHAR(SYSDATE,'YYYYMMDD')
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 업체 서명 정보 등록
+     * 2. 처리내용 :
+     *  	TABLE : TEBI_ENSI(업체서명정보)
+     * </pre>
+     * @Query ID : insertbidPartcptRegist
+     * @date : 2015. 03. 10.
+     * @author : 은우소프트 하성윤
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 10.       은우소프트 하성윤              최초 작성 
+     *  =======================================================   
+     -->
+<!-- 	<insert id="insertEntrpsSignInfoRegist"> -->
+<!-- 		INSERT INTO TEBI_ENSI -->
+<!-- 		( -->
+<!-- 			ANNC_NO -->
+<!-- 			, ANNC_NGR -->
+<!-- 			, VEND_REG_NO -->
+<!-- 			, BID_SIGN_SE_CD -->
+<!-- 			, CRTFCT_ESNTL_VALUE -->
+<!-- 			, ORGINL_VALUE -->
+<!-- 			, ELTSGN_VALUE -->
+<!-- 			, REG_DT -->
+<!-- 			, SSN_VKEY -->
+<!-- 			, ORHA_VALUE -->
+<!-- 		) -->
+<!-- 		VALUES -->
+<!-- 		( -->
+<!-- 			#{P_ANNC_NO , jdbcType=VARCHAR} -->
+<!-- 			,#{P_ANNC_NGR , jdbcType=INTEGER} -->
+<!-- 			,#{P_VEND_REG_NO , jdbcType=VARCHAR} -->
+<!-- 			,#{P_BID_SIGN_SE_CD , jdbcType=VARCHAR} -->
+<!-- 			,#{P_CRTFCT_ESNTL_VALUE , jdbcType=VARCHAR} -->
+<!-- 			,#{P_ORGINL_VALUE , jdbcType=CLOB} -->
+<!-- 			,#{P_ELTSGN_VALUE , jdbcType=CLOB} -->
+<!-- 			,#{P_REG_DT , jdbcType=VARCHAR} -->
+<!-- 			,#{P_SSN_VKEY , jdbcType=VARCHAR} -->
+<!-- 			,#{P_ORHA_VALUE , jdbcType=VARCHAR} -->
+<!-- 		) -->
+<!-- 	</insert> -->
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰 일정 조회
+     * 2. 처리내용 :
+     *  	TABLE : T_BI_ROUND(입찰시간정보)
+     * </pre>
+     * @Query ID : selectBidSchdulDetail
+     * @date : 2015. 03. 10.
+     * @author : 은우소프트 하성윤
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 10.       은우소프트 하성윤              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectBidSchdulDetail" resultType="dataEntity">
+		SELECT	ANNC_NO
+					, ANNC_NGR
+					, ROUND_NO
+					, ANNC_DT
+					, BIDC_SBMT_STDT
+					, BIDC_SBMT_ENDT
+					, PRPDC_SBMT_STDT
+					, PRPDC_SBMT_ENDT
+					, OPNG_DT
+		FROM 	T_BI_ROUND
+		WHERE	ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR}
+		AND		ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER}
+		AND		ROUND_NO = #{P_ROUND_NO, jdbcType=INTEGER}
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : IP 중복 체크
+     * 2. 처리내용 :
+     *  	TABLE : T_BI_VEND_DTL(입찰참여상세)
+     * </pre>
+     * @Query ID : selectBidSchdulDetail
+     * @date : 2015. 03. 10.
+     * @author : 은우소프트 하성윤
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 10.       은우소프트 하성윤              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectIpDplctCeck" resultType="dataEntity">
+		SELECT	COUNT(*) AS CNT
+		FROM		T_BI_VEND_DTL
+		WHERE	ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR}
+		AND		ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER}
+		AND      ROUND_NO = #{P_ROUND_NO, jdbcType=INTEGER}
+		AND		BID_TPI_SECD = #{P_BID_TPI_SECD , jdbcType=VARCHAR}
+		AND		SIGN_IP = #{P_IP_ADRES, jdbcType=VARCHAR}
+		AND		VEND_REG_NO != #{P_VEND_REG_NO, jdbcType=VARCHAR}
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 업체제재목록
+     * 2. 처리내용 :
+     *  	TABLE : TECI_ENPU(업체제재)
+     * </pre>
+     * @Query ID : selectEntrpsPunishList
+     * @date : 2015. 08. 19.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 08. 19.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectEntrpsPunishList" resultType="dataEntity">
+		 SELECT TMP.SNCT_ESTM_DE
+                  	, TMP.SNCT_STCD
+                  	, TMP.SNCT_STCD_NM
+                  	, TMP.SNCT_BSS_CNTN
+                 	, TMP.SNCT_RSN_CNTN
+                  	, TMP.SNCT_STDE
+                  	, TMP.SNCT_ENDE
+                  	, TMP.PROCR_ID
+                  	, TMP.PROCR_NM
+                  	, TMP.RANK
+         FROM 	( SELECT  DENSE_RANK() OVER(ORDER BY T.SNCT_SN DESC) AS RANK
+				                  ,T.SNCT_ESTM_DE
+				                  , T.SNCT_STCD
+				                  , T.SNCT_STCD_NM
+				                  , T.SNCT_BSS_CNTN
+				                  , T.SNCT_RSN_CNTN
+				                  , T.SNCT_STDE
+				                  , T.SNCT_ENDE
+				                  , T.PROCR_ID
+				                  , T.PROCR_NM
+         				FROM (SELECT	    SNCT_ESTM_DE
+							                  , SNCT_STCD
+							                  , F_CDVAL_INQIRE('SNCT_STCD', SNCT_STCD) AS SNCT_STCD_NM
+							                  , SNCT_BSS_CNTN
+							                  , SNCT_RSN_CNTN
+							                  , SNCT_STDE
+							                  , SNCT_ENDE
+							                  , PROCR_ID
+							                  , PROCR_NM
+							                  , SNCT_SN
+         						   FROM 	T_CU_SNCT
+                                 WHERE 1=1
+                                      AND VEND_REG_NO = #{P_VEND_REG_NO , jdbcType=VARCHAR}
+                                      AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN SNCT_STDE AND SNCT_ENDE
+                                  UNION
+						         SELECT  SNCT_ESTM_DE
+							                  , SNCT_STCD
+							                  , F_CDVAL_INQIRE('SNCT_STCD', SNCT_STCD) AS SNCT_STCD_NM
+							                  , SNCT_BSS_CNTN
+							                  , SNCT_RSN_CNTN
+							                  , SNCT_STDE
+							                  , SNCT_ENDE
+							                  , PROCR_ID
+							                  , PROCR_NM
+							                  , SNCT_SN
+						           FROM  T_CU_SNCT
+						         WHERE 1=1
+						             AND VEND_REG_NO = #{P_VEND_REG_NO , jdbcType=VARCHAR}
+                                     AND SNCT_STCD='140000'
+                                  ) T
+                       ) TMP
+          WHERE TMP.RANK='1'
+	</select>
+	
+	<select id="selectBidDcDetail" resultType="dataEntity">
+		SELECT 	ANNC_NO
+					,ANNC_NGR
+					,VEND_REG_NO
+					,ATNPE_NM
+					,ATNPE_TEL_NO
+					,ATNPE_CP_NO
+					,ATNPE_EMAL
+					,RMK
+		FROM		T_BI_BRFS_VEND
+		WHERE	ANNC_NO = #{P_ANNC_NO}
+		AND		ANNC_NGR = #{P_ANNC_NGR} 
+		AND		VEND_REG_NO = #{P_VEND_REG_NO}
+	</select>
+	
+	<insert id="insertBidDcRegist">
+		MERGE INTO T_BI_BRFS_VEND
+		USING DUAL
+		ON ( 	ANNC_NO = #{P_ANNC_NO}
+		AND  	ANNC_NGR = #{P_ANNC_NGR} 
+		AND	VEND_REG_NO = #{P_VEND_REG_NO})
+		WHEN MATCHED THEN
+			UPDATE SET
+			ATNPE_NM = #{P_ATNPE_NM}
+			,ATNPE_TEL_NO = #{P_ATNPE_TEL_NO}
+			,ATNPE_EMAL = #{P_ATNPE_EMAL}
+			,MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+			<include refid="ComRegr.ModrSetClause"/>
+		WHEN NOT MATCHED THEN
+			INSERT (
+				ANNC_NO
+				,ANNC_NGR
+				,VEND_REG_NO
+				,ATNPE_NM
+				,ATNPE_TEL_NO
+				,ATNPE_EMAL
+				<include refid="ComRegr.RegrColumnClause"/>
+			)VALUES(
+				#{P_ANNC_NO}
+				,#{P_ANNC_NGR}
+				,#{P_VEND_REG_NO}
+				,#{P_ATNPE_NM}
+				,#{P_ATNPE_TEL_NO}
+				,#{P_ATNPE_EMAL}
+				<include refid="ComRegr.RegrValueClause"/>
+			)
+	</insert>
+	
+	<delete id="deleteBidDcDel">
+		DELETE 	T_BI_BRFS_VEND
+		WHERE	ANNC_NO = #{P_ANNC_NO}
+		AND		ANNC_NGR = #{P_ANNC_NGR} 
+		AND		VEND_REG_NO = #{P_VEND_REG_NO}
+	</delete>
+</mapper>

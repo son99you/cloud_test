@@ -1,0 +1,56 @@
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+<script type="text/javascript" src="../library/json3.min.js"></script>
+<script type="text/javascript" src="../library/iecompatibility.js"></script>
+
+<script type="text/javascript" src="../vestsign.js"></script>
+<SCRIPT language=javascript>
+
+  var option = {
+      encoding: 'base64',
+      charset: 'UTF-8'        // UTF-8, UTF-8 선택
+  };
+
+  var errorcallback = function (error) {
+    // error = { code, getReason() };
+    if(error.code == -9999) console.log(error.code);  // 취소 버튼 이벤트 error.code: -9999
+    else alert(error.msg);
+  };
+
+  var callback = function (result) {
+    // if( typeof result !== 'undefined' ) {
+      document.getElementById('hashedValue').value = result;
+    // } else alert("성공");
+  };
+
+  function envelope() {
+      var plain = document.getElementById('hashValue').value;
+
+    yettie.envelope(undefined, plain, option, callback, errorcallback);
+  };
+
+  function deenvelope() {
+      var plain = document.getElementById('hashedValue').value;
+
+    yettie.deenvelope(undefined, plain, option, function(result) {alert(result);}, errorcallback);
+  };
+
+</SCRIPT>
+<br><br><br>
+<table border="1" align="center" width=50%>
+    <tr>
+        <td align=center><br>
+                  전자봉투 원문  : <textarea rows='10' style="width:90%" id="hashValue">envelope test</textarea><br><br>
+                  전자봉투 (된)문  : <textarea rows='10' style="width:90%" id="hashedValue"></textarea><br><br>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" align=center><br>
+                  <input type=button onclick=envelope() value="Envelope" style="width:150">
+                  <input type=button onclick=deenvelope() value="Deenvelope" style="width:150">
+                <br><br>
+        </td>
+    </tr>
+</table>
+

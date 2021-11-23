@@ -1,0 +1,116 @@
+@charset "utf-8";
+/* CSS Document */
+
+#pop-wrap { position: relative;   }
+#pop-wrap .p-inner { padding: 0 40px; }
+#pop-wrap .pop-head { background: #00a3e4; height: 60px; }
+#pop-wrap .pop-head .pop-title { float: left; font-size: 24px; color: #fff; line-height: 60px;  }
+#pop-wrap .pop-head .close { float: right; line-height: 60px; }
+#pop-wrap .pop-content { padding: 31px 0 10px; }
+#pop-wrap .tb-tit { margin-bottom: 6px; font-size:14px;}
+#pop-wrap .board-write table { margin-bottom: 20px; }
+#pop-wrap .btn-box { text-align: center; text-decoration:none; }
+#pop-wrap .caption{visibility:hidden;height:0;width:0;font-size:0;line-height:0}
+/* a:link, a:visited{text-decoration:none;} */
+
+html{-webkit-text-size-adjust:100%;}
+a, abbr, acronym, address, applet, articel, aside, audio, b, big, blockquote, body, canvas, caption, cener, cite, code, dd, del, details, dfn, dialog, div, dl, dt, em, embed, 
+fieldset, figcaption, figure, font, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, hr, html, i, iframe, img, ins, kbd, 
+label, legend, li, mark, menu, meter, nav, object, ol, output, p, pre, progress, q, rq, rt, ruby, s, samp, section, small, span, stricke, strong, sub, summary, 
+sup, table, tbody, td, tfoot, th, thead, time, tr, tt, u, ul, var, video, xmp{
+	margin:0;
+	padding:0;
+	border:0; 
+	color:#4c4c4c;
+	font-size:14px;   
+	background:transparent;   
+	line-height:110%;
+}
+
+/* skip navigation */
+.sknavi{position:absolute;z-index:1000;top:-500px;}
+.sknavi:focus, 
+.sknavi:active{top:0;display:block;width:100%;text-align:center;font-size:100%;font-weight:600;background-color:#f7f7f7;text-decoration:none;height:40px;line-height:40px;color:#000;border-bottom:1px solid #ddd;}
+
+/* link */
+a{ color:#4c4c4c;}
+a:link, a:visited{text-decoration:none;}
+
+/* headings */ 
+h1, h2, h3, h4, h5, h6{margin:0;padding:0;  font-family:inherit; font-weight:700;}  
+table{width: 100%; border-collapse:collapse;}
+
+/* element */
+img{max-width:100%; height:auto; vertical-align:middle;}
+ul{list-style-type:none;}
+ol{list-style-type:decimal;}
+form{clear:both;margin:0;padding:0;border:0;}
+textarea{overflow:auto;resize:none;}
+/* input, textarea, select, button{font-size:13px; outline: none; color: #4c4c4c; cursor: pointer} */
+input, textarea, button{font-size:13px; outline: none; color: #4c4c4c; cursor: pointer}
+/* input:focus { border: 0;} */
+
+label *{vertical-align:middle;}
+video, audio, object, embed, iframe{max-width:100%;}
+legend{position:absolute;top:-9999px;left:-9999px;z-index:1;}
+caption{visibility:hidden;height:0;width:0;font-size:0;line-height:0}
+th {font-weight:bold;}
+
+input[type="file"],
+input[type="text"], 
+input[type="password"]{
+	padding:0 10px; 
+	color:#4c4c4c; 
+	height:30px;
+	/* line-height:30px; */
+	border:1px solid #d1d1d1;   
+	font-family: 'Nanum Gothic', sans-serif;   
+} 
+::-webkit-input-placeholder {color:#4c4c4c; font-size:15px; }
+:-moz-placeholder {color:#4c4c4c; font-size:15px;opacity:  1; }
+::-moz-placeholder { color:#4c4c4c; font-size:15px; opacity:  1; }
+:-ms-input-placeholder {color:#4c4c4c; font-size:15px; color:#fff; }
+
+/*  select::-ms-expand { 
+  display: none;
+} 
+
+select{
+	height:30px;
+	padding:0 0 0 10px;
+	color:#4c4c4c; 
+	border:1px solid #ccc;
+	-webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+	background: #fff url('../images/icon_select.png') no-repeat right center;   
+}   
+select::-ms-expand { display: none; }
+*/
+
+
+.board-btn2 { width: 62px; height: 32px; background: #1262b3; color: #ffffff; font-size: 15px; line-height: 32px; font-weight: bold; }
+ .boardPd td { padding: 0 10px; }
+ 
+ /* border */
+.bd0 { border: 0 !important; }
+.br_r_d6d6d6 { border-right: 1px solid #d6d6d6 !important; }
+
+select {border:1px solid #dedede;font-size:12px;vertical-align:middle;line-height:1.5em;font-family:Dotum, 'NanumGothic', Arial, sans-serif;color:#555}
+
+.selectLayer select , .selectLayer2 select, .selectLayer4 select{
+    width: 100% ! important;
+    height: 28px ! important;
+}
+
+.selectLayer2{ position:relative; line-height:normal; display:inline-block; *display:inline; vertical-align:middle; background:#fff; *zoom:1; float: left; margin: 2px 0 0 0px;}
+.selectLayer2 *{ margin:0; padding:0; cursor:pointer; font-size:12px;}
+
+input, select {font-size:100%;vertical-align:middle}
+
+table td{
+    position: relative;
+    word-break:break-all;
+}

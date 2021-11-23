@@ -1,0 +1,784 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- -->
+<mapper namespace="com.eunwoosoft.ipro.sytm.dao.IproSytmEstmFrmDao">
+
+
+	<!-- DB 테이블 CREATE 테스트 -->
+	<insert id="insertDataBaseRegist">
+	
+		CREATE TABLE ${P_DATABASE_NM} (
+			
+			${P_DATABASE_NM}_NO VARCHAR2(30)
+			
+		)
+		
+	</insert>
+
+<!-- 시작 -->
+
+	<select id="selectpFrmNoCreat" resultType="String">
+		SELECT 'FRM'||TO_CHAR(SYSDATE, 'yyyy')||'-'||LPAD(NVL(MAX(SUBSTR(ESTM_FRM_NO,(INSTR(ESTM_FRM_NO, '-', 1, 1)+1), 5)), 0) + 1, 5, 0) AS FRM_NO
+		  FROM T_ESTM_FRM_MST
+		WHERE TO_CHAR(SYSDATE, 'yyyy') = SUBSTR(ESTM_FRM_NO, 4, 4)
+	</select>
+
+	<!-- 평가서식 마스터 -->
+	<insert id="insertEstmFrmMstRegist">
+        INSERT INTO T_ESTM_FRM_MST (
+		                    ESTM_FRM_NO
+		                  , ESTM_FRM_NM
+		                  , ESTM_PROCD_SECD
+		                 <include refid="ComRegr.RegrColumnClause"/>
+        ) VALUES (
+		                    #{P_ESTM_FRM_NO, jdbcType=VARCHAR}
+		                  , #{P_ESTM_FRM_NM , jdbcType=VARCHAR}
+		                  , #{P_ESTM_PROCD_SECD, jdbcType=VARCHAR}
+		                  <include refid="ComRegr.RegrValueClause"/>
+		)
+	</insert>
+	
+	<!-- 평가서식항목 마스터 -->
+	<insert id="insertEstmFrmMstItemRegist">
+        INSERT INTO T_ESTM_FRM_ITEM (
+		                    ESTM_FRM_NO
+		                  , ESTM_ITEM_NO
+		                  , ESTM_ITEM_NM
+		                  , ESTM_ITEM_DSMK
+		                  , ESTM_ITEM_DESC
+		                  , ESTM_MTHD_SECD
+		                 <include refid="ComRegr.RegrColumnClause"/>
+        ) VALUES (
+		                    #{P_ESTM_FRM_NO, jdbcType=VARCHAR}
+		                  , #{P_ESTM_ITEM_NO, jdbcType=VARCHAR}
+		                  , #{P_ESTM_ITEM_NM, jdbcType=VARCHAR}
+		                  , #{P_ESTM_ITEM_DSMK, jdbcType=VARCHAR}
+		                  , #{P_ESTM_ITEM_DESC, jdbcType=VARCHAR}
+		                  , #{P_ESTM_MTHD_SECD, jdbcType=VARCHAR}
+		                  <include refid="ComRegr.RegrValueClause"/>
+		)
+	</insert>
+
+
+	<select id="selectEstmFrmDetail" resultType="dataEntity">
+		<include refid="estmFrmList" />
+		WHERE 1=1
+        AND ESTM_FRM_NO = #{P_ESTM_FRM_NO}
+	</select>
+
+	
+	
+	<select id="selectEstmFrmItemList" resultType="dataEntity">
+		SELECT 
+        		 ESTM_FRM_NO
+				,ESTM_ITEM_NO
+				,ESTM_ITEM_NM
+				,ESTM_ITEM_DSMK
+				<!-- ,ESTM_ITEM_DESC -->
+				,REPLACE(ESTM_ITEM_DESC, CHR(13)||CHR(10), <![CDATA[ '<br>'  ]]>) AS ESTM_ITEM_DESC
+				,ESTM_MTHD_SECD
+				,F_CDVAL_INQIRE('ESTM_MTHD_SECD', ESTM_MTHD_SECD) AS ESTM_MTHD_SECD_NM
+				,REGR_ID
+				,REGR_NM
+				,REG_DT
+				,MODR_ID
+				,MODR_NM
+				,MOD_DT
+				,CONN_IP
+				,DEL_AT
+
+        FROM T_ESTM_FRM_ITEM
+        WHERE 1=1
+        AND ESTM_FRM_NO = #{P_ESTM_FRM_NO}
+        ORDER BY ESTM_ITEM_NO ASC
+	</select>
+	
+
+	<select id="selectEstmFrmList" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause" />
+			SELECT * FROM (
+				<include refid="estmFrmList" />
+				<include refid="estmFrmWhere" />
+			ORDER BY ESTM_FRM_NO DESC
+			) T1
+			WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause" />
+	</select>
+	
+	<select id="selectpLicenseNoCreat" resultType="String">
+		SELECT 'L'||TO_CHAR(SYSDATE, 'yyyy')||'-'||LPAD(NVL(MAX(SUBSTR(LICENSE_NO,(INSTR(LICENSE_NO, '-', 1, 1)+1), 5)), 0) + 1, 5, 0) AS LICENSE_NO
+		  FROM T_LICENSE_MST
+		WHERE TO_CHAR(SYSDATE, 'yyyy') = SUBSTR(LICENSE_NO, 2, 4)
+	</select>
+	
+	<insert id="insertLicenseMstRegist">
+        INSERT INTO T_LICENSE_MST (
+		                    LICENSE_NO
+		                  , BIZRNO
+		                  , VEND_REG_NO
+		                  , VEND_NM
+		                  , VERSION_NO
+		                  , VEND_IP_ADDR
+		                  , LICENSE_PSCD
+		                  , LICENSE_ST_DATE
+		                  , LICENSE_END_DATE
+		                  , LICENSE_PROCD_SECD
+		                 <include refid="ComRegr.RegrColumnClause"/>
+        ) VALUES (
+		                    #{P_LICENSE_NO, jdbcType=VARCHAR}
+		                  , #{P_BIZRNO , jdbcType=VARCHAR}
+		                  , #{P_VEND_REG_NO, jdbcType=VARCHAR}
+		                  , #{P_VEND_NM, jdbcType=VARCHAR}
+		                  , #{P_VERSION_NO, jdbcType=VARCHAR}
+		                  , #{P_VEND_IP_ADDR, jdbcType=VARCHAR}
+		                  , 'A'
+		                  , REGEXP_REPLACE(#{P_LICENSE_ST_DATE, jdbcType=VARCHAR}, '-')
+		                  , REGEXP_REPLACE(#{P_LICENSE_END_DATE, jdbcType=VARCHAR}, '-')
+		                  , #{P_LICENSE_PROCD_SECD, jdbcType=VARCHAR}
+		                  <include refid="ComRegr.RegrValueClause"/>
+		)
+	</insert>
+	
+	
+	<update id="mergeFileMstRegist">
+		MERGE INTO T_MM_FILE_MST
+		USING DUAL
+		ON (	FILE_GRP_NO = #{P_FILE_GRP_NO, jdbcType=VARCHAR}
+		AND	FILE_SN = #{P_FILE_SN, jdbcType=INTEGER}
+		AND	FILE_DOC_SECD = #{P_FILE_DOC_SECD, jdbcType=INTEGER})
+		WHEN MATCHED THEN
+			UPDATE	SET		
+				  SV_FILE_NM = #{P_SV_FILE_NM , jdbcType=VARCHAR}
+				, SYS_FILE_NM = #{P_SYS_FILE_NM , jdbcType=VARCHAR}
+				, FILE_LCTN = #{P_FILE_LCTN , jdbcType=VARCHAR}
+				,MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+				<include refid="ComRegr.ModrSetClause"/>
+		WHEN NOT MATCHED THEN
+			INSERT(
+				 FILE_GRP_NO
+				,FILE_SN
+				,SV_FILE_NM
+				,SYS_FILE_NM
+				,FILE_LCTN
+				,FILE_DOC_NM
+				,FILE_DOC_SECD
+				<include refid="ComRegr.RegrColumnClause"/>
+			)VALUES(
+				 #{P_FILE_GRP_NO, jdbcType=VARCHAR}
+				,#{P_FILE_SN, jdbcType=VARCHAR}
+				,#{P_SV_FILE_NM, jdbcType=VARCHAR}
+				,#{P_SYS_FILE_NM, jdbcType=VARCHAR}
+				,#{P_FILE_LCTN, jdbcType=VARCHAR}
+				,#{P_FILE_DOC_NM, jdbcType=VARCHAR}
+				,#{P_FILE_DOC_SECD, jdbcType=VARCHAR}
+				<include refid="ComRegr.RegrValueClause"/>
+			)
+	</update>
+	
+	
+	<select id="selectLicenseList" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause" />
+			SELECT * FROM (
+				<include refid="licenseList" />
+				<include refid="licenseWhere" />
+			ORDER BY LICENSE_NO DESC
+			) T1
+			WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause" />
+	</select>
+	
+	<select id="selectLicenseListTotCnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="licenseList" />
+			<include refid="licenseWhere" />
+		ORDER BY LICENSE_NO DESC 
+		) T1
+		WHERE 1 = 1
+	</select>
+	
+	<sql id="licenseList">
+        SELECT 
+        		 LICENSE_NO
+				,BIZRNO
+				,VEND_REG_NO
+				,VEND_NM
+				,VERSION_NO
+				,F_CDVAL_INQIRE('VERSION_NO', VERSION_NO) AS VERSION_NM
+				,VEND_IP_ADDR
+				,FILE_GRP_NO
+				,LICENSE_PSCD
+				,F_CDVAL_INQIRE('LICENSE_PSCD', LICENSE_PSCD) AS LICENSE_PSCD_NM
+				,LICENSE_PROCD_SECD
+				,F_CDVAL_INQIRE('LICENSE_PROCD_SECD', LICENSE_PROCD_SECD) AS LICENSE_PROCD_NM
+				,LICENSE_ST_DATE
+				,LICENSE_END_DATE
+				,REGR_ID
+				,REGR_NM
+				,REG_DT
+				,MODR_ID
+				,MODR_NM
+				,MOD_DT
+				,CONN_IP
+				,DEL_AT
+        FROM T_LICENSE_MST
+        
+	</sql>
+
+	<sql id="licenseWhere">
+		<where>
+			1=1 
+			AND NVL(DEL_AT,'N') =  'N' 
+			<if test='P_BIZRNO_S != null and P_BIZRNO_S != "" '>
+				AND BIZRNO = #{P_BIZRNO_S}
+			</if>
+			<if test='P_VEND_NM_S != null and P_VEND_NM_S != "" '>
+				AND VEND_NM LIKE '%'||#{P_VEND_NM_S}||'%'
+			</if>
+		</where>
+	</sql>
+	
+	<select id="selectLicenseDetail" resultType="dataEntity">
+		<include refid="licenseList" />
+		WHERE 1=1
+        AND LICENSE_NO = #{P_LICENSE_NO}
+	</select>
+	
+	<update id="updateLicenseMstUpdt">
+		UPDATE	T_LICENSE_MST 
+		SET		 
+				 BIZRNO = #{P_BIZRNO, jdbcType=VARCHAR}
+				,VEND_NM = #{P_VEND_NM, jdbcType=VARCHAR}
+				,VERSION_NO = #{P_VERSION_NO, jdbcType=VARCHAR}
+				,VEND_IP_ADDR = #{P_VEND_IP_ADDR, jdbcType=VARCHAR}
+				,LICENSE_PSCD = #{P_LICENSE_PSCD, jdbcType=VARCHAR}
+				,LICENSE_ST_DATE = REGEXP_REPLACE(#{P_LICENSE_ST_DATE, jdbcType=VARCHAR}, '-')
+		        ,LICENSE_END_DATE = REGEXP_REPLACE(#{P_LICENSE_END_DATE, jdbcType=VARCHAR}, '-')
+		        ,LICENSE_PROCD_SECD = #{P_LICENSE_PROCD_SECD, jdbcType=VARCHAR}
+				,MODR_ID = #{USR_ID, jdbcType=VARCHAR}
+				,MODR_NM = #{USR_NM, jdbcType=VARCHAR}
+				,MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+		WHERE	1=1
+		AND		LICENSE_NO	=	#{P_LICENSE_NO, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateLicensePscdUpdt">
+		UPDATE	T_LICENSE_MST 
+		SET		 
+				LICENSE_PSCD = #{P_LICENSE_PSCD, jdbcType=VARCHAR}
+				,FILE_GRP_NO = #{P_FILE_GRP_NO, jdbcType=VARCHAR}
+				,MODR_ID = #{USR_ID, jdbcType=VARCHAR}
+				,MODR_NM = #{USR_NM, jdbcType=VARCHAR}
+				,MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+		WHERE	1=1
+		AND		LICENSE_NO	=	#{P_LICENSE_NO, jdbcType=VARCHAR}
+	</update>
+	
+	
+	<delete id="updateLicenseMstDelt">
+		UPDATE	T_LICENSE_MST 
+		SET		 
+				 DEL_AT = #{P_DEL_AT, jdbcType=VARCHAR}
+				,MODR_ID = #{USR_ID, jdbcType=VARCHAR}
+				,MODR_NM = #{USR_NM, jdbcType=VARCHAR}
+				,MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+		WHERE	1=1
+		AND		LICENSE_NO	=	#{P_LICENSE_NO, jdbcType=VARCHAR}
+	</delete>
+	
+	
+	<select id="selectLicenseExcelList" resultType="dataEntity">
+			SELECT ROWNUM AS RNUM, A.* FROM(
+				SELECT * FROM (
+					<include refid="licenseList" />
+					<include refid="licenseWhere" />
+				ORDER BY LICENSE_NO DESC
+				) T1
+				WHERE 1 = 1
+			)A
+	</select>
+
+	<select id="selectEstmFrmExcelList" resultType="dataEntity">
+			SELECT ROWNUM AS RNUM, A.* FROM(
+				SELECT * FROM (
+					<include refid="estmFrmList" />
+					<include refid="estmFrmWhere" />
+				ORDER BY ESTM_FRM_NO DESC
+				) T1
+				WHERE 1 = 1
+			)A
+	</select>
+
+	<select id="selectEstmFrmListTotCnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="estmFrmList" />
+			<include refid="estmFrmWhere" />
+		ORDER BY ESTM_FRM_NO DESC 
+		) T1
+		WHERE 1 = 1
+	</select>
+	
+	<sql id="estmFrmList">
+        SELECT 
+        		 ESTM_FRM_NO
+				,ESTM_FRM_NM
+				,ESTM_PROCD_SECD
+				,F_CDVAL_INQIRE('ESTM_PROCD_SECD', ESTM_PROCD_SECD) AS ESTM_PROCD_SECD_NM
+				,REGR_ID
+				,REGR_NM
+				,REG_DT
+				,MODR_ID
+				,MODR_NM
+				,MOD_DT
+				,CONN_IP
+				,DEL_AT
+        FROM T_ESTM_FRM_MST
+        
+	</sql>
+
+	<sql id="estmFrmWhere">
+		<where>
+			1=1 
+			AND NVL(DEL_AT,'N') =  'N' 
+			<if test='P_ESTM_PROCD_SECD_S != null and P_ESTM_PROCD_SECD_S != "" '>
+				AND ESTM_PROCD_SECD = #{P_ESTM_PROCD_SECD_S}
+			</if>
+			<if test='P_ESTM_FRM_NM_S != null and P_ESTM_FRM_NM_S != "" '>
+				AND ESTM_FRM_NM LIKE '%'||#{P_ESTM_FRM_NM_S}||'%'
+			</if>
+		</where>
+	</sql>
+
+
+	<update id="updateEstmFrmMstUpdt"><!--  timeout="120" -->
+		UPDATE	T_ESTM_FRM_MST 
+		SET		 
+				 ESTM_FRM_NO = #{P_ESTM_FRM_NO, jdbcType=VARCHAR}
+				,ESTM_FRM_NM = #{P_ESTM_FRM_NM, jdbcType=VARCHAR}
+				,ESTM_PROCD_SECD = #{P_ESTM_PROCD_SECD, jdbcType=VARCHAR}
+				,MODR_ID = #{USR_ID, jdbcType=VARCHAR}
+				,MODR_NM = #{USR_NM, jdbcType=VARCHAR}
+				,MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+		WHERE	1=1
+		AND		ESTM_FRM_NO	=	#{P_ESTM_FRM_NO, jdbcType=VARCHAR}
+	</update>
+	
+	
+	<delete id="deleteEstmFrmMstDelt">
+		DELETE FROM T_ESTM_FRM_MST
+		WHERE	1=1
+		AND		ESTM_FRM_NO = #{P_ESTM_FRM_NO, jdbcType=VARCHAR}
+	</delete>
+	
+	
+	<delete id="deleteEstmFrmItemDelt">
+		DELETE FROM T_ESTM_FRM_ITEM
+		WHERE	1=1
+		AND		ESTM_FRM_NO = #{P_ESTM_FRM_NO, jdbcType=VARCHAR}
+	</delete>
+
+
+
+
+<!-- 종료 -->
+
+
+	<resultMap id="FrmCntn" type="dataEntity">
+		<result property="FRM_CNTN" column="FRM_CNTN" jdbcType="CLOB" javaType="java.lang.String" />
+	</resultMap>
+
+	<select id="contFormListWithPgng" resultType="dataEntity" resultMap="FrmCntn">
+		<include refid="ComPgng.pgngHeaderClause" />
+			SELECT * FROM (
+				<include refid="contFormList" />
+				<include refid="contFormWhere" />
+			ORDER BY REG_DT, CONT_SECD
+			) T1
+			WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause" />
+	</select>
+
+	<select id="contFormListTotCnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="contFormList" />
+			<include refid="contFormWhere" />
+		ORDER BY REG_DT, CONT_SECD 
+		) T1
+		WHERE 1 = 1
+	</select>
+
+
+	<sql id="contFormList">
+        SELECT FRM_NO
+                  , FRM_NM
+                  , CONT_SECD
+                  , F_CDVAL_INQIRE('CONT_SECD', CONT_SECD) AS CONT_SECD_NM
+                  , CONT_KDCD
+                  , F_CDVAL_INQIRE('CONT_KDCD', CONT_KDCD) AS CONT_KDCD_NM
+                  , APPC_DT
+                  , FRM_CNTN
+                  , VRSN
+                  , USE_YN
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+           FROM T_MM_FORM_MST
+	</sql>
+
+	<sql id="contFormWhere">
+		<where>
+			1=1 
+			AND NVL(DEL_AT,'N') =  'N' 
+		 	AND NVL(USE_YN,'N') =  'Y'   
+			<if test='P_CONT_SECD_S != null and P_CONT_SECD_S != "" '>
+				AND CONT_SECD = #{P_CONT_SECD_S}
+			</if>
+			<if test='P_APPC_BEGIN_DT_S != null and P_APPC_BEGIN_DT_S != "" '>
+				AND APPC_DT >= #{P_APPC_BEGIN_DT_S}
+			</if>
+			<if test='P_APPC_END_DT_S != null and P_APPC_END_DT_S != "" '>
+				AND APPC_DT &lt;= #{P_APPC_END_DT_S}
+			</if>
+			<if test='P_REGR_NM_S != null and P_REGR_NM_S != "" '>
+				AND REGR_NM LIKE '%'||#{P_REGR_NM_S}||'%'
+			</if>
+			<if test='P_REG_BEGIN_DT_S != null and P_REG_BEGIN_DT_S != "" '>
+				AND REG_DT >= #{P_REG_BEGIN_DT_S}
+			</if>
+			<if test='P_REG_END_DT_S != null and P_REG_END_DT_S != "" '>
+				AND REG_DT &lt;= #{P_REG_END_DT_S}
+			</if>
+		</where>
+	</sql>
+
+
+
+	<insert id="contFormMstRegist">
+        INSERT INTO T_MM_FORM_MST (
+		                    FRM_NO
+		                  , FRM_NM
+		                  , CONT_SECD
+		                  , CONT_KDCD
+		                  , CHNG_SECD
+		                  , APPC_DT
+		                  , FRM_CNTN
+		                  , VRSN
+		                  , USE_YN
+		                 <include refid="ComRegr.RegrColumnClause"/>
+		                  , ADD_FILE_GRP_NO
+		                  , CTDC_FILE_GRP_NO
+        ) VALUES (
+		                    #{P_FRM_NO, jdbcType=VARCHAR}
+		                  , #{P_FRM_NM , jdbcType=VARCHAR}
+		                  , #{P_CONT_SECD, jdbcType=VARCHAR}
+		                  , #{P_CONT_KDCD, jdbcType=VARCHAR}
+		                  , #{P_CHNG_SECD, jdbcType=VARCHAR}
+		                  , #{P_APPC_DT, jdbcType=VARCHAR} 
+		                  , #{P_FRM_CNTN, jdbcType=CLOB}
+		                  , #{P_VRSN, jdbcType=VARCHAR}
+		                  , #{P_USE_YN, jdbcType=VARCHAR}
+		                  <include refid="ComRegr.RegrValueClause"/>
+		                  , #{atchFileGroupNo, jdbcType=VARCHAR}
+		                  , #{P_CTDC_FILE_GRP_NO, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<insert id="contFormFileRegist" >
+		INSERT INTO T_MM_FORM_FILE
+		(
+			 FRM_NO
+			,FILE_GRP_NO
+			,FILE_NM
+			,RMK
+			<include refid="ComRegr.RegrColumnClause"/>
+		)VALUES
+		(
+			  #{P_FRM_NO , jdbcType=VARCHAR}
+			, #{P_FILE_GRP_NO , jdbcType=VARCHAR}
+			, #{P_FILE_NM , jdbcType=VARCHAR}
+			, #{P_RMK, jdbcType=VARCHAR}
+			<include refid="ComRegr.RegrValueClause"/>
+		)
+	</insert>
+	
+	<update id="contFormFileDelete">
+		UPDATE	T_MM_FILE_MST T1 
+		     SET	MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+		     		, DEL_AT = 'Y'
+		WHERE 	1=1
+		<if test='delList != null and delList != "" '>
+			AND		T1.FILE_SN IN ( 
+			<foreach separator="," item="fileSn"  index="index" collection="delList">
+						#{fileSn}
+			</foreach>
+			)
+		</if>
+	</update>
+
+
+	<insert id="contFormHistRegist" useGeneratedKeys="true" keyProperty="P_HIST_SN">
+		<selectKey keyProperty="P_HIST_SN" resultType="int" order="BEFORE">
+			SELECT NVL(MAX(HIST_SN)+1,1)
+			FROM T_MM_FORM_HIST
+			WHERE FRM_NO = #{P_FRM_NO, jdbcType=VARCHAR}
+		</selectKey>
+		INSERT INTO T_MM_FORM_HIST (
+		                    FRM_NO
+		                  , HIST_SN
+		                  , CONT_SECD
+		                  , APPC_DT
+		                  , FRM_CNTN
+		                  , VRSN
+		                  , FILE_GRP_NO
+		                  , CTDC_FILE_GRP_NO
+		                  <include refid="ComRegr.RegrColumnClause"/>
+		                  , RENW_RSN
+		) SELECT FRM_NO
+		            , #{P_HIST_SN , jdbcType=INTEGER} AS HIST_SN
+		            , CONT_SECD
+		            , APPC_DT
+		            , FRM_CNTN
+		            , VRSN
+		            , ADD_FILE_GRP_NO
+		            , CTDC_FILE_GRP_NO
+		            <include refid="ComRegr.RegrValueClause"/>
+		            , #{P_RENW_RSN , jdbcType=VARCHAR} AS RENW_RSN
+		     FROM T_MM_FORM_MST
+		  WHERE FRM_NO = #{P_FRM_NO, jdbcType=VARCHAR}
+		       AND VRSN = #{P_VRSN, jdbcType=VARCHAR}
+	</insert>
+
+
+	<select id="selectContFormDetail" resultType="dataEntity" resultMap="FrmCntn">
+        SELECT MST.FRM_NO
+                  , MST.FRM_NM
+                  , FM.SV_FILE_NM AS SV_FILE_NM
+                  , MST.CONT_SECD
+                  , F_CDVAL_INQIRE('CONT_SECD', MST.CONT_SECD) AS CONT_SECD_NM
+                  , MST.CONT_KDCD
+                  , F_CDVAL_INQIRE('CONT_KDCD', MST.CONT_KDCD) AS CONT_KDCD_NM
+                  , MST.CHNG_SECD
+                  , MST.APPC_DT
+                  , MST.FRM_CNTN
+                  , MST.VRSN
+                  , MST.USE_YN
+                  , MST.RENW_RSN
+                  , MST.ADD_FILE_GRP_NO AS FILE_GRP_NO
+				  , MST.CTDC_FILE_GRP_NO AS CTDC_FILE_GRP_NO
+				  , FM.FILE_SN AS CTDC_FILE_SN
+				  , FM.SYS_FILE_NM AS CTDC_FILE_NM
+           FROM T_MM_FORM_MST MST , (SELECT * FROM T_MM_FILE_MST WHERE 1 = 1 AND DEL_AT = 'N')FM
+         WHERE MST.FRM_NO = #{P_FRM_NO, jdbcType=VARCHAR}
+			    AND MST.VRSN = (SELECT MAX(VRSN) FROM T_MM_FORM_MST WHERE FRM_NO = #{P_FRM_NO, jdbcType=VARCHAR} )
+			    AND MST.CTDC_FILE_GRP_NO = FM.FILE_GRP_NO(+)
+	</select>
+	
+	<select id="selectContFormFileList" resultType="dataEntity">
+		SELECT ROWNUM AS RNUM,
+					A.FRM_NO,
+			        A.FILE_GRP_NO,
+			        A.FILE_SN, 
+			        A.SV_FILE_NM,
+			        A.FILE_SZ,
+			        A.FILE_DOC_NM,
+			        A.SYS_FILE_NM,
+			        A.FILE_LCTN
+		FROM 
+			(
+				SELECT A.FRM_NO,
+			       A.ADD_FILE_GRP_NO AS FILE_GRP_NO,
+			       B.FILE_SN, 
+			       B.SV_FILE_NM,
+			       B.FILE_SZ,
+			       B.FILE_DOC_NM,
+			       B.SYS_FILE_NM,
+			       B.FILE_LCTN
+				FROM T_MM_FORM_MST A, T_MM_FILE_MST B
+				WHERE A.ADD_FILE_GRP_NO = B.FILE_GRP_NO    
+				AND A.DEL_AT ='N'
+				AND B.DEL_AT ='N'
+				AND A.FRM_NO = #{P_FRM_NO , jdbcType=VARCHAR}
+				ORDER BY A.REG_DT
+			) A
+	</select>
+	
+	<insert id="contFormCopyFile">
+		INSERT INTO T_MM_FILE_MST (
+                 FILE_SN
+				,FILE_GRP_NO
+				,ATCH_FSCD
+				,TSK_SECD
+				,SV_FILE_NM
+				,SYS_FILE_NM
+				,FILE_SZ
+				,FILE_LCTN
+				,FILE_DOC_NM
+				,FILE_DOC_SECD
+				,FILE_DESC
+				,OPEN_YN
+				,TSK_VKEY1
+				,TSK_VKEY2
+				,TSK_VKEY3
+				,RMK
+				,REGR_ID
+				,REGR_NM
+				,REG_DT 
+				,MODR_ID
+				,MODR_NM
+				,MOD_DT
+				,CONN_IP
+				,DEL_AT
+		) 
+		SELECT QMBM_ATFI_ATCHMNFL_SN.NEXTVAL, T1.* FROM (
+			SELECT #{atchFileGroupNo} AS FILE_GRP_NO
+					,ATCH_FSCD
+					,TSK_SECD
+					,SV_FILE_NM
+					,SYS_FILE_NM
+					,FILE_SZ
+					,FILE_LCTN
+					,FILE_DOC_NM
+					,FILE_DOC_SECD
+					,FILE_DESC
+					,OPEN_YN
+					,TSK_VKEY1
+					,TSK_VKEY2
+					,TSK_VKEY3
+					,RMK
+					,REGR_ID
+					,REGR_NM
+					,REG_DT 
+					,MODR_ID
+					,MODR_NM
+					,MOD_DT
+					,CONN_IP
+					,DEL_AT
+		FROM T_MM_FILE_MST
+		WHERE 1=1
+		AND FILE_GRP_NO = #{P_COPY_FILE_GRP_NO, jdbcType=VARCHAR}
+		AND DEL_AT = 'N'
+		<if test='delList != null and delList != "" '>
+			AND	FILE_SN NOT IN ( 
+			<foreach separator="," item="fileSn"  index="index" collection="delList">
+					#{fileSn}
+			</foreach>
+			)
+		</if>
+		)T1
+	</insert>
+
+
+	<select id="selectEditorCntn" resultType="dataEntity" resultMap="FrmCntn">
+        SELECT FRM_CNTN
+		  FROM T_MM_FORM_HIST
+		WHERE FRM_NO = #{P_FRM_NO, jdbcType=VARCHAR}
+		    AND VRSN = #{P_VRSN, jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectContFormHistList" resultType="dataEntity" resultMap="FrmCntn">
+        SELECT H.FRM_NO
+                  , H.HIST_SN
+                  , H.CONT_SECD
+                  , H.APPC_DT
+                  , H.FRM_CNTN
+                  , H.VRSN
+                  , (SELECT M.SV_FILE_NM FROM T_MM_FILE_MST M WHERE H.CTDC_FILE_GRP_NO = M.FILE_GRP_NO(+)) AS SV_FILE_NM
+        <include refid="ComRegr.selectColumnClause"/>
+                  , H.RENW_RSN
+                  , H.FILE_GRP_NO
+           FROM T_MM_FORM_HIST H
+         WHERE H.FRM_NO = #{P_FRM_NO, jdbcType=VARCHAR}
+		      AND H.DEL_AT = 'N'
+		   ORDER BY H.VRSN DESC
+	</select>
+
+
+	<select id="selectContFormHistListTotCnt" resultType="int">
+        SELECT COUNT(1) FROM (
+            SELECT FRM_NO
+                      , HIST_SN
+                    <include refid="ComRegr.selectColumnClause"/>
+               FROM T_MM_FORM_HIST
+             WHERE FRM_NO = #{P_FRM_NO, jdbcType=VARCHAR}
+                 AND DEL_AT = 'N'
+             ORDER BY VRSN DESC
+		) T1
+	</select>
+
+
+	<update id="contFormMstUpdate">
+        UPDATE T_MM_FORM_MST
+             SET FRM_NM = #{P_FRM_NM, jdbcType=VARCHAR}
+                 , CONT_SECD = #{P_CONT_SECD, jdbcType=VARCHAR}
+                 , CONT_KDCD = #{P_CONT_KDCD, jdbcType=VARCHAR}
+                 , CHNG_SECD = #{P_CHNG_SECD, jdbcType=VARCHAR}
+                 , APPC_DT = #{P_APPC_DT, jdbcType=VARCHAR}
+                  <if test='P_FRM_CNTN != null and P_FRM_CNTN != "" '>
+                 , FRM_CNTN = #{P_FRM_CNTN , jdbcType=CLOB}
+                 </if>
+                 , VRSN = #{P_VRSN, jdbcType=VARCHAR}
+                 <if test='P_ADD_FILE_GRP_NO != null and P_ADD_FILE_GRP_NO != "" '>
+                 	, ADD_FILE_GRP_NO = #{P_ADD_FILE_GRP_NO, jdbcType=VARCHAR}
+                 </if>
+                 <if test='P_CTDC_FILE_GRP_NO != null and P_CTDC_FILE_GRP_NO != "" '>
+               	 	 , CTDC_FILE_GRP_NO = #{P_CTDC_FILE_GRP_NO, jdbcType=VARCHAR}
+               	 </if>
+                <include refid="ComRegr.ModrSetClause"/>
+       WHERE FRM_NO = #{P_FRM_NO, jdbcType=VARCHAR}
+	</update>
+
+
+	<update id="contFormHistDelete">
+        UPDATE T_MM_FORM_HIST
+              SET DEL_AT = #{P_DEL_AT, jdbcType=VARCHAR}
+                  <include refid="ComRegr.ModrSetClause"/>
+        WHERE FRM_NO = #{P_FRM_NO, jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectContFormHistDetail" resultType="dataEntity" resultMap="FrmCntn">
+        SELECT FRM_NO
+                  , HIST_SN
+                  , CONT_SECD
+                  , FRM_CNTN
+                  , APPC_DT
+                  , VRSN
+                     <include refid="ComRegr.selectColumnClause"/>
+                  , RENW_RSN
+                  , FILE_GRP_NO
+           FROM T_MM_FORM_HIST
+        WHERE FRM_NO = #{P_FRM_NO, jdbcType=VARCHAR}
+            AND VRSN = #{P_VRSN, jdbcType=VARCHAR}
+            AND DEL_AT = 'N'
+	</select>
+	
+	<select id="selectContFormChkCnt" resultType="int" >
+        SELECT COUNT(FRM_NO)
+        FROM T_MM_FORM_MST
+		WHERE 1 = 1
+		AND CONT_SECD = #{P_CONT_SECD, jdbcType=VARCHAR}
+		AND CONT_KDCD = #{P_CONT_KDCD, jdbcType=VARCHAR}
+		AND CHNG_SECD = #{P_CHNG_SECD, jdbcType=VARCHAR}
+		AND USE_YN = 'Y'
+		AND DEL_AT = 'N'
+		<if test="P_FRM_NO != null  and P_FRM_NO != '' ">
+		 	AND FRM_NO NOT IN(#{P_FRM_NO, jdbcType=VARCHAR})
+		</if>
+	</select>
+	
+	<update id="contFormUseUpdate">
+		UPDATE	T_MM_FORM_MST
+		     SET	USE_YN = 'N'
+		WHERE 1 = 1
+		AND CONT_SECD = #{P_CONT_SECD, jdbcType=VARCHAR}
+		AND CONT_KDCD = #{P_CONT_KDCD, jdbcType=VARCHAR}
+		AND CHNG_SECD = #{P_CHNG_SECD, jdbcType=VARCHAR}
+		AND DEL_AT = 'N'
+		<if test="P_FRM_NO != null  and P_FRM_NO != '' ">
+		 	AND FRM_NO NOT IN(#{P_FRM_NO, jdbcType=VARCHAR})
+		</if>
+	</update>
+</mapper> 

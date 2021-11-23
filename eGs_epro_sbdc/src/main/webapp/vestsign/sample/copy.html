@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+<script type="text/javascript" src="../library/json3.min.js?revision=e54ce34"></script>
+<script type="text/javascript" src="../library/iecompatibility.js?revision=e54ce34"></script>
+
+<script type="text/javascript" src="../vestsign.js?revision=e54ce34"></script>
+<SCRIPT language=javascript>
+
+  var callback = function (result) {
+    alert("성공");
+  };
+
+  var errorcallback = function (error) {
+    // error = { code, getReason() };
+      if(error.code != -9999)  // 취소 버튼 이벤트 error.code: -9999
+          alert(error.msg);
+  };
+
+  function certCopy() {
+    yettie.changeStorage(callback, errorcallback);
+  };
+
+</SCRIPT>
+<br><br><br>
+<center>
+    <table border="1" align="center" width=50%>
+        <tr>
+            <td align=center><br><br>
+                <input type=button onclick=certCopy() value="인증서 복사" style="width:150"><br><br><br>
+            </td>
+        </tr>
+    </table>
+</center>

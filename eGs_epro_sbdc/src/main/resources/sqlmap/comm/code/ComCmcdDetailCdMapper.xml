@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eunwoosoft.comm.code.dao.ComCmcdDetailCdDao">
+
+	<select id="selectDetailCdListWithPgng" resultType="dataEntity">	
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT <include refid="selectDetailCdList_SelectClause"/> 
+		FROM TMDM_COMACO T1
+			INNER JOIN TMDM_CODECO T2
+				ON T1.CD_ID = T2.CD_ID
+		<include refid="selectDetailCdList_WhereClause"/>
+		ORDER BY T1.CD_ID_NM
+			, T2.CD_ORDR_NO
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	                
+	<select id="selectDetailCdListTotcnt" resultType="int">		
+		SELECT COUNT(1) 
+		FROM TMDM_COMACO T1
+			INNER JOIN TMDM_CODECO T2
+				ON T1.CD_ID = T2.CD_ID
+		<include refid="selectDetailCdList_WhereClause"/>		
+	</select>
+	
+	
+	<!--
+		  마스터코드목록조회 Select 절
+	-->
+	<sql id="selectDetailCdList_SelectClause">
+		T1.CD_ID
+			, T1.CD_ID_NM
+			, T1.CD_MANAGE_DEPT_NM
+			, T2.CD_VALUE
+			, T2.CD_VALUE_NM
+			, T2.CD_ORDR_NO
+			, T2.CD_ABRV_NM
+			, T2.ENG_NM
+			, T2.USE_AT
+			, T2.USE_CD_ONE_VALUE
+			, T2.USE_CD_TWO_VALUE
+			, T2.USE_CD_THREE_VALUE
+			, T2.USE_CD_FOUR_VALUE
+			, T2.USE_CD_FIVE_VALUE
+			, T2.REGISTER_ID
+			, T2.REGIST_DT
+	</sql>
+	
+	
+	<!--
+		  코드목록조회 Where 절
+	-->
+	<sql id="selectDetailCdList_WhereClause">
+		<where>	
+			<if test='P_USE_AT != null and P_USE_AT != "" '>
+			    AND T2.USE_AT = #{P_USE_AT}
+			</if>		
+			<if test="P_CD_ID != null and P_CD_ID != ''">
+				AND T1.CD_ID LIKE '%'||#{P_CD_ID, jdbcType=VARCHAR, javaType=String}||'%'
+			</if>			
+			<if test="P_CD_ID_NM != null and P_CD_ID_NM != ''">
+				AND T1.CD_ID_NM LIKE '%'||#{P_CD_ID_NM, jdbcType=VARCHAR, javaType=String}||'%'
+			</if>
+			<if test="P_CD_MANAGE_DEPT_NM != null and P_CD_MANAGE_DEPT_NM != ''">
+				AND T1.CD_MANAGE_DEPT_NM LIKE '%'||#{P_CD_MANAGE_DEPT_NM, jdbcType=VARCHAR, javaType=String}||'%'
+			</if>			
+		</where>
+	</sql>
+	
+	
+	<select id="selectCdTableValueListByCdId" resultType="dataEntity">
+		SELECT	    ${P_COLUMN_ID} AS CD_ID
+				,	${P_COLUMN_ID} AS CD_VALUE
+				,	${P_COLUMN_NM} AS CD_VALUE_NM
+		FROM		${P_TABLE_ID}
+		WHERE 1=1
+		<if test="P_WHERE_ID_1 != null and P_WHERE_ID_1 != ''">
+		AND  ${P_WHERE_ID_1} = #{P_WHERE_VAL_1}
+		</if>
+	</select>
+	
+	<select id="selectCdValueListByCdId" resultType="dataEntity">		
+		SELECT	T1.CD_ID
+				,	T1.CD_DTL_ID AS CD_VALUE
+				,	T1.CD_DTL_NM AS CD_VALUE_NM
+		FROM		T_MM_CODE_MST T1		
+		WHERE	T1.CD_ID = #{P_CD_ID, jdbcType=VARCHAR, javaType=String}
+		AND		T1.DEL_AT = 'N'
+		AND		NVL(T1.USE_YN, 'Y') != 'N'
+		<if test='P_ETC_VAL1 != null and P_ETC_VAL1 != "" '>
+			    AND ETC_VAL1 = #{P_ETC_VAL1}
+		</if>
+		<if test='P_ETC_VAL2 != null and P_ETC_VAL2 != "" '>
+			    AND ETC_VAL2 = #{P_ETC_VAL2}
+		</if>
+		<if test='P_ETC_VAL3 != null and P_ETC_VAL3 != "" '>
+			    AND ETC_VAL3 = #{P_ETC_VAL3}
+		</if>
+		<if test='P_ETC_VAL4 != null and P_ETC_VAL4 != "" '>
+			    AND ETC_VAL4 = #{P_ETC_VAL4}
+		</if>
+		<if test='P_ETC_VAL5 != null and P_ETC_VAL5 != "" '>
+			    AND ETC_VAL5 = #{P_ETC_VAL5}
+		</if>
+		ORDER BY ORD_SN			  
+	</select>
+	
+		<select id="selectcomCmcdScsCdInqireByCdId" resultType="dataEntity">		
+		SELECT	T1.CD_ID
+				,	T1.CD_VALUE 
+				,	T1.CD_VALUE_NM
+		FROM		TMDM_CODECO T1		
+		WHERE	T1.CD_ID = #{P_CD_ID, jdbcType=VARCHAR, javaType=String}
+			<!-- AND	T1.DELETE_AT = 'N' -->
+		<if test='P_USE_AT != null and P_USE_AT != "" '>
+			    AND T1.USE_AT = #{P_USE_AT}
+		</if>
+		<if test='P_DATE_AT != null and P_DATE_AT == "Y" '>
+				AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN T1.BEGIN_DE AND T1.END_DE	
+		</if>
+		<if test='P_USE_CD_ONE_VALUE != null and P_USE_CD_ONE_VALUE != "" '>
+			    AND USE_CD_ONE_VALUE = #{P_USE_CD_ONE_VALUE}
+		</if>
+		<if test='P_USE_CD_TWO_VALUE != null and P_USE_CD_TWO_VALUE != "" '>
+			    AND USE_CD_TWO_VALUE = #{P_USE_CD_TWO_VALUE}
+		</if>
+		<if test='P_USE_CD_THREE_VALUE != null and P_USE_CD_THREE_VALUE != "" '>
+			    AND USE_CD_THREE_VALUE = #{P_USE_CD_THREE_VALUE}
+		</if>
+		<if test='P_USE_CD_FOUR_VALUE != null and P_USE_CD_FOUR_VALUE != "" '>
+			    AND USE_CD_FOUR_VALUE = #{P_USE_CD_FOUR_VALUE}
+		</if>
+		<if test='P_USE_CD_FIVE_VALUE != null and P_USE_CD_FIVE_VALUE != "" '>
+			    AND USE_CD_FIVE_VALUE = #{P_USE_CD_FIVE_VALUE} 
+		</if>
+		
+		ORDER BY CD_ORDR_NO		 
+	</select>
+	
+	
+	
+	
+</mapper>

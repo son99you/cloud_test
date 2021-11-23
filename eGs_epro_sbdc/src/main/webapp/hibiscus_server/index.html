@@ -1,0 +1,117 @@
+<!doctype html>
+
+<html>
+
+<head>
+    <title>hibiscus</title>
+    <meta charset="UTF-8">
+    <script src="./lib/jsrose_crypto.js?revision=f21ee59"></script>
+    <script src="./lib/jsrose.js?revision=f21ee59"></script>
+    <script src="./js/____.js?revision=f21ee59"></script> <!-- 4 -->
+    <script src="./js/config.js?revision=f21ee59"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js?revision=f21ee59"></script>
+    <script>
+        function getDate() {
+            var date = new Date();
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            if(month < 10) month = "0" + month;
+            if(day < 10) day = "0" + day;
+            
+            return year + "" + month + "" + day;
+        }
+        
+        if(StorageConfig.OPENCERT.use) {
+            var relay = document.createElement('script');
+            relay.src = "https://fidoweb.yessign.or.kr:3100/v2/relay.js?dt=" + getDate() + "&corp=" + StorageConfig.OPENCERT.corp;
+            document.head.appendChild(relay);
+            var opencert = document.createElement('script');
+            opencert.src = "https://fidoweb.yessign.or.kr:3100/v2/opencert.js?dt=" + getDate() + "&corp=" + StorageConfig.OPENCERT.corp;
+            document.head.appendChild(opencert);
+        }
+
+    </script>
+    <!-- <script src="https://fidoweb.yessign.or.kr:3100/cloud/v2/relay.js"></script>
+    <script src="https://fidoweb.yessign.or.kr:3100/cloud/v2/opencert.js"></script> -->
+    <!-- 금결원 공동 저장소 개발 --> 
+    <!-- <script src="https://fidoweb.yessign.or.kr:3100/v2/relay.js"></script>
+	<script src="https://fidoweb.yessign.or.kr:3100/v2/opencert.js"></script> -->
+    <!-- 금결원 공동 저장소 운영 --> 
+    <!-- <script src="https://www.yessign.or.kr:3100/v2/relay.js"></script>
+	<script src="https://www.yessign.or.kr:3100/v2/opencert.js"></script> -->
+    <script src="./js/___.js?revision=f21ee59"></script> <!-- 3 -->
+    <script src="./js/_____.js?revision=f21ee59"></script> <!-- 5 -->
+    <script src="./js/service/TestFunc.js?revision=f21ee59"></script>
+    <script src="./js/service/ChangePin.js?revision=f21ee59"></script>
+    <script src="./js/service/ChannelEncryptionRandom.js?revision=f21ee59"></script>
+    <script src="./js/service/CheckComplexPin.js?revision=f21ee59"></script>
+    <script src="./js/service/DeleteCertificate.js?revision=f21ee59"></script>
+    <script src="./js/service/ExportCertificate.js?revision=f21ee59"></script>
+    <script src="./js/service/GenerateSignature.js?revision=f21ee59"></script>
+    <script src="./js/service/GetCertificate.js?revision=f21ee59"></script>
+    <script src="./js/service/GetCertificateList.js?revision=f21ee59"></script>
+    <script src="./js/service/GetVersion.js?revision=f21ee59"></script>
+    <script src="./js/service/ImportCertificate.js?revision=f21ee59"></script>
+    <script src="./js/service/ImportP12.js?revision=f21ee59"></script>
+    <script src="./js/service/Issue.js?revision=f21ee59"></script>
+    <script src="./js/service/MakeCustomSession.js?revision=f21ee59"></script>
+    <script src="./js/service/Revoke.js?revision=f21ee59"></script>
+    <script src="./js/service/SetMatchedContext.js?revision=f21ee59"></script>
+    <script src="./js/service/UnSetMatchedContext.js?revision=f21ee59"></script>
+    <script src="./js/service/Update.js?revision=f21ee59"></script>
+    <script src="./js/service/VerifyPin.js?revision=f21ee59"></script>
+    <script src="./js/service/VerifySignature.js?revision=f21ee59"></script>
+    <script src="./js/service/VerifyVID.js?revision=f21ee59"></script>
+    <script src="./js/service/GetCACertificate.js?revision=f21ee59"></script>
+    <script src="./js/service/GetRefNum.js?revision=f21ee59"></script>
+    <script src="./js/service/RelayImport.js?revision=f21ee59"></script>
+    <script src="./js/service/RelayExport.js?revision=f21ee59"></script>
+    <script src="./js/service/ClearStorage.js?revision=f21ee59"></script>
+    <script src="./js/service/CheckStorage.js?revision=f21ee59"></script>
+    <script src="./js/service/ValidateCertificate.js?revision=f21ee59"></script>
+    <script src="./js/service/OpenCertInit.js?revision=f21ee59"></script>
+    <script src="./js/service/OpenCertSync.js?revision=f21ee59"></script>
+    <script src="./js/service/OpenCertGetP12.js?revision=f21ee59"></script>
+    <script src="./js/service/OpenCertSetP12.js?revision=f21ee59"></script>
+    <script src="./js/service/OpenCertRemoveP12.js?revision=f21ee59"></script>
+    <script src="./js/service/OpenCertSetEvent.js?revision=f21ee59"></script>
+    <script src="./js/service/OpenCertSetCertificate.js?revision=f21ee59"></script>
+    <script src="./js/service/GetCertInfos.js?revision=f21ee59"></script>
+    <script src="./js/service/OpenCertGetFP.js?revision=f21ee59"></script>
+    <script src="./js/service/OpenCertVerifyVID.js?revision=f21ee59"></script>
+    <script src="./js/service/Envelope.js?revision=f21ee59"></script>
+    <script src="./js/service/Deenvelope.js"></script>
+    <script src="./js/__.js?revision=f21ee59"></script> <!-- 2 -->
+	<script>
+		function isSafari() {
+			var agent = navigator.userAgent.toLowerCase();
+
+			if (agent.indexOf('safari') > -1) { // Chrome or Safari
+				if (agent.indexOf('opr') < 0 && agent.indexOf('chrome') < 0) { 
+				return true;
+				} 
+			} 
+			return false;
+		}
+		function loadView() {
+			if( isSafari() == false ) {
+				document.getElementById("dCont1").style.display="none";
+				document.getElementById("dCont2").style.display="none";
+			}
+		}
+	</script>
+</head>
+
+<body style="margin: auto;" onload="loadView()">
+    <div id="dCont1" style="height: 50%; font-size: 24px; padding: 50px 10px; background-color: #efeff5;">
+        브라우저 공동 저장소 서비스 중입니다.
+    </div>
+    <div id="dCont2" style="padding: 20px 0px; margin: 10px 15px 10px 0;">
+        <ul>
+            <li>현재 창을 닫으실 경우 브라우저 공동 저장소를 사용할 수 없습니다.</li>
+        </ul>
+    </div>
+</body>
+
+</html>

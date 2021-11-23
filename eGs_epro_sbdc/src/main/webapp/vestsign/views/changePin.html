@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <title>비밀번호 변경</title>
+    <link type="text/css" rel="stylesheet" href="../styles/css/common.css?revision=e54ce34"/>
+    <!--[if IE 7]>
+    <link rel="stylesheet" type="text/css" href="../styles/css/ie7Debug.css"/>
+    <![endif]-->
+    <link rel="stylesheet" href="../styles/css/jquery-ui.css?revision=e54ce34">
+    
+    <script>
+        (function (){
+            try{
+                //console.log("page documnet.domain: " + document.domain);
+                parent.document.location;
+            }catch(e) {
+                if (document.domain.indexOf(".co.kr") != -1) {
+                    //co.kr
+                    var domainArr = document.domain.split(".");
+                    //console.log("arr:" + domainArr);
+                    document.domain = domainArr[domainArr.length - 3] + ".co.kr";
+                }
+                else if (document.domain.indexOf(".com") != -1) {
+                    //com
+                    var domainArr = document.domain.split(".");
+                    //console.log("arr:" + domainArr);
+                    document.domain = domainArr[domainArr.length - 2] + ".com";
+                }
+            }
+        })();
+    </script>
+    
+    <script type="text/javascript" src="../styles/js/jquery-1.11.0.min.js?revision=e54ce34"></script>
+    <script src="../styles/js/jquery-ui.js"></script>
+
+    <script type="text/javascript" src="../scripts/__GobalValue__.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../library/json3.min.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../library/iecompatibility.js?revision=e54ce34"></script>
+
+    <script src="../languages/changePinLang.js"></script>
+</head>
+<script>
+    function dragCheck(){
+        if(window.navigator.userAgent.toLowerCase().indexOf('firefox') !== -1)
+            return;
+        addHandle(document.getElementById('titleText'), window);
+    }
+</script>
+<body onload="dragCheck()">
+<div class="CERT_titlebar">
+    <!--<h1 id="titleText" tabindex="1"><script>document.write(changePinLang(0))</script></h1>-->
+    <div class="titleIcon"></div>
+    <h1 class="inputter_h1"><ul><li id="titleText" tabindex="1"></li></ul></h1>
+    <div id="versionText" class="CERT_util_version"></div>
+    <div class="inputter_btnClose" id="x_btn"><a href="#" tabindex="2" alt="닫힘" title="닫힘"></a></div>
+</div>
+<div class="certWrap">
+    <div class="noticeIcon">
+        <p class="noticieTitle"><script>document.write(changePinLang(17))</script></p>
+    </div>
+    <dl class="tab1">
+        <dd>
+            <div class="notice_wrap" id="mainInfo">
+                <div class="noticieTitle2">
+                            <script>document.write(changePinLang(8))</script>
+                    <div class="noticeTitle3">
+                            <script>document.write(changePinLang(9))</script>
+                            <script>document.write(changePinLang(10))</script>
+                            <script>document.write(changePinLang(11))</script>
+                    </div>
+                </div>
+            </div>
+
+            <form id="passwordForm" name="passwordForm" method="post" onsubmit="return false;" >
+                <div class="pw_wrap">
+                    <div class="marginTextBox">
+                        <script>document.write(changePinLang(1))</script>
+                    </div>
+                    <input type="password" autocomplete="off" tabindex="3" title="pin" id="pin" class="CERT_inputStyle" value="" />
+                    <label for="pin"></label>
+                    <br>
+                </div>
+                <div class="pw_wrap">
+                    <div class="marginTextBox">
+                        <script>document.write(changePinLang(2))</script>
+                    </div>
+                    <input type="password" autocomplete="off" tabindex="4" title="newPin" id="newPin" class="CERT_inputStyle" value="" />
+                    <label for="newPin"></label>
+                    <br>
+                </div>
+                <div class="pw_wrap">
+                    <div class="marginTextBox">
+                        <script>document.write(changePinLang(3))</script>
+                    </div>
+                    <input type="password" autocomplete="off" tabindex="5" title="checkNewPin" id="checkNewPin" class="CERT_inputStyle" value="" />
+                    <label for="checkNewPin"></label>
+                    <br>
+                </div>
+            </form>
+            
+            <a href="#">
+                <div class="checkbox_unChecked" style="display: none;">
+                        <div id="unChecked"><script>document.write(changePinLang(18))</script></div>
+                </div>
+                <div class="checkbox_checked">
+                        <div id="checked"><script>document.write(changePinLang(18))</script></div>
+                </div>
+            </a>
+                <div class="checkbox_disabled" style="display: none;">
+                        <div id="checked_disable"><script>document.write(changePinLang(18))</script></div>
+                </div>
+        </dd>
+    </dl>
+    <div class="CERT_line"></div>
+    <div class="CERT_btns_common">
+        <p class="CERT_btnBg_mbtn"><a id="dialogCertTab_okBtn" tabindex="9998"><script>document.write(changePinLang(4))</script></a></p>
+        <p class="CERT_btnBg_mbtn"><a id="dialogCertTab_cancelBtn" tabindex="9999"><script>document.write(changePinLang(5))</script></a></p>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../library/keySafer.js?revision=e54ce34"></script>
+<script type="text/javascript" src="../scripts/changePin.js?revision=e54ce34"></script>
+<script type="text/javascript" src="../library/dragiframe.js?revision=e54ce34"></script>
+</html>

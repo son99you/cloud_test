@@ -1,0 +1,57 @@
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+<script type="text/javascript" src="../library/json3.min.js"></script>
+<script type="text/javascript" src="../library/iecompatibility.js"></script>
+
+<script type="text/javascript" src="../vestsign.js"></script>
+<SCRIPT language=javascript>
+
+  var errorcallback = function (error) {
+    // error = { code, getReason() };
+    if(error.code == -9999) console.log(error.code);  // 취소 버튼 이벤트 error.code: -9999
+    else alert(error.msg);
+  };
+
+  var callback = function (result) {
+      document.getElementById('hashedValue').value = result;
+  };
+
+  function selectedType(radioName) {
+    var checkedValue;
+    var temp = document.getElementsByName( radioName );
+
+    for (var i = 0, ii = temp.length; i < ii; ++i) {
+      if (temp[i].checked)  checkedValue = temp[i].value;
+    }
+    return checkedValue;
+  };
+
+  function hash() {
+      var plain = document.getElementById('hashValue').value;
+
+    yettie.getHash(selectedType('hashPlainType'), plain, selectedType('hashOpt'), callback, errorcallback);
+  };
+
+</SCRIPT>
+<br><br><br>
+<table border="1" align="center" width=50%>
+    <tr>
+        <td align=center><br><br>
+                  Hash 원문  : <textarea rows='10' style="width:90%" id="hashValue">hash test</textarea><br>
+                  Hash (된)문  : <textarea rows='10' style="width:90%" id="hashedValue"></textarea><br>
+
+                  plainType: 
+                  <input type="radio" name="hashPlainType" value="0" checked="true" />hash 할 원문
+                  <input type="radio" name="hashPlainType" value="1" />hash 할 file 경로
+                  <br>
+
+                  mode: 
+                  <input type="radio" name="hashOpt" value="0" checked="true" />SHA1
+                  <input type="radio" name="hashOpt" value="1" />SHA256
+                  <input type="radio" name="hashOpt" value="2" />MD5
+                  <br><br>
+            <input type=button onclick=hash() value="Hash" style="width:150"><br><br><br>
+        </td>
+    </tr>
+</table>

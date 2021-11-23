@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eunwoosoft.comm.itfc.dao.CommItfcDao"> 
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 알림톡 발송정보 INSERT
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : insertTsmsMsgRegist
+     * @date : 2019. 04. 02.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2019. 04. 02.       은우소프트 맹경열              최초 작성 
+     *  =======================================================   
+     -->	
+	<insert id="insertTsmsMsgRegist">
+    	INSERT
+    	INTO		TSMS_AT_MESSAGE
+    	(
+			MESSAGE_SEQNO
+			, SERVICE_SEQNO
+			, SEND_MESSAGE
+			, BACKUP_PROCESS_CODE
+			, MESSAGE_TYPE
+			, CONTENTS_TYPE
+			, RECEIVE_MOBILE_NO
+			, CALLBACK_NO
+			, JOB_TYPE
+			, SEND_RESERVE_DATE
+			, TEMPLATE_CODE
+			, REGISTER_DATE
+			, REGISTER_BY
+			, IMG_ATTACH_FLAG
+			, KKO_BTN_LINK1
+			, BACKUP_MESSAGE
+			, CUST_BACKUP_TYPE
+    	)
+    	VALUES
+    	(
+			TSMS_AT_SEQ.NEXTVAL
+			, '1910025684'
+			, #{P_SEND_MESSAGE, jdbcType=VARCHAR}
+			, '003'
+			, #{P_MESSAGE_TYPE, jdbcType=VARCHAR}
+			, #{P_CONTENTS_TYPE, jdbcType=VARCHAR}
+			, #{P_RECEIVE_MOBILE_NO, jdbcType=VARCHAR}
+			, #{P_CALLBACK_NO, jdbcType=VARCHAR}
+			, #{P_JOB_TYPE, jdbcType=VARCHAR}
+			, SYSDATE
+			, #{P_TEMPLATE_CODE, jdbcType=VARCHAR}
+			, SYSDATE
+			, #{P_REGISTER_BY, jdbcType=VARCHAR}
+			, #{P_IMG_ATTACH_FLAG, jdbcType=VARCHAR}    	
+			, #{P_KKO_BTN_LINK1, jdbcType=VARCHAR}
+			, #{P_SEND_MESSAGE, jdbcType=VARCHAR}
+			, 'L'				<!-- S:sms, L:LMS, X:부달없음 -->
+    	)
+	</insert>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 낙찰정보 연계 프로시저
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : sendSbidInfoToMIS
+     * @date : 2019. 04. 05.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2019. 04. 05.       은우소프트 맹경열              최초 작성 
+     *  =======================================================   
+     -->		
+	<select id="sendSbidInfoToMIS" statementType="CALLABLE">
+		{CALL P_SBID_INFO_SND
+			(
+				#{P_ANNC_NO, jdbcType=VARCHAR, mode=IN}
+				, #{P_ANNC_NGR, jdbcType=INTEGER, mode=IN}
+				, #{P_CHRGR_ID  , jdbcType=VARCHAR, mode=IN}
+				, #{CONN_IP , jdbcType=VARCHAR, mode=IN}
+			)
+		}
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 계약생성정보 연계 프로시저
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : sendContInfoToMIS
+     * @date : 2019. 04. 05.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2019. 04. 05.       은우소프트 맹경열              최초 작성 
+     *  =======================================================   
+     -->		
+	<select id="sendContInfoToMIS" statementType="CALLABLE" resultType="dataEntity">
+		{CALL P_CONT_INFO_SND
+			(
+				#{P_CONT_NO, jdbcType=VARCHAR, mode=IN}
+				, #{P_CHNG_NGR, jdbcType=INTEGER, mode=IN}
+				, #{P_CONT_CHRGR_ID  , jdbcType=VARCHAR, mode=IN}
+				, #{CONN_IP , jdbcType=VARCHAR, mode=IN}
+				, #{P_FILE_BRDN_NO , jdbcType=INTEGER, mode=IN}
+				, #{P_ERP_FILE_PATH , jdbcType=VARCHAR, mode=IN}
+			)
+		}
+	</select>	
+	
+		<!--  
+     * <pre>
+     * 1. 개요 : ERP 첨부파일 번호 조회
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectErpFileBrdnNo
+     * @date : 2019. 07. 11.
+     * @author : 은우소프트 하성윤
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2019. 07. 11.       은우소프트 하성윤              최초 작성 
+     *  =======================================================   
+     -->		
+	<select id="selectErpFileBrdnNo" resultType="dataEntity">
+		SELECT SQ_PO_ATCHFILE_B_IF.NEXTVAL AS P_FILE_BRDN_NO
+      	FROM DUAL
+	</select>	
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 계약보증정보 연계 프로시저
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : sendContGrntInfoToMIS
+     * @date : 2019. 04. 05.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2019. 04. 05.       은우소프트 맹경열              최초 작성 
+     *  =======================================================   
+     -->		
+	<select id="sendContGrntInfoToMIS" statementType="CALLABLE">
+		{CALL P_CONT_GRNT_INFO_SND
+			(
+				#{P_CONT_NO, jdbcType=VARCHAR, mode=IN}
+				, #{P_CHNG_NGR, jdbcType=INTEGER, mode=IN}
+				, #{P_CONT_CHRGR_ID  , jdbcType=VARCHAR, mode=IN}
+				, #{CONN_IP , jdbcType=VARCHAR, mode=IN}
+			)
+		}
+	</select>
+			
+	<!--  
+     * <pre>
+     * 1. 개요 : 계약보증정보 연계 프로시저
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : sendVendInfoToMIS
+     * @date : 2019. 04. 05.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2019. 04. 05.       은우소프트 맹경열              최초 작성 
+     *  =======================================================   
+     -->		
+	<select id="sendVendInfoToMIS" statementType="CALLABLE">
+		{CALL P_VEND_INFO_SND
+			(
+				#{P_VEND_REG_NO,  jdbcType=VARCHAR, mode=IN}
+				, #{P_REGR_ID  , jdbcType=VARCHAR, mode=IN}
+				, #{CONN_IP , jdbcType=VARCHAR, mode=IN}
+			)
+		}
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 메시지 폼 불러오기
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectMsgForm
+     * @date : 2019. 05. 07.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2019. 05. 07.       은우소프트 맹경열              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectMsgForm" resultType="dataEntity">
+     	SELECT	MSG_SN
+					, MSG_CNTN
+		FROM		T_MM_MSG_FORM
+		WHERE	1=1
+		AND		MSG_SN = #{P_MSG_SN}			
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 단문메시지 발송정보 INSERT
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : insertSsmsMsgRegist
+     * @date : 2020. 04. 27.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2020. 04. 27.       은우소프트 맹경열              최초 작성 
+     *  =======================================================   
+     -->	
+	<insert id="insertSsmsMsgRegist">
+		INSERT
+		INTO SC_TRAN
+		(
+			TR_NUM
+			, TR_SENDDATE
+			, TR_SENDSTAT
+			, TR_MSGTYPE
+			, TR_PHONE
+			, TR_CALLBACK
+			, TR_MSG
+		)
+		VALUES
+		(
+			SC_TRAN_SEQ.NEXTVAL
+			, SYSDATE
+			, '0'
+			, '0'
+			, #{P_RECEIVE_MOBILE_NO, jdbcType=VARCHAR}
+			, #{P_CALLBACK_NO, jdbcType=VARCHAR}
+			, #{P_SEND_MESSAGE, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : IF 업체 SEQ_NO 조회 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectTrdplcSeqNoToIF
+     * @date : 2020. 05. 18.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2020. 05. 18.       은우소프트 맹경열              최초 작성 
+     *  =======================================================   
+     -->		
+	<select id="selectTrdplcSeqNoToIF" resultType="dataEntity">
+		SELECT	MAX(TRDPLC_SEQ_NO) AS TRDPLC_SEQ_NO
+		FROM		PO_TRDPLC_M_IF
+		WHERE	1=1
+		AND		BUSIR_NO = #{P_VEND_REG_NO}
+		AND		USE_YN = 'Y'
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 구매접수 상태값 MIS 연계
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : sendPrcqStatToMIS
+     * @date : 2020. 05. 28.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2020. 05. 28.       은우소프트 맹경열              최초 작성 
+     *  =======================================================   
+     -->		
+	<select id="sendPrcqStatToMIS" statementType="CALLABLE">
+		{CALL P_PCRQ_STAT_INFO_SND
+			(
+				#{P_PCH_DMND_NO, jdbcType=VARCHAR}			
+				, #{P_PRCRE_PRG_STE_CD, jdbcType=VARCHAR}
+				, #{P_REGR_ID  , jdbcType=VARCHAR, mode=IN}
+				, #{CONN_IP , jdbcType=VARCHAR, mode=IN}
+			)
+		}
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : IF 업체 코드 조회 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectTrdplcCdFromIF
+     * @date : 2020. 06. 03.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2020. 06. 03.       은우소프트 맹경열              최초 작성 
+     *  =======================================================   
+     -->		
+	<select id="selectTrdplcCdFromIF" resultType="dataEntity">
+		SELECT	MAX(TRDPLC_CD) AS TRDPLC_CD 
+		FROM		PO_TRDPLC_M_IF 
+		WHERE	1=1
+		AND		BUSIR_NO = #{P_VEND_REG_NO}
+		AND		USE_YN = 'Y'
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : IF 파일 INSERT
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : intsertAtchFileToIF
+     * @date : 2020. 06. 19.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2020. 06. 19.       은우소프트 맹경열              최초 작성 
+     *  =======================================================   
+     -->
+	<insert id="intsertAtchFileToIF">
+		INSERT INTO PO_ATCHFILE_B_IF ( 
+			FILE_BRDN_NO
+			, FILE_BRDN_SN
+			, ATCHMNFL_NO
+			, PRCRE_FILE_NO
+			, ORIGN_FILE_NM
+			, FILE_MG
+			, KPS_FILE_STRE_PATH
+			, PRCRE_FILE_STRE_PATH
+			, IDEN_YN
+			, IDEN_YMD
+			, RMKS_BRDN
+			, REGR_ID
+			, REGR_IP
+			, REG_DT
+			, MODFR_ID
+			, MODFR_IP
+			, MODF_DT
+		)
+		SELECT	#{P_FILE_BRDN_NO}
+					, ROWNUM AS FILE_BRDN_SN
+					, NULL AS ATCHMNFL_NO
+					, #{P_FILE_GRP_NO}
+					, SYS_FILE_NM AS ORIGN_FILE_NM
+					, FILE_SZ AS FILE_MG
+					, NULL AS KPS_FILE_STRE_PATH
+					, #{P_ERP_FILE_PATH} AS PRCRE_FILE_STRE_PATH
+					, NULL AS IDEN_YN
+					, NULL AS IDEN_YMD
+					, NULL AS RMKS_BRDN
+					, #{P_VEND_REGR_ID} AS REGR_ID
+					, NVL(CONN_IP,'172.30.20.36') AS REGR_IP
+					, SYSDATE AS REG_DT
+					, #{P_VEND_REGR_ID} AS MODFR_ID
+					, NVL(CONN_IP,'172.30.20.36') AS MODFR_IP
+					, SYSDATE AS MODF_DT
+		FROM		T_MM_FILE_MST
+		WHERE	1=1
+		AND		FILE_GRP_NO = #{P_FILE_GRP_NO} 
+		AND		DEL_AT = 'N'
+	</insert>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 계약 업체정보 TRDPLC UPDT
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : sendTrdplcToMISCom
+     * @date : 2020. 06. 30.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2020. 06. 30.       은우소프트 맹경열              최초 작성 
+     *  =======================================================   
+     -->		
+	<select id="sendTrdplcToMISCom" statementType="CALLABLE">
+		{CALL P_CONT_INFO_VEND_TRDPLC_UPD
+			(
+				#{P_CONT_NO, jdbcType=VARCHAR}			
+				, #{USR_ID  , jdbcType=VARCHAR}
+				, #{CONN_IP , jdbcType=VARCHAR}
+				, #{P_VEND_REG_NO, jdbcType=VARCHAR}
+				, #{P_TRDPLC_CD, jdbcType=VARCHAR}
+			)
+		}
+	</select>	
+	
+</mapper>

@@ -1,0 +1,47 @@
+@charset "utf-8";
+/* CSS Document */ 
+
+#wrap { position: relative; width: 100%; min-width: 1350px; }
+#container {padding-top: 42px; min-height: 834px; }
+.inner { width: 1350px; margin: 0 auto; }
+
+/* header */
+#header {}
+#header .top-area { padding: 27px 0 12px; }
+#header .top-area .logo { float: left; }
+#header .top-area .login { float: right; margin-top: 32px; font-size: 13px; font-weight: 600; letter-spacing: -0.7px;}
+#header .top-area .login a { display: inline-block; width: 62px; font-size: 13px; line-height: 20px; background: #858598; color: #fff; text-align: center; }
+#header .gnb { background: #246cab; }
+#header .gnb .menu li { float: left; width: 225px; border-right: 1px solid #5089bc; }
+#header .gnb .menu li:first-child { border-left: 1px solid #5089bc; }
+#header .gnb .menu li:hover,
+#header .gnb .menu li:focus,
+#header .gnb .menu li.on { background: #3694cc; }
+#header .gnb .menu li a { display: block; font-size: 17px; line-height: 51px; font-weight: 600; color: #fff; text-align: center; } 
+
+/* lnb */
+.lnb { float: left; width: 120px; }
+.lnb h2 { margin-bottom: 16px; font-size: 25px; font-weight: 600; color: #01579b; }
+.lnb .depth1 { width: 100%; border-top: 2px solid #3694cc; background: #246cab;}
+.lnb .depth1:hover { width: 100%; border-top: 2px solid #3694cc; background: #3694cc;}
+.lnb .depth1 li a { padding-left: 11px; display: block; color: #fff; font-size: 14px; line-height: 41px; }
+.lnb .depth2 { padding: 8px 15px; background: #f7f7f7;}
+.lnb .depth2 li a { padding-left: 14px;  background: url(../../images/icon/lnb_bg.gif) no-repeat left center; font-size: 13px; line-height: 26px; color: #4c4c4c;}
+.lnb .depth2 li a:hover,
+.lnb .depth2 li a.on { font-weight: 600;  color: #246cab; background-image: url(../../images/icon/lnb_hover.gif); }
+
+/* content */
+.content { float: right; width: 1200px; }
+.content h3 { float: left; padding-bottom: 18px; font-size: 25px; color: #1a1a1a; font-weight: 600; }
+
+/* location */
+.location { float: right; margin-top: 6px;}
+.location span, .location a { color: #666; }
+.location .gohome { padding-left: 13px; background: url(../../images/common/home.gif) no-repeat center left; }
+.location .currentPage { line-height: 18px; font-weight: 600; }
+
+/* footer */
+#footer { clear: both; padding: 19px 0; background: #6d6f7a;}
+#footer .info { margin-bottom: 7px; font-size: 13px; line-height: 18px; color: #d1d1d1; letter-spacing: -0.6px;}
+#footer .copy { font-size: 11px; color: #a8a9af; }
+

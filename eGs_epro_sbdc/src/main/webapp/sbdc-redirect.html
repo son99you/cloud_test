@@ -1,0 +1,63 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>특정 미팅룸 들어가기</title>
+</head>
+
+<body onload='callroom();'>
+
+<script type="text/javascript">
+  function callroom() {
+    location.href = get_url();
+
+    setTimeout(function() {
+      window.close();
+    }, 10000);
+  }
+
+  function callroom2() {
+    location.href = get_url();
+  }
+
+  function get_url() {
+    const url = location.href;
+    const idx = url.indexOf("?") + 1;
+    let querystring =  url.substring(idx, url.length);
+    if (idx <= 0)
+      querystring = "";
+
+    return `sc-sbdc21://?${querystring}`;
+  }
+
+  //secu mate custom 설치 프로그램을 다운로드 하는 경로
+  function guide() {
+    const url = "https://nsmate.sbdc.or.kr/corus_update/SBDC_mate_setup_64bit.exe";
+    window.open(url);
+    window.close();
+  }
+
+</script>
+
+<div>
+	사용방법 안내<br>
+	본 문서는 10초간 출력됩니다. 사용하지 않는 경우 자동으로 닫힙니다.
+	<br><br>
+
+	<strong>[실행 여부 확인]</strong> <br>
+	실행되지 않을 경우 설치여부를 확인한 후 설치하세요.<br>
+	<font color=blue>프로그램이 설치된 경우에는  자동적으로 "Secumate_cust" 버튼이 나타납니다.</font><br>
+
+	<font color=green>Secumate_cust가 설치되었고 실행을 취소한 경우에는 재실행하려면 아래 버튼을 클릭하세요.</font><br><br>
+
+	<center>
+	<a href="javascript:callroom2();" class='btn btn-primary btn-sm' >실행하기</a>
+	</center>
+	<br><br>
+
+	<strong>[다운로드 및 설치]</strong> <br>
+	<a href="javascript:guide();" class='btn btn-danger btn-sm' >설치하기</a>
+
+</div>
+
+</body>
+</html>

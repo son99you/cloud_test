@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+ * 지역정보 Mapper
+ *
+ * <pre>
+ * oda.com.cmcd.dao 
+ *    |_ ComCmcdAreaMapper.xml
+ * 
+ * </pre>
+ * @date : 2015. 2. 17. 오전 11:20:08
+ * @version : 1.0
+ * @author : 야긴스텍 정윤교
+-->
+<mapper namespace="ew.com.cmcd.dao.ComCmcdLegaldongDao">
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 시도목록조회      
+     * 2. 처리내용 :
+     *  	TABLE : TB_MDM005(도로명코드)
+     * </pre>
+     * @Query ID : legaldongBrtcListInqire
+     * @date : 2015. 2. 13
+     * @author :  야긴스텍 정윤교
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 2. 13.        야긴스텍 정윤교              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="legaldongBrtcListInqire" resultType="dataEntity">
+			SELECT 
+			 	<include refid="legaldongBrtcListInqire_SelectClause"/>
+			FROM TMDM_LADOCO
+			WHERE ABL_AT = 'N'
+			GROUP BY CTPRVN_NO, CTPRVN_NM
+			ORDER BY CTPRVN_NM ASC
+		
+	</select>
+	
+	<!--
+		 시도목록조회 Select 절
+	-->
+	<sql id="legaldongBrtcListInqire_SelectClause">
+		CTPRVN_NO AS AREA_CD 
+  		, CTPRVN_NM AS AREA_NM
+	</sql>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 시군구목록조회      
+     * 2. 처리내용 :
+     *  	TABLE : TB_MDM005(도로명코드)
+     * </pre>
+     * @Query ID : legaldongSignguListInqire
+     * @date : 2015. 2. 13
+     * @author :  야긴스텍 정윤교
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 2. 13.        야긴스텍 정윤교              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="legaldongSignguListInqire" resultType="dataEntity">
+			SELECT 
+			 	<include refid="legaldongSignguListInqire_SelectClause"/>
+			FROM TMDM_LADOCO
+			<include refid="legaldongSignguListInqire_WhereClause"/>
+			GROUP BY SIGNGU_NO, SIGNGU_NM
+			ORDER BY SIGNGU_NM ASC 
+	</select>
+	
+	<!--
+		  시군구목록조회 Where 절
+	-->
+	<sql id="legaldongSignguListInqire_WhereClause">
+		<where>			
+			AND ABL_AT = 'N'
+			AND SIGNGU_NO <![CDATA[ <>]]>  '000'
+			AND CTPRVN_NM = #{P_AREA_NM, jdbcType=VARCHAR, javaType=String}
+		</where>
+	</sql>
+	
+	<!--
+		 시군구목록조회 Select 절
+	-->
+	
+	<sql id="legaldongSignguListInqire_SelectClause">
+		SIGNGU_NO AS AREA_CD
+  		, SIGNGU_NM AS AREA_NM
+	</sql>
+	
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 읍면동목록조회      
+     * 2. 처리내용 :
+     *  	TABLE : TB_MDM005(도로명코드)
+     * </pre>
+     * @Query ID : legaldongEmdListInqire
+     * @date : 2015. 2. 13
+     * @author :  야긴스텍 정윤교
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 2. 13.        야긴스텍 정윤교              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="legaldongEmdListInqire" resultType="dataEntity">
+			SELECT 
+			 	<include refid="legaldongEmdListInqire_SelectClause"/>
+			FROM TMDM_LADOCO
+			<include refid="legaldongEmdListInqire_WhereClause"/>
+			ORDER BY EMD_NM ASC
+		
+	</select>
+	
+	<!--
+		 읍면동목록조회 Select 절
+	-->
+	<sql id="legaldongEmdListInqire_SelectClause">
+		EMD_NO AS AREA_CD
+  		, EMD_NM AS AREA_NM
+	</sql>
+	
+	<!--
+		  읍면동목록조회 Where 절
+	-->
+	<sql id="legaldongEmdListInqire_WhereClause">
+		<where>
+			AND EMD_NO <![CDATA[ <>]]> '000' 
+			AND ABL_AT = 'N'
+			AND SIGNGU_NM = #{P_AREA_NM, jdbcType=VARCHAR, javaType=String} 
+		</where>
+	</sql>
+	
+</mapper>

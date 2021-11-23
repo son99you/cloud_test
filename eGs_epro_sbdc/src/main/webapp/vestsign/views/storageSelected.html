@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <title>저장매체 선택</title>
+    <link type="text/css" rel="stylesheet" href="../styles/css/common.css?revision=e54ce34"/>
+    <!--[if IE 7]>
+    <link rel="stylesheet" type="text/css" href="../styles/css/ie7Debug.css"/>
+    <![endif]-->
+    <script type="text/javascript" src="../styles/js/jquery-1.11.0.min.js?revision=e54ce34"></script>
+
+    <link rel="stylesheet" href="../styles/css/jquery-ui.css?revision=e54ce34">
+    <script type="text/javascript" src="../styles/js/jquery-ui.js?revision=e54ce34"></script>
+    
+    <script type="text/javascript" src="../scripts/__GobalValue__.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../languages/storageLang.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../languages/manageLang.js?revision=e54ce34"></script>
+
+    <script type="text/javascript">
+        function tab(num) {
+            //$($("dl.tab1 dt")[num]).show();
+
+            if ($("#menu_btn li:eq(" + num + ") a").hasClass("on")) return;
+
+
+            for (var i = 0; i < $("#menu_btn li").length; i++) {
+                if ($("#menu_btn li:eq(" + i + ") a").attr('class') != undefined)
+                    $("#menu_btn li:eq(" + i + ") a").attr('class', $("#menu_btn li:eq(" + i + ") a").attr('class').replace("_on on", ""));
+            }
+
+            if ($("#menu_btn li:eq(" + num + ") a").attr('class') != undefined) $("#menu_btn li:eq(" + num + ") a").attr('class', $("#menu_btn li:eq(" + num + ") a").attr('class') + "_on on");
+        }
+
+    </script>
+</head>
+<body>
+<div class="Wrapper">
+    <div class="CERT_titlebar_common" style="width:430px;">
+        <h1 id="titleText">
+            <script>document.write(storageLang(11));</script>
+        </h1>
+
+        <div class="CERT_util_btnClose" id="certAgree_xBtn"></div>
+    </div>
+    <div class="CERT_certWrapper">
+        <h2>
+            <script>document.write(storageLang(12));</script>
+        </h2>
+        <dl class="tab1">
+            <dt class="cert01_01 clfix">
+            <div id="button_slide_wrap" class="clfix">
+                <button class="prev"></button>
+                <div>
+                    <ul class="icos" id="menu_btn" style="left:2px;"/>
+                </div>
+                <button class="next"></button>
+            </div>
+            </dt>
+            <dd>
+                <p class="CERT_txt11">
+                    <script>document.write(storageLang(13));</script>
+                </p>
+
+                <div class="CERT_contWrap11">
+                    <p class="CERT_em" id="menu_notice">
+
+                    </p>
+                </div>
+            </dd>
+        </dl>
+        <div class="CERT_btns_common">
+            <p class="CERT_btnBg_mbtn" id="certAgree_confirmBtn"><a id="">
+                <script>document.write(storageLang(14));</script>
+            </a></p>
+
+            <p class="CERT_btnBg_mbtn" id="certAgree_cancelBtn"><a id="">
+                <script>document.write(storageLang(15));</script>
+            </a></p>
+        </div>
+    </div>
+    <!--//CERT_certWrapper-->
+</div>
+<!--//Wrapper-->
+
+<div class="Wrapper" id="dialog" style="display:none">
+    <div class="CERT_titlebar_common" style="width:324px;">
+        <h1>
+            <script>document.write(storageLang(16));</script>
+        </h1>
+
+        <div class="CERT_util_btnClose" id="dialog_clostBtn"></div>
+    </div>
+    <div class="CERT_certWrapper2">
+        <ul class="CERT_usb_select" id="dialog_list"/>
+    </div>
+    <!--//CERT_certWrapper-->
+</div>
+<!--//Wrapper-->
+
+<!-- 인증서창 layer처리 -->
+<div id="ytLayer" style="display: none; opacity: 0.72; position: fixed; top: 50%; left: 50%; width: 100%; height: 100%; margin-top: -165px; margin-left: -215px; z-index: 10000; background: #000000 no-repeat center center url(../styles/images/loading-animation-6.gif); ">
+</div>
+
+</body>
+
+<script type="text/javascript" src="../library/json3.min.js?revision=e54ce34"></script>
+<script type="text/javascript" src="../library/iecompatibility.js?revision=e54ce34"></script>
+
+<script type="text/javascript" src="../scripts/storageSelected.js?revision=e54ce34"></script>
+<script type="text/javascript" src="../library/dragiframe.js?revision=e54ce34"></script>
+</html>

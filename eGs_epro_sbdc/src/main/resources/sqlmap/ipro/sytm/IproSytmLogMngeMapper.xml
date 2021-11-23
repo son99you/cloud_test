@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * sqlmap.ipro.sytm
+ * IproSytmLogMngeMapper.xml
+ * 
+ * @Author : jandi_Eun
+ * @Date   : 2018. 2. 28.
+ * 
+ -->
+<mapper namespace="com.eunwoosoft.ipro.sytm.dao.IproSytmLogMngeDao">
+
+	<select id="selectLogMngeListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="logMngeList"/>
+			<include refid="logMngeListWhere"/>
+		) T1
+		WHERE 1 = 1
+ 		ORDER BY REG_DT DESC
+ 		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+
+	<select id="selectLogMngeExcelList" resultType="dataEntity">
+		SELECT * FROM (
+			<include refid="logMngeList"/>
+			<include refid="logMngeListWhere"/>
+		) T1
+		WHERE 1 = 1
+ 		ORDER BY REG_DT DESC
+	</select>
+	
+	<select id="selectLogMngeListTotCnt" resultType="int">
+ 		SELECT COUNT(1) FROM (
+			<include refid="logMngeList"/>
+			<include refid="logMngeListWhere"/>
+		) T1
+ 	</select>
+	
+	<sql id="logMngeList">
+        SELECT LOG_SN
+                  , SYS_CONN_SECD
+                  , F_CDVAL_INQIRE('SYS_CONN_SECD', SYS_CONN_SECD) AS SYS_CONN_SECD_NM
+                  , CONN_CNTN
+                  , CONN_DT
+                  , TO_DATE(CONN_DT, 'yyyyMMddHH24MISS') AS CONN_DT_F
+                  , CONN_ID
+                  , CONN_URL
+                  , LOG_ERR_SECD
+                  , F_CDVAL_INQIRE('LOG_ERR_SECD', LOG_ERR_SECD) AS LOG_ERR_SECD_NM
+                  , ERR_CNTN
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , TO_CHAR(TO_DATE(REG_DT, 'yyyyMMddHH24miss'), 'yyyy-MM-dd HH:mi') AS REG_DT_F
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+                  , MENU_ID
+                  , ( SELECT MENU_NM FROM T_MM_MENU_MST MENU WHERE MENU.MENU_ID = LOG.MENU_ID ) AS MENU_NM
+          FROM T_MM_LOG LOG
+	</sql>
+	
+	<sql id="logMngeListWhere">
+		<where>
+			AND DEL_AT = 'N'
+			<if test='P_SYS_CONN_SECD_S != null and P_SYS_CONN_SECD_S != "" '>
+				AND SYS_CONN_SECD = #{P_SYS_CONN_SECD_S}
+			</if>
+			<if test='P_CONN_ID_S != null and P_CONN_ID_S != "" '>
+				AND CONN_ID LIKE '%'||#{P_CONN_ID_S}||'%'
+			</if>
+			<if test='P_REGR_NM_S != null and P_REGR_NM_S != "" '>
+				AND REGR_NM LIKE '%'||#{P_REGR_NM_S}||'%'
+			</if>
+			
+			<if test='P_CONN_BEGIN_DT_S != null and P_CONN_BEGIN_DT_S != "" '>
+				AND TO_CHAR(TO_DATE(CONN_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') >= #{P_CONN_BEGIN_DT_S}
+			</if>
+			<if test='P_CONN_END_DT_S != null and P_CONN_END_DT_S != "" '>
+				AND TO_CHAR(TO_DATE(CONN_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') &lt;= #{P_CONN_END_DT_S}
+			</if>
+			
+			<if test='P_REG_BEGIN_DT_S != null and P_REG_BEGIN_DT_S != "" '>
+				AND TO_CHAR(TO_DATE(REG_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') >= #{P_REG_BEGIN_DT_S}
+			</if>
+			<if test='P_REG_END_DT_S != null and P_REG_END_DT_S != "" '>
+				AND TO_CHAR(TO_DATE(REG_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') &lt;= #{P_REG_END_DT_S}
+			</if>
+			
+		</where>
+	</sql>
+	
+	
+	<select id="selectLogMngeDetail" resultType="dataEntity">
+        SELECT LOG_SN
+                  , SYS_CONN_SECD
+                  , F_CDVAL_INQIRE('SYS_CONN_SECD', SYS_CONN_SECD) AS SYS_CONN_SECD_NM
+                  , CONN_CNTN
+                  , CONN_DT
+                  , TO_DATE(CONN_DT, 'yyyyMMddHH24MISS') AS CONN_DT_F
+                  , CONN_ID
+                  , CONN_URL
+                  , LOG_ERR_SECD
+                  , F_CDVAL_INQIRE('LOG_ERR_SECD', LOG_ERR_SECD) AS LOG_ERR_SECD_NM
+                  , ERR_CNTN
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+                  , MENU_ID
+                  , ( SELECT MENU_NM FROM T_MM_MENU_MST MENU WHERE MENU.MENU_ID = LOG.MENU_ID ) AS MENU_NM
+          FROM T_MM_LOG LOG		
+       WHERE 1=1
+       <if test='P_LOG_SN != null and P_LOG_SN != "" '>
+			AND LOG_SN = #{P_LOG_SN}
+		</if>
+	</select>
+	
+</mapper>

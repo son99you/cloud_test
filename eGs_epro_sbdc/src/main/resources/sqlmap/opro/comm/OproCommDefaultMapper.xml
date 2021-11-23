@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eunwoosoft.opro.comm.dao.OproCommDefaultDao">	
+	<!--  
+     * <pre>
+     * 1. 개요 : 공통 첨부 파일 정보 조회(단건)
+     * 2. 처리내용 :
+     *  	TABLE : T_MM_FILE_MST(공통첨부파일)
+     -->
+	<select id="selectCmmnFileInfoInqire" resultType="dataEntity">
+        SELECT 	FILE_GRP_NO
+                  , FILE_SN
+                  , ATCH_FSCD
+                  , TSK_SECD
+                  , SV_FILE_NM
+                  , SYS_FILE_NM
+                  , FILE_SZ
+                  , FILE_LCTN
+                  , FILE_DOC_NM
+                  , FILE_DESC
+                  , OPEN_YN
+                  , TSK_VKEY1
+                  , TSK_VKEY2
+                  , TSK_VKEY3
+                  , RMK
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+           FROM T_MM_FILE_MST
+        WHERE FILE_SN =  #{P_FILE_SN , jdbcType=VARCHAR}
+        <if test="P_FILE_GRP_NO != null and P_FILE_GRP_NO != '' ">
+            AND FILE_GRP_NO = #{P_FILE_GRP_NO , jdbcType=VARCHAR}
+        </if>
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 공통 첨부 파일 정보 조회(다건)
+     * 2. 처리내용 :
+     *  	TABLE : TMDM_ATFI(공통첨부파일)
+     -->
+	<select id="selectCmmnFileListInqire" resultType="dataEntity">
+		SELECT 	FILE_GRP_NO
+					,FILE_SN
+					,ATCH_FSCD
+					,TSK_SECD
+					,SV_FILE_NM
+					,SYS_FILE_NM
+					,FILE_SZ
+					,FILE_LCTN
+					,FILE_DOC_NM
+					,FILE_DESC
+					,OPEN_YN
+					,TSK_VKEY1
+					,TSK_VKEY2
+					,TSK_VKEY3
+					,RMK
+					,REGR_ID
+					,REGR_NM
+					,REG_DT
+					,MODR_ID
+					,MODR_NM
+					,MOD_DT
+					,CONN_IP
+					,DEL_AT
+		FROM 	T_MM_FILE_MST
+		WHERE	1=1
+		<if test='fileSnList != null and fileSnList.size != 0'>
+		AND		FILE_SN IN
+		<foreach separator="," item="fileSn" collection="fileSnList" open="(" close=")">
+					#{fileSn, jdbcType=VARCHAR}
+		</foreach>
+		</if>
+		<if test='fileGrpList != null and fileGrpList.size != 0'>
+		AND		FILE_GRP_NO IN
+		<foreach separator="," item="fileGrp" collection="fileGrpList" open="(" close=")">
+					#{fileGrp, jdbcType=VARCHAR}
+		</foreach>
+		</if>
+		AND		DEL_AT NOT IN ('Y')
+	</select>
+	
+	
+	
+	<select id="selectCodeList" resultType="dataEntity">
+		SELECT CD_ID
+                  , CD_DTL_ID
+                  , CD_NM
+                  , CD_DTL_NM
+                  , ORD_SN
+                  , USE_YN
+                  , RMK
+                  , ETC_VAL1
+                  , ETC_VAL2
+                  , ETC_VAL3
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+                  , CHNG_PSBL_YN
+           FROM T_MM_CODE_MST
+           
+           WHERE 1 = 1
+           AND DEL_AT = 'N'
+           AND USE_YN = 'Y'
+		<if test='P_CD_ID != null and P_CD_ID != "" '>
+			AND CD_ID LIKE '%'||#{P_CD_ID}||'%'
+		</if>
+		ORDER BY ORD_SN
+	</select> 
+	
+	<insert id="sendLOG">
+		INSERT INTO T_MM_LOG
+			(LOG_SN
+			, SYS_CONN_SECD
+			, CONN_CNTN
+			, CONN_DT
+			, CONN_ID
+			, CONN_URL
+			, LOG_ERR_SECD
+			, ERR_CNTN
+			, REGR_ID
+			, REGR_NM
+			, REG_DT
+			, MODR_ID
+			, MODR_NM
+			, MOD_DT
+			, CONN_IP
+			, DEL_AT
+			, MENU_ID
+		)VALUES (
+			S_T_MM_LOG.NEXTVAL
+			,#{P_SYS_CONN_SECD, jdbcType=VARCHAR} 		  
+			,#{P_CONN_CNTN, jdbcType=VARCHAR} 		  	 
+			,TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 		  
+			,#{P_USR_ID, jdbcType=VARCHAR} 		      	  
+			,#{P_CONN_URL, jdbcType=VARCHAR} 		     
+			,NULL										 
+			,NULL										 
+			,#{P_USR_ID, jdbcType=VARCHAR}				  
+			,#{P_USR_NM, jdbcType=VARCHAR}				  	
+			,TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 		 
+			,#{P_USR_ID, jdbcType=VARCHAR}				  
+			,#{P_USR_NM, jdbcType=VARCHAR}				  
+			,TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 		  
+			,#{P_CONN_IP, jdbcType=VARCHAR}
+			,'N'   
+			,#{P_MENU_ID, jdbcType=VARCHAR}     		  
+		)			
+	</insert >
+	
+	
+</mapper>	

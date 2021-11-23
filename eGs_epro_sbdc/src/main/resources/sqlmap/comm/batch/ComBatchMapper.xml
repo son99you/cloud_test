@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eunwoosoft.comm.batch.dao.ComBatchDao">
+
+	
+	<update id="updtBereNotiClosePscd">
+		UPDATE T_BI_BFAN_MST
+           SET BFAN_PSCD = 'D'
+         WHERE BFAN_PSCD = 'C'
+           AND BFAN_ENDE &lt; TO_CHAR(SYSDATE, 'yyyyMMdd')
+	</update>
+	
+	<update id="updtPayClosePscd">
+		UPDATE T_CT_PAY A
+           SET A.PAY_STCD = '3'
+         WHERE A.PAY_STCD = '2'
+           AND A.CONT_NO||A.CHNG_NGR||A.VEND_REG_NO||A.PAY_SEQ IN (SELECT B.CONT_NO||B.CHNG_NGR||B.VEND_REG_NO||B.PAY_SEQ
+                                                                     FROM T_CT_PAY B
+                                                                    WHERE PAY_YN = 'Y'
+                                                                  )
+	</update>
+</mapper>

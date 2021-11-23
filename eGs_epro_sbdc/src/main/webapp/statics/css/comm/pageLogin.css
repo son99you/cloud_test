@@ -1,0 +1,382 @@
+@charset "utf-8";
+
+/*---------------
+	common
+-------------------*/
+body{
+    background-color: white ! important;
+}
+#panelLoginContent {
+	position: relative;
+	width: 1250px;
+	background-color: white;
+}
+.panelLoginContentHead {
+	width:100%;
+	height:43px;
+	padding-top:22px;
+	margin-bottom:25px;
+	border-bottom:2px solid #d7d7d7
+}
+.panelLoginContentHead .pageTitle{
+	color:#636363;
+	font:26px NanumGothicBold , "NanumGothicBold" , Dotum, "NanumGothic", Arial, sans-serif;
+	margin-left:13px;
+	padding-left:28px;
+	background-image: url('../../images/opro/login/bul_register_title.png');
+	background-repeat: no-repeat;
+	background-position: 0 ;
+}
+.panelLoginContentBody{
+	width:1250px;
+	position:relative;
+	min-height:500px;
+}
+.pointBlue {color:#006eb1 ! important;}
+.pointRed {color:#cf0000 ! important;}
+.pointBlack {color:#303030 ! important;}
+
+.blind {
+	visibility: hidden;
+	overflow: hidden;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 1px;
+	height: 1px;
+	font-size: 0;
+	line-height: 0;
+}
+.ftr {
+  float: right;
+}
+.ftl {
+  float: left;
+}
+.box {
+	width:1208px;
+	padding:15px 20px;
+	border: 1px solid #d9d9d9;
+}
+#content button::-moz-focus-inner {border:0; padding:0;}
+#content input[type=text]{border: 1px solid #aaaaaa;}
+#content input[type=password]{border: 1px solid #aaaaaa;}
+#content .btnWrap {
+	clear:both;
+	width:100%;
+	height:50px;
+	text-align:center;
+}
+.btn{
+	display:inline-block;
+	width:100%;
+	text-align:center;
+	color:#fff;
+	line-height:50px;
+	font-family:NanumGothicBold , "NanumGothicBold" , Dotum, "NanumGothic", Arial, sans-serif;
+	font-size:13px;
+}
+.btn a {
+	display:inline-block;
+	width:100%;
+	line-height:50px;
+	color:#fff;
+	text-decoration:none;
+}
+.blueBtn {
+	background-color:#017ac3
+}
+.grayBtn{
+	background-color:#666
+}
+
+/*로그인*/
+div.loginForm{
+    position: relative;
+	width: 1248px;
+    height: 619px;
+    padding-top:10px;
+    margin-bottom:30px;
+    border:1px solid #d9d9d9
+ }
+.loginTitleBox{
+    width:1209px;
+	height:66px;
+	margin:0 auto;
+	border-bottom:3px solid #017ac3;
+	background-image: url(../../images/opro/login/iconLock.png);
+	background-repeat:no-repeat;
+	background-position: right 0
+}
+.loginTitleBox .subTitle{
+	float:left;
+	color:#303030;
+    font:32px NanumGothicBold , "NanumGothicBold" , Dotum, "NanumGothic", Arial, sans-serif;
+    margin-top:24px;
+}
+.loginFormLeft {
+	float:left;
+	width: 443px;	
+    height:392px;
+	margin-top:38px;
+	margin-left:	 157px;
+}
+.loginFormRight {
+	float:right;
+	width: 443px;
+    height:392px;
+	margin-top:38px;
+	margin-right:157px;
+}
+.squareBox{
+    float: left;
+    width: 407px;
+    height:342px;
+	padding: 25px 18px;
+	background-color: white;
+    border: 2px solid #dadada;
+	border-radius: 10px; 
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-khtml-border-radius: 10px;
+}
+.squareBox h4{
+   font:22px NanumGothicBold , "NanumGothicBold" , Dotum, "NanumGothic", Arial, sans-serif; 
+   color:#303030;
+   margin-bottom:15px;
+}
+ .squareBox h4 em{
+   color:#f26100;
+}
+.squareBox .loginBoxT {
+	width:367px;
+	clear:both;
+	height:196px;
+	background-color:#f3f3f3;
+	padding:20px;
+	border-radius: 10px; 
+	margin-bottom:15px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-khtml-border-radius: 10px;
+}
+.loginFormLeft .squareBox .loginBoxT {
+	height:196px;
+}
+.loginFormRight .squareBox .loginBoxT {
+	height:196px;
+}
+
+/*로그인 안내*/
+.loginForm .infoTxt{
+    float:left;
+    width:367px;
+}
+.loginForm .infoTxt li{
+	float: left;
+	color:#494949;
+	font-size:13px;
+	padding-left: 17px;
+    background-image: url('../../images/opro/login/template_arr.png');
+    background-position: 0 5px;
+    background-repeat: no-repeat;
+    line-height:20px;
+}
+.loginForm .item {
+	background-color:#fff;
+	float: left;
+	clear:both;
+	width:317px;
+	height:66px;
+	padding:	11px 25px;
+	margin-top:15px;
+	border-radius: 10px; 
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-khtml-border-radius: 10px;
+}
+ .loginForm .item dt {
+	float:left;
+	width:70px;
+	color:#303030;
+	padding-top:7px;
+	font:14px NanumGothicBold , "NanumGothicBold" , Dotum, "NanumGothic", Arial, sans-serif; 
+}
+ .loginForm .item dd {
+	float:left;
+	width:247px;
+}
+.loginForm .item input[type=text]{
+    width: 247px;
+    height: 30px;
+    float: left;
+}
+.loginForm .item input[type=password]{
+    width: 247px;
+    height: 30px;
+    float: left;
+    margin-top: 2px;
+}
+
+
+/*지문인식 신원확인 체크*/
+.loginBoxT .keeping{
+    float:left;
+    position: relative;
+	width: 361px;
+    margin-top: 13px;
+	margin-left:6px;
+}
+.keeping input{
+    float: left;
+	margin-right:6px;
+	margin-top:4px
+}
+.keeping span{
+	display:block;
+	float:left;
+    font-size: 13px;
+	color:#717171;
+}
+.keeping span em.pointBlack{
+	font-family:NanumGothicBold , "NanumGothicBold" , Dotum, "NanumGothic", Arial, sans-serif;
+}
+/*회원가입 완료페이지*/
+.completeType {
+	width: 880px;
+	height:115px;
+	border-top: 2px solid #017ac3;
+	border-bottom: 2px solid #cacaca;
+	background-color:#f8f8f8;
+	background-image: url('../../images/opro/login/icon_check.png');
+	background-repeat: no-repeat;
+	background-position: 220px 50px;
+	padding: 50px 0 60px 370px;
+	margin-top:130px;
+	margin-bottom:20px
+}
+.completeType p {
+	color:#666666;
+	font-size:15px;
+	line-height:24px;
+}
+.completeType p span{
+	color:#303030;
+	font:24px NanumGothicBold , "NanumGothicBold" , Dotum, "NanumGothic", Arial, sans-serif;
+}
+
+/*회원가입 약관*/
+.joinAgree {
+ margin-bottom:50px
+}
+.joinAgree .btnWrap .btn{
+	margin-left:8px;
+}
+.joinAgree .btnWrap {
+    text-align: right;
+}
+.joinAgree .box {
+	height: 488px;
+	overflow-y: scroll;
+	font-family: Dotum, "NanumGothic", Arial, sans-serif;
+	font-size:13px;
+	color:#656565;
+	line-height:21px;
+}
+.joinAgree h4 {
+	font-size:14px	
+}
+.joinAgree h5 {
+	font-size:13px;
+	font-weight:normal;
+	color:#656565;
+	margin-top:21px;
+}
+.joinAgree ul {
+	margin-left:7px;
+	text-align:justify;
+}
+.joinAgree li {
+	margin-bottom:2px;
+}
+.joinAgree p {
+	text-align:justify;
+}
+.joinAgree p {
+	text-align:justify;
+}
+.joinAgree .addc {
+	margin-top:21px;
+}
+.agreeChek {
+	float:right;
+	margin-top:21px;
+	margin-bottom:28px;
+}
+.agreeChek label {
+	color:#535353;
+	font:12px NanumGothicBold , "NanumGothicBold" , Dotum, "NanumGothic", Arial, sans-serif;
+	margin-left:6px;
+}
+
+/*가입여부 확인*/
+.jonConfirm {
+	width:1250px;
+	height:161px;
+	padding:21px 0;
+}
+.jonConfirm .box{
+	height:67px;
+	padding-top:28px;
+	padding-bottom:28px;
+}
+.jonConfirm h4{
+	color:#636363;
+	font:18px NanumGothicBold , "NanumGothicBold" , Dotum, "NanumGothic", Arial, sans-serif;
+	background-image: url('../../images/opro/login/bullet_circle02.png');
+	background-position:10px 6px;
+	background-repeat:no-repeat;
+	padding-left:30px;
+	margin-bottom:18px;
+}
+.jonConfirm p {
+	color:#656565;
+	font-size:13px;
+	font-family:Dotum, "NanumGothic", Arial, sans-serif;
+	margin-bottom:18px;
+}
+.jonConfirm dl {
+ 	width:252px;
+ 	float:left;
+ 	margin-right:10px;
+ }
+ .jonConfirm dd{
+ 	width:252px;
+ 	height:35px;
+ }
+  .jonConfirm dd input[type=text]{
+   width:100%;
+   height:35px;
+  }
+  
+.jonConfirm .btn {
+   	height:37px;
+   	line-height:37px;
+   }
+    
+/*footer*/
+#panelFooter{
+    width: 100%;
+    position: relative;
+    float: left;
+}
+#panelFooter .footerWrapBg{
+	height: 95px;
+    background: url('../../images/opro/footer/footerBg.png') repeat 0 0;
+}
+
+#panelFooter .footerWrapBg .footer_wrap{
+    width: 1250px;
+    margin: 0 auto;
+    color: #d7d7d7;
+}

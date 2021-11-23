@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * sqlmap.ipro.sytm
+ * IproSytmUserMngeMapper.xml
+ * 
+ * @Author : jandi_Eun
+ * @Date   : 2018. 2. 26.
+ * 
+ -->
+<mapper namespace="com.eunwoosoft.ipro.sytm.dao.IproSytmUserMngeDao">
+	<select id="selectUserMgrListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+		<include refid="userMgrList"/>
+		<include refid="userMgrListWhere"/>
+		) T1
+		WHERE 1 = 1
+ 		ORDER BY USR_NM
+ 		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+
+	<select id="selectUserMgrExcelList" resultType="dataEntity">
+		SELECT ROWNUM AS RNUM, A.* FROM(
+		SELECT T1.* FROM (
+		<include refid="userMgrList"/>
+		<include refid="userMgrListWhere"/>
+		) T1
+		WHERE 1 = 1
+ 		ORDER BY USR_NM
+ 		)A
+	</select>
+	
+	<select id="selectUserMgrListTotcnt" resultType="int">
+ 		SELECT COUNT(1) FROM (
+			<include refid="userMgrList"/>
+			<include refid="userMgrListWhere"/>
+		) T1
+ 	</select>
+	
+	<sql id="userMgrList">
+		SELECT * FROM (
+             SELECT    VUSR.USR_ID
+            		  , VUSR.EMPL_NO
+            		  , VUSR.USR_NM
+            		  , VUSR.ARA_DEPT_CD
+            		  , VUSR.DEPT_NO
+            		  , VUSR.DEPT_NM
+            		  , VUSR.OFPS_CD
+            		  , VUSR.OFPS_NM
+            		  , VUSR.EMAL_ADDR
+            		  , VUSR.TEL_NO
+            		  , VUSR.CP_NO
+            		  , DECODE(USR.AUTH_ID, '' ,VUSR.AUTH_ID ,USR.AUTH_ID)  AS AUTH_ID
+					  , F_CDVAL_INQIRE('AUTH_ID',  DECODE(USR.AUTH_ID, '' ,VUSR.AUTH_ID ,USR.AUTH_ID)) AS AUTH_NM
+                      , AUTH.AUTH_SECD
+               FROM V_MM_USER VUSR
+                      , T_MM_USER_MST USR
+                      , T_MM_AUTH AUTH
+             WHERE 1=1
+             AND VUSR.USR_ID = USR.USR_ID(+)
+             AND VUSR.AUTH_ID = AUTH.AUTH_ID(+)
+           )
+	</sql>
+	
+	<sql id="userMgrListWhere">
+		<where>
+			<if test='P_USR_ID_S != null and P_USR_ID_S != "" '>
+				AND	EMPL_NO LIKE '%'||#{P_USR_ID_S}||'%'
+			</if>
+			<if test='P_USR_NM_S != null and P_USR_NM_S != "" '>
+				AND	USR_NM LIKE '%'||#{P_USR_NM_S}||'%'
+			</if>
+			<if test= 'P_AUTH_ID_S != "6" '>
+				<if test='P_AUTH_ID_S != null and P_AUTH_ID_S != "" '>
+					AND	AUTH_ID = #{P_AUTH_ID_S}
+				</if>
+			</if>
+			<if test= 'P_AUTH_ID_S == "6" '>
+				AND	AUTH_ID IS NULL
+			</if>
+		</where>
+	</sql>
+	
+	<select id="selectUserMgrDetail" resultType="dataEntity">
+         SELECT  VUSR.USR_ID
+            		  , VUSR.EMPL_NO
+            		  , VUSR.USR_NM
+            		  , VUSR.ARA_DEPT_CD
+            		  , VUSR.DEPT_NO
+            		  , VUSR.DEPT_NM
+            		  , VUSR.OFPS_CD
+            		  , VUSR.OFPS_NM
+            		  , VUSR.EMAL_ADDR
+            		  , VUSR.TEL_NO
+            		  , VUSR.CP_NO
+                      , DECODE(USR.AUTH_ID, '' ,VUSR.AUTH_ID ,USR.AUTH_ID)  AS AUTH_ID
+                      , F_CDVAL_INQIRE('AUTH_ID',  DECODE(USR.AUTH_ID, '' ,VUSR.AUTH_ID ,USR.AUTH_ID)) AS AUTH_NM
+                      , DECODE(USR.APPR_AUTH_YN,'' ,VUSR.APPR_AUTH_YN ,USR.APPR_AUTH_YN)  AS APPR_AUTH_YN
+           FROM V_MM_USER VUSR
+                  , T_MM_USER_MST USR
+        WHERE 1=1
+             AND VUSR.USR_ID = USR.USR_ID(+)
+             AND VUSR.USR_ID = #{P_USR_ID_S}
+	</select>
+	
+	
+	<update id="userMgrUpdt">
+		MERGE 
+		INTO		T_MM_USER_MST T
+				USING (SELECT * FROM V_MM_USER WHERE USR_ID = #{P_USR_ID}) A
+		ON (	
+			T.USR_ID = #{P_USR_ID}
+			)
+		WHEN MATCHED THEN	
+			UPDATE
+			SET		AUTH_ID = #{P_AUTH_ID, jdbcType=VARCHAR}
+			, APPR_AUTH_YN = #{P_APPR_AUTH_YN, jdbcType =VARCHAR}
+			, MODR_ID = #{P_REGR_ID, jdbcType=VARCHAR}
+			, MODR_NM = #{P_REGR_NM, jdbcType=VARCHAR}
+			, MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+			, CONN_IP = #{P_CONN_IP, jdbcType=VARCHAR}
+		WHEN NOT MATCHED THEN	
+			INSERT
+			(
+				USR_ID
+				, EMPL_NO
+				, USR_NM
+				, DEPT_NO
+				, DEPT_NM
+				, OPCD
+				, OFPS_NM
+				, EMAL_ADDR
+				, TEL_NO
+				, CP_NO
+				, AUTH_ID
+				, APPR_AUTH_YN
+				, REGR_ID
+				, REGR_NM
+				, REG_DT
+				, MODR_ID
+				, MODR_NM
+				, MOD_DT
+				, CONN_IP
+				, DEL_AT
+			)
+			VALUES (
+				A.USR_ID
+				, A.EMPL_NO
+				, A.USR_NM
+				, A.DEPT_NO
+				, A.DEPT_NM
+				, A.OFPS_CD
+				, A.OFPS_NM
+				, A.EMAL_ADDR
+				, A.TEL_NO
+				, A.CP_NO
+				, #{P_AUTH_ID, jdbcType=VARCHAR}
+				, #{P_APPR_AUTH_YN, jdbcType=VARCHAR}
+				, #{P_REGR_ID, jdbcType=VARCHAR}
+				, #{P_REGR_NM, jdbcType=VARCHAR}
+				, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+				, #{P_REGR_ID, jdbcType=VARCHAR}
+				, #{P_REGR_NM, jdbcType=VARCHAR}
+				, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+				, #{P_CONN_IP, jdbcType=VARCHAR}
+				, 'N'
+			)
+	</update>
+	
+</mapper>

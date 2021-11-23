@@ -1,0 +1,242 @@
+@charset "utf-8";
+/* 
+	Copyright(c) 2018 Onlinepowers
+	http://www.onlinepowers.com
+*/
+
+/* ============================ all ============================ */
+.inner {
+	position: relative;
+	width: 1000px;
+}
+.inner:after {
+	display: block;
+	content: '';
+	clear: both;
+}
+#header .inner,
+#footer .inner {
+	width: 100%;
+	min-width: 1030px;
+}
+
+
+/* ============================ header ============================ */
+#header {
+	background: #3e719c;
+}
+#header .inner {
+	padding: 0 30px 0 15px;
+}
+
+
+/* -------- logo -------- */
+#header .logo {
+	float: left;
+	padding: 41px 0 23px;
+}
+#header .logo a {
+	display: block;
+	height: 21px;
+}
+#header .logo a img {
+	vertical-align: top;
+}
+
+
+
+/* -------- gnb -------- */
+#gnb {
+	float: right;
+	padding: 16px 0 22px;
+}
+
+/* --- utile_wrap ---*/
+#header .utile_wrap {
+	font-size: 0;
+	text-align: right;
+}
+#header .utile_wrap li {
+	display: inline-block;
+	margin-left: 8px;
+}
+#header .utile_wrap a {
+	display: block;
+	font-size: 12px;
+	font-weight: 200;
+	color: #fff;
+	opacity: 0.7;
+}
+
+/* --- info_wrap ---*/
+#header .info_wrap {
+	text-align: right;
+}
+#header .info_wrap .tit {
+	display: inline-block;
+	padding-left: 14px;
+	font-size: 12px;
+	font-weight: 200;
+	color: #d2dbe4;
+	background: url(/statics/images/ipro/keri/tit_icon02.png) no-repeat 0 center;
+}
+#header .info_wrap .tit span {
+	font-weight: 500;
+	color: #fff;
+}
+
+
+/* --- depth1_wrap ---*/
+#gnb .depth1_wrap {
+	margin-top: 20px;
+}
+#gnb .depth1_wrap:after {
+	display: block;
+	content: '';
+	clear: both;
+}
+#gnb .depth1_wrap li {
+	float: left;
+	margin-left: 30px;
+}
+#gnb .depth1_wrap a {
+	display: block;
+	font-size: 16px;
+	font-weight: 500;
+	color: #fff;
+}
+
+
+
+
+/* ============================ container ============================ */
+#lnb {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1000;
+	width: 180px;
+	height: 100%;
+	border-right: 1px solid #d4d6d9;
+}
+#lnb .tit {
+	padding: 45px 0 45px 25px;
+	font-size: 20px;
+	font-weight: 600;
+	color: #164e7c;
+}
+#lnb a {
+	display: block;
+}
+#lnb .depth1_wrap .depth1_tit {
+	padding-left: 25px;
+	font-size: 15px;
+	line-height: 44px;
+	font-weight: 500;
+	color: #333;
+	border-top: 1px solid #d4d6d9;
+	border-bottom: 1px solid #f4f4f4;
+}
+#lnb .depth2_wrap {
+	padding: 10px 0;
+}
+#lnb .depth2_wrap .depth2_tit {
+	padding: 6px 0 6px 28px;
+	font-size: 14px;
+	font-weight: 200;
+	color: #666;
+}
+#lnb .depth3_wrap {
+	padding: 2px 0;
+}
+#lnb .depth3_wrap a {
+	padding: 6px 0 6px 40px;
+	font-size: 13px;
+	font-weight: 300;
+	color: #888;
+}
+
+/* lnb event */
+#lnb .depth1_wrap .depth1.on .depth1_tit,
+#lnb .depth1_wrap .depth1:hover .depth1_tit,
+#lnb .depth1_wrap .depth1_tit:focus {
+	color: #fff;
+	background: #a6b6c6;
+	border-color: #a6b6c6;
+}
+#lnb .depth2_wrap .depth2.on .depth2_tit,
+#lnb .depth2_wrap .depth2:hover .depth2_tit,
+#lnb .depth2_wrap .depth2_tit:focus {
+	font-weight: 500;
+	color: #3e719c;
+}
+#lnb .depth3_wrap a.on,
+#lnb .depth3_wrap a:hover,
+#lnb .depth3_wrap a:focus {
+	color: #3c4a53;
+	text-decoration: underline;
+}
+
+
+
+
+
+/* ============================ foooter ============================ */
+#footer {
+	border-top: 1px solid #e6e6e6;
+	position : relative;
+}
+#footer .inner {
+	padding: 20px 30px 36px 15px;
+}
+
+/* --- address_wrap ---*/
+#footer .address_wrap {
+	float: left;
+}
+#footer .address_wrap address {
+	font-size: 12px;
+	line-height: 18px;
+	font-weight: 300;
+	letter-spacing: 0.2px;
+	color: #646566;
+}
+#footer .address_wrap .copy {
+	margin-top: 8px;
+	font-size: 11px;
+	font-weight: 300;
+	letter-spacing: 0.2px;
+	color: #737373;
+}
+
+/* --- info_wrap ---*/
+#footer .info_wrap {
+	float: right;
+}
+#footer .info_wrap .help {
+	padding: 4px 14px;
+	border: 1px solid #ededed;
+}
+#footer .info_wrap .help span {
+	font-size: 12px;
+	font-family: 'Roboto';
+}
+#footer .info_wrap .help .tit {
+	font-weight: 500;
+	letter-spacing: 0.2px;
+	color: #666;
+	opacity: 0.7;
+}
+#footer .info_wrap .help .number {
+	font-weight: 700;
+	letter-spacing: 0.6px;
+	color: #444;
+}
+
+#footer .info_wrap .footer_logo {
+	margin-top: 12px;
+	text-align: right;
+}
+#footer .info_wrap .footer_logo a {
+	display: inline-block;
+}

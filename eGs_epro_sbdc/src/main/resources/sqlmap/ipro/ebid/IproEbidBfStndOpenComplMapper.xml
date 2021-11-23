@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eunwoosoft.ipro.ebid.dao.IproEbidBfStndOpenComplDao">
+
+	<select id="selectBfStndOpenList" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="bfStndOpenList"/>
+			<include refid="bfStndOpenListWhere"/>
+			ORDER BY BFAN_NO DESC
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<select id="selectBfStndOpenExcelList" resultType="dataEntity">
+		SELECT  ROWNUM AS RNUM, R1.* FROM (
+			SELECT * FROM (
+				<include refid="bfStndOpenList"/>
+				<include refid="bfStndOpenListWhere"/>
+				ORDER BY BFAN_NO DESC
+			) T1
+			WHERE 1 = 1
+		) R1
+	</select>
+	
+	<select id="selectBfStndOpenListTotCnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="bfStndOpenList"/>
+			<include refid="bfStndOpenListWhere"/>
+			ORDER BY BFAN_NO DESC
+		) T1
+		WHERE 1 = 1
+	</select>
+	<sql id="bfStndOpenList">
+		SELECT  *  FROM (
+				SELECT 	BF.BFAN_NO
+								, BF.ARA_DEPT_CD
+								, F_CDVAL_INQIRE('ARA_DEPT_CD', BF.ARA_DEPT_CD) AS ARA_DEPT_CD_NM
+								, BF.CONT_SECD
+								, F_CDVAL_INQIRE('CONT_SECD', BF.CONT_SECD) AS CONT_SECD_NM
+								, BF.CONT_DECD
+								, F_CDVAL_INQIRE('CONT_DECD', BF.CONT_DECD) AS CONT_DECD_NM
+								, BF.BID_MTCD
+								, F_CDVAL_INQIRE('BID_MTCD', BF.BID_MTCD) AS BID_MTCD_NM
+								, BF.CONT_MTCD
+								, F_CDVAL_INQIRE('CONT_MTCD', BF.CONT_MTCD) AS CONT_MTCD_NM
+								, BF.SBID_MTCD
+								, F_CDVAL_INQIRE('SBID_MTCD', BF.SBID_MTCD) AS SBID_MTCD_NM
+								, BF.BFAN_PSCD
+								, F_CDVAL_INQIRE('BFAN_PSCD', BF.BFAN_PSCD) AS BFAN_PSCD_NM
+								, BF.BFAN_STDE
+								, BF.BFAN_ENDE
+								, BF.OPNN_CLOS_DT
+								, BF.PRCH_NO
+								, BF.DOC_NO
+								, BF.BSNS_BDG_AMT
+								, BF.STAX_INC_YN
+								, BF.CHRGR_ID
+								, BF.CHRGR_NM
+								, BF.CHRGR_TEL_NO
+								, BF.CHRGR_EMAL
+								, BF.G2B_NTFY_YN
+								, BF.DLGD_LMT
+								, BF.SW_BSNS_OBJ_YN
+								, BF.PCRQ_NO
+								, BF.BFAN_NM
+								, BF.CONT_TE
+								, BF.RQR_DE
+								, BF.RQR_DEPT_NO
+								, BF.RQR_DEPT_NM
+								, BF.RQR_CHRGR_ID
+								, BF.RQR_CHRGR_NM
+								, BF.PRCH_DEPT_NO
+								, BF.PRCH_DEPT_NM
+								, BF.PRCH_CHRGR_ID
+								, BF.PRCH_CHRGR_NM
+								, BF.ACPT_DE
+								, BF.ESTT_PRCE
+								, BF.BF_STND_OPEN_YN
+								, BF.BF_STND_OPEN_TE
+								, BF.PRCH_CHRG_SECD
+								, BF.MNGR_CHRGR_ID
+								, BF.MNGR_CHRGR_NM
+								, BF.CHCK_CHRGR_ID
+								, BF.CHCK_CHRGR_NM
+								, BF.RTRN_RSN
+								, BF.ESTT_FRCUR_AMT
+								, BF.CURR_SECD
+								, BF.EXRT
+								, BF.DLGD_PLCD
+								, BF.EMRG_YN
+								, BF.DLGD_PLC_NM
+								, BF.ASSO_SPDM_CD
+								, BF.PVCT_RSN_NO
+								, BF.PRVT_CONT_RSN
+								, BF.BFAN_WAIT_NO
+								, BF.DEL_AT
+								, F_CDVAL_INQIRE('APPR_STCD', NVL((SELECT CNTC.APPR_STCD FROM T_BI_BFAN_APPR_CNTC  CNTC WHERE CNTC.BFAN_NO = BF.BFAN_NO AND CNTC.APPR_CNTC_KEY = 'B'),'0000')) AS APPR_STCD_NM
+				FROM 	T_BI_BFAN_MST BF
+				WHERE   1 = 1
+				AND BFAN_PSCD IN (
+	            					SELECT CD_DTL_ID FROM T_MM_CODE_MST
+									WHERE 1=1
+									AND CD_ID = 'BFAN_PSCD'
+									AND ETC_VAL2 = 'Y'
+								)
+		)
+	</sql>
+	<sql id="bfStndOpenListWhere">
+		<where>
+				AND DEL_AT = 'N'
+				<if test='P_PCRQ_NO_S != null and P_PCRQ_NO_S != "" '>
+					AND PCRQ_NO LIKE '%'||#{P_PCRQ_NO_S}||'%'
+				</if>
+				<if test='P_BFAN_NO_S != null and P_BFAN_NO_S != "" '>
+					AND BFAN_NO LIKE '%'||#{P_BFAN_NO_S}||'%'
+				</if>
+				<if test='P_ARA_DEPT_CD_S != null and P_ARA_DEPT_CD_S != "" '>
+					AND ARA_DEPT_CD = #{P_ARA_DEPT_CD_S}
+				</if>
+				<if test='P_CONT_SECD_S != null and P_CONT_SECD_S != "" '>
+					AND CONT_SECD = #{P_CONT_SECD_S}
+				</if>
+				<if test='P_BFAN_NM_S != null and P_BFAN_NM_S != "" '>
+					AND BFAN_NM LIKE '%'||#{P_BFAN_NM_S}||'%'
+				</if>
+				<if test='P_RQR_DEPT_NO_S != null and P_RQR_DEPT_NO_S != "" '>
+					AND RQR_DEPT_NO = #{P_RQR_DEPT_NO_S}
+				</if>
+				<if test='P_RQR_BEGIN_DT_S != null and P_RQR_BEGIN_DT_S != "" '>
+					AND RQR_DE >= #{P_RQR_BEGIN_DT_S}
+				</if>
+				<if test='P_RQR_END_DT_S != null and P_RQR_END_DT_S != "" '>
+					AND RQR_DE &lt;= #{P_RQR_END_DT_S}
+				</if>
+				<if test='P_BFAN_PSCD_S != null and P_BFAN_PSCD_S != "" '>
+					AND BFAN_PSCD = #{P_BFAN_PSCD_S}
+				</if>
+		</where>
+	</sql>
+	<select id="selectBfStndOpenDetail" resultType="dataEntity">
+		SELECT  *  FROM (
+						SELECT 	BF.BFAN_NO
+								, BF.ARA_DEPT_CD
+								, F_CDVAL_INQIRE('ARA_DEPT_CD', BF.ARA_DEPT_CD) AS ARA_DEPT_CD_NM
+								, BF.CONT_SECD
+								, F_CDVAL_INQIRE('CONT_SECD', BF.CONT_SECD) AS CONT_SECD_NM
+								, BF.CONT_DECD
+								, F_CDVAL_INQIRE('CONT_DECD', BF.CONT_DECD) AS CONT_DECD_NM
+								, BF.BID_MTCD
+								, F_CDVAL_INQIRE('BID_MTCD', BF.BID_MTCD) AS BID_MTCD_NM
+								, BF.CONT_MTCD
+								, F_CDVAL_INQIRE('CONT_MTCD', BF.CONT_MTCD) AS CONT_MTCD_NM
+								, BF.SBID_MTCD
+								, F_CDVAL_INQIRE('SBID_MTCD', BF.SBID_MTCD) AS SBID_MTCD_NM
+								, BF.BFAN_PSCD
+								, F_CDVAL_INQIRE('BFAN_PSCD', BF.BFAN_PSCD) AS BFAN_PSCD_NM
+								, BF.BFAN_STDE
+								, BF.BFAN_ENDE
+								, BF.OPNN_CLOS_DT
+								, BF.PRCH_NO
+								, BF.DOC_NO
+								, BF.BSNS_BDG_AMT
+								, BF.STAX_INC_YN
+								, BF.CHRGR_ID
+								, BF.CHRGR_NM
+								, BF.CHRGR_TEL_NO
+								, BF.CHRGR_EMAL
+								, BF.G2B_NTFY_YN
+								, BF.DLGD_LMT
+								, BF.PCRQ_NO
+								, BF.BFAN_NM
+								, BF.CONT_TE
+								, BF.RQR_DE
+								, BF.RQR_DEPT_NO
+								, BF.RQR_DEPT_NM
+								, BF.RQR_CHRGR_ID
+								, BF.RQR_CHRGR_NM
+								, BF.PRCH_DEPT_NO
+								, BF.PRCH_DEPT_NM
+								, BF.PRCH_CHRGR_ID
+								, BF.PRCH_CHRGR_NM
+								, BF.ACPT_DE
+								, BF.ESTT_PRCE
+								, BF.BF_STND_OPEN_YN
+								, BF.BF_STND_OPEN_TE
+								, BF.PRCH_CHRG_SECD
+								, BF.MNGR_CHRGR_ID
+								, BF.MNGR_CHRGR_NM
+								, BF.CHCK_CHRGR_ID
+								, BF.CHCK_CHRGR_NM
+								, BF.RTRN_RSN
+								, BF.ESTT_FRCUR_AMT
+								, BF.CURR_SECD
+								, BF.EXRT
+								, BF.DLGD_PLCD
+								, BF.EMRG_YN
+								, BF.DLGD_PLC_NM
+								, BF.ASSO_SPDM_CD
+								, F_CDVAL_INQIRE('ASSO_SPDM_CD', BF.ASSO_SPDM_CD) AS ASSO_SPDM_CD_NM
+								, BF.PVCT_RSN_NO
+								, BF.PRVT_CONT_RSN
+								, BF.BFAN_WAIT_NO
+								, BF.DEL_AT
+								, BF.RMK
+								, BF.ETC_ITEM
+								, BF.SW_BSNS_OBJ_YN
+								, BF.SBCT_YN
+								, BF.SMVE_CMPTI_YN
+								, BF.PRIO_PRCH_YN
+								, BF.SCLSH_SVC_YN
+								, BF.WMAN_SCTY_CORP_YN
+								, BF.ACPS_LMT_YN
+								, BF.INF_BSNS_YN
+								, (SELECT FILE_GRP_NO FROM T_BI_BFAN_FILE WHERE 1 = 1 AND BFAN_FSCD = 'ETC' AND BFAN_NO =  #{P_BFAN_NO, jdbcType=VARCHAR}) AS FILE_GRP_NO_ETC
+								, (SELECT DISTINCT FILE_GRP_NO FROM T_BI_BFAN_FILE WHERE 1 = 1 AND BFAN_FSCD != 'ETC' AND BFAN_NO =  #{P_BFAN_NO, jdbcType=VARCHAR}) AS FILE_GRP_NO
+				FROM 	T_BI_BFAN_MST BF
+				WHERE   1 = 1
+		)
+		WHERE 1 = 1
+		AND DEL_AT = 'N'
+		AND BFAN_NO = #{P_BFAN_NO, jdbcType=VARCHAR}
+	</select>
+	
+	<select  id="selectBfStndOpenItemList"  resultType="dataEntity">
+		SELECT ROWNUM AS RNUM, A.* FROM
+			(
+				SELECT    BFAN_NO
+								, ITEM_SN
+								, ITEM_NO
+								, ITEM_NM
+								, ITEM_UNCD
+								, F_CDVAL_INQIRE('ITEM_UNCD', ITEM_UNCD) AS ITEM_UNCD_NM
+								, ITEM_QTY
+								, ITEM_STND
+								, UNIT
+								, ESTT_UPRC
+								, ESTT_PRCE
+								, ITEM_STAX
+								, ESTT_AMT
+								, BDG_YR
+								, BDG_MM
+								, BSNS_CD
+								, ACNT_CD
+								, ACNT_ITEM_CD
+								, DEPT_NO
+								, ACNT_NM
+								, ASTS_TYCD
+								, F_CDVAL_INQIRE('ASTS_TYCD', ASTS_TYCD) AS ASTS_TYCD_NM
+								, STAX_SECD
+								, F_CDVAL_INQIRE('STAX_SECD', STAX_SECD) AS STAX_SECD_NM
+								, ITEM_DTL
+								, RMK
+								, REGR_ID
+								, REGR_NM
+								, REG_DT
+								, MODR_ID
+								, MODR_NM
+								, MOD_DT
+								, CONN_IP
+								, DEL_AT
+				FROM  T_BI_BFAN_ITEM
+				WHERE 1 = 1
+				AND DEL_AT = 'N'
+				AND BFAN_NO = #{P_BFAN_NO, jdbcType=VARCHAR}
+				ORDER BY ITEM_SN ASC
+			)A
+	</select>
+	
+	<select id="selectBfStndOpenFile" resultType="dataEntity">
+		SELECT BF.BFAN_NO
+					, BF.BFAN_FSCD
+					, F_CDVAL_INQIRE('PCRQ_FSCD', BF.BFAN_FSCD) AS BFAN_FSCD_NM
+					, BF.FILE_GRP_NO
+					, BF.RMK
+					, BF.DEL_AT
+					, MST.SYS_FILE_NM
+					, MST.FILE_SN
+		FROM T_BI_BFAN_FILE BF, T_MM_FILE_MST MST
+		WHERE  1 = 1
+		AND NVL(BF.DEL_AT,'N') = 'N'
+		AND NVL(MST.DEL_AT, 'N') = 'N'
+		AND BF.BFAN_NO = #{P_BFAN_NO, jdbcType=VARCHAR}
+		AND BF.BFAN_FSCD != 'ETC'
+		AND BF.BFAN_FSCD = MST.FILE_DOC_SECD
+		AND BF.FILE_GRP_NO = MST.FILE_GRP_NO 
+		ORDER BY BFAN_FSCD ASC
+	</select>
+	
+</mapper>

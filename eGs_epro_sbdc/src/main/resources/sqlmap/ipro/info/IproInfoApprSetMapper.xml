@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * sqlmap.ipro.main
+ * IproStatMapper.xml
+ * 
+ * @Author : 
+ * @Date   : 2018. 03. 05.
+ * 
+ -->
+ 
+ <mapper namespace="com.eunwoosoft.ipro.info.dao.IproInfoApprSetDao">
+ 	
+ 	<update id="apprSetYnUpdt">
+	 	UPDATE T_MB_MST 
+	 	SET	 	  EBID_APPR_YN 	= #{P_EBID_APPR_YN, jdbcType=VARCHAR}
+	 			, SBID_APPR_YN 	= #{P_SBID_APPR_YN, jdbcType=VARCHAR}
+	 			, FBID_APPR_YN 	= #{P_FBID_APPR_YN, jdbcType=VARCHAR}
+	 			, FRM_APPR_YN 	= #{P_FRM_APPR_YN, jdbcType=VARCHAR}
+	 			, CONT_APPR_YN 	= #{P_CONT_APPR_YN, jdbcType=VARCHAR}
+	 			, WRTN_CONT_APPR_YN 	= #{P_WRTN_CONT_APPR_YN, jdbcType=VARCHAR}
+	 			, RCV_CONT_APPR_YN 	= #{P_RCV_CONT_APPR_YN, jdbcType=VARCHAR}
+	 			, WRTN_RCV_CONT_APPR_YN 	= #{P_WRTN_RCV_CONT_APPR_YN, jdbcType=VARCHAR}
+	 			, AUTO_EXTN_APPR_YN 	= #{P_AUTO_EXTN_APPR_YN, jdbcType=VARCHAR}
+	 			, OFCL_DOCU_APPR_YN 	= #{P_OFCL_DOCU_APPR_YN, jdbcType=VARCHAR}
+	 			, RCV_OFCL_DOCU_APPR_YN 	= #{P_RCV_OFCL_DOCU_APPR_YN, jdbcType=VARCHAR}
+	 			, SIGN_ORD 	= #{P_SIGN_ORD, jdbcType=VARCHAR}
+	 			, MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+				<include refid="ComRegr.ModrSetClause"/>
+		WHERE VEND_REG_NO = #{P_VEND_REG_NO , jdbcType=VARCHAR}
+	 </update>
+ </mapper>
+ 

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+ --> 
+ <mapper namespace="com.eunwoosoft.ipro.noti.dao.IproBidNotiDao">
+ 
+ 	<resultMap id="BBS_CNTN" type="dataEntity">
+    	<result property="BBS_CNTN" column="BBS_CNTN" jdbcType="CLOB" javaType="java.lang.String" />
+    </resultMap>
+
+    <select id="bidNotiListWithPgng" resultType="dataEntity">
+        <include refid="ComPgng.pgngHeaderClause"/>
+        SELECT * FROM (
+		    <include refid="selectBidNotiList"/>
+			<include refid="selectBidNotiListWhere"/>
+			ORDER BY REG_DT DESC
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>   
+    </select>
+ 
+    <select id="bidNotiListTotCnt" resultType="int" > 
+		SELECT COUNT(1) FROM ( 
+			<include refid="selectBidNotiList"/>
+			<include refid="selectBidNotiListWhere"/>
+		) T1
+		WHERE 1 = 1
+	</select>
+	
+	<sql id="selectBidNotiList">
+        SELECT BBS_SECD
+                  , BBS_SN
+                  , TTL_NM
+                  , BBS_PWD
+                  , INQ_CNT
+                  , BBS_PSCD
+                  , NTC_YN
+                  , USE_YN
+                  , RQRD_YN
+                  , PPUP_YN
+                  , PPUP_STDE
+                  , PPUP_ENDE
+                  , FILE_GRP_NO
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+        FROM T_BA_MST
+	</sql>
+	
+	<sql id="selectBidNotiListWhere">
+		<where>
+            AND DEL_AT = #{P_DEL_AT, jdbcType=VARCHAR}
+            <if test='P_BBS_SECD != null and P_BBS_SECD != "" '>
+	            AND BBS_SECD = #{P_BBS_SECD, jdbcType=VARCHAR}
+            </if>
+            <if test='P_TTL_NM_S != null and P_TTL_NM_S != "" '>
+                AND TTL_NM LIKE '%'|| #{P_TTL_NM_S} || '%' 
+            </if>
+            <if test='P_REGR_NM_S != null and P_REGR_NM_S != "" '>
+                AND REGR_NM LIKE '%'|| #{P_REGR_NM_S}||'%'
+            </if>
+            <if test='P_MOD_DT_BEGIN_S != null and P_MOD_DT_BEGIN_S != "" '>
+                AND TO_CHAR(TO_DATE(MOD_DT, 'yyyyMMddHH24miss'), 'yyyyMMdd') >= #{P_MOD_DT_BEGIN_S}
+            </if>
+            <if test='P_MOD_DT_END_S != null and P_MOD_DT_END_S != "" '>
+                AND TO_CHAR(TO_DATE(MOD_DT, 'yyyyMMddHH24miss'), 'yyyyMMdd') &lt;= #{P_MOD_DT_END_S}
+            </if>
+		</where>
+	</sql>
+	
+	
+	<select id="bidNotiDetail" resultType="dataEntity" resultMap="BBS_CNTN">
+		SELECT BBS_SECD
+                  , BBS_SN
+                  , TTL_NM
+                  , BBS_CNTN
+                  , BBS_PWD
+                  , INQ_CNT
+                  , BBS_PSCD
+                  , NTC_YN
+                  , USE_YN
+                  , RQRD_YN
+                  , PPUP_YN
+                  , PPUP_STDE
+                  , PPUP_ENDE
+                  , FILE_GRP_NO
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+                  , ( SELECT EMAL_ADDR FROM T_MM_USER_MST M WHERE M.USR_ID = A.REGR_ID ) AS EMAL_ADDR
+		FROM T_BA_MST A
+		WHERE BBS_SECD = #{P_BBS_SECD, jdbcType=VARCHAR}
+		AND BBS_SN = #{P_BBS_SN, jdbcType=VARCHAR}
+	</select>
+	
+	
+	<select id="usrInfoDetail" resultType="dataEntity">
+		SELECT USR_ID
+                  , USR_NM
+                  , USR_ENM
+                  , PWD
+                  , EMPL_NO
+                  , DEPT_NO
+                  , DEPT_NM
+                  , ODCD
+                  , OFDT_NM
+                  , OPCD
+                  , OFPS_NM
+                  , TEL_NO
+                  , CP_NO
+                  , FX_NO
+                  , ZIP
+                  , ADDR_NM
+                  , ADDR_DTL_NM
+                  , ADDR_ENM
+                  , EMAL_ADDR
+                  , ESTPC_AUTH_YN
+                  , USR_STCD
+                  , VLD_TE_STDE
+                  , VLD_TE_ENDE
+                  , USE_YN
+                  , LT_CONN_DT
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+                  , AUTH_ID
+		FROM T_MM_USER_MST
+		WHERE USR_ID = #{P_USR_ID, jdbcType=VARCHAR}
+	</select>
+	
+	
+	<insert id="bidNotiRegist" useGeneratedKeys="true" keyProperty="P_BBS_SN">
+		<selectKey resultType="int" keyProperty="P_BBS_SN" order="BEFORE">
+			SELECT 	NVL(MAX(TO_NUMBER(BBS_SN)),0)+1 AS BBS_SN
+			FROM T_BA_MST
+			WHERE BBS_SECD = #{P_BBS_SECD , jdbcType=VARCHAR}
+		</selectKey>
+		INSERT INTO T_BA_MST (
+                            BBS_SECD
+                          , BBS_SN
+                          , TTL_NM
+                          , BBS_CNTN
+                          , BBS_PWD
+                          , INQ_CNT
+                          , BBS_PSCD
+                          , NTC_YN
+                          , USE_YN
+                          , RQRD_YN
+                          , PPUP_YN
+                          , PPUP_STDE
+                          , PPUP_ENDE
+                          , FILE_GRP_NO
+                          <include refid="ComRegr.RegrColumnClause"/>
+		) VALUES (
+                            #{P_BBS_SECD , jdbcType=VARCHAR}
+                          , #{P_BBS_SN, jdbcType=VARCHAR}
+                          , #{P_TTL_NM, jdbcType=VARCHAR}
+                          , #{P_BBS_CNTN, jdbcType=VARCHAR}
+                          , #{P_BBS_PWD, jdbcType=VARCHAR}
+                          , #{P_INQ_CNT, jdbcType=VARCHAR}
+                          , #{P_BBS_PSCD, jdbcType=VARCHAR}
+                          , #{P_NTC_YN, jdbcType=VARCHAR}
+                          , #{P_USE_YN, jdbcType=VARCHAR}
+                          , #{P_RQRD_YN, jdbcType=VARCHAR}
+                          , #{P_PPUP_YN, jdbcType=VARCHAR}
+                          , #{P_PPUP_STDE, jdbcType=VARCHAR}
+                          , #{P_PPUP_ENDE, jdbcType=VARCHAR}
+                          , #{P_FILE_GRP_NO, jdbcType=VARCHAR}
+                          <include refid="ComRegr.RegrValueClause"/>	
+		)
+	</insert>
+
+
+	<update id="bidNotiDelete">
+       UPDATE T_BA_MST
+		      SET DEL_AT = #{P_DEL_AT, jdbcType=VARCHAR}
+                  , MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+                  , MODR_ID = #{USR_ID, jdbcType=VARCHAR}
+                  , MODR_NM = #{USR_NM, jdbcType=VARCHAR}
+        WHERE BBS_SECD = #{P_BBS_SECD, jdbcType=VARCHAR}
+            AND BBS_SN = #{P_BBS_SN, jdbcType=VARCHAR}
+	</update>
+	
+	
+	<update id="bidNotiUpdt">
+		UPDATE T_BA_MST
+		      SET TTL_NM = #{P_TTL_NM, jdbcType=VARCHAR}
+                  , BBS_CNTN = #{P_BBS_CNTN, jdbcType=VARCHAR}
+                  , BBS_PWD = #{P_BBS_PWD, jdbcType=VARCHAR}
+                  , INQ_CNT = #{P_INQ_CNT, jdbcType=VARCHAR}
+                  , BBS_PSCD = #{P_BBS_PSCD, jdbcType=VARCHAR}
+                  , NTC_YN = #{P_NTC_YN, jdbcType=VARCHAR}
+                  , USE_YN = #{P_USE_YN, jdbcType=VARCHAR}
+                  , RQRD_YN = #{P_RQRD_YN, jdbcType=VARCHAR}
+                  , PPUP_YN = #{P_PPUP_YN, jdbcType=VARCHAR}
+                  , PPUP_STDE = #{P_PPUP_STDE, jdbcType=VARCHAR}
+                  , PPUP_ENDE = #{P_PPUP_ENDE, jdbcType=VARCHAR}
+                  , FILE_GRP_NO = #{P_FILE_GRP_NO, jdbcType=VARCHAR}
+                  , DEL_AT = #{P_DEL_AT, jdbcType=VARCHAR}
+                  <include refid="ComRegr.ModrSetClause"/>
+        WHERE BBS_SECD = #{P_BBS_SECD, jdbcType=VARCHAR}
+            AND BBS_SN = #{P_BBS_SN, jdbcType=VARCHAR}
+	</update>
+	
+	
+	
+ </mapper> 

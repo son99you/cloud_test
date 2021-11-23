@@ -1,0 +1,887 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * 공통팝업 Mapper
+ *
+ * <pre>
+ * sqlmap.opro.comm
+ *    |_ OproCommPopupMapper.xml
+ * 
+ * </pre>
+ * @date : 2015. 02. 09. 오후 3:20:00
+ * @version : 1.0
+ * @author : 은우소프트 김봉수
+--> 
+<mapper namespace="com.eunwoosoft.opro.comm.dao.OproCommPopupDao">	
+
+	<resultMap id="TRM_CNTN" type="dataEntity">
+    	<result property="TRM_CNTN" column="TRM_CNTN" jdbcType="CLOB" javaType="java.lang.String" />
+    </resultMap>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 업체 목록조회
+     * 2. 처리내용 : 업체 목록을 조회
+     * </pre>
+     -->
+	<select id="selectEntrpsInqireList" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT	* FROM(
+			<include refid="vendList" />
+			<include refid="vendListWhere" />
+		) T1
+		WHERE	1=1
+		ORDER BY VEND_NM
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 업체 목록총건수조회
+     * 2. 처리내용 : 업체 목록의 총 건수를 조회
+     * </pre>
+     -->
+	<select id="selectEntrpsInqireListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="vendList" />
+			<include refid="vendListWhere" />
+		) T1
+	</select> 
+	
+	<sql id="vendList">
+        SELECT A.* FROM (
+            SELECT MST.VEND_REG_NO
+                      , MST.RPRS_NM
+                      , MST.BCNM
+                      , MST.BTNM
+                      , MST.TEL_NO
+                      , MST.EMAL_ADDR
+                      , MST.VEND_NM
+                      , MST.ADDR_NM
+                      , MST.BIZRNO
+                      , USR.USR_NM AS CHRGR_USR_NM
+                      , USR.TEL_NO AS CHRGR_TEL_NO
+                      , USR.CP_NO AS CHRGR_CP_NO
+                      , USR.EMAL_ADDR AS CHRGR_EMAL_ADDR
+			   FROM V_CU_MST MST
+			          , T_CU_USER USR
+			WHERE MST.VEND_REG_NO = USR.VEND_REG_NO(+)
+			     AND NVL(USR.DEL_AT,'N') = 'N'
+			     AND USR.USR_SN = '1'
+		) A
+	</sql>
+	
+	<sql id="vendListWhere">
+		<where>
+			1=1
+			<if test='P_VEND_NM_S != null and P_VEND_NM_S != "" '>
+			AND VEND_NM LIKE '%' || #{P_VEND_NM_S} || '%'
+			</if>
+			<if test='P_BIZRNO_S != null and P_BIZRNO_S != "" '>
+			AND BIZRNO LIKE '%' || #{P_BIZRNO_S} || '%'
+			</if>
+			<if test='P_VEND_REG_NO_S != null and P_VEND_REG_NO_S != "" '>
+			AND VEND_REG_NO LIKE '%' || #{P_VEND_REG_NO_S} || '%'
+			</if>
+		</where>
+	</sql>
+	<!--  
+     * <pre>
+     * 1. 개요 : 부서 목록조회
+     * 2. 처리내용 : 부서 목록을 조회
+     * </pre>
+     -->
+	<select id="selectDeptInqireList" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+        SELECT 	DEPT_NO
+						, DEPT_NM
+						, HI_DEPT_NO
+						, HI_DEPT_NM
+						, LVL
+						, ORD_SN
+						, DEPT_SECD
+						, ARA_DEPT_CD
+           FROM V_MM_DEPT
+        WHERE 1=1
+           <if test=' P_DEPT_NM != null and P_DEPT_NM != "" '>
+               AND DEPT_NM LIKE '%'||#{P_DEPT_NM}||'%'
+           </if>
+           <if test=' P_DEPT_NO_S != null and P_DEPT_NO_S != "" '>
+               AND DEPT_NO LIKE '%'||#{P_DEPT_NO_S}||'%'
+           </if>
+            ORDER BY DEPT_NO
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 부서 목록총건수조회
+     * 2. 처리내용 : 부서 목록의 총 건수를 조회
+     * </pre>
+     -->
+	<select id="selectDeptInqireListTotcnt" resultType="int">
+		SELECT	COUNT(1) 
+		   FROM (
+		      SELECT 	DEPT_NO
+							, DEPT_NM
+							, HI_DEPT_NO
+							, HI_DEPT_NM
+							, LVL
+							, ORD_SN
+							, DEPT_SECD
+							, ARA_DEPT_CD
+	          	FROM V_MM_DEPT
+				WHERE 1=1
+               <if test=' P_DEPT_NM != null and P_DEPT_NM != "" '>
+                 AND DEPT_NM LIKE '%'||#{P_DEPT_NM}||'%'
+               </if>
+                <if test=' P_DEPT_NO_S != null and P_DEPT_NO_S != "" '>
+	               AND DEPT_NO LIKE '%'||#{P_DEPT_NO_S}||'%'
+	           </if>
+		) T2
+	</select>
+	
+	
+		<!--  
+     * <pre>
+     * 1. 개요 : 사용자정보목록조회_페이징 
+     * 2. 처리내용 :
+     *  	TABLE : VEOP_PREM(사용자정보 VIEW)
+     * </pre>
+     * @Query ID : selectChargerListWithPgng
+     * @date : 2018. 02. 20.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2018. 02. 20.       은우소프트 맹경열              최초 작성 
+     *  =======================================================    
+     -->
+	<select id="selectChargerListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="chargerList"/>
+			<include refid="chargerListWhere"/>
+		) T1
+		WHERE 1 = 1
+		ORDER BY T1.DEPT_NO, T1.OPCD, T1.USR_ID
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 사용자정보목록총건수조회 
+     * 2. 처리내용 :
+     *  	TABLE : VEOP_PREM(사용자정보 VIEW)
+     * </pre>
+     * @Query ID : selectChargerListTotcnt
+     * @date : 2018. 02. 20.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2018. 02. 20.       은우소프트 맹경열              최초 작성 
+     *  =======================================================    
+     -->
+	<select id="selectChargerListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="chargerList"/>
+			<include refid="chargerListWhere"/>
+		) T1
+		WHERE 1 = 1		
+	</select>
+
+	<sql id="chargerList">
+		SELECT	USR_ID
+						, EMPL_NO
+						, USR_NM
+						, ARA_DEPT_CD
+						, DEPT_NO
+						, DEPT_NM
+						, OFPS_CD
+						, OFPS_NM
+						, EMAL_ADDR
+						, TEL_NO
+						, CP_NO
+						, AUTH_ID
+		FROM		V_MM_USER		
+		WHERE	1=1
+	</sql>
+	
+	<sql id="chargerListWhere">
+		<if test='P_USR_NM_S != null and P_USR_NM_S != "" '>
+			AND USR_NM LIKE '%'||#{P_USR_NM_S}||'%'
+		</if>
+		<if test='P_EMPL_NO_S != null and P_EMPL_NO_S != "" '>
+			AND EMPL_NO LIKE '%'||#{P_EMPL_NO_S}||'%'
+		</if>
+	</sql>	
+	
+	
+	<select id="selectItemListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="itemList"/>
+			<include refid="itemListWhere"/>
+			ORDER BY ITEM_NO
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<select id="selectItemListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="itemList"/>
+			<include refid="itemListWhere"/>
+		) T1
+		WHERE 1 = 1		
+	</select>
+	
+	<sql id="itemList">
+        SELECT ITEM_NO
+                  , ITEM_NM
+                  , ITEM_UNCD
+                  , STND_NM
+                  , ITEM_DESC
+                  , LLF_CD
+                  , MLF_CD
+                  , SLF_CD
+                  , DLF_CD
+                  , FILE_GRP_NO
+                  , RMK
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+           FROM V_MM_ITEM_MST	
+		WHERE	NVL(DEL_AT,'N') = 'N'
+	</sql>
+	
+	<sql id="itemListWhere">
+		<if test='P_ITEM_NO_S != null and P_ITEM_NO_S != "" '>
+			AND ITEM_NO LIKE '%'||#{P_ITEM_NO_S}||'%'
+		</if>
+		<if test='P_ITEM_NM_S != null and P_ITEM_NM_S != "" '>
+			AND ITEM_NM LIKE '%'||#{P_ITEM_NM_S}||'%'
+		</if>
+		AND CONT_SECD LIKE '%'||#{P_CONT_SECD_S}||'%'
+	</sql>
+	
+	<select id="trmDetail" resultType="dataEntity" resultMap="TRM_CNTN">
+		SELECT TRM_SECD
+					, TRM_SN
+					, TTL_NM
+					, TRM_CNTN
+					, USE_YN
+					, FILE_GRP_NO
+					, REGR_ID
+					, REGR_NM
+					, REG_DT
+					, MODR_ID
+					, MODR_NM
+					, MOD_DT
+					, CONN_IP
+					, DEL_AT
+		FROM T_BA_TRM_MST
+		WHERE 1 = 1
+		AND DEL_AT = 'N'
+		AND TTL_NM = #{P_TTL_NM, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectEstmCmtmEstmFrmItemList" resultType="dataEntity">
+        SELECT
+        		 FRM.ESTM_NO
+				,FRM.ESTM_PROCD_SEQ
+				,FRM.ESTM_ITEM_NO
+				,FRM.ESTM_ITEM_NM
+				,FRM.ESTM_ITEM_DSMK
+				,REPLACE(FRM.ESTM_ITEM_DESC, CHR(13)||CHR(10), <![CDATA[ '<br>'  ]]>) AS ESTM_ITEM_DESC
+				,FRM.ESTM_MTHD_SECD
+				,F_CDVAL_INQIRE('ESTM_MTHD_SECD', FRM.ESTM_MTHD_SECD) AS ESTM_MTHD_SECD_NM
+				,FRM.REGR_ID
+				,FRM.REGR_NM
+				,FRM.REG_DT
+				,FRM.MODR_ID
+				,FRM.MODR_NM
+				,FRM.MOD_DT
+				,FRM.CONN_IP
+				,FRM.DEL_AT
+				,NVL(SCR.ESTM_SCR,0) AS ESTM_SCR
+				,NVL(SCR.REAL_VAL,0) AS REAL_VAL
+				,SCR.RMK
+				,SCR.ESTM_CMTM_NO
+				,SCR.ESTM_OBJ_SEQ
+
+        FROM T_ESTM_PROCD_FRM FRM
+        	,(SELECT
+        			 ESTM_NO
+        			,ESTM_OBJ_SEQ
+        			,ESTM_PROCD_SEQ
+        			,ESTM_ITEM_NO
+        			,ESTM_CMTM_NO
+        			,ESTM_SCR
+        			,REAL_VAL
+        			,RMK
+        	  FROM T_ESTM_OBJ_SCR
+        	  WHERE ESTM_CMTM_NO = #{P_ESTM_CMTM_NO, jdbcType=INTEGER} 
+        	  AND ESTM_OBJ_SEQ =  #{P_ESTM_OBJ_SEQ, jdbcType=INTEGER} 
+        	  ) SCR
+        WHERE 1=1
+        AND	FRM.ESTM_NO = SCR.ESTM_NO(+)
+        AND FRM.ESTM_PROCD_SEQ = SCR.ESTM_PROCD_SEQ(+)
+        AND FRM.ESTM_ITEM_NO = SCR.ESTM_ITEM_NO(+)
+        AND FRM.ESTM_NO = #{P_ESTM_NO, jdbcType=VARCHAR}
+        AND FRM.ESTM_PROCD_SEQ = #{P_ESTM_PROCD_SEQ, jdbcType=VARCHAR}
+        ORDER BY ESTM_ITEM_NO ASC 
+	</select>
+	
+	<select id="selectEstmObjDetail" resultType="dataEntity">
+		SELECT 				
+					OBJ.ESTM_NO
+				  , (CASE
+	               	 WHEN OBJ.ESTM_CMTM_NM IS NOT NULL THEN OBJ.ESTM_CMTM_NM
+	               	 WHEN OBJ.ESTM_OBJ_PE_NM IS NOT NULL THEN OBJ.ESTM_OBJ_PE_NM
+	           		 ELSE OBJ.VEND_NM END )  AS OBJ_NM
+                  , OBJ.ESTM_OBJ_SEQ
+                  , OBJ.VEND_REG_NO
+                  , OBJ.BIZRNO
+                  , OBJ.VEND_NM
+                  , OBJ.ITEM_NO
+                  , OBJ.ITEM_NM
+                  , OBJ.ESTM_CMTM_NO
+                  , OBJ.ESTM_CMTM_NM
+                  , OBJ.ESTM_OBJ_PE_NO
+                  , OBJ.ESTM_OBJ_PE_NM
+                  , OBJ.EMPL_NO
+                  , OBJ.RSDN_NO
+                  , OBJ.TEL_NO
+                  , OBJ.EMAL
+                  , OBJ.FILE_GRP_NO
+                  , A.PREV_ESTM_OBJ_SEQ
+                  , A.NEXT_ESTM_OBJ_SEQ
+           FROM
+           		T_ESTM_OBJ OBJ
+           		,(
+           			SELECT 		 A.ESTM_NO
+								,A.ESTM_OBJ_SEQ
+								,A.PREV_ESTM_OBJ_SEQ
+								,A.NEXT_ESTM_OBJ_SEQ
+					FROM
+					(
+						SELECT 	 A.ESTM_NO
+								,A.ESTM_OBJ_SEQ
+								,LAG(A.ESTM_OBJ_SEQ) OVER (ORDER BY A.ESTM_RNK, A.ESTM_OBJ_SEQ) AS PREV_ESTM_OBJ_SEQ
+								,LEAD(A.ESTM_OBJ_SEQ) OVER (ORDER BY A.ESTM_RNK, A.ESTM_OBJ_SEQ) AS NEXT_ESTM_OBJ_SEQ
+					
+								FROM
+								(
+									 SELECT
+					
+											  OBJ.ESTM_NO
+							    			, OBJ.ESTM_OBJ_SEQ
+							    			, SLCT.ESTM_RNK
+							    			, NVL((SELECT DECODE(NVL(SLCT.ESTM_PROCD_SEQ, #{P_ESTM_PROCD_SEQ, jdbcType=VARCHAR}),'1', 'Y', SLCT_YN) FROM T_ESTM_OBJ_SLCT WHERE 1=1 AND ESTM_NO = #{P_ESTM_NO, jdbcType=VARCHAR} AND ESTM_PROCD_SEQ =  DECODE(NVL(SLCT.ESTM_PROCD_SEQ, #{P_ESTM_PROCD_SEQ, jdbcType=VARCHAR}), '1', '1', TO_NUMBER(SLCT.ESTM_PROCD_SEQ)-1) AND ESTM_OBJ_SEQ = OBJ.ESTM_OBJ_SEQ ), 'Y') AS BEFORE_SLCT_YN
+					
+									 FROM T_ESTM_OBJ OBJ
+							                  , T_ESTM_OBJ_SLCT SLCT
+							         WHERE 1=1
+							         AND OBJ.ESTM_NO = SLCT.ESTM_NO(+)
+							         AND OBJ.ESTM_OBJ_SEQ = SLCT.ESTM_OBJ_SEQ(+)
+							         AND OBJ.ESTM_NO = #{P_ESTM_NO, jdbcType=VARCHAR}
+							         AND OBJ.DEL_AT = 'N'
+							         AND NVL(SLCT.ESTM_PROCD_SEQ, '1') = #{P_ESTM_PROCD_SEQ, jdbcType=VARCHAR}
+					
+							   ) A
+							   WHERE 1=1
+							   AND A.BEFORE_SLCT_YN = 'Y'
+					
+							   ORDER BY A.ESTM_RNK, A.ESTM_OBJ_SEQ
+						) A
+					WHERE 1=1
+					AND A.ESTM_OBJ_SEQ = #{P_ESTM_OBJ_SEQ, jdbcType=VARCHAR}
+           		) A
+         WHERE 1=1
+           AND OBJ.ESTM_NO = A.ESTM_NO
+           AND OBJ.ESTM_OBJ_SEQ = A.ESTM_OBJ_SEQ
+           AND OBJ.ESTM_NO = #{P_ESTM_NO, jdbcType=VARCHAR}
+           AND OBJ.ESTM_OBJ_SEQ = #{P_ESTM_OBJ_SEQ, jdbcType=VARCHAR}
+           AND OBJ.DEL_AT = 'N'
+	</select>
+	
+	<select id="selectEstmCmtmEstmFrmDetail" resultType="dataEntity">
+		SELECT 				
+					PROCD.ESTM_NO
+                  , PROCD.ESTM_PROCD_SEQ
+                  , PROCD.ESTM_PROCD_SECD
+                  , F_CDVAL_INQIRE('ESTM_PROCD_SECD', PROCD.ESTM_PROCD_SECD) AS ESTM_PROCD_SECD_NM
+                  , PROCD.ESTM_PROCD_NM
+                  , PROCD.ESTM_PROCD_ST_DT
+                  , PROCD.ESTM_PROCD_END_DT
+                  , PROCD.ESTM_FRM_NO
+                  , PROCD.ESTM_PROCD_PSCD
+                  , PROCD.ESTM_PROCD_PSNM
+                  , PROCD.ESTR_SECD
+                  , PROCD.ESTM_OBJ_SEQ
+                  , PROCD.ESTM_CMTM_NO
+                  , SCR.ESTM_OPNN
+                  , SCR.FILE_GRP_NO
+                  , SCR.ESTM_TOT_SCR
+                  , PROCD.ESTM_FRM_PROCD_SECD
+           FROM
+           		 (
+           		 	SELECT
+           		 			ESTM_NO
+		                  , ESTM_PROCD_SEQ
+		                  , ESTM_PROCD_SECD
+		                  , F_CDVAL_INQIRE('ESTM_PROCD_SECD', ESTM_PROCD_SECD) AS ESTM_PROCD_SECD_NM
+		                  , ESTM_PROCD_NM
+		                  , ESTM_PROCD_ST_DT
+		                  , ESTM_PROCD_END_DT
+		                  , ESTM_FRM_NO
+		                  , ESTM_PROCD_PSCD
+		                  , ESTM_PROCD_PSNM
+		                  , ESTR_SECD
+		                  , ESTM_FRM_PROCD_SECD
+		                  , #{P_ESTM_OBJ_SEQ, jdbcType=VARCHAR} AS ESTM_OBJ_SEQ
+		                  , #{P_ESTM_CMTM_NO, jdbcType=VARCHAR} AS ESTM_CMTM_NO
+           		 	FROM T_ESTM_PROCD
+           		 	WHERE 1=1
+           		 	AND  ESTM_NO = #{P_ESTM_NO, jdbcType=VARCHAR}
+           		 	AND  ESTM_PROCD_SEQ = #{P_ESTM_PROCD_SEQ, jdbcType=INTEGER}
+           		 ) PROCD
+           		,T_ESTM_CMTM_OBJ_SCR SCR
+         WHERE 1=1
+         	 AND PROCD.ESTM_NO = SCR.ESTM_NO(+)
+         	 AND PROCD.ESTM_PROCD_SEQ = SCR.ESTM_PROCD_SEQ(+)
+         	 AND PROCD.ESTM_OBJ_SEQ = SCR.ESTM_OBJ_SEQ(+)
+         	 AND PROCD.ESTM_CMTM_NO = SCR.ESTM_CMTM_NO(+)
+             AND PROCD.ESTM_NO = #{P_ESTM_NO, jdbcType=VARCHAR}
+             AND PROCD.ESTM_PROCD_SEQ = #{P_ESTM_PROCD_SEQ, jdbcType=INTEGER}
+             AND PROCD.ESTM_OBJ_SEQ = #{P_ESTM_OBJ_SEQ, jdbcType=VARCHAR}
+             AND PROCD.ESTM_CMTM_NO = #{P_ESTM_CMTM_NO, jdbcType=VARCHAR}
+	</select>
+	
+	<update id="mergeIntoEstmCmtmObjScr">
+		MERGE INTO T_ESTM_CMTM_OBJ_SCR
+		USING DUAL
+		ON (	ESTM_NO = #{P_ESTM_NO, jdbcType=VARCHAR}
+		AND	ESTM_OBJ_SEQ = #{P_ESTM_OBJ_SEQ, jdbcType=INTEGER}
+		AND	ESTM_PROCD_SEQ = #{P_ESTM_PROCD_SEQ, jdbcType=INTEGER}
+		AND	ESTM_CMTM_NO = #{P_ESTM_CMTM_NO, jdbcType=VARCHAR}
+		)
+		WHEN MATCHED THEN
+			UPDATE	SET		
+				ESTM_TOT_SCR = #{P_TOT_SCR , jdbcType=VARCHAR}
+				,CERT_INHR_VAL = #{P_CERT_INHR_VAL , jdbcType=VARCHAR}
+				,ESTM_OPNN = #{P_ESTM_OPNN , jdbcType=VARCHAR}
+				,MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+				,FILE_GRP_NO = #{P_FILE_GRP_NO, jdbcType=VARCHAR}
+				<include refid="ComRegr.ModrSetClause"/>
+		WHEN NOT MATCHED THEN
+			INSERT(
+				ESTM_NO
+				,ESTM_OBJ_SEQ
+				,ESTM_PROCD_SEQ
+				,ESTM_CMTM_NO
+				,ESTM_TOT_SCR
+				,CERT_INHR_VAL
+				,ESTM_OPNN
+				,FILE_GRP_NO
+				<include refid="ComRegr.RegrColumnClause"/>
+			)VALUES(
+				#{P_ESTM_NO, jdbcType=VARCHAR}
+				,#{P_ESTM_OBJ_SEQ, jdbcType=VARCHAR}
+				,#{P_ESTM_PROCD_SEQ, jdbcType=INTEGER}
+				,#{P_ESTM_CMTM_NO , jdbcType=VARCHAR}
+				,#{P_TOT_SCR , jdbcType=VARCHAR}
+				,#{P_CERT_INHR_VAL , jdbcType=VARCHAR}
+				,#{P_ESTM_OPNN , jdbcType=VARCHAR}
+				,#{P_FILE_GRP_NO, jdbcType=VARCHAR}
+				<include refid="ComRegr.RegrValueClause"/>
+			)
+	</update>
+	
+	<insert id="mergeIntoEstmObjScr">
+		MERGE INTO T_ESTM_OBJ_SCR
+		USING DUAL
+		ON (	ESTM_NO = #{P_ESTM_NO, jdbcType=VARCHAR}
+		AND	ESTM_OBJ_SEQ = #{P_ESTM_OBJ_SEQ, jdbcType=INTEGER}
+		AND	ESTM_PROCD_SEQ = #{P_ESTM_PROCD_SEQ, jdbcType=INTEGER}
+		AND	ESTM_CMTM_NO = #{P_ESTM_CMTM_NO, jdbcType=VARCHAR}
+		AND	ESTM_ITEM_NO = #{P_ESTM_ITEM_NO, jdbcType=VARCHAR}
+		)
+		WHEN MATCHED THEN
+			UPDATE	SET		
+				ESTM_SCR = #{P_ESTM_SCR , jdbcType=VARCHAR}
+				<!-- ,REAL_VAL = #{P_REAL_VAL , jdbcType=VARCHAR}
+				,RMK = #{P_RMK , jdbcType=VARCHAR} -->
+				,MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+				<include refid="ComRegr.ModrSetClause"/>
+		WHEN NOT MATCHED THEN
+			INSERT(
+				ESTM_NO
+				,ESTM_OBJ_SEQ
+				,ESTM_PROCD_SEQ
+				,ESTM_CMTM_NO
+				,ESTM_ITEM_NO
+				,ESTM_SCR
+				<!-- ,REAL_VAL
+				,RMK -->
+				<include refid="ComRegr.RegrColumnClause"/>
+			)VALUES(
+				#{P_ESTM_NO, jdbcType=VARCHAR}
+				,#{P_ESTM_OBJ_SEQ, jdbcType=VARCHAR}
+				,#{P_ESTM_PROCD_SEQ, jdbcType=INTEGER}
+				,#{P_ESTM_CMTM_NO , jdbcType=VARCHAR}
+				,#{P_ESTM_ITEM_NO, jdbcType=VARCHAR}
+				,#{P_ESTM_SCR , jdbcType=VARCHAR}
+				<!-- ,#{P_REAL_VAL , jdbcType=VARCHAR}
+				,#{P_RMK , jdbcType=VARCHAR} -->
+				<include refid="ComRegr.RegrValueClause"/>
+			)
+	</insert>
+	
+	<insert id="insertEstmObjScrHist" useGeneratedKeys="true" keyProperty="P_HIST_SEQ">
+        <selectKey resultType="string" keyProperty="P_HIST_SEQ" order="BEFORE">
+            SELECT NVL(MAX(TO_NUMBER(HIST_SEQ)), 0)+1 AS HIST_SEQ
+            FROM T_ESTM_OBJ_SCR_HIST
+            WHERE 1 = 1
+            AND ESTM_NO =  #{P_ESTM_NO, jdbcType=VARCHAR}
+            AND ESTM_OBJ_SEQ =  #{P_ESTM_OBJ_SEQ, jdbcType=VARCHAR}
+            AND ESTM_PROCD_SEQ =  #{P_ESTM_PROCD_SEQ, jdbcType=VARCHAR}
+            AND ESTM_ITEM_NO =  #{P_ESTM_ITEM_NO, jdbcType=VARCHAR}
+            AND ESTM_CMTM_NO =  #{P_ESTM_CMTM_NO, jdbcType=VARCHAR}
+        </selectKey>
+        INSERT INTO T_ESTM_OBJ_SCR_HIST (
+		                    ESTM_NO
+							, ESTM_OBJ_SEQ
+							, ESTM_PROCD_SEQ
+							, ESTM_ITEM_NO
+							, ESTM_CMTM_NO
+							, HIST_SEQ
+							, ESTM_SCR
+							, REAL_VAL
+							, RMK
+		                 <include refid="ComRegr.RegrColumnClause"/>
+        ) VALUES (
+		                    #{P_ESTM_NO, jdbcType=VARCHAR}
+		                  , #{P_ESTM_OBJ_SEQ, jdbcType=VARCHAR}
+		                  , #{P_ESTM_PROCD_SEQ, jdbcType=VARCHAR}
+		                  , #{P_ESTM_ITEM_NO, jdbcType=VARCHAR}
+		                  , #{P_ESTM_CMTM_NO, jdbcType=VARCHAR}
+		                  , #{P_HIST_SEQ, jdbcType=VARCHAR}
+		                  , #{P_ESTM_SCR, jdbcType=VARCHAR}
+		                  , #{P_REAL_VAL, jdbcType=VARCHAR}
+		                  , #{P_RMK, jdbcType=VARCHAR}
+		                  <include refid="ComRegr.RegrValueClause"/>
+		)
+	</insert>
+	
+	<select id="selectEstmObjFileView" resultType="dataEntity">
+        SELECT ESTM_NO
+                  , ESTM_OBJ_SEQ
+                  , VEND_REG_NO
+                  , BIZRNO
+                  , VEND_NM
+                  , ITEM_NO
+                  , ITEM_NM
+                  , ESTM_CMTM_NO
+                  , ESTM_CMTM_NM
+                  , ESTM_OBJ_PE_NO
+                  , ESTM_OBJ_PE_NM
+                  , EMPL_NO
+                  , RSDN_NO
+                  , TEL_NO
+                  , EMAL
+                  , FILE_GRP_NO
+                  <include refid="ComRegr.selectColumnClause"/>
+           FROM T_ESTM_OBJ
+         WHERE 1=1
+         	 AND DEL_AT = 'N'
+             AND ESTM_NO = #{P_ESTM_NO, jdbcType=VARCHAR}
+             <if test='P_ESTM_OBJ_SEQ != null and P_ESTM_OBJ_SEQ != "" '>
+             AND ESTM_OBJ_SEQ = #{P_ESTM_OBJ_SEQ, jdbcType=INTEGER} 
+             </if>
+             <if test='P_RSDN_NO != null and P_RSDN_NO != "" '>
+             AND RSDN_NO = #{P_RSDN_NO} 
+             </if>
+             <if test='P_BIZRNO != null and P_BIZRNO != "" '>
+             AND BIZRNO = #{P_BIZRNO} 
+             </if>
+	</select>
+	
+	<select id="selectEstmCmtmCrtrMstDetail" resultType="dataEntity">
+        SELECT 
+				CRTR_NO
+				, CRTR_NM
+				, CHNL_NM
+				, NVL(SSCRT_CNT, 0) AS SSCRT_CNT
+				, CHNL_ADDR
+				, CP_NO
+				, TEL_NO
+				, EMAL
+           <include refid="ComRegr.selectColumnClause"/>
+           FROM T_ESTM_CRTR_MST
+         WHERE 1=1
+         AND CRTR_NO = #{P_ESTM_OBJ_PE_NO, jdbcType=VARCHAR}
+         AND DEL_AT = 'N'
+	</select>
+	
+	
+	<select id="selectEstmObjImstarsCmpnySelng" resultType="dataEntity">
+        SELECT 
+				BSNM_REGIST_NO
+				, SELNG_YY
+				, SELNG_AM
+				, SELNG_AM_DOLLAR
+				, REGIST_DT
+				, REGISTER_ID
+				, CHANGE_DT
+				, CHANGER_ID
+         FROM CMPNY_SELNG
+         WHERE 1=1
+         AND BSNM_REGIST_NO = #{P_BSNM_REGIST_NO, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectEstmObjImstarsCmpnyFileView" resultType="dataEntity">
+        SELECT FILE_ID
+				, FILE_SN
+				, REPLACE(FILE_STRE_COURS, '/gfsdata/imstars/upload') AS FILE_STRE_COURS
+				, STRE_FILE_NM
+				, WON_FILE_NM
+				, FILE_EXTSN
+	       		, ( SELECT CODE_NM FROM CMMN_CODE CM WHERE CM.SEQ = FILE_CN ) AS FILE_NM
+				, FILE_CN
+				, FILE_MG
+				, REGIST_DT
+				, REGISTER_ID
+				, CHANGE_DT
+				, CHANGER_ID
+				, USE_AT
+           FROM CMMN_FILEDETAILINFO
+        WHERE 1=1
+        <if test='P_FILE_ID != null and P_FILE_ID != "" '>
+			AND FILE_ID = #{P_FILE_ID}
+		</if>
+        <if test='P_FILE_SN != null and P_FILE_SN != "" '>
+			AND FILE_SN = #{P_FILE_SN}
+		</if>
+        <if test='P_FILE_CN != null and P_FILE_CN != "" '>
+			AND FILE_CN = #{P_FILE_CN}
+		</if>
+		   AND USE_AT = 'Y'
+        ORDER BY FILE_CN
+	</select>
+	
+	<resultMap id="cmpnyIntrcn" type="dataEntity">
+    	<result property="CMPNY_INTRCN" column="CMPNY_INTRCN" jdbcType="CLOB" javaType="java.lang.String" />
+    	<result property="CMPNY_INTRCN_ENG" column="CMPNY_INTRCN_ENG" jdbcType="CLOB" javaType="java.lang.String" />
+    </resultMap>
+    
+	<select id="selectEstmObjImstarsMainDetail" resultType="dataEntity" resultMap="cmpnyIntrcn">
+        SELECT 
+				BSNM_REGIST_NO
+				, CMPNY_NM
+				, CMPNY_ENGNM
+				, CMPNY_TY_CODE
+				, CPR_REGIST_NO
+				, FOND_ON
+				, CAPL
+				, TOT_ASSETS_AM
+				, NVL(EMPLY_CO, 0) AS EMPLY_CO
+				, INDUTY
+				, BIZCND
+				, PRDLC_SE_CODE
+				, (SELECT CODE_NM FROM CMMN_CODE WHERE SEQ = PRDLC_SE_CODE) AS PRDLC_SE_NM
+				, PRDCTN_MTHD_SE_CODE  
+				, (SELECT CODE_NM FROM CMMN_CODE WHERE SEQ = PRDCTN_MTHD_SE_CODE) AS PRDCTN_MTHD_SE_NM
+				, HMPG_ADRES
+				, CMPNY_TLPHON_NO
+				, CMPNY_FAX_NO
+				, CMPNY_ZIP
+				, CMPNY_ADRES
+				, CMPNY_DETAIL_ADRES
+				, FCTRY_ZIP
+				, FCTRY_ADRES
+				, FCTRY_DETAIL_ADRES
+				, RPRSNTV_NM
+				, RPRSNTV_TLPHON_NO
+				, RPRSNTV_MOBLPHON_NO
+				, RPRSNTV_EMAIL
+				, CMPNY_INTRCN
+				, CMPNY_INTRCN_ENG
+				, GOODS_INTRCN
+				, LOGO_FILE_ID
+				, ATCH_FILE_ID
+				, OTHBC_AT
+				, USE_AT
+				, UNCOLECT_AT
+				, REGIST_DT
+				, REGISTER_ID
+				, CHANGE_DT
+				, CHANGER_ID
+				, MARKT_EMPLY_CO
+				, RPRSNTV_SEX
+				, ATMC_UPDT_AT
+				, SPCSS_CODE
+				, CNTC_REGIST_DT
+				, IMSELER_USE_INTEN_AT
+				, OTR_SELER_SYS_USE_AT
+				, OTR_SELER_SYS_CODE
+				, OTR_SELER_SYS_ETC_NM
+				, MRO_AT
+				, TAXT_TY_CODE
+				, CMPNY_SCALE_CODE
+         FROM V_CMPNY_INFO
+         WHERE 1=1
+         AND BSNM_REGIST_NO = #{P_BSNM_REGIST_NO, jdbcType=VARCHAR}
+	</select>
+	
+	
+	<select id="selectEstmObjImstarsDetailView" resultType="dataEntity">
+        SELECT GOODSNO
+                  , CTGRYNO
+                  , GOODSNM
+                  , MODLNM
+                  , BRANDNM
+                  , MAKRCODE
+                  , REPLACE(MAKRCODE,'-','') AS BSNM_REGIST_NO
+                  , CMPNYNM
+                  , STNDRD
+                  , ORGPLCECODE
+                  , ( SELECT CODE_NM FROM CMMN_CODE CD WHERE ORGPLCECODE = CD.SEQ ) AS ORGPLCECODE_NM
+                  , CNSMRPC
+                  , FCTRYDOPC
+                  , MNFCTURDE
+                  , DISTBGRNTYMONTHCO
+                  , GOODSDC
+                  , GOODSSFE
+                  , REPRSNTIMAGEFILEID
+                  , ( SELECT WON_FILE_NM FROM CMMN_FILEDETAILINFO FI WHERE FI.FILE_ID = REPRSNTIMAGEFILEID AND ROWNUM = 1 ) AS REPRSNTIMAGEFILEID_FILE_NM
+                  , IMAGEFILEID
+                  , DETAILFILEID
+                  , ( SELECT WON_FILE_NM FROM CMMN_FILEDETAILINFO FI WHERE FI.FILE_ID = DETAILFILEID AND ROWNUM = 1 ) AS DETAILFILEID_FILE_NM
+                  , REGISTDT
+                  , REGISTERID
+                  , EXCAGOODSAT
+                  , EXCAGOODSATTEXT
+                  , OTHBCAT
+                  , STDIZGOODSAT
+                  , REPRSNTAT
+                  , GRAD
+                  , ROOTCTGRYNM
+                  , PATHNAME
+                  , PATHNAME1
+                  , PATHNAME2
+                  , PATHNAME3
+           FROM V_ESTM_ANNC_TPI_INT2
+         WHERE 1=1
+             AND GOODSNO = #{P_GOODSNO}
+	</select>
+	
+	<select id="selectEstmObjImstarsFileView" resultType="dataEntity">
+        SELECT REQST_NO
+                  , FILE_ID
+                  , FILE_SN
+                  , REPLACE(FILE_STRE_COURS, '/gfsdata/imstars/upload') AS FILE_STRE_COURS
+                  , STRE_FILE_NM
+                  , WON_FILE_NM
+                  , FILE_EXTSN
+                  , FILE_CN
+                  , ( SELECT CODE_NM FROM CMMN_CODE CM WHERE TO_CHAR(SEQ) = INFO.FILE_CN ) AS FILE_NM
+                  , FILE_MG
+                  , REGIST_DT
+                  , REGISTER_ID
+                  , CHANGE_DT
+                  , CHANGER_ID
+                  , USE_AT
+           FROM SPORT_REQST_FILEDETAILINFO INFO
+        WHERE 1=1
+        <if test='P_REQST_NO != null and P_REQST_NO != "" '>
+			AND REQST_NO = #{P_REQST_NO}
+		</if>
+        <if test='P_FILE_ID != null and P_FILE_ID != "" '>
+			AND FILE_ID = #{P_FILE_ID}
+		</if>
+        <if test='P_FILE_SN != null and P_FILE_SN != "" '>
+			AND FILE_SN = #{P_FILE_SN}
+		</if>
+        <if test='P_FILE_CN != null and P_FILE_CN != "" '>
+			AND FILE_CN = #{P_FILE_CN}
+		</if>
+		   AND USE_AT = 'Y'
+        ORDER BY FILE_CN
+	</select>
+	
+	
+	
+	<select id="selectEstmObjImstarsDetailFileList" resultType="dataEntity">
+        SELECT FILE_ID
+                  , FILE_SN
+                  , REPLACE(FILE_STRE_COURS, '/gfsdata/imstars/upload') AS FILE_STRE_COURS
+                  , STRE_FILE_NM
+                  , WON_FILE_NM
+                  , FILE_EXTSN
+                  , FILE_CN
+                  , FILE_MG
+                  , REGIST_DT
+                  , REGISTER_ID
+                  , CHANGE_DT
+                  , CHANGER_ID
+                  , USE_AT
+           FROM CMMN_FILEDETAILINFO
+        WHERE 1=1
+            AND FILE_ID = #{P_FILE_ID}
+        <if test='P_FILE_SN != null and P_FILE_SN != "" '>
+			AND FILE_SN = #{P_FILE_SN}
+		</if>
+        <if test='P_FILE_CN != null and P_FILE_CN != "" '>
+			AND FILE_CN = #{P_FILE_CN}
+		</if>
+		   AND USE_AT = 'Y'
+        ORDER BY FILE_SN
+	</select> 
+	
+	
+	<select id="selectEstmObjImstarsGoodsCrtfcList" resultType="dataEntity">
+        SELECT GOODS_NO
+                  , CRTFC_NO
+                  , CRTFC_NM
+                  , ISSU_ENGN
+                  , ACQS_DE
+                  , CRTFC_CN
+                  , AHRZT_FILE_ID
+                  , REGIST_DT
+                  , REGISTER_ID
+                  , CHANGE_DT
+                  , CHANGER_ID
+                  , GOODS_CRTFC_CODE
+                  , AHRZT_NO
+           FROM GOODS_CRTFC
+        WHERE 1=1
+            AND GOODS_NO = #{P_GOODSNO}
+        ORDER BY CRTFC_NO
+	</select>
+	
+	
+	<select id="selectEstmObjImstarsGoodssSelngList" resultType="dataEntity">
+	    SELECT GOODS_NO
+                  , SELNG_YY
+                  , SELNG_AM
+                  , SELNG_AM_DOLLAR
+                  , REGIST_DT
+                  , REGISTER_ID
+                  , CHANGE_DT
+                  , CHANGER_ID
+           FROM GOODS_SELNG
+        WHERE 1=1
+            AND GOODS_NO = #{P_GOODSNO}
+        ORDER BY SELNG_YY DESC
+	</select>
+</mapper>	

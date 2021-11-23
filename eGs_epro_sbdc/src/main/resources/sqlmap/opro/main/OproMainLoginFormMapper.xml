@@ -1,0 +1,1001 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * sqlmap.opro.main
+ * OproMainLoginFormMapper.xml
+ * 
+ * @Author : sanghoon_joen
+ * @Date   : 2018. 2. 20.
+ * 
+ -->
+ 
+ <mapper namespace="com.eunwoosoft.opro.main.dao.OproMainLoginFormDao">
+ 
+ 	<!-- 검토요청 건수 -->
+ 	<select id="selectMyContReqMainTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="contoMainList"/>
+			<include refid="contoMainListWhere"/>
+		) T1
+		WHERE 1 = 1 
+	</select>
+	
+	
+	<sql id="contoMainList"> 
+		SELECT A.PCRQ_NO
+			 , A.PCRQ_NM
+			 , A.STEP_VAL
+			 , A.PCRQ_PSCD
+			  ,A.CONT_SECD
+			  ,A.CONT_MTCD
+			  ,A.CONT_SECD_NM
+			  ,A.PCRQ_PSCD_NM
+		      ,A.CONT_MTCD_NM
+		      ,A.RQR_DEPT_NO
+		      ,A.DEL_AT
+		FROM
+				(
+		
+				SELECT CT.CONT_NO AS PCRQ_NO
+					 , CT.CONT_NM AS PCRQ_NM
+					 ,(SELECT ETC_VAL5 FROM V_MM_CODE_PSCD V WHERE V.CD_DTL_ID = CT.CONT_PSCD) AS STEP_VAL
+					 , CT.CONT_PSCD   AS PCRQ_PSCD
+					  , CT.CONT_SECD  AS  CONT_SECD
+					  , CT.CONT_MTCD AS CONT_MTCD
+					  ,F_CDVAL_INQIRE('CONT_SECD', CT.CONT_SECD) AS CONT_SECD_NM
+					  ,F_CDVAL_INQIRE('CONT_PSCD', CT.CONT_PSCD) AS PCRQ_PSCD_NM
+				      ,F_CDVAL_INQIRE('CONT_MTCD', CT.CONT_MTCD) AS CONT_MTCD_NM
+				      , CT.RQR_DEPT_NO AS RQR_DEPT_NO
+				      , CT.DEL_AT AS DEL_AT
+				FROM T_CT_MST CT, T_CT_VEND VEND
+				WHERE CT.CONT_NO = VEND.CONT_NO
+				AND CT.CHNG_NGR = VEND.CHNG_NGR
+				AND CT.DEL_AT = 'N'
+				AND CT.CONT_PSCD = 'C006'      <!-- 계약요청 -->
+				AND VEND.VEND_REG_NO = #{P_VEND_REG_NO, jdbcType = VARCHAR}		
+			)   A      
+	</sql>
+	<sql id="contoMainListWhere"> 
+		<where> 
+		</where>
+	</sql>
+	
+ 	<!-- 검토요청(계약)_ 건수 -->
+ 	<select id="selectMyContPrcnMainTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="contPrcnMainList"/>
+			<include refid="contPrcnMainListWhere"/>
+		) T1
+		WHERE 1 = 1 
+	</select>
+	
+	<sql id="contPrcnMainList"> 
+		SELECT A.PCRQ_NO
+			 , A.PCRQ_NM
+			 , A.STEP_VAL
+			 , A.PCRQ_PSCD
+			  ,A.CONT_SECD
+			  ,A.CONT_MTCD
+			  ,A.CONT_SECD_NM
+			  ,A.PCRQ_PSCD_NM
+		      ,A.CONT_MTCD_NM
+		      ,A.RQR_DEPT_NO
+		      ,A.DEL_AT
+		FROM
+				(
+		
+				SELECT CT.CONT_NO AS PCRQ_NO
+					 , CT.CONT_NM AS PCRQ_NM
+					 ,(SELECT ETC_VAL5 FROM V_MM_CODE_PSCD V WHERE V.CD_DTL_ID = CT.CONT_PSCD) AS STEP_VAL
+					 , CT.CONT_PSCD   AS PCRQ_PSCD
+					  , CT.CONT_SECD  AS  CONT_SECD
+					  , CT.CONT_MTCD AS CONT_MTCD
+					  ,F_CDVAL_INQIRE('CONT_SECD', CT.CONT_SECD) AS CONT_SECD_NM
+					  ,F_CDVAL_INQIRE('CONT_PSCD', CT.CONT_PSCD) AS PCRQ_PSCD_NM
+				      ,F_CDVAL_INQIRE('CONT_MTCD', CT.CONT_MTCD) AS CONT_MTCD_NM
+				      , CT.RQR_DEPT_NO AS RQR_DEPT_NO
+				      , CT.DEL_AT AS DEL_AT
+				FROM T_CT_MST CT, T_CT_VEND VEND
+				WHERE CT.CONT_NO = VEND.CONT_NO
+				AND CT.CHNG_NGR = VEND.CHNG_NGR
+				AND CT.DEL_AT = 'N'
+				AND CT.CONT_PSCD = 'C018'      <!-- 계약요청(계약) -->
+				AND VEND.VEND_REG_NO = #{P_VEND_REG_NO, jdbcType = VARCHAR}		
+			)   A      
+	</sql>
+	<sql id="contPrcnMainListWhere"> 
+		<where> 
+		</where>
+	</sql>
+ 	
+ 	
+ 	
+ 	<!-- 서명요청 건수 -->
+ 	<select id="selectMyContSignMainTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="signoMainList"/>
+			<include refid="signoMainListWhere"/>
+		) T1
+		WHERE 1 = 1 
+	</select>
+	
+	
+	<sql id="signoMainList"> 
+		SELECT A.PCRQ_NO
+			 , A.PCRQ_NM
+			 , A.STEP_VAL
+			 , A.PCRQ_PSCD
+			  ,A.CONT_SECD
+			  ,A.CONT_MTCD
+			  ,A.CONT_SECD_NM
+			  ,A.PCRQ_PSCD_NM
+		      ,A.CONT_MTCD_NM
+		      ,A.RQR_DEPT_NO
+		      ,A.DEL_AT
+		FROM
+				(
+		
+				SELECT CT.CONT_NO AS PCRQ_NO
+					 , CT.CONT_NM AS PCRQ_NM
+					 ,(SELECT ETC_VAL5 FROM V_MM_CODE_PSCD V WHERE V.CD_DTL_ID = CT.CONT_PSCD) AS STEP_VAL
+					 , CT.CONT_PSCD   AS PCRQ_PSCD
+					  , CT.CONT_SECD  AS  CONT_SECD
+					  , CT.CONT_MTCD AS CONT_MTCD
+					  ,F_CDVAL_INQIRE('CONT_SECD', CT.CONT_SECD) AS CONT_SECD_NM
+					  ,F_CDVAL_INQIRE('CONT_PSCD', CT.CONT_PSCD) AS PCRQ_PSCD_NM
+				      ,F_CDVAL_INQIRE('CONT_MTCD', CT.CONT_MTCD) AS CONT_MTCD_NM
+				      , CT.RQR_DEPT_NO AS RQR_DEPT_NO
+				      , CT.DEL_AT AS DEL_AT
+				FROM T_CT_MST CT, T_CT_VEND VEND
+				WHERE CT.CONT_NO = VEND.CONT_NO
+				AND CT.CHNG_NGR = VEND.CHNG_NGR
+				AND CT.DEL_AT = 'N'
+				AND CT.CONT_PSCD = 'C021'      <!-- 서명요청 -->
+				AND VEND.VEND_REG_NO = #{P_VEND_REG_NO, jdbcType = VARCHAR}		
+			)   A      
+	</sql>
+	<sql id="signoMainListWhere"> 
+		<where> 
+		</where>
+	</sql>
+ 	
+ 	
+ 	
+ 	<!-- 대금지급요청 건수 -->
+ 	<select id="selectMyPayReqMainTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="payMainList"/>
+			<include refid="payMainListWhere"/>
+		) T1
+		WHERE 1 = 1 
+	</select>
+	
+	
+	<sql id="payMainList"> 
+		SELECT A.PCRQ_NO
+			 , A.PCRQ_NM
+			 , A.STEP_VAL
+			 , A.PCRQ_PSCD
+			  ,A.CONT_SECD
+			  ,A.CONT_MTCD
+			  ,A.CONT_SECD_NM
+			  ,A.PCRQ_PSCD_NM
+		      ,A.CONT_MTCD_NM 
+		      ,A.RQR_DEPT_NO
+		      ,A.DEL_AT
+		FROM
+				(
+		
+				SELECT CT.CONT_NO AS PCRQ_NO
+					 , CT.CONT_NM AS PCRQ_NM
+					 ,(SELECT ETC_VAL5 FROM V_MM_CODE_PSCD V WHERE V.CD_DTL_ID = CT.CONT_PSCD) AS STEP_VAL
+					 , CT.CONT_PSCD   AS PCRQ_PSCD
+					  , CT.CONT_SECD  AS  CONT_SECD
+					  , CT.CONT_MTCD AS CONT_MTCD
+					  ,F_CDVAL_INQIRE('CONT_SECD', CT.CONT_SECD) AS CONT_SECD_NM
+					  ,F_CDVAL_INQIRE('CONT_PSCD', CT.CONT_PSCD) AS PCRQ_PSCD_NM
+				      ,F_CDVAL_INQIRE('CONT_MTCD', CT.CONT_MTCD) AS CONT_MTCD_NM
+				      , CT.RQR_DEPT_NO AS RQR_DEPT_NO
+				      , CT.DEL_AT AS DEL_AT
+				FROM T_CT_MST CT, T_CT_VEND VEND, T_CT_PAY PAY
+				WHERE CT.CONT_NO = VEND.CONT_NO
+				AND CT.CHNG_NGR = VEND.CHNG_NGR
+				AND VEND.CONT_NO = PAY.CONT_NO(+)
+				AND VEND.CHNG_NGR = PAY.CHNG_NGR(+)
+				AND VEND.VEND_REG_NO = PAY.VEND_REG_NO(+)
+				AND CT.DEL_AT = 'N' 
+				AND PAY.PAY_STCD = 'P003'      <!-- 지급요청 -->
+				AND VEND.VEND_REG_NO = #{P_VEND_REG_NO, jdbcType = VARCHAR}	 	
+			)   A      
+	</sql>
+	<sql id="payMainListWhere"> 
+		<where> 
+		</where>
+	</sql>
+ 	
+ 	
+	 <!-- 
+	 * 1. 개요 : 사업자번호로 업체 조회
+	 * 2. 처리내용 : 
+	 *  	
+	 * @Query ID : selectEntrpsMberInqireByBizrNo
+	 * @date : 2018. 2. 20.
+	 * @author : sanghoon_joen
+	 -->
+	 <select id="selectEntrpsMberInqireByBizrNo" resultType="dataEntity">
+		SELECT	CU.VEND_REG_NO AS USR_ID
+					, CU.VEND_NM AS USR_NM
+					, CU.BIZRNO AS BIZR_NO
+					, CU.VEND_STCD  
+		FROM		V_CU_MST CU
+		WHERE	1=1 <!-- NVL(CU.DEL_AT,'N') IN ('N') -->
+		AND		CU.BIZRNO = #{P_LOGIN_ID, jdbcType=VARCHAR, javaType=String}
+	 </select>
+	  
+	  <!-- 
+	 * 1. 개요 : 주민등록번호로 평가위원 확인
+	 * 2. 처리내용 : 
+	 *  	
+	 -->
+	 <select id="selectEstmCmtmInqireByRsdnNo" resultType="dataEntity">
+        SELECT MST.ESTM_CMTM_NO AS USR_ID
+                  , MST.ESTM_CMTM_NM AS USR_NM
+                  , damo_decrypt_var_b64(MST.RSDN_NO) AS RSDN_NO
+                  , MST.EMAL
+           FROM V_MM_ESTM_CMTM_MST MST
+        WHERE 1=1
+            AND NVL(MST.DEL_AT,'N') IN ('N')
+            AND MST.RSDN_NO = damo_encrypt_var_b64(#{P_LOGIN_ID, jdbcType=VARCHAR, javaType=String})
+	 </select>
+	  
+	 <!-- 
+	 * 1. 개요 : ID 로 업체 조회
+	 * 2. 처리내용 : 
+	 *  	
+	 * @Query ID : selectEntrpsMberInqireById
+	 * @date : 2018. 2. 20.
+	 * @author : sanghoon_joen
+	 -->
+	<select id="selectEntrpsMberInqireById" resultType="dataEntity">
+		SELECT USR_ID
+					, USR_NM
+					, AUTH_ID
+					, DEPT_NO
+		      	   	, DEPT_NM
+		      	   	, ARA_DEPT_CD
+		      	   	, EMPL_NO
+		FROM V_MM_USER
+		WHERE 1 = 1
+		AND USR_ID =  #{P_LOGIN_ID, jdbcType=VARCHAR, javaType=String}		
+	 </select>
+	 
+	  <!-- 
+	 * 1. 개요 : ID+PW 로 업체 조회
+	 * 2. 처리내용 : 
+	 *  	
+	 * @Query ID : selectEntrpsMberInqireByIdAndPassword
+	 * @date : 2018. 2. 20.
+	 * @author : sanghoon_joen
+	 -->
+	 <select id="selectEntrpsMberInqireByIdAndPassword" resultType="dataEntity">
+		SELECT USR_ID
+					, USR_NM
+					, AUTH_ID
+					, DEPT_NO
+		      	   	, DEPT_NM
+		      	   	, ARA_DEPT_CD
+		FROM V_MM_USER
+		WHERE 1 = 1
+		AND USR_ID =  #{P_LOGIN_ID, jdbcType=VARCHAR, javaType=String}		
+		<if test='P_PWD != null and P_PWD != "" '>
+			AND	PWD = #{P_PWD, jdbcType=VARCHAR, javaType=String}
+		</if>	
+	 </select>
+	 
+	 <insert id="joinEnpaRegist" >
+	 	INSERT
+	 	INTO		V_CU_MST
+		(
+			VEND_REG_NO
+			, BIZRNO
+			, CORP_REG_NO
+			, VEND_NM
+			, VEND_ENM
+			, PWD
+			, RPRS_NM
+			, RPRS_ENM
+			, TEL_NO
+			, FX_NO
+			, ZIP
+			, ADDR_NM
+			, ADDR_DENM
+			, ADDR_ENM
+			, EMAL_ADDR
+			, VEND_STCD
+			, BTCD
+			, BTNM
+			, BCCD
+			, BCNM
+			, ESTB_YR
+			, CORP_TPCD
+			, CORP_TYP_NM
+			, HMPG_ADDR
+			, MBSH_CLA_AGRT_YN
+			, MBSH_CLA_AGRT_DT
+			, CERT_SBMT_YN
+			, CRDT_ESTM_RKCD
+			, CRDT_ESTM_AGCD
+			, CRDT_ESTM_AGNM
+			, USE_YN
+			, LT_CONN_DT
+			, REGR_ID
+			, REGR_NM
+			, REG_DT
+			, MODR_ID
+			, MODR_NM
+			, MOD_DT
+			, CONN_IP
+			, DEL_AT
+			, PRTN_TYCD
+			, CMPP_LCTN
+			, CCN_SPHE
+			, TCHN_SPHE
+			, AUTH_ID
+		)
+		VALUES
+		(
+			#{P_VEND_REG_NO, jdbcType=VARCHAR}
+			, #{P_BIZRNO, jdbcType=VARCHAR}
+			, #{P_CORP_REG_NO, jdbcType=VARCHAR}
+			, #{P_VEND_NM, jdbcType=VARCHAR}
+			, #{P_VEND_ENM, jdbcType=VARCHAR}
+			, #{P_PWD, jdbcType=VARCHAR}
+			, #{P_RPRS_NM, jdbcType=VARCHAR}
+			, #{P_RPRS_ENM, jdbcType=VARCHAR}
+			, #{P_TEL_NO, jdbcType=VARCHAR}
+			, #{P_FX_NO, jdbcType=VARCHAR}
+			, #{P_ZIP, jdbcType=VARCHAR}
+			, #{P_ADDR_NM, jdbcType=VARCHAR}
+			, #{P_ADDR_DENM, jdbcType=VARCHAR}
+			, #{P_ADDR_ENM, jdbcType=VARCHAR}
+			, #{P_EMAL_ADDR, jdbcType=VARCHAR}
+			, #{P_VEND_STCD, jdbcType=VARCHAR}
+			, #{P_BTCD, jdbcType=VARCHAR}
+			, #{P_BTNM, jdbcType=VARCHAR}
+			, #{P_BCCD, jdbcType=VARCHAR}
+			, #{P_BCNM, jdbcType=VARCHAR}
+			, #{P_ESTB_YR, jdbcType=VARCHAR}
+			, #{P_CORP_TPCD, jdbcType=VARCHAR}
+			, #{P_CORP_TYP_NM, jdbcType=VARCHAR}
+			, #{P_HMPG_ADDR, jdbcType=VARCHAR}
+			, #{P_MBSH_CLA_AGRT_YN, jdbcType=VARCHAR}
+			, #{P_MBSH_CLA_AGRT_DT, jdbcType=VARCHAR}
+			, #{P_CERT_SBMT_YN, jdbcType=VARCHAR}
+			, #{P_CRDT_ESTM_RKCD, jdbcType=VARCHAR}
+			, #{P_CRDT_ESTM_AGCD, jdbcType=VARCHAR}
+			, #{P_CRDT_ESTM_AGNM, jdbcType=VARCHAR}
+			, #{P_USE_YN, jdbcType=VARCHAR}
+			, #{P_LT_CONN_DT, jdbcType=VARCHAR}
+			, #{P_BIZRNO, jdbcType=VARCHAR}
+			, #{P_VEND_NM, jdbcType=VARCHAR}
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+			, #{P_BIZRNO, jdbcType=VARCHAR}
+			, #{P_VEND_NM, jdbcType=VARCHAR}
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+			, #{P_CONN_IP, jdbcType=VARCHAR}
+			, 'N'
+			, #{P_PRTN_TYCD, jdbcType=VARCHAR}
+			, #{P_CMPP_LCTN, jdbcType=VARCHAR}
+			, #{P_CCN_SPHE, jdbcType=VARCHAR}
+			, #{P_TCHN_SPHE, jdbcType=VARCHAR}
+			, #{P_AUTH_ID, jdbcType=VARCHAR}
+		)
+	</insert>
+	 
+	<select id="loginIdRegist" statementType="CALLABLE">
+		{CALL MISDBA.SP_IF_TA_CUSTXM_INSERT
+			(
+				#{P_VENDOR_NAME_KOR, jdbcType=VARCHAR, mode=IN}
+				, #{P_VENDOR_NAME_ENG, jdbcType=VARCHAR, mode=IN}
+				, #{P_JOIN_FLAG, jdbcType=VARCHAR, mode=IN}
+				, 'C'
+				, #{P_RPRS_NM, jdbcType=VARCHAR, mode=IN}
+				, #{P_RERN_NUMB, jdbcType=VARCHAR, mode=IN}
+				, #{P_BIZRNO, jdbcType=VARCHAR, mode=IN}
+				, #{P_COPRNO, jdbcType=VARCHAR, mode=IN}
+				, #{P_BUTY_NAME, jdbcType=VARCHAR, mode=IN}
+				, #{P_BUSI_LTNM, jdbcType=VARCHAR, mode=IN}
+				, #{P_FAX, jdbcType=VARCHAR, mode=IN}
+				, #{P_TEL, jdbcType=VARCHAR, mode=IN}
+				, #{P_ZIPCODE, jdbcType=VARCHAR, mode=IN}
+				, #{P_ADDR, jdbcType=VARCHAR, mode=IN}
+				, #{P_ADDR_DE, jdbcType=VARCHAR, mode=IN}
+				, '1'
+				, #{P_PRGN_YN, jdbcType=VARCHAR, mode=IN}
+				, #{P_DOMC_CODE, jdbcType=VARCHAR, mode=IN}
+				, #{P_RECL_CODE, jdbcType=VARCHAR, mode=IN}
+				, #{O_RESULT_CODE, jdbcType=VARCHAR, mode=OUT}
+				, #{O_RESULT_MSG, jdbcType=VARCHAR, mode=OUT}
+			)
+		}
+	</select>	
+	
+	<!--  회원가입 여부 확인 -->	
+	<select id="joinEnpaCheck" resultType="dataEntity">
+        SELECT BIZRNO
+          FROM V_CU_MST
+       WHERE BIZRNO = #{P_BIZRNO, jdbcType=VARCHAR, javaType=String}
+		
+		
+		<!-- SELECT	CU.VEND_REG_NO
+					, CU.BIZRNO AS BIZRNO
+					, CU.RERN_NUMB
+		FROM	V_MIS_CUST_INFO CU
+		WHERE	1=1
+		AND		NVL(CU.DEL_AT,'N') IN ('N')
+		<if test='P_JOIN_FLAG_S != null and P_JOIN_FLAG_S.equals("I")'>
+		AND		CU.RERN_NUMB = #{P_BIZRNO, jdbcType=VARCHAR, javaType=String}		
+		</if>
+		<if test='P_JOIN_FLAG_S != null and P_JOIN_FLAG_S.equals("C")'>
+		AND		CU.BIZRNO = #{P_BIZRNO, jdbcType=VARCHAR, javaType=String}
+		</if> -->
+		
+		
+		
+	</select>
+	
+	 <insert id="enpaUserRegist" >
+		 <selectKey keyProperty="P_USER_ID" resultType="int" order="BEFORE">
+				SELECT NVL(MAX(TO_NUMBER(USER_ID))+1, 1)
+				FROM T_CO_VENDOR_USER
+			</selectKey>
+			INSERT INTO T_CO_VENDOR_USER
+			(
+				  USER_ID
+				, ENTRPS_REGIST_NO
+				, USER_PWD
+				, USER_NAME
+				, USER_TEL
+				, USER_HP
+				, USER_EMAIL
+				, USER_TYPE
+				, DEPT_NAME
+				, USER_POSITION
+				, GROUP_ID
+			)
+			VALUES
+			(
+				 #{P_USER_ID , jdbcType=VARCHAR}
+				, #{P_ENTRPS_REGIST_NO , jdbcType=INTEGER}
+				, #{P_USER_PWD , jdbcType=VARCHAR}
+				, #{P_USER_NAME , jdbcType=VARCHAR}
+				, #{P_USER_TEL , jdbcType=VARCHAR}
+				, #{P_USER_HP , jdbcType=VARCHAR}
+				, #{P_USER_EMAIL , jdbcType=VARCHAR}
+				, #{P_USER_TYPE , jdbcType=VARCHAR}
+				, #{P_DEPT_NAME , jdbcType=VARCHAR}
+				, #{P_USER_POSITION , jdbcType=VARCHAR}
+				, #{P_GROUP_ID , jdbcType=VARCHAR}
+			)
+	</insert>
+	 
+	 <select id="selectVendFileYn" resultType="dataEntity">
+		SELECT CASE WHEN (	SELECT COUNT(1)
+											FROM	T_MM_FILE_MST
+											WHERE	FILE_GRP_NO = (	SELECT 	FILE_GRP_NO
+																					FROM	T_CU_FILE_MST MST
+																					WHERE	VEND_REG_NO = #{P_VEND_REG_NO}
+																					AND		VEND_DOC_FSCD = 'DC01')
+											AND		NVL(DEL_AT,'N') = 'N' ) = 0 THEN 'N'
+					ELSE	'Y' END AS FILE_YN
+		FROM	DUAL
+	 </select>
+	 
+	 
+	 
+	 <insert id="insertVendInfoRegist">
+        INSERT INTO V_CU_MST (
+          VEND_REG_NO
+        , BIZRNO
+        , CORP_REG_NO
+        , VEND_NM
+        , VEND_ENM
+        , PWD
+        , RPRS_NM
+        , RPRS_ENM
+        , TEL_NO
+        , FX_NO
+        , ZIP
+        , ADDR_NM
+        , ADDR_DENM
+        , ADDR_ENM
+        , EMAL_ADDR
+        , VEND_STCD
+        , BTCD
+        , BTNM
+        , BCCD
+        , BCNM
+        , ESTB_YR
+        , CORP_TPCD
+        , CORP_TYP_NM
+        , HMPG_ADDR
+        , MBSH_CLA_AGRT_YN
+        , MBSH_CLA_AGRT_DT
+        , CERT_SBMT_YN
+        , USE_YN
+        , LT_CONN_DT
+        <include refid="ComRegr.RegrColumnClause"/>
+        , PRTN_TYCD
+        , CMPP_LCTN
+        , CCN_SPHE
+        , TCHN_SPHE
+        , RERN_NUMB
+        , TYPE_GUBN
+        , SPCL_ITEM
+        , RRNO
+        , SPLY_VEND_SECD
+        , CPTL_AMT
+        , MMBR_CNT
+        , ESTB_DE
+        , ID
+        ) VALUES (
+          #{P_VEND_REG_NO, jdbcType=VARCHAR}
+        , #{P_BIZRNO, jdbcType=VARCHAR}
+        , #{P_CORP_REG_NO, jdbcType=VARCHAR}
+        , #{P_VEND_NM, jdbcType=VARCHAR}
+        , #{P_VEND_ENM, jdbcType=VARCHAR}
+        , #{P_PWD, jdbcType=VARCHAR}
+        , #{P_RPRS_NM, jdbcType=VARCHAR}
+        , #{P_RPRS_ENM, jdbcType=VARCHAR}
+        , #{P_TEL_NO, jdbcType=VARCHAR}
+        , #{P_FX_NO, jdbcType=VARCHAR}
+        , #{P_ZIP, jdbcType=VARCHAR}
+        , #{P_ADDR_NM, jdbcType=VARCHAR}
+        , #{P_ADDR_DENM, jdbcType=VARCHAR}
+        , #{P_ADDR_ENM, jdbcType=VARCHAR}
+        , #{P_EMAL_ADDR, jdbcType=VARCHAR}
+        , #{P_VEND_STCD, jdbcType=VARCHAR}
+        , #{P_BTCD, jdbcType=VARCHAR}
+        , #{P_BTNM, jdbcType=VARCHAR}
+        , #{P_BCCD, jdbcType=VARCHAR}
+        , #{P_BCNM, jdbcType=VARCHAR}
+        , #{P_ESTB_YR, jdbcType=VARCHAR}
+        , #{P_CORP_TPCD, jdbcType=VARCHAR}
+        , #{P_CORP_TYP_NM, jdbcType=VARCHAR}
+        , #{P_HMPG_ADDR, jdbcType=VARCHAR}
+        , #{P_MBSH_CLA_AGRT_YN, jdbcType=VARCHAR}
+        , #{P_MBSH_CLA_AGRT_DT, jdbcType=VARCHAR}
+        , #{P_CERT_SBMT_YN, jdbcType=VARCHAR}
+        , #{P_USE_YN, jdbcType=VARCHAR}
+        , #{P_LT_CONN_DT, jdbcType=VARCHAR}
+        <include refid="ComRegr.RegrValueClause"/>
+        , #{P_PRTN_TYCD, jdbcType=VARCHAR}
+        , #{P_CMPP_LCTN, jdbcType=VARCHAR}
+        , #{P_CCN_SPHE, jdbcType=VARCHAR}
+        , #{P_TCHN_SPHE, jdbcType=VARCHAR}
+        , #{P_RERN_NUMB, jdbcType=VARCHAR}
+        , #{P_TYPE_GUBN, jdbcType=VARCHAR}
+        , #{P_SPCL_ITEM, jdbcType=VARCHAR}
+        , #{P_RRNO, jdbcType=VARCHAR}
+        , #{P_SPLY_VEND_SECD, jdbcType=VARCHAR}
+        , #{P_CPTL_AMT, jdbcType=INTEGER}
+        , #{P_MMBR_CNT, jdbcType=VARCHAR}
+        , #{P_ESTB_DE, jdbcType=VARCHAR}
+        , #{P_ID, jdbcType=VARCHAR}
+        )
+	 </insert>
+	 
+	 <insert id="insertVendChrgrInfoRegist">
+        INSERT INTO T_CU_USER (
+          VEND_REG_NO
+        , USR_SN
+        , USR_NM
+        , USR_ENM
+        , TEL_NO
+        , CP_NO
+        , FX_NO
+        , ZIP
+        , ADDR_NM
+        , ADDR_DENM
+        , ADDR_ENM
+        , EMAL_ADDR
+        , USR_STCD
+        , DEPT_NO
+        , DEPT_NM
+        , ODCD
+        , ODNM
+        , OPCD
+        , OPNM
+        , USR_TYCD
+        , MNGR_YN
+        , USE_YN
+        , FNGR_REG_YN
+        , LT_CONN_DT
+        <include refid="ComRegr.RegrColumnClause"/>
+        , DLGT_YN
+        ) VALUES (
+          #{P_VEND_REG_NO, jdbcType=VARCHAR}
+        , #{P_USR_SN, jdbcType=INTEGER}
+        , #{P_USR_NM, jdbcType=VARCHAR}
+        , #{P_USR_ENM, jdbcType=VARCHAR}
+        , #{P_TEL_NO, jdbcType=VARCHAR}
+        , #{P_CP_NO, jdbcType=VARCHAR}
+        , #{P_FX_NO, jdbcType=VARCHAR}
+        , #{P_ZIP, jdbcType=VARCHAR}
+        , #{P_ADDR_NM, jdbcType=VARCHAR}
+        , #{P_ADDR_DENM, jdbcType=VARCHAR}
+        , #{P_ADDR_ENM, jdbcType=VARCHAR}
+        , #{P_EMAL_ADDR, jdbcType=VARCHAR}
+        , #{P_USR_STCD, jdbcType=VARCHAR}
+        , #{P_DEPT_NO, jdbcType=VARCHAR}
+        , #{P_DEPT_NM, jdbcType=VARCHAR}
+        , #{P_ODCD, jdbcType=VARCHAR}
+        , #{P_ODNM, jdbcType=VARCHAR}
+        , #{P_OPCD, jdbcType=VARCHAR}
+        , #{P_OPNM, jdbcType=VARCHAR}
+        , #{P_USR_TYCD, jdbcType=VARCHAR}
+        , #{P_MNGR_YN, jdbcType=VARCHAR}
+        , #{P_USE_YN, jdbcType=VARCHAR}
+        , #{P_FNGR_REG_YN, jdbcType=VARCHAR}
+        , #{P_LT_CONN_DT, jdbcType=VARCHAR}
+        <include refid="ComRegr.RegrValueClause"/>
+        , #{P_DLGT_YN, jdbcType=VARCHAR}         
+        )
+	 </insert>
+
+	<select id="getBknm" resultType="dataEntity">
+        SELECT CD_DTL_NM AS P_BKNM
+           FROM T_MM_CODE_MST
+        WHERE DEL_AT = 'N'
+             AND USE_YN = 'Y'
+             AND CD_ID = 'BKCD'
+             AND CD_DTL_ID = #{P_BKCD, jdbcType=VARCHAR}
+	</select>
+
+	<insert id="insertVendAcctInfoList">
+        INSERT INTO T_CU_ACCT (
+          VEND_REG_NO
+        , ACC_SN
+        , ACNO
+        , BKCD
+        , BKNM
+        , DPSO
+        , ORD_SN
+        , FILE_GRP_NO
+        <include refid="ComRegr.RegrColumnClause"/>
+        , BNK_BRNC_NM
+        ) VALUES (
+          #{P_VEND_REG_NO, jdbcType=VARCHAR}
+        , #{P_ACC_SN, jdbcType=INTEGER}
+        , ENCRYPT_VAR('AES256', #{P_ACNO, jdbcType=VARCHAR}, '')
+        , #{P_BKCD, jdbcType=VARCHAR}
+        , #{P_BKNM, jdbcType=VARCHAR}
+        , #{P_DPSO, jdbcType=VARCHAR}
+        , #{P_ORD_SN, jdbcType=INTEGER}
+        , #{P_FILE_GRP_NO, jdbcType=VARCHAR}
+        <include refid="ComRegr.RegrValueClause"/>
+        , #{P_BNK_BRNC_NM, jdbcType=VARCHAR}
+        )
+	</insert>
+	
+	<select id="getCttNm" resultType="dataEntity">
+        SELECT CD_DTL_NM AS P_CTT_NM
+           FROM T_MM_CODE_MST
+        WHERE DEL_AT = 'N'
+             AND USE_YN = 'Y'
+             AND CD_ID = 'DATA_CD'
+             AND CD_DTL_ID = #{P_DATA_CD, jdbcType=VARCHAR}
+	</select>
+	
+
+	<insert id="insertVendAcqsInfoList">
+        INSERT INTO T_CU_CTT_ACQS (
+          VEND_REG_NO
+        , CTT_ACQS_SN
+        , CTT_NM
+        , ACQS_DE
+        , ACQS_AGNM
+        , RMK
+        <include refid="ComRegr.RegrColumnClause"/>
+        , VLD_STDE
+        , VLD_ENDE
+        , DATA_CD
+        , FILE_GRP_NO
+        ) VALUES (
+          #{P_VEND_REG_NO, jdbcType=VARCHAR}
+        , #{P_CTT_ACQS_SN, jdbcType=INTEGER}
+        , #{P_CTT_NM, jdbcType=VARCHAR}
+        , #{P_ACQS_DE, jdbcType=VARCHAR}
+        , #{P_ACQS_AGNM, jdbcType=VARCHAR}
+        , #{P_RMK, jdbcType=VARCHAR}
+        <include refid="ComRegr.RegrValueClause"/>
+        , #{P_VLD_STDE, jdbcType=VARCHAR}
+        , #{P_VLD_ENDE, jdbcType=VARCHAR}
+        , #{P_DATA_CD, jdbcType=VARCHAR}
+        , #{P_FILE_GRP_NO, jdbcType=VARCHAR}
+        )
+	</insert>
+	
+	<insert id="insertVendItemList">
+        INSERT INTO T_CU_VEND_ITEM (
+          VEND_REG_NO
+        , ITEM_NO
+        , MKN_YN
+        , SPLY_YN
+        , ITEM_NM
+        , G2B_CLS_NO
+        , FRM_APPR_NO
+        , FRM_APPR_AGNM
+        , FRM_APPR_DE
+        , YY3_SL_AMT
+        , DLGT_ITEM_YN
+        <include refid="ComRegr.RegrColumnClause"/>
+        , LLF_NM
+        , MLF_NM
+        , SLF_NM
+        , DLF_NM
+        , ITEM_UPRC
+        , LLF_CD
+        , MLF_CD
+        , SLF_CD
+        , DLF_CD
+        ) VALUES (
+          #{P_VEND_REG_NO, jdbcType=VARCHAR}
+        , #{P_ITEM_NO, jdbcType=VARCHAR}
+        , #{P_MKN_YN, jdbcType=VARCHAR}
+        , #{P_SPLY_YN, jdbcType=VARCHAR}
+        , #{P_ITEM_NM, jdbcType=VARCHAR}
+        , #{P_G2B_CLS_NO, jdbcType=VARCHAR}
+        , #{P_FRM_APPR_NO, jdbcType=VARCHAR}
+        , #{P_FRM_APPR_AGNM, jdbcType=VARCHAR}
+        , #{P_FRM_APPR_DE, jdbcType=VARCHAR}
+        , #{P_YY3_SL_AMT, jdbcType=INTEGER}
+        , #{P_DLGT_ITEM_YN, jdbcType=VARCHAR}
+        <include refid="ComRegr.RegrValueClause"/>
+        , #{P_LLF_NM, jdbcType=VARCHAR}
+        , #{P_MLF_NM, jdbcType=VARCHAR}
+        , #{P_SLF_NM, jdbcType=VARCHAR}
+        , #{P_DLF_NM, jdbcType=VARCHAR}
+        , #{P_ITEM_UPRC, jdbcType=INTEGER}
+        , #{P_LLF_CD, jdbcType=VARCHAR}
+        , #{P_MLF_CD, jdbcType=VARCHAR}
+        , #{P_SLF_CD, jdbcType=VARCHAR}
+        , #{P_DLF_CD, jdbcType=VARCHAR}
+        )
+	</insert>
+	
+	<insert id="insertVendAtchDocList">
+        INSERT INTO T_CU_FILE_MST (
+          VEND_REG_NO
+        , VEND_DOC_FSCD
+        , FILE_GRP_NO
+        , ORD_SN
+        <include refid="ComRegr.RegrColumnClause"/>
+        ) VALUES (
+          #{P_VEND_REG_NO, jdbcType=VARCHAR}
+        , #{P_VEND_DOC_FSCD, jdbcType=VARCHAR}
+        , #{P_FILE_GRP_NO, jdbcType=VARCHAR}
+        , #{P_ORD_SN, jdbcType=VARCHAR}
+        <include refid="ComRegr.RegrValueClause"/>
+        )
+	</insert>
+	
+	
+	<insert id="insertApprVendProgHist">
+		<selectKey keyProperty="P_APPR_SN" resultType="int" order="BEFORE">
+            SELECT NVL(MAX(APPR_SN)+1, 1)
+            FROM T_CU_APPR_HIST
+            WHERE VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+		</selectKey>
+        INSERT INTO T_CU_APPR_HIST (
+          VEND_REG_NO
+        , APPR_SN
+        , VEND_APPR_STCD
+        , APPR_CNTN
+        , APPR_PE_ID
+        , APPR_DT
+        , LT_CONN_DT
+        <include refid="ComRegr.RegrColumnClause"/>
+        ) VALUES (
+          #{P_VEND_REG_NO, jdbcType=VARCHAR}
+        , #{P_APPR_SN, jdbcType=VARCHAR}
+        , #{P_VEND_APPR_STCD, jdbcType=VARCHAR}
+        , #{P_APPR_CNTN, jdbcType=VARCHAR}
+        , #{P_APPR_PE_ID, jdbcType=VARCHAR}
+        , #{P_APPR_DT, jdbcType=VARCHAR}
+        , #{P_LT_CONN_DT, jdbcType=VARCHAR}
+        <include refid="ComRegr.RegrValueClause"/>
+        )
+	</insert>
+	
+	
+	<select id="selectToDoList" resultType="dataEntity">
+ 		<!-- 사전공고 -->
+		SELECT '1' AS GUBUN_SN
+		          , BFAN_NO AS TODO_NO
+		          , 1 AS TODO_ODR
+		          , BFAN_NM AS TODO_NM
+		          , 'B' AS TODO_STTUS_CD
+		          , BFAN_ENDE AS TODO_DATE
+		   FROM T_BI_BFAN_MST
+		 WHERE NVL(DEL_AT, 'N') = 'N'
+		     AND SUBSTR(BFAN_ENDE, 1, 8) = #{P_TODAY}
+		
+		UNION ALL
+		
+		<!-- 입찰공고 -->
+		SELECT '2' AS GUBUN_SN
+		          , MST.ANNC_NO AS TODO_NO
+		          , MST.ANNC_NGR AS TODO_ODR
+		          , MST.BID_NM AS TODO_NM
+		          , 'B' AS TODO_STTUS_CD
+		          , ROUND.ANNC_DT AS TODO_DATE
+		   FROM T_BI_MST MST
+		          , T_BI_ROUND ROUND
+		WHERE MST.ANNC_NO = ROUND.ANNC_NO
+		     AND MST.ANNC_NGR = ROUND.ANNC_NGR
+		     AND NVL(MST.DEL_AT, 'N') = 'N'
+		     AND ROUND.BID_PSCD IN ('PF02','PF20', 'PF30','PF40')
+		     AND BID_MTCD IN ('BID')
+		     AND SUBSTR(ANNC_DT, 1, 8) = #{P_TODAY}
+		
+		UNION ALL
+		
+		<!-- 입찰서제출 -->
+		SELECT '6' AS GUBUN_SN
+		          , MST.ANNC_NO AS TODO_NO
+		          , MST.ANNC_NGR AS TODO_ODR
+		          , MST.BID_NM AS TODO_NM
+		          , 'B' AS TODO_STTUS_CD
+		          , ROUND.BIDC_SBMT_ENDT AS TODO_DATE
+		   FROM T_BI_MST MST
+		          , T_BI_ROUND ROUND
+		WHERE MST.ANNC_NO = ROUND.ANNC_NO
+		     AND MST.ANNC_NGR = ROUND.ANNC_NGR
+		     AND NVL(MST.DEL_AT, 'N') = 'N'
+		     AND ROUND.BID_PSCD IN ('PF02','PF20', 'PF30','PF40')
+		     AND BID_MTCD IN ('BID')
+		     AND SUBSTR(BIDC_SBMT_ENDT, 1, 8) = #{P_TODAY}
+ 	</select>
+
+	
+	<parameterMap type="HashMap" id="myParam">
+		<parameter property="P_LOGIN_ID" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
+		<parameter property="P_PWD" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
+		<parameter property="P_RETURN" mode="OUT" jdbcType="INTEGER" javaType="int" />
+		<!-- #{P_ACCOUNT_DECNS_NO} -->
+	</parameterMap>
+	<!-- selectAccuntDecnsNo -->
+	<select id="selectPasswordChk" statementType="CALLABLE" parameterMap="myParam">
+	
+		{ CALL SP_P_PASSWORD_CHK_SSO(?, ?, ?) }
+	
+	</select>
+	
+	<select id="selectEstmAnncMainList" resultType="dataEntity">
+	    <include refid="ComPgng.pgngHeaderClause"/>
+        SELECT * FROM (
+		    <include refid="estmProgList"/>
+			<include refid="estmProgListWhere"/>
+			ORDER BY TO_NUMBER(ESTM_NO) DESC
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>   
+	</select>
+	
+	<sql id="estmProgList">
+        SELECT ESTM_NO
+                  , ESTM_SECD
+                  , ESTM_SENM
+                  , F_CDVAL_INQIRE('ESTM_SECD', ESTM_SECD) AS ESTM_SECD_NM
+                  , ESTM_PSCD
+                  , ESTM_PSNM
+                  , F_CDVAL_INQIRE('ESTM_PSCD', ESTM_PSCD) AS ESTM_PSCD_NM
+                  , ESTM_NM
+                  , TOTL_ESTM_ST_DT
+                  , TOTL_ESTM_END_DT
+                  , TO_CHAR(TO_DATE(TOTL_ESTM_ST_DT, 'yyyyMMddHH24miss'), 'yyyy-MM-dd HH:mi:ss') AS TOTL_ESTM_ST_DT_F
+                  , TO_CHAR(TO_DATE(TOTL_ESTM_END_DT, 'yyyyMMddHH24miss'), 'yyyy-MM-dd HH:mi:ss') AS TOTL_ESTM_END_DT_F
+                  , ESTM_CHRG_DEPT_NM
+                  , REG_DT
+                  , TO_CHAR(TO_DATE(REG_DT, 'yyyyMMddHH24miss'), 'yyyy-MM-dd') AS REG_DT_F
+                  , REGR_NM
+           FROM T_ESTM_MNG_MST
+	</sql>
+	
+	<sql id="estmProgListWhere">
+		<where>
+            AND DEL_AT = #{P_DEL_AT, jdbcType=VARCHAR}
+            AND ESTM_PSCD IN ('A002', 'A005' )
+            <if test='P_ESTM_NO_S != null and P_ESTM_NO_S != "" '>
+	            AND ESTM_NO LIKE '%'|| #{P_ESTM_NO_S} || '%'
+            </if>
+            <if test='P_ESTM_NM_S != null and P_ESTM_NM_S != "" '>
+                AND ESTM_NM LIKE '%'|| #{P_ESTM_NM_S} || '%' 
+            </if>
+            <if test='P_ESTM_SECD_S != null and P_ESTM_SECD_S != "" '>
+                AND ESTM_SECD = #{P_ESTM_SECD_S}
+            </if>
+            <if test='P_ESTM_PSCD_S != null and P_ESTM_PSCD_S != "" '>
+                AND ESTM_PSCD = #{P_ESTM_PSCD_S}
+            </if>
+            <if test='P_ESTM_CHRG_DEPT_NO_S != null and P_ESTM_CHRG_DEPT_NO_S != "" '>
+                AND ESTM_CHRG_DEPT_NO = #{P_ESTM_CHRG_DEPT_NO_S}
+            </if>
+            <if test='P_REG_BEGIN_DT_S != null and P_REG_BEGIN_DT_S != "" '>
+                AND TO_CHAR(TO_DATE(REG_DT, 'yyyyMMddHH24miss'), 'yyyyMMdd') >= #{P_REG_BEGIN_DT_S}
+            </if>
+            <if test='P_REG_END_DT_S != null and P_REG_END_DT_S != "" '>
+                AND TO_CHAR(TO_DATE(REG_DT, 'yyyyMMddHH24miss'), 'yyyyMMdd') &lt;= #{P_REG_END_DT_S}
+            </if>
+		</where>
+	</sql>
+	
+	
+	<!-- 
+	 * 1. 개요 : 로그인 유저 정보 조회(id)
+	 * 2. 처리내용 : 
+	 *  	
+	 * @Query ID : selectEmplyrInqireById
+	 * @date : 2018. 2. 12.
+	 * @author : sanghoon_joen
+	 -->
+	 <select id="selectEmplyrInqireById" resultType="dataEntity">
+        SELECT UM.USR_ID AS USR_ID
+                  , UM.USR_NM AS USR_NM
+                  , UM.EMPL_NO AS EMPL_NO
+                  , UM.DEPT_NO AS DEPT_NO
+                  , UM.DEPT_NM AS DEPT_NM
+                  , UM.ARA_DEPT_CD AS ARA_DEPT_CD
+                  , UM.OFPS_CD AS OFPS_CD
+                  , UM.OFPS_NM  AS OFPS_NM
+                  , UM.EMAL_ADDR AS EMAL_ADDR
+                  , UM.TEL_NO AS TEL_NO
+                  , UM.CP_NO AS CP_NO
+                  , MM.AUTH_ID
+                  , MM.APPR_AUTH_YN
+                  , UM.STORE
+                  , UM.ORGAN
+                  <!-- , NVL(MM.AUTH_ID, '5') AS AUTH_ID
+                  , NVL(MM.APPR_AUTH_YN, 'N') AS APPR_AUTH_YN -->
+           FROM V_MM_USER UM
+                  , T_MM_USER_MST MM
+        WHERE 1=1
+            AND UM.USR_ID = MM.USR_ID(+)
+            AND UM.USR_ID = #{P_USR_ID, jdbcType=VARCHAR, javaType=String}
+	</select>
+	 
+	 <!-- 
+	 * 1. 개요 : 로그인 유저 정보 조회 (id+pw)
+	 * 2. 처리내용 : 
+	 *  	
+	 * @Query ID : selectEmplyrInqireByIdAndPassword
+	 * @date : 2018. 2. 12.
+	 * @author : sanghoon_joen
+	 -->
+	<select id="selectEmplyrInqireByIdAndPassword" resultType="dataEntity">
+        SELECT UM.USR_ID AS USR_ID
+                  , UM.USR_NM AS USR_NM
+                  , UM.EMPL_NO AS EMPL_NO
+                  , UM.DEPT_NO AS DEPT_NO
+                  , UM.DEPT_NM AS DEPT_NM
+                  , UM.ARA_DEPT_CD AS ARA_DEPT_CD
+                  , UM.OFPS_CD AS OFPS_CD
+                  , UM.OFPS_NM  AS OFPS_NM
+                  , UM.EMAL_ADDR AS EMAL_ADDR
+                  , UM.TEL_NO AS TEL_NO
+                  , UM.CP_NO AS CP_NO
+                  , MM.AUTH_ID
+                  , MM.APPR_AUTH_YN
+                  , UM.STORE
+                  , UM.ORGAN
+           FROM V_MM_USER UM
+                  , T_MM_USER_MST MM
+        WHERE 1=1
+            AND UM.USR_ID = MM.USR_ID(+)
+            AND UM.USR_ID = #{P_USR_ID, jdbcType=VARCHAR, javaType=String}
+            AND UM.PWD = F_GET_ENCPASS(#{P_PWD, jdbcType=VARCHAR, javaType=String})
+	</select>
+	
+	 
+ </mapper>

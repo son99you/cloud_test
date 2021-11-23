@@ -1,0 +1,701 @@
+@charset "utf-8";
+
+/* font-face */
+@font-face{
+    font-family: "NanumGothic";
+    src: url('font/NanumGothic.eot');
+    src:local('※'), url('font/NanumGothic.woff') format('woff');
+}
+@font-face{
+    font-family: "NanumGothicBold";
+    src: url('font/NanumGothicBold.eot');
+    src:local('※'), url('font/NanumGothicBold.woff') format('woff');
+}
+@font-face{
+    font-family: "NanumGothicExtraBold";
+    src: url('font/NanumGothicExtraBold.eot');
+    src:local('※'), url('font/NanumGothicExtraBold.woff') format('woff');
+}
+/* reset css */
+html, body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, form, fieldset, legend, input, textarea, radio, select, p, button {margin:0;padding:0}
+body, h1, h2, h3, h4, th, td, input {font-family:"NanumGothic", NanumGothic, Dotum, "NanumGothic", Arial, sans-serif;font-size:12px;color:#555;line-height:1.5em;font-weight:normal}
+select, textarea {font-family:"NanumGothic", NanumGothic, Dotum, "NanumGothic", Arial, sans-serif;font-size:12px;color:#333333}
+html, body {height:100%}
+
+*{margin: 0; padding: 0;}
+a:link, a:visited {text-decoration:none;color:#333333}
+a:hover {text-decoration:underline;}
+table { border-collapse:collapse; border-spacing:0px; table-layout: fixed; }
+html[xmlns*=""] body:last-child table {table-layout: auto;}
+caption, legend {overflow:hidden;visibility:hidden;width:0;height:0;text-indent:-9999px;line-height:0;font-size:0;}
+img, fieldset, button {border:0}
+button:focus, button:active{border:0; outline: 0;}
+input, select, textarea {vertical-align:middle}
+textarea{border:1px solid #d9d9d9; resize: none;}
+img {vertical-align:middle} 
+ul, ol, li {list-style:none}
+hr {display:none}
+em, address {font-style:normal}
+input {font-family:"NanumGothic", NanumGothic, Dotum, "NanumGothic", Arial, sans-serif;color:#333333;/* border:1px solid #d9d9d9;*/ text-indent: 10px;}
+select {border:1px solid #dedede;font-size:12px;vertical-align:middle;line-height:1.5em;font-family:Dotum, 'NanumGothic', Arial, sans-serif;color:#555}
+input, select {font-size:100%;vertical-align:middle}
+button, label, input[type=image] {cursor:pointer}
+button {background:none;padding:0;border:0 none;display:inline-block;margin:0;cursor:pointer;font-family:"NanumGothic", NanumGothic, Dotum, "NanumGothic", Arial, sans-serif;font-size:12px}
+input[type=checkbox]{border:0;}
+input[type=radio]{border:0;}
+
+/*wrap*/
+#wrap{
+    min-width: 1250px;
+    margin:0 auto;
+}
+/*wrap*/
+#panelWrap{
+    width: 100%;
+    position: relative;
+    float: left;
+}
+#content{
+    width:1250px;
+    margin:0 auto;
+    position: relative;
+}
+
+/*LNB 생성시 content wrap*/
+#panelSubContent{
+    width: 980px;
+    margin-bottom: 20px;
+    margin-top: 5px;
+    position: relative;
+    float: right;
+    border: 1px solid #d9d9d9;
+    padding: 30px 14px;
+    background-color: white;
+}
+#panelSubContent.n_m{
+    margin-top: 0px;
+    padding: 5px 14px 30px;
+}
+#panelSubContent.n_p{
+    padding: 0 ! important;
+    width:1008px;
+}
+/*코딩 편의성을 위한 css*/
+/*label 숨김*/
+label.blind{
+    display: block;
+    overflow: hidden;
+    position: absolute;
+    top: -1000em;
+    left: 0;
+}
+span.wave {
+    float: left;
+    margin: 5px 5px 0;
+}
+.hiddenTitle{
+    width:0; height:0; overflow: hidden; text-indent: -999999; visibility: hidden;
+}
+/*input 기본*/
+input[type=text].placeholder{
+    color: #e6e6e6;
+}
+input[type=text].disabled{
+    border:1px solid #cdcdcd;
+    background-color: #e2e2e2;
+}
+
+body{
+    background-color: white ! important;
+}
+#wrap.loginPage #panelWrap{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 850px;
+    height: 546px;
+    margin-top: -305px;
+    margin-left: -425px;
+    /*background-color: aqua;*/
+}
+#wrap.loginPage .loginForm{
+    width: 850px;
+    height: 458px;
+    border: 1px solid #b9b9b9;
+    border-top: 2px solid #017ac3;
+    position: relative;
+}
+#wrap.loginPage .loginFormLeft , #wrap.loginPage .loginFormRight{
+    width: 330px;
+    height:300px;
+    position: relative;
+    float:left;
+    margin-left: 15px;
+}
+#wrap.loginPage .loginFormLeft{
+    margin: 25px 0 0 30px;
+}
+#wrap.loginPage .loginFormRight{
+    margin: 25px 0 0 70px;
+}
+#wrap.loginPage .loginSubTitle{
+    font:24px NanumGothicBold , "NanumGothicBold" , Dotum, "NanumGothic", Arial, sans-serif;
+    color:#1370b2;
+    margin : 0 0 10px 2px;
+    float:left;
+}
+#wrap.loginPage .squareBox{
+    float: left;
+    width: 375px;
+    height: 180px;
+    border: 1px solid #d0d0d0;
+    background-color: white;
+}
+#wrap.loginPage .loginFormLeft fieldset, #wrap.loginPage .loginFormLeft legend{
+    float:left;
+}
+#wrap.loginPage fieldset{
+    margin-left: 15px;
+    width:350px;
+}
+#wrap.loginPage .loginFormLeft legend{
+    display: block;
+    visibility: visible;
+    font-size: 16px;
+    font-family: NanumGothicBold , "NanumGothicBold" , Dotum, "NanumGothic", Arial, sans-serif;
+    color: #333333;
+    width: 100%;
+    height: 44px;
+    border-bottom: 1px solid #d0d0d0;
+    text-indent: 15px;
+    margin-bottom: 25px;
+    line-height: 46px;
+}
+#wrap.loginPage .loginBtnLayer{
+    margin:20px 0 30px;
+    float: left;
+    width: 377px;
+}
+#wrap.loginPage .loginBtnLayer a{
+    background-color: #f6f6f6;
+    border: 1px solid #737373;
+    color: #737373;
+    font: 11px Dotum, 'NanumGothic', Arial, sans-serif;
+    padding: 0 20px;
+    height: 20px;
+    line-height: 22px;
+    display: inline-block;
+    text-align: center;
+}
+#wrap.loginPage .loginBtnLayer a:hover{
+    text-decoration: none;
+}
+.helpList{
+    float:left;
+    width: 377px;
+    font-size: 11px;
+    font-family: Dotum, 'NanumGothic', Arial, sans-serif;
+}
+
+#wrap.loginPage input[type=text]{
+    width: 247px;
+    height: 30px;
+    border: 1px solid #aaaaaa;
+    float: left;
+}
+#wrap.loginPage .inputBtn{
+    width: 90px;
+    height: 32px;
+    background-color: #1484c7;
+    color: white;
+    text-align: center;
+    float: left;
+    font:14px NanumGothicBold , "NanumGothicBold" , Dotum, "NanumGothic", Arial, sans-serif;
+    margin-left: 6px;
+}
+#wrap.loginPage .keeping{
+    float:left;
+    position: relative;
+    margin-top: 25px;
+    width: 345px;
+}
+#wrap.loginPage .keeping input, #wrap.loginPage .keeping label{
+    float: left;
+}
+#wrap.loginPage .keeping input{
+    margin-top: 3px;
+    margin-right: 5px;
+}
+#wrap.loginPage .keeping label {
+    color: #535353;
+    font-size: 11px;
+}
+#wrap.loginPage .keeping label span{
+    font-size: 12px;
+    font-family: NanumGothicBold , "NanumGothicBold" , Dotum, "NanumGothic", Arial, sans-serif;
+}
+#wrap.loginPage .helpList li{
+    font-family: NanumGothicBold , "NanumGothicBold" , Dotum, "NanumGothic", Arial, sans-serif;
+    font-size:11px;
+    float: left;
+    padding-left: 6px;
+    background-image: url('../images/bul_black2X2.png');
+    background-position: 0 7px;
+    background-repeat: no-repeat;
+    margin-bottom: 9px;
+}
+#wrap.loginPage .helpList li a{
+    color:#1484c7;
+    text-decoration: underline;
+}
+#wrap.loginPage .keeping .qBtn1{
+    text-indent: -9999px;
+    width: 14px;
+    height: 14px;
+    display: block;
+    background-image: url('../images/icon_q.png');
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 2px; left: 210px;
+}
+#wrap.loginPage .keeping .qBtn2{
+    font-family: Dotum, 'NanumGothic', Arial, sans-serif;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    padding-right: 20px;
+    height: 14px;
+    background-image: url('../images/icon_q.png');
+    background-position: right center;
+    background-repeat: no-repeat;
+}
+#wrap.loginPage .keeping a.qBtn2:hover{
+    text-decoration: underline;
+}
+#wrap.loginPage .loginFormRight .squareBox .tapBtns{
+    float:left;
+    width: 375px;
+    border-bottom: none;
+    height: 44px;
+    background-color: white;
+    margin-bottom: 25px;
+
+}
+#wrap.loginPage .loginFormRight .squareBox .tapBtns button.tapBtn{
+    float:left;
+    width: 187.5px;
+    height: 44px;
+    background-color: #fbfbfb;
+    border-bottom:1px solid #d0d0d0;
+    color: #787878;
+    font-size: 16px;
+    text-align: center;
+}
+#wrap.loginPage .loginFormRight .squareBox .tapBtns button.tapBtn.on{
+    border-bottom:1px solid white;
+    background-color: white;
+    font-family: NanumGothicBold , "NanumGothicBold" , Dotum, "NanumGothic", Arial, sans-serif;
+    color: #333333;
+}
+#wrap.loginPage .loginFormRight .squareBox .tapBtns button:nth-child(1){
+    border-right: 1px solid #d0d0d0;
+}
+
+
+
+
+
+
+#wrap.loginPage .signUpBtn{
+    width: 328px;
+    padding-top: 10px;
+    height:25px;
+    border: 1px solid #d0d0d0;
+    border-top: 1px solid #80bce1;
+    background-color: #e8f6fb;
+    text-align: center;
+    float:left;
+    margin-top: -1px;
+}
+#wrap.loginPage .signInfoBtn{
+    color: white;
+    background-color: #1484c7;
+    text-align: center;
+    width: 163px;
+    height: 25px;
+    padding-top: 10px;
+    font-size: 14px;
+    float: left;
+    margin-right: 4px;
+}
+#wrap.loginPage .signCheckBtn{
+    color: white;
+    background-color: #1484c7;
+    text-align: center;
+    width: 163px;
+    height: 25px;
+    padding-top: 10px;
+    font-size: 14px;
+    float: left;
+}
+#wrap.loginPage .infoTxt{
+    color:#535353;
+    font-size: 12px;
+    width: 330px;
+    margin-top: 7px;
+    float:left;
+    font-family: NanumGothicBold , "NanumGothicBold" , Dotum, "NanumGothic", Arial, sans-serif;
+}
+#wrap.loginPage .loginFormRight .keeping{
+    font-size: 12px;
+    font-family:  NanumGothicBold , "NanumGothicBold" , Dotum, "NanumGothic", Arial, sans-serif;
+}
+#wrap.loginPage .loginFormRight .keeping label{
+    margin:0 15px 0 5px;
+}
+#wrap.loginPage .loginForm .helpTxt{
+    width: 73px;
+    height: 21px;
+    padding-top: 7px;
+    background-color: #d0d0d0;
+    border: 1px solid #bebebe;
+    text-align: center;
+    margin-top: 8px;
+    font: 14px NanumGothicBold , "NanumGothicBold" , Dotum, "NanumGothic", Arial, sans-serif;
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+}
+.bottomTxt{
+    position: absolute;
+    bottom: -15px;
+    left: 0px;
+    color: #838383;
+}
+
+
+/*로그인 페이지 sso 불능*/
+#wrap.loginType1{
+
+}
+#wrap.loginType1 #content{
+    padding-top: 30px;
+    height: 560px;
+    width: 1250px;
+}
+
+#wrap.loginType1 .loginTitle {
+    margin: 0 auto 40px;
+    width: 564px;
+}
+
+#wrap.loginType1 #panelWrap .loginForm{
+    height: 240px;
+    width: 460px;
+    position: relative;
+}
+#wrap.loginType1 #panelWrap .loginForm.h_170{
+    height:170px
+}
+#wrap.loginType1 #panelWrap .loginForm .submit{
+    position: absolute;
+    top:12px;
+    right: 0px;
+}
+#wrap.loginType1 #panelWrap .loginTitle{
+    margin-top: 50px;
+}
+
+#wrap.loginType1 #panelWrap{
+    background-image: url('../images/logInBgP.png');
+    background-repeat: repeat-x;
+    background-position: 0 0;
+}
+#wrap.loginType1 #panelWrap #content{
+    padding-top:30px;
+    height:488px;
+    width: 1250px;
+}
+#wrap.loginType1 .buttonLayer .T_btnLayer{
+    margin-left:430px;
+}
+#wrap.loginType1 .loginTitle{
+    width: 1250px;
+    margin: 0 auto;
+}
+#wrap.loginType1 .loginTitle p{
+    text-align: center;
+    width: 1250px;
+    font-family: NanumGothicBold , "NanumGothicBold" , Dotum, "NanumGothic", Arial, sans-serif;
+    font-size: 24px;
+    margin: 10px 0 40px;
+    color:#404040;
+}
+#wrap.loginType1 .loginForm{
+    margin : 0 auto;
+    width:720px;
+    height: 430px;
+}
+#wrap.loginType1 .loginForm dd{
+    width: 321px;
+    height: 65px;
+    background-image: url('../images/loginInputBg.png');
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    float: left;
+    margin-right: 10px;
+}
+#wrap.loginType1 .loginForm .submit{
+    float:left;
+}
+#wrap.loginType1 .loginForm .submit{
+    float:right;
+}
+
+#wrap.loginType1 .loginForm dd input{
+    margin: 15px 0 0 30px;
+    height: 35px;
+    width: 250px;
+    border: none;
+    font:13px "NanumGothicBold", NanumGothicBold, Dotum, "NanumGothic", Arial, sans-serif;
+}
+#wrap.loginType1 .loginForm .keeping{
+    float: left;
+    margin: 10px 10px 10px 20px;
+}
+#wrap.loginType1 .loginForm .keeping input{
+    margin-right: 5px;
+    float:left;
+    margin-top: 3px;
+}
+#wrap.loginType1 .loginForm .keeping label{
+    margin-right: 10px;
+    float:left;
+}
+#wrap.loginPage .loginFormTap dl{
+    float: left;
+    width: 178px;
+}
+#wrap.loginPage .loginFormTap input[type=text] , #wrap.loginPage .loginFormTap input[type=password]{
+    width: 178px;
+    height: 30px;
+    border: 1px solid #aaaaaa;
+    float: left;
+}
+#wrap.loginPage .loginFormTap input[type=password]{ border-top: none; }
+#wrap.loginPage .loginFormTap .btnLayer{
+    float:left;
+    width: 153px;
+    height: 63px;
+    background-image: url('../images/lnb_arrowL4X6.png');
+    background-position: center center;
+    background-repeat: no-repeat;
+    margin-left: 15px;
+}
+#wrap.loginPage .loginFormTap .btnLayer .btnSquare{
+    width: 70px;
+    height: 63px;
+    background-color: #bac0c3;
+    float: left;
+    font-family: NanumGothicBold , "NanumGothicBold" , Dotum, "NanumGothic", Arial, sans-serif;
+    font-size: 14px;
+    color:white;
+}
+#wrap.loginPage .loginFormTap .btnLayer .btnSquare:nth-child(1){
+    margin-right: 13px;
+}
+#wrap.loginPage .loginFormTap .btnLayer .btnSquare.on{
+    background-color: #1484c7;
+}
+.helpTxt{
+    position: absolute;
+    bottom: -15px;
+    right: 0px;
+}
+/*
+#wrap.loginPage .loginFormTap input[type=text]{
+    width: 247px;
+    height: 30px;
+    border: 1px solid #aaaaaa;
+    float: left;
+}*/
+
+
+#panelFooter{
+    width: 100%;
+    position: relative;
+    float: left;
+}
+#panelFooter{
+	height: 95px;
+    background: url('../images/footerBg.png') repeat 0 0;
+}
+
+#panelFooter .footer_wrap{
+    width: 1250px;
+    margin: 0 auto;
+    color: #d7d7d7;
+}
+
+#panelFooter .footer_wrap p.footLogo{float:left;margin-top:23px;}
+#panelFooter .footer_wrap address,
+#panelFooter .footer_wrap p{float:left;margin-left:33px;}
+#panelFooter .footer_wrap address{margin:25px 0 5px 33px;}
+
+
+
+.T_btnLayer{
+    margin : 10px 0;
+}
+.T_btnLayer button , .T_btnLayer a{
+    float:left;
+    text-align: center;
+}
+.T_btnLayer.ab{position: absolute;}
+.T_btnLayer.fl{float: left; clear: both;}
+.T_btnLayer.fr{float: right; clear: both;}
+.T_btnLayer.ab{position: absolute;}
+.T_btnLayer.n_m{margin: 0;}
+.T_btnLayer.mt_5{margin-top: 5px;}
+.T_btnLayer.mt_2{margin-top: 2px;}
+.T_btnLayer.cn{clear: none ! important;}
+.T_btnLayer.mr_25{margin-right: 25px;}
+.T_btnLayer.mt_22{margin-top: 22px;}
+.T_btnLayer.ml_10{margin-top: 10px;}
+
+/*기본 스타일*/
+button.whiteGray , button.grayBtn , button.blueBtn{
+    font-family:"NanumGothic", NanumGothic, Dotum, "NanumGothic", Arial, sans-serif;
+    margin-left:3px;
+    margin-right:2px;
+    float:left;
+}
+.T_btnLayer a.whiteGray , .T_btnLayer a.grayBtn , .T_btnLayer a.blueBtn{
+    font-family:"NanumGothic", NanumGothic, Dotum, "NanumGothic", Arial, sans-serif;
+    margin-left:3px;
+    margin-right:2px;
+    float:left;
+}
+/*하단 위치 스타일*/
+.T_btnLayer.bt_L{
+    position:absolute;
+    bottom: 3px;
+    left: 3px;
+}
+.T_btnLayer.bt_R{
+    position:absolute;
+    bottom: 3px;
+    right: 3px;
+}
+/*사이즈*/
+.T_btnLayer a.L ,button.L{
+    padding:7px 21px 6px;
+    font-size:13px;
+    /*ie hack padding bug fix*/
+    padding:5px 21px 5px\0;
+}
+.T_btnLayer a.M ,button.M{
+    padding:5px 10px;
+    font-size:12px;
+    /*ie hack padding bug fix*/
+    padding:4px 10px\0;
+}
+.T_btnLayer a.MM.grayBtn , button.MM.grayBtn{
+    padding : 10px 25px;
+    font-size:12px;
+    border-radius: 1px;
+    margin: 7px 10px 0 0;
+    /*ie hack padding bug fix*/
+    padding : 8px 23px\0;
+}
+.T_btnLayer a.S , button.S{
+    padding:3px 15px;
+    /*ie hack padding bug fix*/
+    padding:1px 15px\0;
+}
+/*타입 아이콘*/
+.T_btnLayer a.ico , button.ico{
+    padding:6px 8px;
+    /*ie hack padding bug fix*/
+    padding:5px 8px\0;
+}
+.T_btnLayer a.ico img , button.ico img{
+    margin-right:3px;
+    width:15px;
+    height:14px;
+}
+/*사각형 스타일*/
+.T_btnLayer a.square , button.square{
+    padding:2px;
+}
+/*컬러 스타일*/
+/*블루*/
+.T_btnLayer a.blueBtn , button.blueBtn{
+    border:1px solid #016CAC;
+    color:white;
+    background-color:#017AC3;
+    background-image: url('../../images/template_ico_right_arrow.png');
+    background-repeat: no-repeat;
+    background-position: right center;
+}
+.T_btnLayer a.blueBtn:hover , .T_btnLayer a.blueBtn.on,
+button.blueBtn:hover , button.blueBtn.on{
+    border:1px solid #0049b4;
+    background-color:#0055d1;
+}
+/*gray*/
+.T_btnLayer a.grayBtn,
+button.grayBtn{
+    border:1px solid #666666;
+    color:white;
+    background-color: #666666;
+    border-radius: 3px;
+}
+.T_btnLayer a.grayBtn:hover , .T_btnLayer a.grayBtn.on,
+button.grayBtn:hover , button.grayBtn.on{
+    background-color:#292929;
+    border:1px solid #1b1b1b;
+}
+/*whiteGray*/
+.T_btnLayer a.whiteGray, button.whiteGray{
+    border:1px solid #c6c6c6;
+    color:#666666;
+    background-color: #d9d9d9;
+    border-radius: 5px;
+}
+.T_btnLayer a.whiteGray:hover , .T_btnLayer a.whiteGray.on,
+button.whiteGray:hover , button.whiteGray.on{
+    background-color:#ffffff;
+    border:1px solid #c6c6c6;
+}
+/*게시판 버튼*/
+.T_btnLayer a.iconWhite , button.iconWhite{
+    background-color: white;
+    border:1px solid #ccc;
+    width: 68px;
+    height: 23px;
+    text-align: center;
+    border-radius: 3px;
+    margin-left: 5px;
+    text-indent: 15px;
+    background-repeat: no-repeat;
+    background-position: 9px center;
+    color:#555555;
+}
+.T_btnLayer a.iconWhite.type1, button.iconWhite.type1{
+    background-image: url('../../images/upArrowIcon.png');
+}
+.T_btnLayer a.iconWhite.type2, button.iconWhite.type2{
+    background-image: url('../../images/downArrowIcon.png');
+}
+.T_btnLayer a.iconWhite.type3 , button.iconWhite.type3{
+    background-image: url('../../images/printIcon.png');
+    background-position: 9px 5px;
+    width: 58px;
+    text-indent: 15px;
+}
+
+.T_btnLayer a:hover{
+    text-decoration: none ! important;
+}

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * sqlmap.ipro.sytm
+ * IproSytmMssgeMngeMapper.xml
+ * 
+ * @Author : jandi_Eun
+ * @Date   : 2018. 2. 28.
+ * 
+ -->
+<mapper namespace="com.eunwoosoft.ipro.sytm.dao.IproSytmMssgeMngeDao">
+
+	<select id="selectMssgeLogListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="mssgeLogList"/>
+			<include refid="mssgeLogListWhere"/>
+		) T1
+		WHERE 1 = 1
+ 		ORDER BY REG_DT DESC
+ 		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<select id="selectMssgeLogListTotCnt" resultType="int">
+ 		SELECT COUNT(1) FROM (
+			<include refid="mssgeLogList"/>
+			<include refid="mssgeLogListWhere"/>
+		) T1
+ 	</select>
+	
+	<sql id="mssgeLogList">
+        SELECT MSG_SN
+                  , MSG_CNTN
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+          FROM T_MM_MSG_FORM
+	</sql>
+	
+	<sql id="mssgeLogListWhere">
+		<where>
+			AND DEL_AT = 'N'
+			<!-- <if test='P_MSG_SECD_S != null and P_MSG_SECD_S != "" '>
+				AND MSG_SECD = #{P_MSG_SECD_S}
+			</if> -->
+			<if test='P_MSG_CNTN_S != null and P_MSG_CNTN_S != "" '>
+				AND MSG_CNTN LIKE '%'||#{P_MSG_CNTN_S}||'%'
+			</if>
+		</where>
+	</sql>
+	
+	
+	<select id="selectMssgeLogDetail" resultType="dataEntity">
+        SELECT MSG_SN
+                  , MSG_CNTN
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+          FROM T_MM_MSG_FORM	
+       WHERE 1=1
+       <if test='P_MSG_SN != null and P_MSG_SN != "" '>
+			AND MSG_SN = #{P_MSG_SN}
+		</if>
+	</select>
+	
+</mapper>

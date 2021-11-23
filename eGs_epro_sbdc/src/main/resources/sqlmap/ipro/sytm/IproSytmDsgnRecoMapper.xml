@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- -->
+<mapper namespace="com.eunwoosoft.ipro.sytm.dao.IproSytmDsgnRecmDao">
+
+	<select id="selectDsgnRecmListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause" />
+			SELECT * FROM (
+				<include refid="dsgnRecmList" />
+				<include refid="dsgnRecmWhere" />
+			ORDER BY REG_DT, RECM_ID
+			) T1
+			WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause" />
+	</select>
+
+	<select id="selectDsgnRecmListTotCnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="dsgnRecmList" />
+			<include refid="dsgnRecmWhere" />
+		ORDER BY REG_DT, RECM_ID 
+		) T1
+		WHERE 1 = 1
+	</select>
+
+
+	<sql id="dsgnRecmList">
+        SELECT 
+        		CD_ID
+        		, CD_DTL_ID
+        		, CD_NM
+        		, CD_DTL_NM
+        		, ORD_SN
+        		, USE_YN
+        		, RMK
+        		<!-- , ETC_VAL1
+        		, F_CDVAL_INQIRE('CONT_SECD', ETC_VAL1) AS CONT_SECD_NM
+        		, ETC_VAL2
+        		, ETC_VAL3
+        		, ETC_VAL4
+        		, ETC_VAL5
+        		, ETC_VAL6
+        		, ETC_VAL7
+        		, ETC_VAL8 -->
+        		, ETC_VAL9 AS RECM_ID
+        		, ETC_VAL10 AS FILE_GRP_NO
+        		, REGR_ID
+        		, REGR_NM
+        		, REG_DT
+        		, DEL_AT
+           FROM T_MM_CODE_MST
+	</sql>
+
+	<sql id="dsgnRecmWhere">
+		<where>
+			1=1
+			AND DEL_AT = 'N'
+			AND CD_ID = #{P_CD_ID, jdbcType=VARCHAR}
+			<if test='P_CD_DTL_ID_S != null and P_CD_DTL_ID_S != "" '>
+				AND CD_DTL_ID = #{P_CD_DTL_ID_S}
+			</if>
+			<if test='P_CD_DTL_NM_S != null and P_CD_DTL_NM_S != "" '>
+				AND CD_DTL_NM LIKE '%' || #{P_CD_DTL_NM_S} || '%'
+			</if>
+		</where>
+	</sql>
+
+	<insert id="insertDsgnRecmMst" useGeneratedKeys="true" keyProperty="P_CD_DTL_ID">
+		<selectKey resultType="String" keyProperty="P_CD_DTL_ID" order="BEFORE">
+			SELECT 	NVL(MAX(TO_NUMBER(CD_DTL_ID)),0)+1 AS CD_DTL_ID
+			FROM T_MM_CODE_MST
+			WHERE CD_ID =  #{P_CD_ID, jdbcType=VARCHAR}
+		</selectKey>
+        INSERT INTO T_MM_CODE_MST (
+		                  CD_ID
+		        		, CD_DTL_ID
+		        		, CD_NM
+		        		, CD_DTL_NM
+		        		, ORD_SN
+		        		, USE_YN
+		        		<!-- , ETC_VAL1
+		        		, ETC_VAL2
+		        		, ETC_VAL3
+		        		, ETC_VAL4
+		        		, ETC_VAL5
+		        		, ETC_VAL6
+		        		, ETC_VAL7
+		        		, ETC_VAL8 -->
+		        		, ETC_VAL9
+		        		, ETC_VAL10
+		                 <include refid="ComRegr.RegrColumnClause"/>
+        ) VALUES (
+		                    #{P_CD_ID, jdbcType=VARCHAR}
+		                  , #{P_CD_DTL_ID , jdbcType=VARCHAR}
+		                  , #{P_CD_NM, jdbcType=VARCHAR}
+		                  , #{P_CD_DTL_NM, jdbcType=VARCHAR}
+		                  , #{P_CD_DTL_ID, jdbcType=VARCHAR}
+		                  , #{P_USE_YN, jdbcType=VARCHAR} 
+		                <!--   , #{P_CONT_SECD, jdbcType=VARCHAR} 
+		                  , #{P_CONT_MTCD, jdbcType=VARCHAR} 
+		                  , #{P_ESTT_PRCE_ST, jdbcType=VARCHAR} 
+		                  , #{P_ESTT_PRCE_END, jdbcType=VARCHAR} 
+		                  , #{P_EMRG_YN, jdbcType=VARCHAR}  -->
+		                  , #{P_RECM_ID, jdbcType=VARCHAR} 
+		                  , #{atchFileGroupNo, jdbcType=VARCHAR}
+		                  <include refid="ComRegr.RegrValueClause"/>
+		)
+	</insert>
+	
+	<select id="selectDsgnRecmDetail" resultType="dataEntity" >
+       SELECT 
+        		CD_ID
+        		, CD_DTL_ID
+        		, CD_NM
+        		, CD_DTL_NM
+        		, ORD_SN
+        		, USE_YN
+        		, RMK
+        		<!-- , ETC_VAL1
+        		, F_CDVAL_INQIRE('CONT_SECD', ETC_VAL1) AS CONT_SECD_NM
+        		, ETC_VAL2
+        		, F_CDVAL_INQIRE('CONT_SECD', ETC_VAL2) AS CONT_MTCD_NM
+        		, ETC_VAL3
+        		, ETC_VAL4
+        		, ETC_VAL5
+        		, ETC_VAL6
+        		, ETC_VAL7
+        		, ETC_VAL8 -->
+        		, ETC_VAL9 AS RECM_ID
+        		, ETC_VAL10 AS FILE_GRP_NO
+        		, REGR_ID
+        		, REGR_NM
+        		, REG_DT
+        		, DEL_AT
+           FROM T_MM_CODE_MST
+           WHERE 1 = 1
+           AND DEL_AT = 'N'
+           AND CD_ID = #{P_CD_ID, jdbcType=VARCHAR}
+           AND CD_DTL_ID = #{P_CD_DTL_ID, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectDsgnRecmFileList" resultType="dataEntity">
+		SELECT ROWNUM AS RNUM,
+					A.CD_DTL_ID,
+			        A.FILE_GRP_NO,
+			        A.FILE_SN, 
+			        A.SV_FILE_NM,
+			        A.FILE_SZ,
+			        A.FILE_DOC_NM,
+			        A.SYS_FILE_NM,
+			        A.FILE_LCTN
+		FROM 
+			(
+				SELECT A.CD_DTL_ID,
+			       A.ETC_VAL10 AS FILE_GRP_NO,
+			       B.FILE_SN,
+			       B.SV_FILE_NM,
+			       B.FILE_SZ,
+			       B.FILE_DOC_NM,
+			       B.SYS_FILE_NM,
+			       B.FILE_LCTN
+				FROM T_MM_CODE_MST A, T_MM_FILE_MST B
+				WHERE A.ETC_VAL10 = B.FILE_GRP_NO
+				AND A.DEL_AT ='N'
+				AND B.DEL_AT ='N'
+				AND A.CD_DTL_ID = #{P_CD_DTL_ID , jdbcType=VARCHAR}
+				ORDER BY A.REG_DT , B.FILE_SN
+			) A
+	</select>
+	
+	<update id="updateDsgnRecmMst">
+        UPDATE T_MM_CODE_MST
+             SET CD_DTL_NM = #{P_CD_DTL_NM, jdbcType=VARCHAR}
+                 <!-- , ETC_VAL1 = #{P_CONT_SECD, jdbcType=VARCHAR}
+                 , ETC_VAL2 = #{P_CONT_MTCD, jdbcType=VARCHAR}
+                 , ETC_VAL3 = #{P_ESTT_PRCE_ST, jdbcType=VARCHAR}
+                 , ETC_VAL4 = #{P_ESTT_PRCE_END, jdbcType=VARCHAR}
+                 , ETC_VAL5 = #{P_EMRG_YN, jdbcType=VARCHAR} -->
+                 , ETC_VAL9 = #{P_RECM_ID, jdbcType=VARCHAR}
+                 , ETC_VAL10 = #{P_FILE_GRP_NO, jdbcType=VARCHAR}
+                <include refid="ComRegr.ModrSetClause"/>
+       WHERE CD_ID = #{P_CD_ID, jdbcType=VARCHAR}
+       AND CD_DTL_ID =  #{P_CD_DTL_ID, jdbcType=VARCHAR}
+       AND DEL_AT = 'N'
+       AND USE_YN = 'Y'
+	</update>
+	
+	<update id="updateDsgnRecmFileDel">
+		UPDATE	T_MM_FILE_MST T1 
+		     SET	MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+		     		, DEL_AT = 'Y'
+		WHERE 	1=1
+		AND FILE_GRP_NO  = #{P_FILE_GRP_NO, jdbcType =VARCHAR}
+		<if test='delList != null and delList != "" '>
+			AND		T1.FILE_SN IN ( 
+			<foreach separator="," item="fileSn"  index="index" collection="delList">
+						#{fileSn}
+			</foreach>
+			)
+		</if>
+	</update>
+
+</mapper> 

@@ -1,0 +1,636 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eunwoosoft.opro.estm.dao.OproEstmMngeDao">
+
+ 	  <!-- 
+   	 * <pre>
+     * 1. 개요 : 견적접수 목록조회
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : estiMngeRegstrListInqireWithPgng
+	 * @date : 2018. 03. 05
+	 * @author : 은우소프트 홍찬일
+     * @history : 
+     *  ====================================================================
+     *  변경일             		작성자                     		변경내용  
+     *  ====================================================================
+	 *	2018. 03. 05.		  은우소프트 홍찬일	  				최초 작성 
+     *  ====================================================================   
+	-->
+	<select id="estiMngeRegstrListInqireWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="estiMngeRegstrList"/>
+			<include refid="estiMngeRegstrListWhere"/>
+			ORDER BY ANNC_DT DESC, BIDC_SBMT_ENDT DESC, ANNC_NO DESC
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<select id="estiMngeRegstrListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="estiMngeRegstrList"/>
+			<include refid="estiMngeRegstrListWhere"/>
+		) T1
+		WHERE 1 = 1
+	</select>
+
+	<sql id="estiMngeRegstrList">
+        SELECT * FROM	(
+            <!-- 소액견적_공개 -->
+            SELECT	BM.ANNC_NO
+						, BM.ANNC_NGR
+						, BR.ROUND_NO
+						, BM.BID_PSCD
+						, CASE
+							WHEN	BM.BID_PSCD = 'PF20'
+							THEN		
+								CASE
+									WHEN	( TO_DATE(BR.BIDC_SBMT_ENDT,'yyyyMMddHH24MISS') > SYSDATE )	
+									THEN		F_CDVAL_INQIRE('BID_PSCD', BM.BID_PSCD)
+									ELSE		'공고마감'
+								END	
+							ELSE		F_CDVAL_INQIRE('BID_PSCD', BM.BID_PSCD)
+						  END AS BID_PSCD_NM
+						, BM.CONT_SECD
+						, F_CDVAL_INQIRE('CONT_SECD', BM.CONT_SECD) AS CONT_SECD_NM
+						, BM.BID_NM
+						, BR.ANNC_DT
+						, TO_CHAR(TO_DATE(BR.ANNC_DT, 'yyyyMMddhh24miss'), 'yyyy-MM-dd') AS ANNC_DT_F
+						, BM.CONT_MTCD
+						, F_CDVAL_INQIRE('CONT_MTCD', BM.CONT_MTCD) AS CONT_MTCD_NM
+						, BM.ESTT_AMT
+						, BR.BIDC_SBMT_STDT
+						, BR.BIDC_SBMT_ENDT
+						, ( SELECT COUNT(1)
+						       FROM T_BI_VEND_DTL
+						    WHERE ANNC_NO = BR.ANNC_NO
+						         AND ANNC_NGR = BR.ANNC_NGR
+						         AND ROUND_NO = BR.ROUND_NO
+						         AND VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+						         AND BID_TPI_SECD = 'OP03') AS BIDC_SBMT_CNT
+						, BM.REG_DT
+						, '' AS VEND_REG_NO
+			FROM		T_BI_MST BM
+						, T_BI_ROUND BR
+			WHERE	1=1
+			AND		BM.ANNC_NO = BR.ANNC_NO
+			AND		BM.ANNC_NGR = BR.ANNC_NGR
+			AND		BR.ROUND_NO = (SELECT MAX(ROUND_NO) FROM T_BI_ROUND WHERE ANNC_NO = BR.ANNC_NO AND ANNC_NGR = BR.ANNC_NGR)
+			AND		NVL(BM.DEL_AT, 'N') != 'Y'
+			AND		BM.BID_PSCD IN ('PF20', 'PF30')
+			AND		BM.BID_MTCD IN ('EST')
+			AND		BM.CONT_MTCD  = '10004'
+			AND		TO_CHAR(SYSDATE, 'yyyyMMddHH24MI') >= NVL(TO_CHAR(TO_DATE(BR.ANNC_DT, 'yyyyMMddhh24miss'), 'yyyyMMddHH24MI'),TO_CHAR(SYSDATE, 'yyyyMMddHH24MI'))
+                
+            UNION ALL
+            
+            <!-- 소액견적_지명 -->
+			SELECT	BM.ANNC_NO
+						, BM.ANNC_NGR
+						, BR.ROUND_NO
+						, BM.BID_PSCD
+						, CASE
+							WHEN	BM.BID_PSCD = 'PF20'
+							THEN		
+								CASE
+									WHEN	( TO_DATE(BR.BIDC_SBMT_ENDT,'yyyyMMddHH24MISS') > SYSDATE )	
+									THEN		F_CDVAL_INQIRE('BID_PSCD', BM.BID_PSCD)
+									ELSE		'공고마감'
+								END	
+							ELSE		F_CDVAL_INQIRE('BID_PSCD', BM.BID_PSCD)
+						  END AS BID_PSCD_NM	
+						, BM.CONT_SECD
+						, F_CDVAL_INQIRE('CONT_SECD', BM.CONT_SECD) AS CONT_SECD_NM
+						, BM.BID_NM
+						, BR.ANNC_DT
+						, TO_CHAR(TO_DATE(BR.ANNC_DT, 'yyyyMMddhh24miss'), 'yyyy-MM-dd') AS ANNC_DT_F
+						, BM.CONT_MTCD
+						, F_CDVAL_INQIRE('CONT_MTCD', BM.CONT_MTCD) AS CONT_MTCD_NM
+						, BM.ESTT_AMT
+						, BR.BIDC_SBMT_STDT
+						, BR.BIDC_SBMT_ENDT
+						, ( SELECT COUNT(1)
+						       FROM T_BI_VEND_DTL
+						    WHERE ANNC_NO = BR.ANNC_NO
+						        AND ANNC_NGR = BR.ANNC_NGR
+						        AND ROUND_NO = BR.ROUND_NO
+						        AND VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+						        AND BID_TPI_SECD = 'OP03') AS BIDC_SBMT_CNT
+						, BM.REG_DT
+						, BV.VEND_REG_NO
+			FROM		T_BI_MST BM
+						, T_BI_ROUND BR
+						, T_BI_VEND_MST BV
+			WHERE	1=1
+			AND		BM.ANNC_NO = BR.ANNC_NO
+			AND		BM.ANNC_NGR = BR.ANNC_NGR
+			AND		BM.ANNC_NO = BV.ANNC_NO(+)
+			AND		BM.ANNC_NGR = BV.ANNC_NGR(+)
+			AND		BR.ROUND_NO = (SELECT MAX(ROUND_NO) FROM T_BI_ROUND WHERE ANNC_NO = BR.ANNC_NO AND ANNC_NGR = BR.ANNC_NGR)
+			AND		NVL(BM.DEL_AT, 'N') != 'Y'
+			AND		BM.BID_PSCD IN ('PF20', 'PF30')
+			AND		BM.BID_MTCD IN ('EST')
+			AND		BM.CONT_MTCD  = '10005'
+			AND		TO_CHAR(SYSDATE, 'yyyyMMddHH24MI') >= NVL(TO_CHAR(TO_DATE(BR.ANNC_DT, 'yyyyMMddhh24miss'), 'yyyyMMddHH24MI'),TO_CHAR(SYSDATE, 'yyyyMMddHH24MI'))
+			AND		BV.VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+		)
+	</sql>
+	
+	<sql id="estiMngeRegstrListWhere">
+		<where>
+			<if test='P_BID_NM_S != null and P_BID_NM_S != "" '>
+				AND BID_NM LIKE '%'||#{P_BID_NM_S}||'%'
+			</if>
+			<if test='P_ANNC_NO_S != null and P_ANNC_NO_S != "" '>
+				AND ANNC_NO LIKE '%'||#{P_ANNC_NO_S}||'%'
+			</if>
+			<if test='P_CONT_SECD_S != null and P_CONT_SECD_S != "" '>
+				AND CONT_SECD = #{P_CONT_SECD_S}
+			</if>
+			<if test='P_SBID_MTCD_S != null and P_SBID_MTCD_S != "" '>
+				AND SBID_MTCD = #{P_SBID_MTCD_S}
+			</if>
+			<if test='P_BID_PSCD_S != null and P_BID_PSCD_S != "" '>
+				AND BID_PSCD = #{P_BID_PSCD_S}
+			</if>
+			<if test='P_APPR_STCD_S != null and P_APPR_STCD_S != "" '>
+				AND APPR_STCD = #{P_APPR_STCD_S}
+			</if>
+			<if test='P_ANNC_STDT_S != null and P_ANNC_STDT_S != "" '>
+				AND TO_CHAR(TO_DATE(ANNC_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') >= #{P_ANNC_STDT_S}
+			</if>
+			<if test='P_ANNC_ENDT_S != null and P_ANNC_ENDT_S != "" '>
+				AND TO_CHAR(TO_DATE(ANNC_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') &lt;= #{P_ANNC_ENDT_S}
+			</if>
+			<if test='P_CHRGR_ID_S != null and P_CHRGR_ID_S != "" '>
+				AND CHRGR_ID = #{P_CHRGR_ID_S}
+			</if>
+			<if test='P_FIRST_S != null and P_FIRST_S != "" '>
+				AND BID_PSCD = 'PF20'
+			</if>
+		</where>
+	</sql>
+	
+	<!-- 
+   	 * <pre>
+     * 1. 개요 : 견적결과 목록조회
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : estiMngeRsltListInqireWithPgng
+	 * @date : 2018. 03. 05
+	 * @author : 은우소프트 홍찬일
+     * @history : 
+     *  ====================================================================
+     *  변경일             		작성자                     		변경내용  
+     *  ====================================================================
+	 *	2018. 03. 05.		  은우소프트 홍찬일	  				최초 작성 
+     *  ====================================================================   
+	-->
+	<select id="estiMngeRsltListInqireWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="estiMngeRsltList"/>
+			<include refid="estiMngeRsltListWhere"/>
+			ORDER BY ANNC_NO DESC, ANNC_NGR DESC
+		) T1
+		WHERE 1=1
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<select id="estiMngeRsltListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="estiMngeRsltList"/>
+			<include refid="estiMngeRsltListWhere"/>
+		) T1
+		WHERE 1 = 1
+	</select>
+	
+	<sql id="estiMngeRsltList">
+		SELECT * FROM 
+		(
+			SELECT	BIPLMA.ANNC_NO
+						, BIPLMA.ANNC_NGR
+						, BITI.ROUND_NO
+						, BIPLMA.BID_NM
+						, BIPLMA.CONT_MTCD
+						, F_CDVAL_INQIRE('CONT_MTCD', BIPLMA.CONT_MTCD) AS CONT_MTCD_NM
+						, BIPLMA.CONT_SECD
+						, F_CDVAL_INQIRE('CONT_SECD', BIPLMA.CONT_SECD) AS CONT_SECD_NM
+						, BIPLMA.BID_PSCD
+						, F_CDVAL_INQIRE('BID_PSCD', BIPLMA.BID_PSCD) AS BID_PSCD_NM
+						, BIPLMA.SBID_MTCD
+						, F_CDVAL_INQIRE('SBID_MTCD', BIPLMA.SBID_MTCD) AS SBID_MTCD_NM
+						, BITI.ANNC_DT
+						, BITI.OPNG_DT
+						, BIPLMA.CHRGR_NM
+			FROM 	T_BI_MST BIPLMA
+						,T_BI_ROUND BITI
+			WHERE 	BIPLMA.ANNC_NO = BITI.ANNC_NO
+			AND		BIPLMA.ANNC_NGR = BITI.ANNC_NGR
+			AND		BIPLMA.ANNC_NGR = ( SELECT MAX(ANNC_NGR) FROM T_BI_MST WHERE ANNC_NO = BIPLMA.ANNC_NO )		
+			AND		BITI.ROUND_NO = ( SELECT MAX(ROUND_NO) FROM T_BI_ROUND WHERE ANNC_NO = BIPLMA.ANNC_NO AND ANNC_NGR = BIPLMA.ANNC_NGR )		
+			AND		BIPLMA.BID_PSCD IN ( 'PF61', 'PF99' )
+			AND		BIPLMA.BID_MTCD IN ( 'EST' )
+		)
+		WHERE	1=1
+	</sql>
+	
+	<sql id="estiMngeRsltListWhere">
+		<if test='P_BID_NM_S != null and P_BID_NM_S != "" '>
+			AND BID_NM LIKE '%'||#{P_BID_NM_S}||'%'
+		</if>
+		<if test='P_ANNC_NO_S != null and P_ANNC_NO_S != "" '>
+			AND ANNC_NO LIKE '%'||#{P_ANNC_NO_S}||'%'
+		</if>
+		<if test='P_CONT_SECD_S != null and P_CONT_SECD_S != "" '>
+			AND CONT_SECD = #{P_CONT_SECD_S}
+		</if>
+		<if test='P_BID_PSCD_S != null and P_BID_PSCD_S != "" '>
+			AND BID_PSCD = #{P_BID_PSCD_S}
+		</if>
+		<if test='P_ANNC_STDT_S != null and P_ANNC_STDT_S != "" '>
+			AND TO_CHAR(TO_DATE(ANNC_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') >= #{P_ANNC_STDT_S}
+		</if>
+		<if test='P_ANNC_ENDT_S != null and P_ANNC_ENDT_S != "" '>
+			AND TO_CHAR(TO_DATE(ANNC_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') &lt;= #{P_ANNC_ENDT_S}
+		</if>
+	</sql>
+	
+	<!-- 
+   	 * <pre>
+     * 1. 개요 : 견적결과 목록조회
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectEstAnncDetail
+	 * @date : 2019. 03. 12
+	 * @author : 은우소프트 맹경열
+     * @history : 
+     *  ====================================================================
+     *  변경일             		작성자                     		변경내용  
+     *  ====================================================================
+	 *	2019. 03. 12.		  은우소프트 맹경열	  				최초 작성 
+     *  ====================================================================   
+	-->	
+	<select id="selectEstAnncDetail" resultType="dataEntity">
+		SELECT	A.ANNC_NO
+					, A.ANNC_NGR
+					, B.ROUND_NO
+					, A.BID_NM
+					, A.BID_MTCD
+					, F_CDVAL_INQIRE('BID_MTCD',A.BID_MTCD) AS BID_MTCD_NM 
+					, A.BID_PSCD
+					, F_CDVAL_INQIRE('BID_PSCD',A.BID_PSCD) AS BID_PSCD_NM 
+					, A.APPR_STCD
+					, F_CDVAL_INQIRE('APPR_STCD',A.APPR_STCD) AS APPR_STCD_NM
+					, A.CONT_SECD
+					, F_CDVAL_INQIRE('CONT_SECD',A.CONT_SECD) AS CONT_SECD_NM
+					, A.CONT_DECD
+					, F_CDVAL_INQIRE('CONT_DECD',A.CONT_DECD) AS CONT_DECD_NM
+					, A.CONT_MTCD
+					, F_CDVAL_INQIRE('CONT_MTCD',A.CONT_MTCD) AS CONT_MTCD_NM
+					, A.SBID_MTCD
+					, F_CDVAL_INQIRE('SBID_MTCD',A.SBID_MTCD) AS SBID_MTCD_NM
+					, A.ASSO_SPDM_CD
+					, F_CDVAL_INQIRE('ASSO_SPDM_CD',A.ASSO_SPDM_CD) AS ASSO_SPDM_CD_NM
+					, A.ESTPC_SECD
+					, F_CDVAL_INQIRE('ESTPC_SECD',A.ESTPC_SECD) AS ESTPC_SECD_NM
+					, A.SUM_RTCD
+					, F_CDVAL_INQIRE('SUM_RTCD',A.SUM_RTCD) AS SUM_RTCD_NM
+					, A.ELGB_LMT_SCR
+					, A.SBID_LWST_RT
+					, A.BASE_AMT
+					, A.ESTT_AMT
+					, FEBI_NUMTOKOR(A.ESTT_AMT) AS ESTT_AMT_KOR
+					, A.BID_RNG_CNTN
+					, A.BRFS_PLC_NM
+					, A.BRFS_DT
+					, A.CPDF_RT
+					, A.ITEM_DRCD
+					, F_CDVAL_INQIRE('ITEM_DRCD',A.ITEM_DRCD) AS ITEM_DRCD_NM
+					, A.DLGD_PLC_NM
+					, A.DLGD_TE_CNTN
+					, A.EMRG_YN
+					, FEBI_GET_CPRAT(A.EMRG_YN) AS EMRG_YN_NM
+					, A.OPNG_YN
+					, A.SBID_YN
+					, A.LT_NGR_YN
+					, A.G2B_NTFY_YN
+					, FEBI_GET_CPRAT(A.G2B_NTFY_YN) AS G2B_NTFY_YN_NM
+					, A.PRTC_QLF_CNTN
+					, A.CTFL_GTAMT_RT
+					, A.DFFL_GTAMT_RT
+					, A.PRCDC_SBMT_YN
+					, FEBI_GET_CPRAT(A.PRCDC_SBMT_YN) AS PRCDC_SBMT_YN_NM
+					, A.PRPDC_ESS_YN
+					, FEBI_GET_CPRAT(A.PRPDC_ESS_YN) AS PRPDC_ESS_YN_NM
+					, A.EMRG_BID_RSN
+					, A.ESTT_PRCE
+					, A.BID_BRFS_YN
+					, FEBI_GET_CPRAT(A.BID_BRFS_YN) AS BID_BRFS_YN_NM
+					, A.BID_BRFS_ATND_YN
+					, FEBI_GET_CPRAT(A.BID_BRFS_ATND_YN) AS BID_BRFS_ATND_YN_NM
+					, A.SITE_BRFS_YN
+					, FEBI_GET_CPRAT(A.SITE_BRFS_YN) AS SITE_BRFS_YN_NM
+					, A.SITE_BRFS_DT
+					, A.SITE_BRFS_PLC
+					, A.GTAMT_PYMT_TYP
+					, A.SMPR_BID_SECD
+					, F_CDVAL_INQIRE('SMPR_BID_SECD',A.SMPR_BID_SECD) AS SMPR_BID_SECD_NM
+					, A.ARA_LMT_CD
+					, F_CDVAL_INQIRE('ARA_LMT_CD',A.ARA_LMT_CD) AS ARA_LMT_CD_NM
+					, A.BTP_LMT_CD
+					, A.BTP_LMT_CD AS BTP_LMT_CD_NM
+					, A.ISTL_LMT
+					, A.DOC_NO
+					, A.AUTO_FBID_YN
+					, FEBI_GET_CPRAT(A.AUTO_FBID_YN) AS AUTO_FBID_YN_NM
+					, A.CONT_STDE
+					, A.CONT_ENDE
+					, A.CONT_TE
+					, A.BSNS_BDG_AMT
+					, A.ANNC_SECD
+					, F_CDVAL_INQIRE('ANNC_SECD',A.ANNC_SECD) AS ANNC_SECD_NM
+					, B.PRTC_APLY_ENDT
+					, B.ANNC_DT
+					, B.BIDC_SBMT_STDT
+					, B.BIDC_SBMT_ENDT
+					, B.PRPDC_SBMT_STDT
+					, B.PRPDC_SBMT_ENDT
+					, B.OPNG_DT
+					, A.OPNG_SYS_SECD
+					, F_CDVAL_INQIRE('OPNG_SYS_SECD',A.OPNG_SYS_SECD) AS OPNG_SYS_SECD_NM
+					, A.PLR_ESTPC_RNG_CD
+					, F_CDVAL_INQIRE('PLR_ESTPC_RNG_CD',A.PLR_ESTPC_RNG_CD) AS PLR_ESTPC_RNG_CD_NM
+					, A.UPR_8CNT_YN
+					, FEBI_GET_CPRAT(A.UPR_8CNT_YN) AS UPR_8CNT_YN_NM
+					, A.TNDR_AMT_STAX_YN
+					, FEBI_GET_CPRAT(A.TNDR_AMT_STAX_YN) AS TNDR_AMT_STAX_YN_NM
+					, A.UPRC_YN
+					, A.BID_GTAMT_RT
+					, A.BIDGR_AMT
+					, A.BIDGR_SECD
+					, F_CDVAL_INQIRE('BIDGR_SECD',A.BIDGR_SECD) AS BIDGR_SECD_NM
+					, CASE 
+						WHEN A.BIDGR_SECD = 'PAY_MMRD' 
+						THEN 'Y'
+						ELSE 'N' END AS EXMT_YN
+					, FEBI_GET_CPRAT
+						(	
+							CASE 
+								WHEN A.BIDGR_SECD = 'PAY_MMRD' 
+								THEN 'Y'
+								ELSE 'N' END
+						) AS EXMT_YN_NM
+					, A.IFC_ID
+					, A.TCHN_SCR_RT
+					, A.PRCE_SCR_RT
+					, A.ESTPC_UP_CNT
+					, A.OPNG_PLC_NM
+					, A.ELGB_ESTM_KDCD
+					, F_CDVAL_INQIRE('ELGB_ESTM_KDCD',A.ELGB_ESTM_KDCD) AS ELGB_ESTM_KDCD_NM
+					, A.SW_BSNS_OBJ_YN
+					, A.PVCT_CNVR_YN
+					, A.DTAC_TNDR_LMT_CNT
+					, A.MIN_DN_RT
+					, A.TNDR_PSBL_AMT
+					, A.ZERO_BID_PSBL_YN
+					, A.REGR_ID
+					, A.REG_DT
+					, A.DEL_AT
+					, A.PRCH_NO
+					, A.CHRGR_NM
+					, A.CHRGR_TEL_NO
+					, A.TCHN_CHRGR_NM
+					, A.TCHN_CHRGR_TEL_NO
+					, A.CHRGR_EMAL
+					, A.TCHN_CHRGR_EMAL
+					, A.RMK
+					
+					, C.BASE_ESTPC_AMT
+					, C.SCH_PRCE_AMT
+		FROM		T_BI_MST A
+					, T_BI_ROUND B
+					, T_BI_ESTC_MST C
+		WHERE	1=1
+		AND		A.ANNC_NO = B.ANNC_NO
+		AND		A.ANNC_NGR = B.ANNC_NGR
+		AND		B.ANNC_NO = C.ANNC_NO(+)
+		AND		B.ANNC_NGR = C.ANNC_NGR(+)
+		AND		B.ROUND_NO = C.ROUND_NO(+)
+		AND		B.ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR}
+		AND		B.ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER}
+		AND		B.ROUND_NO = #{P_ROUND_NO, jdbcType=INTEGER}
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰품목 목록 조회
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectEstPrdlstList
+	 * @date : 2019. 03. 12
+	 * @author : 은우소프트 맹경열
+     * @history : 
+     *  ====================================================================
+     *  변경일             		작성자                     		변경내용  
+     *  ====================================================================
+	 *	2019. 03. 12.		  은우소프트 맹경열	  				최초 작성 
+     *  ====================================================================   
+     -->
+	<select id="selectEstPrdlstList" resultType="dataEntity">
+		SELECT	ANNC_NO
+					, ANNC_NGR
+					, ITEM_SN
+					, ITEM_NO
+					, ITEM_NM
+					, STND_NM
+					, ITEM_UNCD
+					, ITEM_UNNM
+					, ITEM_QTY
+					, RQST_UNIT
+					, SCH_UNIT
+					, PRCE_UNCD
+					, PRCE_UNNM
+					, PCRQ_NO
+		FROM	T_BI_ITEM
+		WHERE	ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR}
+		AND		ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER}
+		ORDER BY ITEM_SN
+	</select>
+	
+	
+	<select id="estiMyMngeRegstrListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="estiMyMngeRegstrList"/>
+			<include refid="estiMngeRegstrListWhere"/>
+			ORDER BY ANNC_DT DESC, BIDC_SBMT_ENDT DESC, ANNC_NO DESC
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<select id="estiMyMngeRegstrListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="estiMyMngeRegstrList"/>
+			<include refid="estiMngeRegstrListWhere"/>
+		) T1
+		WHERE 1 = 1
+	</select>
+	
+	
+	<sql id="estiMyMngeRegstrList">
+	    SELECT * FROM (
+	        SELECT	A.ANNC_NO
+						, A.ANNC_NGR
+						, B.ROUND_NO
+						, A.CONT_SECD
+						, F_CDVAL_INQIRE('CONT_SECD', A.CONT_SECD) AS CONT_SECD_NM
+						, A.BID_NM
+						, A.BID_PSCD
+						, CASE
+							WHEN	A.BID_PSCD = 'PF20'
+							THEN		
+								CASE
+									WHEN	( TO_DATE(B.BIDC_SBMT_ENDT,'yyyyMMddHH24MISS') > SYSDATE )	
+									THEN		F_CDVAL_INQIRE('BID_PSCD', A.BID_PSCD)
+									ELSE		'공고마감'
+								END	
+							ELSE		F_CDVAL_INQIRE('BID_PSCD', A.BID_PSCD)
+						  END AS BID_PSCD_NM
+						, B.ANNC_DT
+						, A.CONT_MTCD
+						, F_CDVAL_INQIRE('CONT_MTCD', A.CONT_MTCD) AS CONT_MTCD_NM
+						, A.SBID_MTCD
+						, F_CDVAL_INQIRE('SBID_MTCD', A.SBID_MTCD) AS SBID_MTCD_NM
+						, A.CHRGR_NM
+						, B.BIDC_SBMT_STDT
+						, B.BIDC_SBMT_ENDT
+						, C.VEND_REG_NO
+						
+						, ( SELECT COUNT(1)
+						       FROM T_BI_VEND_DTL
+						    WHERE ANNC_NO = B.ANNC_NO
+						         AND ANNC_NGR = B.ANNC_NGR
+						         AND ROUND_NO = B.ROUND_NO
+						         AND VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+						         AND BID_TPI_SECD = 'OP03') AS BIDC_SBMT_CNT
+			FROM		T_BI_MST A
+						, T_BI_ROUND B
+						, T_BI_VEND_DTL C
+	        WHERE	1=1
+			AND		A.ANNC_NO = B.ANNC_NO
+			AND		A.ANNC_NGR = B.ANNC_NGR
+			AND		A.ANNC_NO = C.ANNC_NO
+			AND		A.ANNC_NGR = C.ANNC_NGR
+			AND		B.ROUND_NO = C.ROUND_NO
+			AND		B.ROUND_NO = (SELECT MAX(ROUND_NO) FROM T_BI_ROUND C WHERE C.ANNC_NO = A.ANNC_NO AND C.ANNC_NGR = A.ANNC_NGR)
+			AND		NVL(A.DEL_AT, 'N') != 'Y'
+			AND		A.BID_MTCD IN ('EST')
+			AND		A.CONT_MTCD = '10004'
+			AND		C.VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+			AND		C.BID_TPI_SECD = 'OP03'
+			AND		A.BID_PSCD IN ( 'PF20', 'PF30', 'PF50' )
+	
+	        UNION ALL
+	
+	        SELECT	A.ANNC_NO
+						, A.ANNC_NGR
+						, B.ROUND_NO
+						, A.CONT_SECD
+						, F_CDVAL_INQIRE('CONT_SECD', A.CONT_SECD) AS CONT_SECD_NM
+						, A.BID_NM
+						, A.BID_PSCD
+						, CASE
+							WHEN	A.BID_PSCD = 'PF20'
+							THEN		
+								CASE
+									WHEN	( TO_DATE(B.BIDC_SBMT_ENDT,'yyyyMMddHH24MISS') > SYSDATE )	
+									THEN		F_CDVAL_INQIRE('BID_PSCD', A.BID_PSCD)
+									ELSE		'공고마감'
+								END	
+							ELSE		F_CDVAL_INQIRE('BID_PSCD', A.BID_PSCD)
+						  END AS BID_PSCD_NM
+						, B.ANNC_DT
+						, A.CONT_MTCD
+						, F_CDVAL_INQIRE('CONT_MTCD', A.CONT_MTCD) AS CONT_MTCD_NM
+						, A.SBID_MTCD
+						, F_CDVAL_INQIRE('SBID_MTCD', A.SBID_MTCD) AS SBID_MTCD_NM
+						, A.CHRGR_NM
+						, B.BIDC_SBMT_STDT
+						, B.BIDC_SBMT_ENDT
+						, C.VEND_REG_NO
+						
+						, ( SELECT COUNT(1)
+						       FROM T_BI_VEND_DTL
+						    WHERE ANNC_NO = B.ANNC_NO
+						         AND ANNC_NGR = B.ANNC_NGR
+						         AND ROUND_NO = B.ROUND_NO
+						         AND VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+						         AND BID_TPI_SECD = 'OP03') AS BIDC_SBMT_CNT						
+			FROM		T_BI_MST A
+						, T_BI_ROUND B
+						, T_BI_VEND_MST C
+	        WHERE	1=1
+			AND		A.ANNC_NO = B.ANNC_NO
+			AND		A.ANNC_NGR = B.ANNC_NGR
+			AND		A.ANNC_NO = C.ANNC_NO
+			AND		A.ANNC_NGR = C.ANNC_NGR
+			AND		B.ROUND_NO = C.ROUND_NO
+			AND		B.ROUND_NO = (SELECT MAX(ROUND_NO) FROM T_BI_ROUND C WHERE C.ANNC_NO = A.ANNC_NO AND C.ANNC_NGR = A.ANNC_NGR)
+			AND		NVL(A.DEL_AT, 'N') != 'Y'
+			AND		A.BID_MTCD IN ('EST')
+			AND		A.CONT_MTCD = '10005'
+			AND		C.VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+			AND		A.BID_PSCD IN ( 'PF20', 'PF30', 'PF50' )
+	    )
+	</sql>
+	
+	
+	<select id="selectVendChrgrInfoDetail" resultType="dataEntity">
+        SELECT VEND_REG_NO
+                  , USR_SN
+                  , USR_NM
+                  , USR_ENM
+                  , TEL_NO
+                  , CP_NO
+                  , FX_NO
+                  , ZIP
+                  , ADDR_NM
+                  , ADDR_DENM
+                  , ADDR_ENM
+                  , EMAL_ADDR
+                  , USR_STCD
+                  , DEPT_NO
+                  , DEPT_NM
+                  , ODCD
+                  , ODNM
+                  , OPCD
+                  , OPNM
+                  , USR_TYCD
+                  , MNGR_YN
+                  , USE_YN
+                  , FNGR_REG_YN
+                  , LT_CONN_DT
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+                  , DLGT_YN
+           FROM T_CU_USER
+        WHERE 1=1
+            AND VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+            <if test='P_USR_SN != null and P_USR_SN != "" '>
+            AND USR_SN = #{P_USR_SN} 
+            </if>
+            AND DEL_AT = 'N'
+	</select>
+	
+</mapper>

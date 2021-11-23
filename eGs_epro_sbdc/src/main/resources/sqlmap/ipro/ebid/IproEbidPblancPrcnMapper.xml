@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eunwoosoft.ipro.ebid.dao.IproEbidPblancPrcnDao">	
+
+   		<select id="selectBidPblancPrcnListWithPgng" resultType="dataEntity">
+			<include refid="ComPgng.pgngHeaderClause"/>
+			SELECT * FROM (
+				<include refid="bidPblancPrcnList"/>
+				<include refid="bidPblancPrcnListWhere"/>
+				ORDER BY REG_DT DESC, ANNC_NO DESC, ANNC_NGR DESC
+			) T1
+			WHERE 1 = 1
+			<include refid="ComPgng.pgngTailClause"/>
+		</select>
+		
+   		<select id="selectBidPblancPrcnExcelList" resultType="dataEntity">
+   		 SELECT  ROWNUM AS RNUM, R1.* FROM (
+			SELECT * FROM (
+				<include refid="bidPblancPrcnList"/>
+				<include refid="bidPblancPrcnListWhere"/>
+				ORDER BY REG_DT DESC, ANNC_NO DESC, ANNC_NGR DESC
+				) T1
+		)R1
+		</select>
+		
+		<select id="selectBidPblancPrcnListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="bidPblancPrcnList"/>
+			<include refid="bidPblancPrcnListWhere"/>
+		) T1
+		WHERE 1 = 1		
+	</select>
+	
+	<sql id="bidPblancPrcnList">
+    SELECT * FROM	(
+        SELECT BM.ANNC_NO
+					,BM.ANNC_NGR
+					,BR.ROUND_NO
+					,BM.ANNC_WAIT_NO
+					,BM.ANNC_WAIT_NGR
+					,BM.BID_NM
+					,BM.BID_PSCD
+					,BM.CONT_SECD
+					,F_CDVAL_INQIRE('CONT_SECD', BM.CONT_SECD) AS CONT_SECD_NM
+					,F_CDVAL_INQIRE('BID_PSCD', BM.BID_PSCD) AS BID_PSCD_NM
+					,BM.SBID_MTCD
+					,F_CDVAL_INQIRE('SBID_MTCD', BM.SBID_MTCD) AS SBID_MTCD_NM
+					,BM.ASSO_SPDM_CD
+					,F_CDVAL_INQIRE('ASSO_SPDM_CD', BM.ASSO_SPDM_CD) AS ASSO_SPDM_CD_NM
+					,BM.ESTPC_SECD
+					,F_CDVAL_INQIRE('ESTPC_SECD', BM.ESTPC_SECD) AS ESTPC_SECD_NM
+					,BM.CONT_MTCD
+					,F_CDVAL_INQIRE('CONT_MTCD', BM.CONT_MTCD) AS CONT_MTCD_NM
+					,BM.ELGB_LMT_SCR
+					,BM.SBID_LWST_RT
+					,BM.ESTT_AMT
+					,BM.BID_RNG_CNTN
+					,BM.CHRGR_ID
+					,BM.CHRGR_NM
+					,BM.BRFS_PLC_NM
+					,BM.BRFS_DT
+					,BM.DLGD_PLC_NM
+					,BM.PRCH_RQR_NO
+					,BM.EMRG_YN
+					,BM.PRTC_QLF_CNTN
+					,BM.RMK
+					,BM.REGR_ID
+					,BM.REGR_NM
+					,BM.REG_DT
+					,BM.MODR_ID
+					,BM.MODR_NM
+					,BM.MOD_DT
+					,BM.CONN_IP
+					,BM.DEL_AT
+					,BM.ESTT_PRCE
+					,BM.BID_BRFS_YN
+					,BM.CONT_TE
+					,BM.REAL_ANNC_NO
+					,BM.ACPT_DE
+					,BM.ARA_DEPT_CD
+					,F_CDVAL_INQIRE('ARA_DEPT_CD', BM.ARA_DEPT_CD) AS ARA_DEPT_CD_NM
+					,BM.RQR_DE
+					,BM.RQR_DEPT_NO
+					,BM.RQR_DEPT_NM
+					,BM.RQR_CHRGR_ID
+					,BM.RQR_CHRGR_NM
+					,BM.PRCH_DEPT_NO
+					,BM.PRCH_DEPT_NM
+					,BM.BF_STND_OPEN_YN
+					,BM.BF_STND_OPEN_TE
+					,BM.PRCH_CHRG_SECD
+					,F_CDVAL_INQIRE('PRCH_CHRG_SECD', BM.PRCH_CHRG_SECD) AS PRCH_CHRG_SECD_NM
+					,BM.MNGR_CHRGR_ID
+					,BM.MNGR_CHRGR_NM
+					,BM.CHCK_CHRGR_ID
+					,BM.CHCK_CHRGR_NM
+					,BM.PVCT_RSN_NO
+					,BM.PRVT_CONT_RSN
+					,BM.ETC_ITEM 
+           FROM T_BI_MST BM
+                  , T_BI_ROUND BR
+      	  WHERE 1=1
+            AND BM.ANNC_NGR = ( SELECT MAX(ANNC_NGR) FROM T_BI_MST WHERE ANNC_NO = BM.ANNC_NO )
+            AND BM.ANNC_NO = BR.ANNC_NO
+            AND BM.ANNC_NGR = BR.ANNC_NGR
+            AND BR.ROUND_NO = (SELECT MAX(ROUND_NO) FROM T_BI_ROUND WHERE ANNC_NO = BR.ANNC_NO AND ANNC_NGR = BR.ANNC_NGR)
+            AND NVL(BM.DEL_AT, 'N') != 'Y'
+            AND BM.BID_PSCD IN (
+	            					SELECT CD_DTL_ID FROM T_MM_CODE_MST
+									WHERE 1=1
+									AND CD_ID = 'BID_PSCD'
+									AND ETC_VAL2 = 'C'
+								)
+			<!-- <if test='P_DEPT_NO != null and P_DEPT_NO != "" '>
+				AND		BM.PRCH_DEPT_NO = #{P_DEPT_NO, jdbcType=VARCHAR, javaType=String}
+			</if> -->
+		)
+		WHERE 1=1
+	</sql>
+	 
+	<sql id="bidPblancPrcnListWhere">
+		<if test='P_ARA_DEPT_CD_S != null and P_ARA_DEPT_CD_S != "" '>
+			AND ARA_DEPT_CD = #{P_ARA_DEPT_CD_S} 
+		</if>
+		<if test='P_RQR_DEPT_NO_S != null and P_RQR_DEPT_NO_S != "" '>
+			AND RQR_DEPT_NO = #{P_RQR_DEPT_NO_S}
+		</if>
+		<if test='P_BID_NM_S != null and P_BID_NM_S != "" '>
+			AND BID_NM LIKE '%'||#{P_BID_NM_S}||'%'
+		</if>
+		<if test='P_ANNC_NO_S != null and P_ANNC_NO_S != "" '>
+			AND ANNC_NO LIKE '%'||#{P_ANNC_NO_S}||'%'
+		</if>
+		<if test='P_CONT_SECD_S != null and P_CONT_SECD_S != "" '>
+			AND CONT_SECD = #{P_CONT_SECD_S}
+		</if>
+		<if test='P_SBID_MTCD_S != null and P_SBID_MTCD_S != "" '>
+			AND SBID_MTCD = #{P_SBID_MTCD_S}
+		</if>
+		<if test='P_BID_PSCD_S != null and P_BID_PSCD_S != "" '>
+			AND BID_PSCD = #{P_BID_PSCD_S}
+		</if>
+		<if test='P_APPR_STCD_S != null and P_APPR_STCD_S != "" '>
+			AND APPR_STCD = #{P_APPR_STCD_S}
+		</if>
+		<if test='P_BID_MTCD_MAIN != null and P_BID_MTCD_MAIN != "" '>
+			AND BID_MTCD = #{P_BID_MTCD_MAIN}
+		</if>
+		<if test='P_ANNC_STDT_S != null and P_ANNC_STDT_S != "" '>
+			AND TO_CHAR(TO_DATE(ANNC_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') >= #{P_ANNC_STDT_S}
+		</if>
+		<if test='P_ANNC_ENDT_S != null and P_ANNC_ENDT_S != "" '>
+			AND TO_CHAR(TO_DATE(ANNC_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') &lt;= #{P_ANNC_ENDT_S}
+		</if>
+		<if test='P_CHRGR_ID_S != null and P_CHRGR_ID_S != "" '>
+			AND CHRGR_ID = #{P_CHRGR_ID_S}
+		</if>		
+		<if test='P_BIDC_SBMT_STDT_S != null and P_BIDC_SBMT_STDT_S != "" '>
+			AND TO_CHAR(TO_DATE(BIDC_SBMT_ENDT, 'yyyyMMddhh24miss'), 'yyyyMMdd') >= #{P_BIDC_SBMT_STDT_S}
+		</if>
+		<if test='P_BIDC_SBMT_ENDT_S != null and P_BIDC_SBMT_ENDT_S != "" '>
+			AND TO_CHAR(TO_DATE(BIDC_SBMT_ENDT, 'yyyyMMddhh24miss'), 'yyyyMMdd') &lt;= #{P_BIDC_SBMT_ENDT_S}
+		</if>
+		<if test='P_RQR_BEGIN_DT_S != null and P_RQR_BEGIN_DT_S != "" '>
+			AND TO_CHAR(TO_DATE(RQR_DE, 'yyyyMMdd'), 'yyyyMMdd') >= #{P_RQR_BEGIN_DT_S}
+		</if>
+		<if test='P_RQR_END_DT_S != null and P_RQR_END_DT_S != "" '>
+			AND TO_CHAR(TO_DATE(RQR_DE, 'yyyyMMdd'), 'yyyyMMdd') &lt;= #{P_RQR_END_DT_S}
+		</if>
+	</sql>
+	
+	
+	<delete id="deleteBidVendFile">
+		DELETE 	T_BI_VEND_FILE
+		WHERE	ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR}
+		AND		ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER}
+		AND		ROUND_NO = #{P_ROUND_NO, jdbcType=INTEGER}
+		AND 	VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+		AND 	BID_TPI_SECD = #{P_BID_TPI_SECD, jdbcType=VARCHAR}
+		 <if test='P_BID_SBMT_FSCD != null and P_BID_SBMT_FSCD != "" '>
+			AND	BID_SBMT_FSCD = #{P_BID_SBMT_FSCD, jdbcType=VARCHAR}
+		</if>
+	</delete> 
+	
+	
+	
+	<insert id="insertBidVendFile">
+		INSERT INTO T_BI_VEND_FILE (
+                          ANNC_NO
+                        , ANNC_NGR
+                        , ROUND_NO
+                        , VEND_REG_NO
+                        , BID_TPI_SECD
+                        , BID_SBMT_FSCD
+						, FILE_GRP_NO
+						, REGR_ID
+						, REGR_NM
+						, REG_DT
+						, MODR_ID
+						, MODR_NM
+						, MOD_DT
+						, CONN_IP
+						, DEL_AT
+		) VALUES (
+                            #{P_ANNC_NO , jdbcType=VARCHAR}
+                          , #{P_ANNC_NGR , jdbcType=INTEGER}
+                          , #{P_ROUND_NO , jdbcType=INTEGER}
+                          , #{P_VEND_REG_NO , jdbcType=VARCHAR}
+                          , #{P_BID_TPI_SECD , jdbcType=VARCHAR}
+                          , #{P_BID_SBMT_FSCD , jdbcType=VARCHAR}
+                          , #{P_FILE_GRP_NO, jdbcType=INTEGER}
+                          , #{P_REGR_ID, jdbcType=VARCHAR}
+                          , #{P_REGR_NM, jdbcType=VARCHAR}
+                          , #{P_REG_DT, jdbcType=VARCHAR}
+                          , #{P_REGR_ID, jdbcType=VARCHAR}
+                          , #{P_REGR_NM, jdbcType=VARCHAR}
+                          , #{P_REG_DT, jdbcType=VARCHAR}
+                          , #{P_CONN_IP, jdbcType=VARCHAR}
+                          , #{P_DEL_AT, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	
+	<update id="updateBidVendMst"> 
+		UPDATE T_BI_VEND_MST
+		SET
+			  ESTM_ELCD = #{P_ESTM_ELCD, jdbcType=VARCHAR}
+			  , ESTM_SCR = #{P_ESTM_SCR, jdbcType=VARCHAR}
+			  , ESTM_NT_ELGB_RSN = #{P_ESTM_NT_ELGB_RSN, jdbcType=VARCHAR}
+			  , MODR_ID = #{P_REGR_ID, jdbcType=VARCHAR}
+			  , MODR_NM = #{P_REGR_NM, jdbcType=VARCHAR}
+			  , MOD_DT = #{P_REG_DT, jdbcType=VARCHAR}
+		WHERE 1 = 1
+		AND ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR}
+		AND ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER}
+		AND ROUND_NO = #{P_ROUND_NO, jdbcType=INTEGER}
+		AND VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateBidBiopMst"> 
+		UPDATE T_BI_VEND_BIOP
+		SET
+			  ELGB_CD = #{P_ELGB_CD, jdbcType=VARCHAR}
+			  , MODR_ID = #{P_REGR_ID, jdbcType=VARCHAR}
+			  , MODR_NM = #{P_REGR_NM, jdbcType=VARCHAR}
+			  , MOD_DT = #{P_REG_DT, jdbcType=VARCHAR}
+		WHERE 1 = 1
+		AND ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR}
+		AND ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER}
+		AND ROUND_NO = #{P_ROUND_NO, jdbcType=INTEGER}
+		AND VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateBidStat">
+		UPDATE T_BI_MST
+		SET
+			BID_PSCD = #{P_BID_PSCD, jdbcType = VARCHAR}
+			, MODR_ID	 = #{P_REGR_ID, jdbcType = VARCHAR}
+			, MODR_NM	 = #{P_REGR_NM, jdbcType = VARCHAR}
+			, MOD_DT	 = #{P_REG_DT, jdbcType = VARCHAR}
+			<if test='P_BID_PSCD == "A004" '>
+				, CHRGR_ID	 = #{P_REGR_ID, jdbcType = VARCHAR}
+				, CHRGR_NM	 = #{P_REGR_NM, jdbcType = VARCHAR}
+				, ACPT_DE	 = TO_CHAR(TO_DATE(#{P_REG_DT, jdbcType = VARCHAR} , 'yyyyMMddHH24MISS'), 'yyyyMMdd')
+			 </if>
+		WHERE 1 = 1
+		AND ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR}
+		AND ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER}
+	</update>
+	
+	
+	<insert id="insertBidProgHist" useGeneratedKeys="true" keyProperty="P_HSTY_SN">
+		<selectKey resultType="int" keyProperty="P_HSTY_SN" order="BEFORE">
+			SELECT 	NVL(MAX(TO_NUMBER(HSTY_SN)),0)+1 AS HSTY_SN
+			FROM T_BI_PROG_HIST
+			WHERE 1 = 1
+			AND ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR}
+			AND ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER}
+			AND ROUND_NO = #{P_ROUND_NO, jdbcType=INTEGER}
+		</selectKey>
+		INSERT INTO T_BI_PROG_HIST (
+                           ANNC_NO
+                           , ANNC_NGR
+                           , ROUND_NO
+							, HSTY_SN
+							, BID_PSCD
+							, PROC_DT
+							, RMK
+							, REGR_ID
+							, REGR_NM
+							, REG_DT
+							, MODR_ID
+							, MODR_NM
+							, MOD_DT
+							, CONN_IP
+							, DEL_AT
+		) VALUES (
+                            #{P_ANNC_NO , jdbcType=VARCHAR}
+                          , #{P_ANNC_NGR, jdbcType=INTEGER}
+                          , #{P_ROUND_NO, jdbcType=INTEGER}
+                          , #{P_HSTY_SN, jdbcType=INTEGER} 
+                          , #{P_BID_PSCD, jdbcType=VARCHAR}
+                          , #{P_REG_DT, jdbcType=VARCHAR}
+                          , #{P_RMK, jdbcType=VARCHAR}
+                          , #{P_REGR_ID, jdbcType=VARCHAR}
+                          , #{P_REGR_NM, jdbcType=VARCHAR}
+                          , #{P_REG_DT, jdbcType=VARCHAR}
+                          , #{P_REGR_ID, jdbcType=VARCHAR}
+                          , #{P_REGR_NM, jdbcType=VARCHAR}
+                          , #{P_REG_DT, jdbcType=VARCHAR}
+                          , #{P_CONN_IP, jdbcType=VARCHAR}
+                          , #{P_DEL_AT, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="selectBidReqPrcnListDetail" resultType="dataEntity">
+		SELECT	BM.ANNC_NO
+				,BM.ANNC_NGR
+				,BR.ROUND_NO
+				,BM.BID_NM
+				,BM.BID_PSCD
+				,BM.CONT_SECD
+				,F_CDVAL_INQIRE('CONT_SECD', BM.CONT_SECD) AS CONT_SECD_NM
+				,F_CDVAL_INQIRE('BID_PSCD', BM.BID_PSCD) AS BID_PSCD_NM
+				,BM.SBID_MTCD
+				,F_CDVAL_INQIRE('SBID_MTCD', BM.SBID_MTCD) AS SBID_MTCD_NM
+				,BM.ASSO_SPDM_CD
+				,F_CDVAL_INQIRE('ASSO_SPDM_CD', BM.ASSO_SPDM_CD) AS ASSO_SPDM_CD_NM
+				,BM.ESTPC_SECD
+				,F_CDVAL_INQIRE('ESTPC_SECD', BM.ESTPC_SECD) AS ESTPC_SECD_NM
+				,BM.CONT_MTCD
+				,F_CDVAL_INQIRE('CONT_MTCD', BM.CONT_MTCD) AS CONT_MTCD_NM
+				,BM.ELGB_LMT_SCR
+				,BM.TCHN_SCR_RT
+				,BM.PRCE_SCR_RT
+				,BM.SBID_LWST_RT
+				,BM.ESTT_AMT
+				,BM.BID_RNG_CNTN
+				,BM.CHRGR_ID
+				,BM.CHRGR_NM
+				,BM.BRFS_PLC_NM
+				,BM.BRFS_DT
+				,BM.DLGD_PLC_NM
+				,BM.PRCH_RQR_NO
+				,BM.EMRG_YN
+				,BM.PRTC_QLF_CNTN
+				,BM.RMK
+				,BM.REGR_ID
+				,BM.REGR_NM
+				,BM.REG_DT
+				,BM.MODR_ID
+				,BM.MODR_NM
+				,BM.MOD_DT
+				,BM.CONN_IP
+				,BM.DEL_AT
+				,BM.ESTT_PRCE
+				,BM.BID_BRFS_YN
+				,BM.CONT_TE
+				,BM.REAL_ANNC_NO
+				,BM.ACPT_DE
+				,BM.ARA_DEPT_CD
+				,F_CDVAL_INQIRE('ARA_DEPT_CD', BM.ARA_DEPT_CD) AS ARA_DEPT_CD_NM
+				,BM.RQR_DE
+				,BM.RQR_DEPT_NO
+				,BM.RQR_DEPT_NM
+				,BM.RQR_CHRGR_ID
+				,BM.RQR_CHRGR_NM
+				,BM.PRCH_DEPT_NO
+				,BM.PRCH_DEPT_NM
+				,BM.BF_STND_OPEN_YN
+				,BM.BF_STND_OPEN_TE
+				,BM.PRCH_CHRG_SECD
+				,F_CDVAL_INQIRE('PRCH_CHRG_SECD', BM.PRCH_CHRG_SECD) AS PRCH_CHRG_SECD_NM
+				,BM.MNGR_CHRGR_ID
+				,BM.MNGR_CHRGR_NM
+				,BM.CHCK_CHRGR_ID
+				,BM.CHCK_CHRGR_NM
+				,BM.PVCT_RSN_NO
+				,BM.PRVT_CONT_RSN 
+				,BM.ETC_ITEM
+				,BR.ANNC_DT
+				,BR.BIDC_SBMT_STDT
+				,BR.BIDC_SBMT_ENDT
+				,BR.PRPDC_SBMT_STDT
+				,BR.PRPDC_SBMT_ENDT
+				,BR.OPNG_DT 
+				,(SELECT FILE_GRP_NO FROM T_BI_FILE WHERE 1 = 1 AND BID_FSCD = 'ETC' AND ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR} AND ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER} AND ROUND_NO = #{P_ROUND_NO, jdbcType=INTEGER}) AS FILE_GRP_NO_ETC
+				,(SELECT DISTINCT FILE_GRP_NO FROM T_BI_FILE WHERE 1 = 1 AND BID_FSCD != 'ETC' AND BID_FSCD != 'OPENR'  AND BID_FSCD != 'TECH' AND ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR} AND ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER} AND ROUND_NO = #{P_ROUND_NO, jdbcType=INTEGER}) AS FILE_GRP_NO
+				, BR.ESTPC_AMT
+				,(SELECT FILE_GRP_NO FROM T_BI_FILE WHERE 1 = 1 AND BID_FSCD = 'OPENR' AND ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR} AND ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER} AND ROUND_NO = #{P_ROUND_NO, jdbcType=INTEGER}) AS FILE_GRP_NO_OPENR
+				,(SELECT FILE_GRP_NO FROM T_BI_FILE WHERE 1 = 1 AND BID_FSCD = 'OPENR' AND ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR} AND ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER} AND ROUND_NO = #{P_ROUND_NO, jdbcType=INTEGER}) AS FILE_GRP_NO_TECH
+				,BM.SW_BSNS_OBJ_YN
+				,BM.SBCT_YN
+				,BM.SMVE_CMPTI_YN
+				,BM.PRIO_PRCH_YN
+				,BM.SCLSH_SVC_YN 
+				,BM.WMAN_SCTY_CORP_YN
+				,BM.ACPS_LMT_YN
+				,BM.INF_BSNS_YN
+		FROM T_BI_MST BM
+			, T_BI_ROUND BR
+		WHERE 1=1
+		AND BM.ANNC_NO = BR.ANNC_NO
+		AND BM.ANNC_NGR = BR.ANNC_NGR
+		AND BM.ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR}
+		AND BM.ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER}
+		AND BR.ROUND_NO = #{P_ROUND_NO, jdbcType=INTEGER}
+		AND NVL(BM.DEL_AT,'N') = 'N'
+	</select>
+	
+	<select id="selectReceiver" resultType="dataEntity">
+		SELECT * FROM (
+			SELECT ANNC_NO, ANNC_NGR, REGR_ID FROM T_BI_PROG_HIST
+			
+			WHERE 1 = 1
+			AND ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR}
+			AND ANNC_NGR = #{P_ANNC_NGR, jdbcType=VARCHAR}
+			AND BID_PSCD =  #{P_PRE_BID_PSCD, jdbcType=VARCHAR}
+			ORDER BY PROC_DT DESC
+		)
+         WHERE 1 = 1
+         AND ROWNUM = 1
+	</select>
+</mapper>

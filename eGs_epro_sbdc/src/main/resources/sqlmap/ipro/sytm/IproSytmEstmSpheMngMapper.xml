@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+ --> 
+ <mapper namespace="com.eunwoosoft.ipro.sytm.dao.IproSytmEstmSpheMngDao">
+ 
+ 	<select id="selectEstmSpheMngList" resultType="dataEntity">
+        <include refid="ComPgng.pgngHeaderClause"/>
+        SELECT * FROM (
+		    <include refid="estmSpheMngList"/>
+			<include refid="estmSpheMngListWhere"/>
+			ORDER BY REG_DT DESC
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>   
+    </select>
+    
+    <select id="selectEstmSpheMngListTotCnt" resultType="int" > 
+		SELECT COUNT(1) FROM ( 
+			<include refid="estmSpheMngList"/>
+			<include refid="estmSpheMngListWhere"/>
+		) T1
+		WHERE 1 = 1
+	</select>
+ 
+ 
+ 	<sql id="estmSpheMngList">
+ 	select * from (
+        SELECT ESTM_SPHE_SECD
+                  , ESTM_SPHE_SENM
+                  , REGR_ID
+                  , ( SELECT DEPT_NO FROM V_MM_USER V WHERE V.USR_ID = REGR_ID ) AS REGR_DEPT_NO
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+           FROM T_ESTM_SPHE_MST
+ 	)
+	</sql>
+	
+	<sql id="estmSpheMngListWhere">
+		<where>
+            AND DEL_AT = #{P_DEL_AT, jdbcType=VARCHAR}
+            <if test='P_ESTM_SPHE_SENM_S != null and P_ESTM_SPHE_SENM_S != "" '>
+	            AND ESTM_SPHE_SENM LIKE '%'|| #{P_ESTM_SPHE_SENM_S} || '%' 
+            </if>
+            <if test='P_USR_ID_S != null and P_USR_ID_S != "" '>
+            	AND REGR_ID = #{P_USR_ID_S, jdbcType=VARCHAR}
+            </if>
+            <if test='P_REGR_DEPT_NO_S != null and P_REGR_DEPT_NO_S != "" '>
+            	AND REGR_DEPT_NO = #{P_REGR_DEPT_NO_S, jdbcType=VARCHAR}
+            </if>
+		</where>
+	</sql>
+	
+	
+	<select id="selectEstmSpheMngDetail" resultType="dataEntity">
+        SELECT ESTM_SPHE_SECD
+                  , ESTM_SPHE_SENM
+                  <include refid="ComRegr.selectColumnClause"/>
+           FROM T_ESTM_SPHE_MST
+        WHERE 1=1
+            AND ESTM_SPHE_SECD = #{P_ESTM_SPHE_SECD, jdbcType=VARCHAR}
+	</select>
+ 
+ 	<insert id="insertEstmSpheMng" useGeneratedKeys="true" keyProperty="P_ESTM_SPHE_SECD">
+        <selectKey resultType="string" keyProperty="P_ESTM_SPHE_SECD" order="BEFORE">
+            SELECT NVL(MAX(TO_NUMBER(ESTM_SPHE_SECD)), 0)+1 AS ESTM_SPHE_SECD
+              FROM T_ESTM_SPHE_MST
+        </selectKey>
+        INSERT INTO T_ESTM_SPHE_MST (
+          ESTM_SPHE_SECD
+        , ESTM_SPHE_SENM
+        <include refid="ComRegr.RegrColumnClause"/>
+        ) VALUES (
+		  #{P_ESTM_SPHE_SECD, jdbcType=VARCHAR}
+		, #{P_ESTM_SPHE_SENM, jdbcType=VARCHAR}
+        <include refid="ComRegr.RegrValueClause"/>	
+		)
+ 	</insert>
+ 	
+ 	<update id="updateEstmSpheMng">
+ 	        UPDATE T_ESTM_SPHE_MST
+              SET ESTM_SPHE_SENM = #{P_ESTM_SPHE_SENM, jdbcType=VARCHAR} 
+                  , MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+                  <include refid="ComRegr.ModrSetClause"/>
+         WHERE ESTM_SPHE_SECD = #{P_ESTM_SPHE_SECD, jdbcType=VARCHAR}
+ 	</update>
+ 	
+ 	<delete id="deleteEstmSpheMng">
+        DELETE FROM T_ESTM_SPHE_MST
+        WHERE ESTM_SPHE_SECD = #{P_ESTM_SPHE_SECD, jdbcType=VARCHAR}
+	</delete>
+        
+ </mapper>

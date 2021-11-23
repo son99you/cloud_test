@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p" 
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+	
+	
+	<mvc:interceptors>
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/**/*.do"/>
+			<mvc:mapping path="/**/*.dx"/>
+			<mvc:mapping path="/**/*.json"/>
+			<mvc:mapping path="/**/*.iframe"/>
+	        <bean class="com.eunwoosoft.comm.util.ComParameterMapInterceptor">
+			</bean>			
+		</mvc:interceptor>
+		
+		<mvc:interceptor>
+			<!-- <mvc:mapping path="/erro/error.do"/>
+			<mvc:mapping path="/erro/ssoError.do"/>
+			<bean class="com.eunwoosoft.frwk.prl.tiles2.FwkTilesViewInterceptor">
+				<property name="tilesDefinitionName" value="errorLayout" /> -->
+			<mvc:mapping path="/**/erro/*.do"/>
+			<bean class="com.eunwoosoft.comm.util.SessionHandler">
+			</bean>
+		</mvc:interceptor>
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/main/adminByCertLoginForm.do"/>
+			<mvc:mapping path="/main/emgncLoginForm.do"/>
+			<mvc:mapping path="/main/ssoLoginForm.do"/>
+			<mvc:mapping path="/main/SBDC_sugarmanWork.do"/>
+			<bean class="com.eunwoosoft.frwk.prl.tiles2.FwkTilesViewInterceptor">
+				<property name="tilesDefinitionName" value="emgncLoginLayout" />
+			</bean>
+		</mvc:interceptor>
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/main/emgncLogoutForm.do"/>
+			<bean class="com.eunwoosoft.frwk.prl.tiles2.FwkTilesViewInterceptor">
+				<property name="tilesDefinitionName" value="emgncLogoutLayout" />
+			</bean>
+		</mvc:interceptor>
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/main/mainPage.do"/>
+			<bean class="com.eunwoosoft.frwk.prl.tiles2.FwkTilesViewInterceptor">
+				<property name="tilesDefinitionName" value="mainPageLayout" />
+			</bean>			
+		</mvc:interceptor>
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/opro/**/popup/printPopup.do"/> 
+			<bean class="com.eunwoosoft.frwk.prl.tiles2.FwkTilesViewInterceptor">
+				<property name="tilesDefinitionName" value="printLayout" />
+			</bean>			 
+		</mvc:interceptor>
+		
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/opro/**/popup/**.do"/>
+			<bean class="com.eunwoosoft.frwk.prl.tiles2.FwkTilesViewInterceptor">
+				<property name="tilesDefinitionName" value="defaultSupplierPopupframe" />
+			</bean>
+		</mvc:interceptor>
+		
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/**/popup/printPopup.do"/> 
+			<bean class="com.eunwoosoft.frwk.prl.tiles2.FwkTilesViewInterceptor">
+				<property name="tilesDefinitionName" value="printLayout" />
+			</bean>			 
+		</mvc:interceptor>
+
+		<mvc:interceptor>
+			<mvc:mapping path="/**/popup/*.do"/>
+			<bean class="com.eunwoosoft.frwk.prl.tiles2.FwkTilesViewInterceptor">
+				<property name="tilesDefinitionName" value="defaultPopupLayout" />
+			</bean>			
+		</mvc:interceptor>
+
+		<mvc:interceptor>
+			<mvc:mapping path="/**/emptyPopup/*.do"/>
+			<bean class="com.eunwoosoft.frwk.prl.tiles2.FwkTilesViewInterceptor">
+				<property name="tilesDefinitionName" value="emptyPopupLayout" />
+			</bean>			
+		</mvc:interceptor>
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/opro/erro/error.do"/>
+			<bean class="com.eunwoosoft.frwk.prl.tiles2.FwkTilesViewInterceptor">
+				<property name="tilesDefinitionName" value="errorSupplierframe" />
+			</bean>			
+		</mvc:interceptor>		
+				
+		<mvc:interceptor>
+			<mvc:mapping path="/opro/main/emgncLoginForm.do"/>
+			<mvc:mapping path="/opro/main/emgncCmtmLoginForm.do"/>
+			<mvc:mapping path="/opro/main/mberSbscrbForm.do"/>
+			<mvc:mapping path="/opro/main/loginPage.do"/>
+			<bean class="com.eunwoosoft.frwk.prl.tiles2.FwkTilesViewInterceptor">
+				<property name="tilesDefinitionName" value="loginSupplierframe" />
+			</bean>
+		</mvc:interceptor>
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/opro/main/innerLoginForm.do"/>
+			<bean class="com.eunwoosoft.frwk.prl.tiles2.FwkTilesViewInterceptor">
+				<property name="tilesDefinitionName" value="loginSupplierframe2" />
+			</bean>
+		</mvc:interceptor>
+	
+		<mvc:interceptor>
+			<mvc:mapping path="/opro/main/mberSbscrbForm.do"/>
+			<mvc:mapping path="/opro/main/joinFormPage.do"/> 
+			<mvc:mapping path="/opro/main/joinSuccessView.do"/>  
+			<bean class="com.eunwoosoft.frwk.prl.tiles2.FwkTilesViewInterceptor">
+				<property name="tilesDefinitionName" value="joinSupplierframe" />
+			</bean> 
+		</mvc:interceptor>
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/opro/recr/recrAnncList.do"/>
+			<mvc:mapping path="/opro/recr/recrAnncDetail.do"/>
+			<mvc:mapping path="/opro/recr/recrAnncRegForm.do"/>
+			<mvc:mapping path="/opro/recr/recrAnncEstmRegForm.do"/>
+			<mvc:mapping path="/opro/recr/recrAnncListExcelDwld.do"/>
+			<bean class="com.eunwoosoft.frwk.prl.tiles2.FwkTilesViewInterceptor">
+				<property name="tilesDefinitionName" value="beforeLoginSupplierframe" />
+			</bean> 
+		</mvc:interceptor>
+		
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/opro/main/mainPage.do"/>
+			<bean class="com.eunwoosoft.frwk.prl.tiles2.FwkTilesViewInterceptor">
+				<property name="tilesDefinitionName" value="mainPageSupplierframe" />
+			</bean>
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/opro/**/**.do"/>
+			<bean class="com.eunwoosoft.frwk.prl.tiles2.FwkTilesViewInterceptor">
+				<property name="tilesDefinitionName" value="defaultSupplierframe" />
+			</bean>
+		</mvc:interceptor>
+				
+		<mvc:interceptor>
+			<mvc:mapping path="/**/*.do"/>
+			<bean class="com.eunwoosoft.frwk.prl.tiles2.FwkTilesViewInterceptor">
+				<property name="tilesDefinitionName" value="defaultLayout" />
+			</bean>			
+		</mvc:interceptor>
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/**/*.iframe"/>
+			<bean class="com.eunwoosoft.frwk.prl.tiles2.FwkTilesViewInterceptor">
+				<property name="tilesDefinitionName" value="iframeLayout" />
+			</bean>			
+		</mvc:interceptor>		
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/raonkeditor/**/*.do"/>
+			<bean class="com.eunwoosoft.frwk.prl.tiles2.FwkTilesViewInterceptor">
+				<property name="tilesDefinitionName" value="defaultPopupLayout" />
+			</bean>			
+		</mvc:interceptor>
+					
+		<mvc:interceptor>
+			<mvc:mapping path="/raonkupload/**/*.do"/>
+			<bean class="com.eunwoosoft.frwk.prl.tiles2.FwkTilesViewInterceptor">
+				<property name="tilesDefinitionName" value="defaultPopupLayout" />
+			</bean>			
+		</mvc:interceptor>
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/**/*.dx"/>
+			<bean class="com.eunwoosoft.frwk.prl.tiles2.FwkTilesViewInterceptor">
+				<property name="tilesDefinitionName" value="defaultPopupLayout" />
+			</bean>			
+		</mvc:interceptor>				
+	</mvc:interceptors>		
+	
+</beans>

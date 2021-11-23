@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * sqlmap.ipro.ebid
+ * IproEbidProconMapper.xml
+ * 
+ * @Author : sanghoon_joen
+ * @Date   : 2018. 3. 02.
+ * 
+ -->
+<mapper namespace="com.eunwoosoft.ipro.ebid.dao.IproEbidProconDao">	
+	<!-- 
+	 * 1. 개요 : 입찰작성현황 목록 
+	 * 2. 처리내용 : 
+	 *  	
+	 * @Query ID : selectBidPlanAprvlListWithPgng
+	 * @date : 2018. 2. 21.
+	 * @author : sanghoon_joen
+	 -->
+	<select id="selectBidPlanAprvlListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="bidPlanAprvlList"/>
+			<include refid="bidPlanAprvlWhere"/>
+			ORDER BY A.REG_DT DESC, A.ANNC_NO DESC, A.ANNC_NGR DESC
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<!-- 
+	 * 1. 개요 : 입찰작성현황 목록 총개수
+	 * 2. 처리내용 : 
+	 *  	
+	 * @Query ID : selectBidPlanAprvlListTotcnt
+	 * @date : 2018. 2. 21.
+	 * @author : sanghoon_joen
+	 -->
+	<select id="selectBidPlanAprvlListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="bidPlanAprvlList"/>
+			<include refid="bidPlanAprvlWhere"/>
+		) T1
+		WHERE 1 = 1		
+	</select>
+
+	<sql id="bidPlanAprvlList">
+		SELECT A.* FROM (
+				SELECT	A.ANNC_NO
+							,A.ANNC_NGR
+							,A.BID_PSCD
+							, F_CDVAL_INQIRE('BID_PSCD', A.BID_PSCD) AS BID_PSCD_NM
+							, A.APPR_STCD
+							, F_CDVAL_INQIRE('22646', A.APPR_STCD) AS APPR_STCD_NM
+							, A.CONT_SECD
+							, F_CDVAL_INQIRE('C00001', A.CONT_SECD) AS CONT_SECD_NM
+							, BID_NM
+							, ANNC_DT
+							, PRTC_APLY_ENDT
+							, CONT_MTCD
+							, F_CDVAL_INQIRE('CONT_MTCD', CONT_MTCD) AS CONT_MTCD_NM
+							, ESTT_AMT
+							, A.REG_DT
+							, PRCH_NO
+<!-- 							, PURDMD_ODR -->
+							, EMRG_YN
+							, FNGR_BID_YN
+							, ITNT_BID_YN
+				FROM 	T_BI_MST A
+							, T_BI_ROUND B
+				WHERE	A.ANNC_NO = B.ANNC_NO
+				AND		A.ANNC_NGR = B.ANNC_NGR
+				AND		NVL(A.DEL_AT, 'N') != 'Y'
+				AND		A.APPR_STCD IN(
+																		SELECT 	CD_VALUE 
+																		FROM 	TMDM_CODECO 
+																		WHERE 	CD_ID = '22646' 
+																		AND     	USE_CD_ONE_VALUE = 'PE'
+																		AND     	USE_CD_TWO_VALUE = 'APRVL'
+																	)
+		) A
+
+	</sql>
+	
+	<sql id="bidPlanAprvlWhere">
+		<where>
+		AND APPR_STCD IN (SELECT T1.CD_VALUE FROM TMDM_CODECO T1 WHERE T1.CD_ID = '22646')
+		AND CONT_MTCD != '10003'
+		<if test='P_BID_NM_S != null and P_BID_NM_S != "" '>
+			AND BID_NM LIKE '%'||#{P_BID_NM_S}||'%'
+		</if>
+		<if test='P_CONT_SECD_S != null and P_CONT_SECD_S != "" '>
+			AND CONT_SECD = #{P_CONT_SECD_S}
+		</if>
+		<if test='P_BID_PSCD_S != null and P_BID_PSCD_S != "" '>
+			AND BID_PSCD = #{P_BID_PSCD_S}
+		</if>
+		<if test='P_APPR_STCD_S != null and P_APPR_STCD_S != "" '>
+			AND APPR_STCD = #{P_APPR_STCD_S}
+		</if>
+		<if test='P_BID_LMT_BEGIN_AMOUNT_S != null and P_BID_LMT_BEGIN_AMOUNT_S != "" '>
+			AND ESTT_AMT >= #{P_BID_LMT_BEGIN_AMOUNT_S}
+		</if>
+		<if test='P_BID_LMT_END_AMOUNT_S != null and P_BID_LMT_END_AMOUNT_S != "" '>
+			AND ESTT_AMT &lt;= #{P_BID_LMT_END_AMOUNT_S}
+		</if>
+		<if test='P_PBLANC_BEGIN_DT_S != null and P_PBLANC_BEGIN_DT_S != "" '>
+			AND TO_CHAR(TO_DATE(ANNC_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') >= #{P_PBLANC_BEGIN_DT_S}
+		</if>
+		<if test='P_PBLANC_END_DT_S != null and P_PBLANC_END_DT_S != "" '>
+			AND TO_CHAR(TO_DATE(ANNC_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') &lt;= #{P_PBLANC_END_DT_S}
+		</if>
+		</where>
+	</sql>
+	
+</mapper>

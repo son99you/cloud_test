@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN" "<DTDURL>/tiles-config_2_1.dtd">
+
+<tiles-definitions>	
+	
+	<!-- <definition name=".emgncLoginLayout" template="/WEB-INF/jsp/ipro/frame/emgncLoginFrame.jsp">
+		<put-attribute name="body.contents" value="" />
+		<put-attribute name="body.footer" value="/WEB-INF/jsp/ipro/frame/attr/bodyFooter.jsp" />
+	</definition> -->
+	
+	<definition name=".emgncLoginLayout" template="/WEB-INF/jsp/ipro/frame/emgncLoginFrame.jsp">
+		<put-attribute name="head" value="/WEB-INF/jsp/ipro/frame/attr/indexHead.jsp" />
+		<put-attribute name="body.header" value="/WEB-INF/jsp/ipro/frame/attr/indexHeader.jsp" />
+		<put-attribute name="body.contents" value="" />
+		<put-attribute name="body.footer" value="/WEB-INF/jsp/ipro/frame/attr/mainBodyFooter.jsp" />
+	</definition>
+	
+	<definition name=".emgncLogoutLayout" template="/WEB-INF/jsp/ipro/frame/emgncLogoutFrame.jsp">
+		<put-attribute name="body.contents" value="" />
+		<put-attribute name="body.footer" value="/WEB-INF/jsp/ipro/frame/attr/bodyFooter.jsp" />
+	</definition>
+	
+	<!-- 내부 - 업무요약페이지 -->
+	<definition name=".mainPageLayout" template="/WEB-INF/jsp/ipro/frame/MainLayout.jsp">
+		<put-attribute name="head" value="/WEB-INF/jsp/ipro/frame/attr/mainPagehead.jsp" />
+		<put-attribute name="body.contents" value="/WEB-INF/jsp/ipro/views/main/mainPage.jsp" />
+	</definition>
+	
+	<!-- 내부 - default -->
+	<definition name=".defaultLayout" template="/WEB-INF/jsp/ipro/frame/defaultLayout.jsp">
+		<put-attribute name="head" value="/WEB-INF/jsp/ipro/frame/attr/head.jsp" />
+		<put-attribute name="body.header" value="/WEB-INF/jsp/ipro/frame/attr/bodyHeader.jsp" />
+		<put-attribute name="body.left" value="/WEB-INF/jsp/ipro/frame/attr/bodyLeft.jsp" />		
+		<put-attribute name="body.footer" value="/WEB-INF/jsp/ipro/frame/attr/bodyFooter.jsp" />
+		<put-attribute name="body.navigator" value="/WEB-INF/jsp/ipro/frame/attr/bodyNavigator.jsp" />
+		<put-attribute name="body.contents" value="" />
+	</definition>
+	
+	<!-- 내부 - 공통팝업 -->
+	<definition name=".defaultPopupLayout" template="/WEB-INF/jsp/ipro/frame/defaultPopupLayout.jsp">
+		<put-attribute name="head" value="/WEB-INF/jsp/ipro/frame/attr/popupHead.jsp" />
+		<put-attribute name="body.contents" value="" />
+	</definition>
+	
+	<definition name=".emptyframe" template="/WEB-INF/jsp/ipro/frame/emptyframe.jsp">
+		<put-attribute name="head" value="/WEB-INF/jsp/ipro/frame/attr/popupHead.jsp" />
+		<put-attribute name="body.contents" value="" />
+	</definition>
+
+	<definition name=".emptyPopupLayout" template="/WEB-INF/jsp/ipro/frame/emptyPopupLayout.jsp">
+		<put-attribute name="body.contents" value="" />
+	</definition>
+		
+	<definition name=".printframe" template="/WEB-INF/jsp/ipro/frame/printframe.jsp">
+		<put-attribute name="head" value="/WEB-INF/jsp/ipro/frame/attr/popupHead.jsp" />
+		<put-attribute name="body.contents" value="" />
+	</definition>
+	
+	<definition name=".errorLayout" template="/WEB-INF/jsp/ipro/frame/defaultLayout.jsp">
+		<put-attribute name="head" value="/WEB-INF/jsp/ipro/frame/attr/mainPagehead.jsp" />
+		<put-attribute name="body.header" value="" />
+		<put-attribute name="body.left" value="" />
+		<put-attribute name="body.contents" value="" />
+		<put-attribute name="body.footer" value="" />
+	</definition>
+	
+	<definition name=".portalframe" template="/WEB-INF/jsp/ipro/frame/portalframe.jsp">
+		<put-attribute name="head" value="/WEB-INF/jsp/ipro/frame/attr/portalHead.jsp" />
+		<put-attribute name="body.header" value="/WEB-INF/jsp/ipro/frame/attr/portalBodyHeader.jsp" />
+		<put-attribute name="body.contents" value="" />
+	</definition>
+	
+	<definition name=".printLayout" template="/WEB-INF/jsp/ipro/frame/printLayout.jsp">
+		<put-attribute name="head" value="/WEB-INF/jsp/ipro/frame/attr/popupHead.jsp" />
+		<put-attribute name="body.contents" value="" />
+	</definition> 
+		
+	
+	<definition name=".iframeLayout" template="/WEB-INF/jsp/ipro/frame/iframeLayout.jsp">
+		<put-attribute name="head" value="/WEB-INF/jsp/ipro/frame/attr/head.jsp" />
+		<put-attribute name="body.contents" value="" />
+	</definition>	
+	
+	<!-- 외부 - 로그인페이지 -->
+	<definition name=".loginSupplierframe" template="/WEB-INF/jsp/opro/frame/emgncLoginFrame.jsp">
+		<put-attribute name="head" value="/WEB-INF/jsp/opro/frame/attr/indexHead.jsp" />
+		<put-attribute name="body.header" value="/WEB-INF/jsp/opro/frame/attr/indexHeader.jsp" />
+		<put-attribute name="body.contents" value="" />
+		<put-attribute name="body.footer" value="/WEB-INF/jsp/opro/frame/attr/mainBodyFooter.jsp" />
+	</definition>
+	
+	<definition name=".loginSupplierframe2" template="/WEB-INF/jsp/opro/frame/innerLoginFrame.jsp">
+		<put-attribute name="head" value="/WEB-INF/jsp/opro/frame/attr/indexHead.jsp" />
+		<put-attribute name="body.header" value="/WEB-INF/jsp/opro/frame/attr/innerLoginFormHeader.jsp" />
+		<put-attribute name="body.contents" value="" />
+		<put-attribute name="body.footer" value="/WEB-INF/jsp/opro/frame/attr/mainBodyFooter.jsp" />
+	</definition>
+	
+	<definition name=".joinSupplierframe" template="/WEB-INF/jsp/opro/frame/joinframe.jsp">
+		<put-attribute name="head" value="/WEB-INF/jsp/opro/frame/attr/head.jsp" />
+		<put-attribute name="body.header" value="/WEB-INF/jsp/opro/frame/attr/indexHeader.jsp" />
+		<put-attribute name="body.contents" value="" />
+		<put-attribute name="body.footer" value="/WEB-INF/jsp/opro/frame/attr/mainBodyFooter.jsp" />
+	</definition>
+	
+	 <!-- 외부 - 공통팝업 -->
+	<definition name=".defaultSupplierPopupframe" template="/WEB-INF/jsp/opro/frame/defaultPopupframe.jsp">
+		<put-attribute name="head" value="/WEB-INF/jsp/opro/frame/attr/popupHead.jsp" />
+		<put-attribute name="body.contents" value="" />
+	</definition>
+			
+	<!-- 외부 - 업무요약 -->
+	<definition name=".mainPageSupplierframe" template="/WEB-INF/jsp/opro/frame/mainPageLayout.jsp">
+		<put-attribute name="head" value="/WEB-INF/jsp/opro/frame/attr/mainHead.jsp" />
+		<put-attribute name="body.header" value="/WEB-INF/jsp/opro/frame/attr/mainHeader.jsp" />
+		<put-attribute name="body.contents" value="" />
+		<put-attribute name="body.footer" value="/WEB-INF/jsp/opro/frame/attr/mainBodyFooter.jsp" />
+	</definition>	
+	
+	
+	<!-- 외부 - 로그인전화면 -->
+	<definition name=".beforeLoginSupplierframe" template="/WEB-INF/jsp/opro/frame/beforeLoginframe.jsp">
+		<put-attribute name="beforehead" value="/WEB-INF/jsp/opro/frame/attr/beforeHead.jsp" />
+		<put-attribute name="before.header" value="/WEB-INF/jsp/opro/frame/attr/beforeHeader.jsp" />
+		<put-attribute name="body.contents" value="" />
+		<put-attribute name="body.footer" value="/WEB-INF/jsp/opro/frame/attr/mainBodyFooter.jsp" />
+	</definition>
+	
+	<!-- 외부 - default -->
+	<definition name=".defaultSupplierframe" template="/WEB-INF/jsp/opro/frame/defaultframe.jsp">
+		<put-attribute name="head" value="/WEB-INF/jsp/opro/frame/attr/mainHead.jsp" />
+		<put-attribute name="body.header" value="/WEB-INF/jsp/opro/frame/attr/mainHeader.jsp" />
+		<put-attribute name="body.left" value="/WEB-INF/jsp/opro/frame/attr/bodyLeft.jsp" />
+		<put-attribute name="body.navigator" value="/WEB-INF/jsp/opro/frame/attr/bodyNavigator.jsp" />
+		<put-attribute name="body.contents" value="" />
+		<put-attribute name="body.footer" value="/WEB-INF/jsp/opro/frame/attr/mainBodyFooter.jsp" />
+	</definition>
+	
+	<definition name=".errorSupplierframe" template="/WEB-INF/jsp/opro/frame/defaultframe.jsp">
+		<put-attribute name="head" value="/WEB-INF/jsp/opro/frame/attr/mainHead.jsp" />
+		<put-attribute name="body.header" value="" />
+		<put-attribute name="body.left" value="" />
+		<put-attribute name="body.contents" value="" />
+		<put-attribute name="body.footer" value="" />
+	</definition>	
+	
+</tiles-definitions>

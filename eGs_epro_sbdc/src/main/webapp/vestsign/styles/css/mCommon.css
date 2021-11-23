@@ -1,0 +1,191 @@
+@charset "utf-8";
+@import url("default.css");
+
+html {opacity: 0; font-size: 6.25%; }
+body > div {width: 640px; height: 960px; margin: 0 auto;}
+body > div.IMPORT_webapp {width: 640px; height: 568px;}
+body > div.IMPORT_webappNo {width: 640px; height: 428px;}
+
+ul.list_list {margin: 0px; padding: 0px;}
+ul.list_list > div {width: 100%; height: 184px; border-bottom: 1px solid #e4e4e4; overflow:hidden; position: relative; cursor: pointer; -webkit-tap-highlight-color:transparent;}
+ul.list_list.on {background-color: #e4faff; opacity: 50%;}
+
+.list_contents_wrap0 {float: left; width: 11px; height: 185px; margin-right: 8px;}
+.list_contents_wrap1 {float: left; width: 120px; height: 120px; margin: 32px 39px 31px 0px;}
+.list_contents_wrap2 {float: left; width: 320px; height: 185px;}
+.list_contents_wrap3 {float: left; width: 36px; height: 36px; padding: 74px 9px 73px 53px;}
+
+.div_list_contents_bottom1 {margin-top: 14px;}
+.div_list_contents_bottom2 {margin: 0px 0px 20px 0px;}
+
+.list_contents_top {width: 320px; height: 50px; letter-spacing: -0.02em; font-size: 36rem; color: #2e2e2e; font-weight: bold; font-family: '굴림'; margin: 24px 0px 12px 0px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;}
+.list_contents_bottom1 {width: 64px; height: 34px; letter-spacing: -0.115em; font-size: 24rem; color: #4d4d4d; font-weight: bold; float: left;}
+.list_contents_bottom2 {width: 64px; height: 34px; letter-spacing: -0.115em; font-size: 24rem; color: #4d4d4d; font-weight: bold; float: left;}
+.list_contents_bottom3 {width: 243px; height: 34px; letter-spacing: -0.03em; font-size: 24rem; color: #787878; font-weight: bold; margin-left: 77px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;}
+
+.m_icon_true_choice {background:url(../images/true_choice.png) no-repeat; width: 11px; height: 183px;}
+.m_icon_re_choice {background:url(../images/re_choice.png) no-repeat; width: 11px; height: 183px;}
+.m_icon_false_choice {background:url(../images/false_choice.png) no-repeat; width: 11px; height: 183px;}
+
+.m_icon_true {position: absolute; background:url(../images/list_icon_true.png) no-repeat; width: 120px; height: 120px;}
+.m_icon_re {position: absolute; background:url(../images/list_icon_re.png) no-repeat; width: 120px; height: 120px;}
+.m_icon_false {position: absolute; background:url(../images/list_icon_false.png) no-repeat; width: 120px; height: 120px;}
+
+hr.list_contents_hr {border: 0px; border-top: 1px; border-style: solid; border-color: #e5e5e5; margin: 0px; width: 320px;}
+.list_contents_manage {background:url(../images/set_icon_out.png) no-repeat; width: 36px; height: 36px;}
+.list_contents_manage {font-size: 0px;}
+.list_contents_manage_on {background:url(../images/set_icon_touch.png) no-repeat; width: 36px; height: 36px;}
+
+
+/*.clfix {display: inline-block;}*/
+.clfix {display: block;}
+
+ul.CERT_sign_list {margin: 0px; padding: 0px;}
+ul.CERT_sign_list > li {display: block; float: left; width: 300px; height: 184px; border-bottom: 1px solid #e4e4e4; overflow:hidden;}
+
+.CERT_title {background-color:#fff; width: 640px; height: 111px;border-radius:20px 20px 0 0; }
+.TITLE_div {position:absolute; width: 506px; padding-left: 34px; color: #111111; font-size: 44rem; font-weight: bold; font-family: '굴림'; letter-spacing: -0.12em; line-height: 2.5;}
+.TITLE_div > p {text-overflow: ellipsis; overflow: hidden; white-space: nowrap;}
+.xBtn {background:url(../images/close_btn.png) center no-repeat; width: 36px; height: 36px; float: right; margin: 37px 32px 37px; cursor: pointer;}
+.xBtn {font-size: 0px;}
+
+.CERT_contents {background-color: white; padding: 20px 20px 0px 20px; position:relative; width: 600px; height: 755px;}
+.CERT_contents.changepin_contents {height: 342px;}
+.CERT_contents.webApp_contents {height: 383px; padding-top: 0px;}
+.CERT_contents.webApp_contents.noServer {height: 115px;}
+.BANNER {width: 600px; height: 140px; margin-bottom: 20px; background: url(../images/mBanner.jpg) center no-repeat; display: none;}
+.BANNER.on {display: block;}
+.CERT_list {position:relative; width:600px; height:488px; border-top:1px solid #e4e4e4; border-bottom:1px solid #e4e4e4; background:#fbfbfb; overflow: hidden;}
+.CERT_list > ul {width: 617px; margin: 0px; padding: 0px; overflow-y:scroll; height: 100%;}
+.CERT_list.BANNER_div {height: 369px;}
+
+.CERT_one {height: 185px;}
+.CERT_one > ul > li > ul > div {border: none;}
+
+.importView {width: 180px; height: 106px; margin: 0 auto; margin-top: 40px; margin-bottom: 38px; cursor: pointer;}
+.importView > div.importView_img {background:url(../images/add_btn_out.png) center no-repeat; width: 60px; height: 60px; margin: 0 auto;}
+.importView > div.importView_info {font-weight: bold; color: #4b4b4b; text-align: center; font-size: 26rem; letter-spacing: -0.15em; margin-top: 10px;}
+
+.importFromPC {margin-left: 61px; margin-top: 33px; background:url(../images/import_pc_out.png) center no-repeat; width: 169px; height: 117px; cursor: pointer; float: left;}
+.importFromPC {font-size: 0px}
+.importFromPC_on {margin-left: 61px; margin-top: 33px; background:url(../images/import_pc_touch.png) center no-repeat; width: 169px; height: 117px; cursor: pointer; float: left;}
+.importFromPhone {margin-right: 42px; margin-top: 33px; background:url(../images/import_mobile_out.png) center no-repeat; width: 206px; height: 117px; cursor: pointer; float: right;}
+.importFromPhone {font-size: 0px}
+.importFromPhone_on {margin-right: 42px; margin-top: 33px; background:url(../images/import_mobile_touch.png) center no-repeat; width: 206px; height: 117px; cursor: pointer; float: right;}
+
+.titleDivision_div {height: 2px; width: 600px; padding: 0px 20px 0px 20px; background-color: #fff;}
+.titleDivisionLine {height: 100%; background-color: #e4e4e4;}
+hr.contDivisionLine {width: 600px; margin: 0px; border: 0px; border-top: 1px solid #e4e4e4;}
+
+.PIN_info_wrap {height: 157px;}
+.PIN_alert {background:url(../images/point_icon_03.png) center no-repeat; width: 60px; height: 60px; float: left; margin: 49px 69px 48px 49px;}
+.PIN_info {width: 408px; height: 82px; color: #f65744; font-size: 20rem; font-weight: bold; font-family: '굴림'; float: left; margin: 35px 14px 40px 0px;}
+.PIN_input {height: 248px; margin: 18px 0px;}
+
+::-webkit-input-placeholder {color: #4687f0;}
+/* Firefox 4-18 */
+:-moz-placeholder {color: #4687f0;}
+/* Firefox 19+ */
+::-moz-placeholder {color: #4687f0;}
+/* IE10+ */
+:-ms-input-placeholder {color: #4687f0;}
+
+.FORM_wrap {height: 80px;}
+
+.PW_div {margin-top: 58px; display: none;}
+.PW_div.BANNER_margin {margin-top: 18px;}
+.PW_div.importPC_margin {margin-top: 20px;}
+.PW_div.importAPP_margin {margin-top: -20px;}
+.PW_div input {width: 598px; height: 78px; background-color: #e4faff; border: 1px solid #5193fb; font-family: '굴림'; text-align: center; font-size: 28rem; color: #4687f0; padding: 0px;}
+.PW_div input:focus {background-color: #fff; font-size: 80rem;}
+.pw_wrap {margin-bottom: 9px;}
+
+.pw_text {float: left; width: 140px; height: 70px; font-size: 26rem; font-family: '굴림'; text-align: center; letter-spacing: -0.08em; color: #2e2e2e; font-weight: bold; line-height: 2.8; margin-left: 6px; margin-right: 11px;}
+input.pw_textbox {width: 388px; height: 18px; border: 1px solid #5193fb; background-color: #fff; font-family: '굴림'; letter-spacing: -0.05em; font-size: 24rem; color: #4687f0; padding: 25px 25px 25px 26px; text-align: center; zoom: 0.99;}
+input.pw_textbox:focus {text-align: center; background-color: #e4faff; font-size: 60rem;}
+
+.MANAGE_TITLE {background:url(../images/detail_title-bar_bg.png) center no-repeat; width: 600px; height: 94px; margin-bottom: 10px;}
+.MANAGE_dn {width: 303px; height: 38px; margin: 28px 0px 0px 35px; position: absolute;}
+.MANAGE_dn > p {font-family: '굴림'; letter-spacing: -0.011em; font-size: 34rem; color: #ffffff; font-weight: bold; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;}
+.MANAGE_isUse {width: 104px; height: 36px; color: #2e2e2e; border: 1px solid #e4e4e4; float: right; margin: 28px 13px 28px 0px;}
+.MANAGE_isUse > p {font-family: '굴림'; text-align: center; letter-spacing: -0.005em; font-size: 22rem; color: #e4e4e4; font-weight: bold; line-height: 1.7}
+
+/* Chrome, Safari용 스크롤 바 */
+::-webkit-scrollbar {width: 12px; height: 8px;}
+::-webkit-scrollbar-thumb {height: 50px; width: 50px; background: #e4e4e4; border-radius: 6px;}
+::-webkit-scrollbar-button:start:decrement, ::-webkit-scrollbar-button:end:increment {height: 24px; background-color: #fff;}
+
+.CERT_detail {position:relative; width:100%; height:520px; border-top:1px solid #bebebe; border-bottom:1px solid #bebebe; background:#fff;}
+.CERT_detail > ul {width: 588px; height:100%; margin: 0px; padding: 0px; overflow-y:scroll;}
+
+ul.CERT_list_list {height: 84px; margin: 0px; padding: 0px; border-bottom: 1px solid #e4e4e4 ; width: 564px; font-size: 24rem; font-family: '굴림'; display: table-cell;}
+@-moz-document url-prefix() {
+     ul.CERT_list_list {height: 100%;}
+ }
+ul.CERT_list_list > li {float:left; width:420px; height: 100%; color:#787878; overflow:hidden; background-color: #ffffff; display: table;}
+ul.CERT_list_list > li:first-child {width:120px; height: 100%; color:#4d4d4d; background-color: #f5f5f5; text-align: center; font-weight: bold; display: table;}
+ul.CERT_list_list > li:last-child > p {margin-left: 32px; word-break: break-all;}
+ul.CERT_list_list > li > p {margin: 29px 10px 29px 10px;}
+
+.PC_title1 { width: 600px;margin-bottom: 15px;margin-top:20px;}
+
+ .PC_title1 > p {font-family: '굴림'; font-size: 38rem; color: #4687f0; font-weight: bold; text-align: left;letter-spacing: -0.1em;}
+ .PC_title2 {width: 581px; background-color: #f3f3f3;padding:25px 0 0 19px;}
+ .PC_title2 > p {font-family:'굴림'; font-size: 28rem; color: #4d4d4d; font-weight: bold; text-align: left; letter-spacing: -0.1em;}
+
+ .PC_title3 { width: 600px;height:30px;margin-bottom: 15px;margin-top:20px;}
+ .PC_title3 > p {font-family: '굴림'; font-size: 38rem; color: #4687f0; font-weight: bold; text-align: left;letter-spacing: -0.1em;}
+
+.PC_inputbox {height: 78px; margin: 15px 0px; display: flex;}
+.PC_inputbox > input {width: 185px; height: 70px; text-align: center; border: 2px solid #4687f0;padding: 0px; float: left; font-family: '굴림'; font-size: 33rem; color: #4687f0; font-weight: bold; background-color: #e4faff; letter-spacing: 0.1em;}
+.PC_inputbox > input.CENTER_margin {margin: 0 auto;}
+
+.PC_inputInfo {margin-bottom: 30px; height: 45px;}
+.PC_infoImg {background:url(../images/i_icon.png) center no-repeat; width: 30px; height: 30px; float: left; margin: 0px 14px 0px 8px;}
+.PC_inputInfo p {font-family:'굴림'; font-size: 20rem; color: #4687f0;}
+
+.PC_useInfo {height: 170px; padding: 15px 18px 25px 19px;background-color: #f3f3f3;}
+.PC_useInfo > div.INFO_contents {display: flex;}
+.PC_useInfo > div.INFO_contents > p {font-family:'굴림'; font-size: 20rem; color: #656565; margin-bottom: 8px;letter-spacing: -0.05em;line-height: 1.4;}
+
+.PHONE_info {height: 85px; padding: 10px 20px; background-color: #f3f3f3;}
+.PHONE_info > div.INFO_contents {display: flex;line-height: 1.8; }
+.PHONE_info > div.INFO_contents > p {font-family:'굴림'; font-size: 20rem; color: #656565; letter-spacing: -0.08em; }
+
+div.INFO_contents > div.number_box {float: left; font-family:'굴림'; font-weight: 700; font-size: 20rem; color: #656565;margin-right: 12px; margin-bottom: 2px;}
+
+.APP_restart {background:url(../images/app_re_btn.png) center no-repeat; width: 269px; height: 70px; cursor: pointer; margin: 30px auto;}
+.APP_restart > p {user-select: none; height: 100%; font-family: '굴림'; font-size: 26rem; color: #676767; font-weight: bold; text-align: center; line-height: 2.8; letter-spacing: -0.06em; margin-left: 66px;}
+.no-drag {-ms-user-select: none; -moz-user-select: -moz-none; -webkit-user-select: none; -khtml-user-select: none; user-select:none;}
+
+.PHONE_pw_wrap {height: 107px;}
+.PHONE_pw_img {background:url(../images/phone_icon.png) center no-repeat; float: left; width: 34px; height: 60px; margin: 19px 25px 18px 25px;}
+.PHONE_pw_img.webapp {margin-top: 57px;}
+.PHONE_pw_info {float: left; font-size: 22rem; font-family: '굴림'; font-weight: bold; color: #4d4d4d; margin-top: 22px; margin-bottom: 18px;}
+.PHONE_pw_info.webApp_info {margin-top: 71px; font-size: 30rem;}
+.PHONE_pw_info.webApp_info.noServer {margin-top: 43px;}
+.PHONE_pw_info font {color: red;}
+
+.PHONE_process_img {background:url(../images/mobile_progress_img.png) center no-repeat; max-width:600px;height:228px;margin:28px 0;}
+
+.BTN_common {height: 140px;}
+.BTN_webappNo {height: 110px;}
+
+.commonForm {margin-top: 20px; line-height: 2.6; display: none; letter-spacing: 0.1em;}
+.confirm_btn {background:url(../images/true_btn.png) center no-repeat; width: 290px; height: 88px; cursor: pointer; float: right;}
+.confirm_btn p {font-family: '굴림'; text-align: center; font-size: 34rem; color: #ffffff; font-weight: bold;}
+.cancel_btn {background:url(../images/false_btn.png) center no-repeat; width: 290px; height: 88px; cursor: pointer; float: left;}
+.cancel_btn p {font-family: '굴림'; text-align: center; font-size: 34rem; color: #2e2e2e; font-weight: bold;}
+
+.change_btn {background:url(../images/true_btn.png) center no-repeat; width: 290px; height: 88px; cursor: pointer; float: right;}
+.change_btn p {font-family: '굴림'; text-align: center; letter-spacing: -0.1em; font-size: 34rem; color: #ffffff; font-weight: bold;}
+.deleteCert_btn {background:url(../images/delete_btn.png) center no-repeat; width: 290px; height: 88px; cursor: pointer; float: left;}
+.deleteCert_btn p {font-family: '굴림'; text-align: center; letter-spacing: -0.1em; font-size: 34rem; color: #ffffff; font-weight: bold;}
+
+.install_btn {background:url(../images/install_btn.png) center no-repeat; max-width: 598px; height: 88px; cursor: pointer;margin-bottom:15px; }
+.install_btn p {font-family: '굴림'; text-align: center; font-size: 34rem; color: #2e2e2e; font-weight: bold;letter-spacing: -0.05em;}
+.get_btn {background:url(../images/get_btn.png) center no-repeat; max-width: 598px; height: 88px; cursor: pointer;}
+.get_btn p {font-family: '굴림'; text-align: center; font-size: 34rem; color: #ffffff; font-weight: bold;letter-spacing: -0.05em;}
+
+
+.copyright {background-color:#f6f6f6;border-radius:0 0 20px 20px ; width:640px; height:72px;font-size:18rem;vertical-align: middle;line-height:72px; color: #d1d1d1; text-align: center;font-family: 'MalgunGothic','맑은 고딕','굴림';letter-spacing: -0.025em;}

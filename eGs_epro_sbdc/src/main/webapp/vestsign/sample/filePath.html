@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+<script type="text/javascript" src="../library/json3.min.js?revision=e54ce34"></script>
+<script type="text/javascript" src="../library/iecompatibility.js?revision=e54ce34"></script>
+
+<script type="text/javascript" src="../vestsign.js?revision=e54ce34"></script>
+<SCRIPT language=javascript>
+
+    function getFilePath() {
+        var option = {};
+        yettie.getFilePath(option, function(path) {
+            document.getElementById('filePath').value = path;
+        }, function() {
+            alert('실패');
+        });
+    };
+
+    function pin1() {
+        yettie.passwordInput({pwdInput: 1}, function (res) {
+            alert(res);
+        }, function (error) {
+//            console.log(error.msg);
+        });
+    };
+
+    function pin2() {
+        yettie.passwordInput({pwdInput: 2}, function (res) {
+            alert(res);
+        }, function (error) {
+//            console.log(error.msg);
+        });
+    };
+
+    function pin3() {
+        yettie.passwordInput({pwdInput: 3}, function (oldPin, newPin) {
+            alert('성공\n변경전 비밀번호: '+oldPin+'\n변경된 비밀번호: ' + newPin);
+        }, function (error) {
+//            console.log(error.msg);
+        });
+    };
+    
+    // 안전디스크 백업
+    function secureBack() {
+        var option = {};
+        yettie.securediskBackup(option, function(res) {
+            alert('성공');
+        }, function(error) {
+//            console.log(error.msg);
+        });
+    };
+
+    // 안전디스크 복구
+    function secureRecov() {
+        var option = {};
+        yettie.securediskRestore(option, function(res) {
+            alert('성공');
+        }, function(error) {
+//            console.log(error.msg);
+        });
+    };
+
+    function checkVersion() {
+        yettie.checkVersion(function(res) {
+//            console.log("성공콜백");
+//            alert(res);
+        }, function (res) {
+//            console.log("실패콜백");
+//            alert(res);
+        });
+    }
+
+    function exportToWeb() {
+        var option = {
+            encoding: 'base64',
+            charset: 'UTF-8'
+        };
+
+        yettie.exportToWeb(option, function(res){
+//            console.log(res);
+        }, function(error) {
+//            console.log(error.msg);
+        });
+    }
+
+    function importFromWeb() {
+        var option = {
+            encoding: 'base64',
+            charset: 'UTF-8'
+        };
+
+        yettie.importFromWeb(option, function(res){
+//            console.log(res);
+        }, function(error) {
+//            console.log(error.msg);
+        });
+    }
+
+</SCRIPT>
+<br><br><br>
+<table border="1" align="center" width=50%>
+    <!-- <tr>
+        <td align="center"><br>
+            선택한 File 경로<br><textarea rows='10' style="width:90%" id="filePath"></textarea><br><br>
+        </td>
+    </tr>
+    <tr>
+        <td align="center"><br>
+            <input type=button onclick=getFilePath(); value="FilePath 요청" style="width:150"><br><br>
+        </td>
+    </tr> -->
+    <!-- <tr>
+        <td align="center"><br>
+            <input type=button onclick=pin1(); value="pin 1개" style="width:150"><br><br>
+        </td>
+    </tr>
+    <tr>
+        <td align="center"><br>
+            <input type=button onclick=pin2(); value="pin 2개" style="width:150"><br><br>
+        </td>
+    </tr>
+    <tr>
+        <td align="center"><br>
+            <input type=button onclick=pin3(); value="pin 3개" style="width:150"><br><br>
+        </td>
+    </tr>
+    <tr>
+        <td align="center"><br>
+            <input type=button onclick=secureBack(); value="안전디스크 백업" style="width:150"><br>
+            <input type=button onclick=secureRecov(); value="안전디스크 복구" style="width:150"><br><br>
+        </td>
+    </tr> -->
+    <!--<tr>
+        <td align="center"><br>
+            <input type=button onclick=checkVersion(); value="버전체크" style="width:150"><br><br>
+        </td>
+    </tr>-->
+    <tr>
+        <td align="center"><br>
+            <input type=button onclick=exportToWeb(); value="Sloth을 이용한 이동식복사 (pc->mobile web) 테스트!!!" style="width:150"><br><br>
+        </td>
+        <td align="center"><br>
+            <input type=button onclick=importFromWeb(); value="Sloth을 이용한 이동식복사 (mobile web->pc) 테스트!!!" style="width:150"><br><br>
+        </td>
+    </tr>
+</table>

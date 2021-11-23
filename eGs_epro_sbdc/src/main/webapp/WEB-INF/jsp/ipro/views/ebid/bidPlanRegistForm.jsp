@@ -1,0 +1,758 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%--
+ * 입찰관리 > 입찰작성대기현황 등록
+ *
+ * <pre>
+ * ebid 
+ *    |_ bidPlanRegistForm.jsp
+ * 
+ * </pre>
+ * @date : 2017. 06. 16
+ * @version : 1.0
+ * @author : 은우소프트 전상훈
+--%>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="comFn" uri="/WEB-INF/tlds/comFunctionTag.tld" %> 
+<%@ taglib prefix="comTag" uri="/WEB-INF/tlds/comTag.tld" %> 
+
+<script type="text/javascript" src="${jsPath}/ipro/views/ebid/bidPlanRegistForm.js"></script>
+
+<div class="contents_wrap">
+	<ul class="step_wrap">
+		<li><a href="#">${myMenuList.bigMenuNm}</a></li>
+		<li><a href="#">${myMenuSubList.smallMenuNm}</a></li>
+	</ul>
+	<div class="tit_wrap">
+		<h3 class="tit">입찰작성대기현황 등록</h3>
+	</div>
+	
+	<form id="bidPlanRegistFrm" method="POST" enctype="multipart/form-data">
+		<fieldset>
+			<legend>입찰작성대기현황 등록</legend>
+			<input type="hidden" name="resourceName" value="${param.resourceName}">
+			<input type="hidden" name="P_USR_ID" value="${sessionScope.loginResult.USR_ID}">
+			<input type="hidden" id="P_PAGE_NO" name="P_PAGE_NO" value="1">
+			<input type="hidden" id="P_PAGE_SIZE" name="P_PAGE_SIZE" value="10">
+			<input type="hidden" id="P_RQSTR_ID" name="P_RQSTR_ID" value="${bidPlanDetail.RQR_CHRGR_ID}">
+			<input type="hidden" id="P_RQSTR_NM" name="P_RQSTR_NM" value="${bidPlanDetail.RQR_CHRGR_NM}">
+			<input type="hidden" id="P_RQSTR_TEL_NO" name="P_RQSTR_TEL_NO" value="${bidPlanDetail.RQR_CHRGR_TEL_NO}">
+			<input type="hidden" id="P_RQST_DEPT_NO" name="P_RQST_DEPT_NO" value="${bidPlanDetail.RQR_CHRGR_DEPT_NO}">
+			<input type="hidden" id="P_RQST_DEPT_NM" name="P_RQST_DEPT_NM" value="${bidPlanDetail.RQR_CHRGR_DEPT_NM}">
+			<input type="hidden" id="P_RQSTR_EMAL" name="P_RQSTR_EMAL" value="${bidPlanDetail.RQR_CHRGR_EMAIL}">
+			<input type="hidden" id="P_UPRC_YN" name="P_UPRC_YN" value="${bidPlanDetail.UPRC_YN}">
+			<c:if test="${not empty bidPlanDetail.IFC_ID}">
+				<input type="hidden" id="P_BID_REG_YN" name="P_BID_REG_YN" value="Y">
+			</c:if>
+			<input type="hidden" id="P_FILE_GROUP_FLAG" name="P_FILE_GROUP_FLAG" value="bid">
+			
+			<input type="hidden" id="P_ANNC_NO" name="P_ANNC_NO">
+			<input type="hidden" id="P_ANNC_NGR" name="P_ANNC_NGR">
+			<input type="hidden" id="P_ROUND_NO" name="P_ROUND_NO">
+			<input type="hidden" id="P_BID_FSCD" name="P_BID_FSCD" value="DI01">
+			<input type="hidden" id="P_FILE_GRP_NO" name="P_FILE_GRP_NO" value="${bidPlanDetail.FILE_GRP_NO}">
+			
+			<input type="hidden" id="P_CONT_SECD" name="P_CONT_SECD" value="${bidPlanDetail.CONT_SECD }">
+			<input type="hidden" id="P_BID_MTCD" name="P_BID_MTCD" value="${bidPlanDetail.BID_MTCD}">
+			
+			<input type="hidden" name="P_PRCH_NO" value="${bidPlanDetail.PCAC_NO}">
+			<input type="hidden" name="P_PRCH_RQR_NO" value="${bidPlanDetail.PCRQ_NO }">
+			<input type="hidden" name="P_IFC_ID" value="${bidPlanDetail.BID_WAIT_NO }">
+			<input type="hidden" name="P_BF_ANNC_NO" value="${bidPlanDetail.ANNC_NO }">
+			
+			<input type="hidden" name="P_DLGD_PLCD" value="${bidPlanDetail.DLGD_PLCD }">
+			<input type="hidden" name="P_CONT_DECD" value="${bidPlanDetail.CONT_DECD }">
+			
+			<div class="view_wrap typeB">
+				<div class="tit_area">
+					<h4 class="tit">기본정보</h4>
+				</div>
+				<div class="view_area">
+					<table>
+						<caption>기본정보</caption>
+				    	<colgroup>
+				        	<col style="width: 15%;">						        
+				        	<col style="width: 35%;">						        
+				        	<col style="width: 15%;">						        
+				        	<col style="width: 35%;">						        
+						</colgroup>
+						<tbody>
+					    	<tr>
+					    		<th scope="row">사전공고번호</th>
+					    		<td colspan="3">
+					    			<c:if test="${empty bidPlanDetail.BFAN_NO}">사전공고번호가 없습니다.</c:if>
+					    			<c:if test="${not empty bidPlanDetail.BFAN_NO}">${bidPlanDetail.BFAN_NO }</c:if>
+					    		</td>
+					    	</tr>
+					    	<tr>	
+					            <th scope="row" class="bullet_orange">입찰담당자</th>
+					            <td colspan="3">
+									<input type="text" id="usrNm" name="P_CHRGR_NM" value="${bidPlanDetail.PRCH_CHRGR_NM}" class="w180" placeholder="${sessionScope.loginResult.USR_NM}" readonly="readonly">
+									<input type="hidden" id="usrId" name="P_CHRGR_ID" value="${bidPlanDetail.PRCH_CHRGR_ID}" placeholder="${sessionScope.loginResult.USR_ID}">
+									<input type="hidden" id="deptCd" name="P_CHRGR_DEPT_NO" value="${bidPlanDetail.PRCH_CHRGR_DEPT_NO}" placeholder="${sessionScope.loginResult.DEPT_NO}">
+									<input type="hidden" id="deptNm" name="P_CHRGR_DEPT_NM" value="${bidPlanDetail.PRCH_CHRGR_DEPT_NM}" placeholder="${sessionScope.loginResult.DEPT_NM}">
+									<button type="button" class="btn btn_s btn_sch" id="chargerBtn">검색</button>					            
+					            </td>
+				        	</tr>
+				        	<tr>
+					            <th scope="row" class="bullet_orange">입찰문의 전화번호</th>
+					            <td>
+					            	<input type="text" id="usrTel" name="P_CHRGR_TEL_NO" value="${bidPlanDetail.PRCH_CHRGR_TEL_NO}" class="w180" placeholder="${sessionScope.loginResult.CP_NO}">
+					            </td>
+					            <th scope="row" class="bullet_orange">입찰문의 이메일</th>
+					            <td>
+					            	<input type="text" id="mail" name="P_CHRGR_EMAL" value="${bidPlanDetail.PRCH_CHRGR_EMAIL}" class="w180" placeholder="${sessionScope.loginResult.EMAL_ADDR}">
+					            </td>
+				        	</tr>
+					    	<tr>	
+					            <th scope="row" class="bullet_orange">기술문의담당자</th>
+					            <td colspan="3">
+									<input type="text" id="tchnUsrNm" name="P_TCHN_CHRGR_NM" value="${bidPlanDetail.RQR_CHRGR_NM }" class="w180" readonly="readonly">
+									<input type="hidden" id="tchnUsrId" name="P_TCHN_CHRGR_ID" value="${bidPlanDetail.RQR_CHRGR_ID }">
+									<button type="button" class="btn btn_s btn_sch" id="tchnChargerBtn">검색</button>					            
+					            </td>
+				        	</tr>
+				        	<tr>
+					            <th scope="row" class="bullet_orange">기술문의 전화번호</th>
+					            <td>
+					            	<input type="text" id="tchnUsrTel" name="P_TCHN_CHRGR_TEL_NO" value="${bidPlanDetail.RQR_CHRGR_TEL_NO }" class="w180">
+					            </td>
+					            <th scope="row" class="bullet_orange">기술문의 이메일</th>
+					            <td>
+									<input type="text" id="tchnMail" name="P_TCHN_CHRGR_EMAL" value="${bidPlanDetail.RQR_CHRGR_EMAIL }" class="w180">
+					            </td>
+				        	</tr>
+						</tbody>
+					</table>
+				</div>
+			
+				<div class="tit_area">
+					<h4 class="tit">입찰개요</h4>
+				</div>
+				<div class="view_area">
+					<table>
+						<caption>입찰개요</caption>
+				    	<colgroup>
+				        	<col style="width: 15%;">						        
+				        	<col style="width: 35%;">						        
+				        	<col style="width: 15%;">						        
+				        	<col style="width: 35%;">								        
+						</colgroup>
+				    	<tr>
+				    		<th scope="row">입찰방법</th>
+				    		<td>
+				    			${bidPlanDetail.BID_MTCD_NM}
+				    		</td>
+				            <th scope="row">계약구분</th>
+				            <td>
+			            		${bidPlanDetail.CONT_SECD_NM }<c:if test="${bidPlanDetail.CONT_DECD eq '200'}">&nbsp;/&nbsp;${bidPlanDetail.CONT_DECD_NM}</c:if>
+				            </td>
+				        </tr>
+				        <tr>
+				            <th scope="row" class="bullet_orange bullet_orange2"><label for="P_BID_NM">입찰공고명</label></th>
+				            <td colspan="3">
+		                        <input type="text" id="P_BID_NM" name="P_BID_NM"  value="${bidPlanDetail.PCRQ_NM}" maxlength="1000">
+				            </td>
+				        </tr>
+				        <tr class="grlDiv">    
+				            <th scope="row">제안서(규격서)필수여부</th>
+				            <td>
+				            	<comTag:cmmnCdValueRadio id="P_PRPDC_ESS_YN" name="P_PRPDC_ESS_YN_DISP" selectKey="${comFn:nvl(bidPlanDetail.PRPDC_ESS_YN, 'N')}" list="{'Y':'예', 'N':'아니오'}"/>
+				            	<input type="hidden" name="P_PRPDC_ESS_YN" value="N">
+				            </td>
+				            <th scope="row">G2B 동시게시여부</th>
+				            <td>
+				            	<comTag:cmmnCdValueRadio name="P_G2B_NTFY_YN"  selectKey="${comFn:nvl(bidPlanDetail.G2B_NTFY_YN, 'Y')}" list="{'Y':'예', 'N':'아니오'}"/>
+				            	<input type="hidden" id="P_OPNG_SYS_SECD" name="P_OPNG_SYS_SECD" value="${bidPlanDetail.OPNG_SYS_SECD }">
+				            </td>				            
+						</tr>
+						<tr class="emrgDiv" <c:if test="${bidPlanDetail.EMRG_YN ne 'Y'}"> style="display: none;"</c:if>>
+				            <th scope="row" class="bullet_orange"><label for="P_EMRG_BID_RSN">긴급입찰사유</label></th>
+				            <td colspan="3">
+		                        <input type="text" id="P_EMRG_BID_RSN" name="P_EMRG_BID_RSN" value="${bidPlanDetail.EMRG_BID_RSN}" maxlength="4000">
+				            </td>
+				        </tr>
+				        <tr>
+		                    <th scope="row"><label for="P_CONT_TE" class="cdtDiv">계약기간(TEXT)</label></th>
+		                    <td>
+		                        <input type="text" class="cdtDiv" id="P_CONT_TE" name="P_CONT_TE" value="${bidPlanDetail.CONT_TE}" maxlength="1000" onblur="contTeEvent(this)">
+		                    </td>
+				        	<th scope="row"><label for="P_CONT_STDE"  class="cddDiv">계약기간</label></th>
+		                    <td>
+		                    	<div class="cddDiv">
+			                        <input type="text" id="P_CONT_STDE" name="P_CONT_STDE" class="w120" date value="${comFn:formatDate(bidPlanDetail.CONT_STDE,'yyyyMMdd','yyyy-MM-dd')}">
+			                        &nbsp;~&nbsp;
+			                        <input type="text" id="P_CONT_ENDE" name="P_CONT_ENDE" class="w120" date value="${comFn:formatDate(bidPlanDetail.CONT_ENDE,'yyyyMMdd','yyyy-MM-dd')}">
+		                    	</div>
+		                    </td>
+		                </tr>
+				        <tr class="grlDiv">
+				        	<th scope="row" class="bullet_orange"><label for="P_ESTT_AMT">추정금액 (원)</label></th>
+		                    <td>
+		                        <input type="text" class="tr" id="P_ESTT_AMT" name="P_ESTT_AMT" money value="${comFn:formatMoney(bidPlanDetail.ESTT_AMT)}" maxlength="22">
+		                    </td>
+				        	<th scope="row" class="bullet_orange"><label for="P_ESTT_PRCE">추정가격 (원)</label></th>
+		                    <td>
+		                        <input type="text" class="tr" id="P_ESTT_PRCE" name="P_ESTT_PRCE" money value="${comFn:formatMoney(bidPlanDetail.ESTT_PRCE)}" maxlength="22">
+		                    </td>
+		                </tr>
+		                <tr>
+							<th scope="row">SW사업대상</th>
+							<td colspan="3">
+								<comTag:cmmnCdValueRadio name="P_SW_BSNS_OBJ_YN"  selectKey="${comFn:nvl(bidPlanDetail.SW_BSNS_OBJ_YN, 'N')}" list="{'Y':'예', 'N':'아니오'}"/>
+								<input type="hidden" name="P_TNDR_AMT_STAX_YN" value="Y">
+							</td>
+		                </tr>		                
+		                <c:if test="${bidPlanDetail.CONT_SECD eq '4'}">
+		                <tr>
+							<th scope="row">통화</th>
+							<td>
+								<comTag:comCmcdCdValueComboBox id="P_CURR_SECD" name="P_CURR_SECD" selectKey="${bidPlanDetail.CURR_SECD}" cdId="CURR_SECD" headerKey="" headerValue="선택" width="160"/>
+							</td>
+							<th scope="row">환율</th>
+							<td>
+								<input type="text" class="tr" id="P_EXRT" name="P_EXRT" value="${comFn:formatMoney(bidPlanDetail.EXRT)}" maxlength="22" money>
+							</td>
+		                </tr>
+		                </c:if>
+				    </table>
+				</div>
+				
+				<div class="tit_area">
+					<h4 class="tit">입찰방법</h4>
+				</div>
+				<div class="view_area">
+					<table>
+						<caption>입찰방법</caption>
+				    	<colgroup>
+				        	<col style="width: 15%;">						        
+				        	<col style="width: 35%;">						        
+				        	<col style="width: 15%;">						        
+				        	<col style="width: 35%;">		
+				        </colgroup>
+				        <tr>
+				            <th scope="row" class="bullet_orange"><label for="P_CONT_MTCD">계약방법</label></th>
+				            <td colspan="3">
+			            		<comTag:comCmcdCdValueComboBox id="P_CONT_MTCD" name="P_CONT_MTCD"   selectKey="${bidPlanDetail.CONT_MTCD}" cdId="CONT_MTCD" cond1="BID" headerKey="" headerValue="선택" width="180"/>
+				            </td>
+				        </tr>
+				        <tr>
+				        	<th scope="row" class="bullet_orange"><label for="P_SBID_MTCD">낙찰자선정방법</label></th>
+				            <td>
+			            		<comTag:comCmcdCdValueComboBox id="P_SBID_MTCD" name="P_SBID_MTCD"   selectKey="${bidPlanDetail.SBID_MTCD}" cdId="SBID_MTCD" cond1="BID" headerKey="" headerValue="선택" width="180"/>
+				            </td>
+							<th scope="row" id="negoTH">
+								<%-- 낙찰자선정방식이 [적격심사]가 아닐 경우 활성화 --%>
+								<label for="P_SBID_LWST_RT" class="elgbDiv grlDiv lwstDiv" <c:if test="${bidPlanDetail.SBID_MTCD ne '31' and bidPlanDetail.SBID_MTCD ne '20'}">style="display: none;"</c:if>>낙찰하한율 (%)</label>
+								<%-- 낙찰자선정방식이 [적격심사]가 아닐 경우 활성화 End--%>
+								
+								<%-- 낙찰자선정방식이 [협상에의한계약]이 아닐 경우 활성화 --%>
+								<label for="P_TCHN_SCR_RT" class="negoDiv grlDiv" <c:if test="${bidPlanDetail.SBID_MTCD ne '40'}">style="display: none;"</c:if>>합산비율</label>
+								<%-- 낙찰자선정방식이 [협상에의한계약]이 아닐 경우 활성화 End--%>
+							</th>
+							<td>
+			                    <div class="elgbDiv grlDiv lwstDiv" <c:if test="${bidPlanDetail.SBID_MTCD ne '31'}"> style="display:none;"</c:if>>
+				                    <%-- 낙찰자선정방식이 [적격심사]가 아닐 경우 활성화 --%>
+			                        <input type="text" class="tr PT4 elgbDiv lwstDiv" id="P_SBID_LWST_RT" name="P_SBID_LWST_RT" value="${bidPlanDetail.SBID_LWST_RT}" maxlength="10">
+			                    	<%-- 낙찰자선정방식이 [적격심사]가 아닐 경우 활성화 End--%>
+			                    </div>
+			                    
+		                    	<%-- 낙찰자선정방식이 [협상에의한계약]이 아닐 경우 활성화 --%>
+			                    <div class="negoDiv grlDiv" <c:if test="${bidPlanDetail.SBID_MTCD ne '40'}"> style="display:none;"</c:if>>
+									기술점수비율&nbsp;<input type="text" class="negoDiv" id="P_TCHN_SCR_RT" name="P_TCHN_SCR_RT" value="${bidPlanDetail.TCHN_SCR_RT }" maxlength="1" numeric  style="width: 50px;">
+									&nbsp;:&nbsp;
+									가격점수비율&nbsp;<input type="text" class="negoDiv" id="P_PRCE_SCR_RT" name="P_PRCE_SCR_RT" value="${bidPlanDetail.PRCE_SCR_RT }" maxlength="1" numeric  style="width: 50px;">
+			                    </div>
+								<%-- 낙찰자선정방식이 [협상에의한계약]이 아닐 경우 활성화 End--%>
+		                    </td>
+				        </tr>
+				        <tr class="elgbDiv grlDiv negoDiv" <c:if test="${bidPlanDetail.SBID_MTCD ne '31'}"> style="display:none;"</c:if>>
+				        	<th scope="row"><label for="P_ELGB_ESTM_KDCD_CTRC">적격심사종류</label></th>
+				        	<td>
+				        		<comTag:comCmcdCdValueComboBox id="P_ELGB_ESTM_KDCD_CTRC" name="P_ELGB_ESTM_KDCD_VIEW" selectKey="${bidPlanDetail.ELGB_ESTM_KDCD}" cdId="ELGB_ESTM_KDCD" cond1="CTRC" className="ctrcDiv" headerKey="" headerValue="선택"/>
+				        		<comTag:comCmcdCdValueComboBox id="P_ELGB_ESTM_KDCD_SVC_TCHN" name="P_ELGB_ESTM_KDCD_VIEW" selectKey="${bidPlanDetail.ELGB_ESTM_KDCD}" cdId="ELGB_ESTM_KDCD" cond1="SVC" cond2="TCHN" className="svcDiv svcKdDiv svcTchnDiv" headerKey="" headerValue="선택"/>
+				        		<comTag:comCmcdCdValueComboBox id="P_ELGB_ESTM_KDCD_SVC_ACDM" name="P_ELGB_ESTM_KDCD_VIEW" selectKey="${bidPlanDetail.ELGB_ESTM_KDCD}" cdId="ELGB_ESTM_KDCD" cond1="SVC" cond2="ACDM" className="svcDiv svcKdDiv svcAcdmDiv" headerKey="" headerValue="선택"/>
+				        		<comTag:comCmcdCdValueComboBox id="P_ELGB_ESTM_KDCD_SVC_FCLT" name="P_ELGB_ESTM_KDCD_VIEW" selectKey="${bidPlanDetail.ELGB_ESTM_KDCD}" cdId="ELGB_ESTM_KDCD" cond1="SVC" cond2="FCLT" className="svcDiv svcKdDiv svcFcltDiv" headerKey="" headerValue="선택"/>
+				        		<comTag:comCmcdCdValueComboBox id="P_ELGB_ESTM_KDCD_SVC_INFO" name="P_ELGB_ESTM_KDCD_VIEW" selectKey="${bidPlanDetail.ELGB_ESTM_KDCD}" cdId="ELGB_ESTM_KDCD" cond1="SVC" cond2="INFO" className="svcDiv svcKdDiv svcInfoDiv" headerKey="" headerValue="선택"/>
+				        		<comTag:comCmcdCdValueComboBox id="P_ELGB_ESTM_KDCD_SVC_WST" name="P_ELGB_ESTM_KDCD_VIEW" selectKey="${bidPlanDetail.ELGB_ESTM_KDCD}" cdId="ELGB_ESTM_KDCD" cond1="SVC" cond2="WST" className="svcDiv svcKdDiv svcWstDiv" headerKey="" headerValue="선택"/>
+				        		<comTag:comCmcdCdValueComboBox id="P_ELGB_ESTM_KDCD_SVC_LAND" name="P_ELGB_ESTM_KDCD_VIEW" selectKey="${bidPlanDetail.ELGB_ESTM_KDCD}" cdId="ELGB_ESTM_KDCD" cond1="SVC" cond2="LAND" className="svcDiv svcKdDiv svcLandDiv" headerKey="" headerValue="선택"/>
+				        		<comTag:comCmcdCdValueComboBox id="P_ELGB_ESTM_KDCD_PRCH" name="P_ELGB_ESTM_KDCD_VIEW" selectKey="${bidPlanDetail.ELGB_ESTM_KDCD}" cdId="ELGB_ESTM_KDCD" cond1="PRCH" className="buyDiv" headerKey="" headerValue="선택"/>
+				        		<input type="hidden" id="P_ELGB_ESTM_KDCD" name="P_ELGB_ESTM_KDCD" value="${bidPlanDetail.ELGB_ESTM_KDCD}">
+				        	</td>
+				        	<th scope="row">
+				        		<label for="P_ELGB_LMT_SCR">적격심사통과점수</label>
+				        	</th>
+				        	<td>
+				        		<input type="text" class="PT0" id="P_ELGB_LMT_SCR" name="P_ELGB_LMT_SCR" value="${bidPlanDetail.ELGB_LMT_SCR }" numeric maxlength="3">
+				        	</td>
+				        </tr>
+				        <tr class="grlDiv">
+				        	<th scope="row" class="bullet_orange"><label for="P_ESTPC_SECD">예가방식</label></th>
+				            <td>
+			            		<comTag:comCmcdCdValueComboBox id="P_ESTPC_SECD" name="P_ESTPC_SECD"   selectKey="${bidPlanDetail.ESTPC_SECD}" cdId="ESTPC_SECD" headerKey="" headerValue="선택" width="180"/>
+							</td>
+				        	<th scope="row">
+				        		<label for="P_BASE_AMT" class="estpcDiv" <c:if test="${bidPlanDetail.ESTPC_SECD eq '180002'}"> style="display:none;"</c:if>>기초금액 (원)</label>
+				        	</th>
+				        	<td>
+				        		<input type="text" class="tr estpcDiv" id="P_BASE_AMT" name="P_BASE_AMT" money value="${comFn:formatMoney(bidPlanDetail.ESTT_AMT)}" maxlength="22" <c:if test="${bidPlanDetail.ESTPC_SECD eq '180002'}"> style="display:none;"</c:if>>
+				        	</td>
+				        </tr>
+				        <tr class="prepDiv grlDiv" <c:if test="${bidPlanDetail.ESTPC_SECD ne '180000'}"> style="display:none;"</c:if>>
+				        	<th scope="row"><label for="P_PLR_ESTPC_RNG_CD">복수예비가격범위</label></th>
+				            <td colspan="3">
+			            		<comTag:comCmcdCdValueComboBox id="P_PLR_ESTPC_RNG_CD" name="P_PLR_ESTPC_RNG_CD"   selectKey="${comFn:nvl(bidPlanDetail.PLR_ESTPC_RNG_CD,'NTN')}" cdId="PLR_ESTPC_RNG_CD" headerKey="" headerValue="선택" width="160"/>
+			            		<input type="hidden" name="P_ESTPC_UP_CNT" value="7">
+							</td>
+				        </tr>
+				        <tr class="grlDiv">    
+				            <th scope="row">입찰설명회여부</th>
+				            <td>
+				            	<comTag:cmmnCdValueRadio name="P_BID_BRFS_YN"  selectKey="${comFn:nvl(bidPlanDetail.BID_BRFS_YN, 'N')}" list="{'Y':'예', 'N':'아니오'}"/>
+				            </td>
+				            <%-- 입찰설명회 [예] 일 경우 활성화 --%>
+				            <th scope="row"><label class="brfsDiv" <c:if test="${bidPlanDetail.BID_BRFS_YN ne 'Y'}">style="display:none;"</c:if>>입찰설명회필수참석여부</label></th>
+				            <td>
+				            	<div class="brfsDiv" <c:if test="${bidPlanDetail.BID_BRFS_YN ne 'Y'}">style="display:none;"</c:if>>
+				            		<comTag:cmmnCdValueRadio name="P_BID_BRFS_ATND_YN"  selectKey="${comFn:nvl(bidPlanDetail.BID_BRFS_ATND_YN, 'N')}" list="{'Y':'예', 'N':'아니오'}" className="brfsDiv" />
+				            	</div>
+				            </td>
+						</tr>
+						<tr class="brfsDiv grlDiv" <c:if test="${bidPlanDetail.BID_BRFS_YN ne 'Y'}">style="display:none;"</c:if>>    
+				            <th scope="row"><label for="P_BRFS_PLC_NM">입찰설명회장소</label></th> 
+		                    <td colspan="3">
+		                        <input type="text" id="P_BRFS_PLC_NM" name="P_BRFS_PLC_NM" value="${bidPlanDetail.BRFS_PLC_NM}" maxlength="1000">
+		                    </td>
+						</tr>
+						<%-- 입찰설명회 [예] 일 경우 활성화 END--%>
+						<%-- 현장설명회 [예] 일 경우 활성화 END--%>
+						
+						<tr class="exmtNDiv grlDiv">
+		                    <th scope="row"><label for="P_BID_GTAMT_RT" class="bidgrRtDiv">입찰보증률 (%)</label></th>
+		                    <td>
+		                    	<input type="text" id="P_BID_GTAMT_RT" name="P_BID_GTAMT_RT" value="5" class="PT2 bidgrRtDiv">
+		                    </td>
+		                    <th scope="row"><label for="P_BIDGR_AMT" class="bidgrAmtDiv">입찰보증금 (원)</label></th>
+		                    <td>
+								<input type="text" id="P_BIDGR_AMT" name="P_BIDGR_AMT" value="${comFn:formatMoney(bidPlanDetail.BIDGR_AMT) }" money class="bidgrAmtDiv" style="display:none;">
+		                    </td>
+		                </tr>
+		                <tr class="grlDiv">
+		                    <th scope="row"><label for="P_PRTC_QLF_CNTN">입찰참가자격</label></th>
+		                    <td colspan="3">
+		                        <textarea id="P_PRTC_QLF_CNTN" name="P_PRTC_QLF_CNTN" style="width: 100%; height: 120px;" maxlength="4000"></textarea>
+		                    </td>
+		                </tr>
+		                <tr class="grlDiv">
+		                	<th scope="row" class="bullet_orange"><label for="P_ASSO_SPDM_CD">공동수급</label></th>
+		                    <td>
+			            		<comTag:comCmcdCdValueComboBox id="P_ASSO_SPDM_CD" name="P_ASSO_SPDM_CD"   selectKey="${bidPlanDetail.ASSO_SPDM_CD}" cdId="ASSO_SPDM_CD" headerKey="" headerValue="선택" width="180"/>
+		                    </td>
+		                    <th scope="row" class="bullet_orange"><label for="P_SMPR_BID_SECD">동가입찰옵션</label></th>
+		                    <td>
+			            		<comTag:comCmcdCdValueComboBox id="P_SMPR_BID_SECD" name="P_SMPR_BID_SECD"   selectKey="${bidPlanDetail.SMPR_BID_SECD}" cdId="SMPR_BID_SECD" headerKey="" headerValue="선택" width="180"/>
+			            	</td>
+		                </tr>
+				    </table>
+				</div>
+				
+				<%-- 계약방법이 [지명경쟁] 일 경우 활성화 --%>
+		        <div class="slctDiv" <c:if test="${bidPlanDetail.CONT_MTCD ne '10001' and bidPlanDetail.CONT_MTCD ne '10005'}"> style="display: none;"</c:if>>
+		        	<div class="tit_area">
+		        		<div class="tit_area">
+		        			<h4 class="tit" style="clear: both;">지명업체</h4>
+		        		</div>
+				        <div class="btn_right">
+				            <button type="button" class="btn btn_s2 btn_c2" id="nmenSearchBtn">업체추가</button>
+				            <button type="button" class="btn btn_s2 btn_c2" id="nmenDeleteBtn">업체삭제</button>
+				        </div>
+			        </div>
+					<div class="view_area" style="margin-bottom: 30px;">
+			            <table>
+			                <caption>지명업체선택</caption>
+			                <colgroup>
+			                    <col style="width: 5%;">
+			                   	<col style="width: 20%;">
+			                   	<col style="width: auto;">
+			                   	<col style="width: 20%;">
+			                </colgroup>
+			                <thead>
+				                <tr>
+				                    <th scope="col" class="txtc">선택</th>
+				                    <th scope="col" class="txtc">사업자번호</th>
+				                    <th scope="col" class="txtc">업체명</th>
+				                    <th scope="col" class="txtc">대표자명</th>
+				                </tr>
+			                </thead>
+			                <tbody id="nmenChoiseHiddTbdy">
+			                	<tr style="display: none;">
+									<td class="txtc">
+										<input type="checkbox" id="nmenChoiseCbx" name="nmenChoiseCbx">
+										<input type="hidden" name="P_VEND_REG_NO" disabled>
+									</td>
+									<td bizrNo class="txtc"></td>
+									<td entrpsNm></td>
+									<td rprsntvNm class="txtc"></td>
+								</tr>
+			                </tbody>
+			                <tbody id="nmenChoiseShowTbdy">
+			                	<c:forEach var="data" items="${bidNmfpcEntrpsList}" varStatus="status">
+									<tr class="row">
+										<td  class="txtc">
+											<input type="checkbox" id="nmenChoiseCbx${status.count}" name="nmenChoiseCbx">
+											<input type="hidden" name="P_VEND_REG_NO" value="${data.VEND_REG_NO}">
+											<c:set var="cnt" value="${status.count}" scope="request" />
+										</td>
+										<td class="txtc">${data.BIZRNO}</td>
+										<td>${data.VEND_NM}</td>
+										<td class="txtc">${data.RPRS_NM}</td>
+									</tr>
+								</c:forEach>
+			                </tbody>
+			                <tbody>
+				               	<tr class="row" id="nmenChoiseEmpty" <c:if test="${not empty bidNmfpcEntrpsList}"> style="display:none;"</c:if>>
+				               		<td colspan="4" class="txtc">선택된 업체가 없습니다.<input type="hidden" id="cnt" value="${cnt}"></td>
+				               	</tr>
+			               	</tbody>
+			            </table>
+			        </div>
+		        </div>
+		        <%-- 계약방법이 [지명경쟁] 일 경우 활성화 End --%>
+		        
+		        <%-- 계약방법이 [제한경쟁] 일 경우 활성화 --%>
+		        <div class="lmtDiv" <c:if test="${bidPlanDetail.CONT_MTCD ne '10002'}"> style="display: none;"</c:if>>
+		        	<div class="tit_area">
+		        		<h4 class="tit">투찰제한</h4>
+		        	</div>
+		        	<div class="view_area" style="margin-bottom: 30px;">
+						<table>
+							<caption>투찰제한</caption>
+					    	<colgroup>
+				        	<col style="width: 15%;">						        
+				        	<col style="width: 35%;">						        
+				        	<col style="width: 15%;">						        
+				        	<col style="width: 35%;">		
+					        </colgroup>
+					        <tr>
+					            <th scope="row"><label for="P_ARA_LMT_CD">지역제한</label></th>
+					            <td>
+					            	<comTag:comCmcdCdValueComboBox id="P_ARA_LMT_CD" name="P_ARA_LMT_CD"   selectKey="${bidPlanDetail.ARA_LMT_CD}" cdId="ARA_LMT_CD" headerKey="" headerValue="선택" width="180"/>
+					            </td>
+					            <th scope="row"><label for="P_BTP_LMT_CD">업종제한</label></th>
+					            <td>
+					            	<input type="text" class="tr w180" id="P_BTP_LMT_CD" name="P_BTP_LMT_CD" value="${bidPlanDetail.BTP_LMT_CD}" />
+					            </td>
+					        </tr>
+						</table>
+					</div>
+				</div>
+		        <%-- 계약방법이 [제한경쟁] 일 경우 활성화 End --%>
+				
+				<div class="tit_area">
+		        	<h4 class="tit grlDiv">계약조건</h4>
+		        </div>
+				<div class="view_area grlDiv">
+		            <table>
+		                <caption>계약조건</caption>
+		                <colgroup>
+				        	<col style="width: 15%;">						        
+				        	<col style="width: 35%;">						        
+				        	<col style="width: 15%;">						        
+				        	<col style="width: 35%;">		
+		                </colgroup>
+		                <tbody>
+		                <tr>
+		                    <th scope="row" class="bullet_orange"><label for="P_CPDF_RT">지체상금률 (%)</label></th>
+		                    <td>
+		                        <input type="text" class="tr PT2 w180" id="P_CPDF_RT" name="P_CPDF_RT" value="<c:if test="${not empty bidPlanDetail.ANNC_NO}">${bidPlanDetail.CPDF_RT}</c:if>" numeric maxlength="4"> /1,000
+		                    </td>
+		                    <th scope="row" class="bullet_orange"><label for="P_CTFL_GTAMT_RT">계약보증금률 (%)</label></th>
+		                    <td>
+		                        <input type="text" class="tr PT2 w180" id="P_CTFL_GTAMT_RT" name="P_CTFL_GTAMT_RT" value="<c:if test="${empty bidPlanDetail.ANNC_NO}">10</c:if><c:if test="${not empty bidPlanDetail.ANNC_NO}">${bidPlanDetail.CTFL_GTAMT_RT}</c:if>" numeric maxlength="4">
+		                    </td>
+		                </tr>
+		                <tr>
+		                    <th scope="row" class="bullet_orange"><label for="P_DFFL_GTAMT_RT">하자이행보증금률 (%)</label></th>
+		                    <td>
+		                        <input type="text" class="tr PT2 w180" id="P_DFFL_GTAMT_RT" name="P_DFFL_GTAMT_RT" value="<c:if test="${empty bidPlanDetail.ANNC_NO}">5</c:if><c:if test="${not empty bidPlanDetail.ANNC_NO}">${bidPlanDetail.DFFL_GTAMT_RT}</c:if>" numeric maxlength="4">
+		                    </td>
+		                    <%-- 계약구분이 [구매] 일 경우 활성화 --%>
+		                    <th scope="row"><label for="P_ITEM_DRCD" class="buyDiv" <c:if test="${bidPlanDetail.CONT_SECD ne '0' and bidPlanDetail.CONT_SECD ne '4'}"> style="display: none;"</c:if>>물품인도조건</label></th>
+		                    <td>
+		                    	<div class="buyDiv" <c:if test="${bidPlanDetail.CONT_SECD ne '0' and bidPlanDetail.CONT_SECD ne '4'}">style="display: none;"</c:if>>
+			            			<comTag:comCmcdCdValueComboBox id="P_ITEM_DRCD" name="P_ITEM_DRCD"   selectKey="${bidPlanDetail.ITEM_DRCD}" cdId="ITEM_DRCD" headerKey="" headerValue="선택" className="buyDiv" width="180"/>
+			            		</div>
+		                    </td>
+		                </tr>
+		                <tr class="buyDiv" <c:if test="${bidPlanDetail.CONT_SECD ne '0' and bidPlanDetail.CONT_SECD ne '4'}"> style="display: none;"</c:if>>
+		                    <th scope="row"><label for="P_DLGD_PLC_NM">납품장소</label></th>
+		                    <td colspan="3">
+		                        <textarea id="P_DLGD_PLC_NM" name="P_DLGD_PLC_NM" style="width: 100%; height: 50px;" maxlength="4000">${bidPlanDetail.DLGD_PLC_NM}</textarea>
+		                    </td>
+		                </tr>
+		                <tr class="buyDiv" <c:if test="${bidPlanDetail.CONT_SECD ne '0' and bidPlanDetail.CONT_SECD ne '4'}"> style="display: none;"</c:if>>
+		                    <th scope="row"><label for="P_DLGD_TE_CNTN">납품기한</label></th>
+		                    <td colspan="3">
+		                    	<textarea id="P_DLGD_TE_CNTN" name="P_DLGD_TE_CNTN" style="width: 100%; height: 50px;" maxlength="4000">${bidPlanDetail.DLGD_TE_CNTN}</textarea>
+		                    </td>
+		                </tr>
+		                <%-- 
+		                <tr class="buyDiv" <c:if test="${bidPlanDetail.CONT_SECD ne '0' and bidPlanDetail.CONT_SECD ne '4'}"> style="display: none;"</c:if>>
+		                    <th scope="row"><label for="P_ISTL_LMT">설치기한</label></th>
+		                    <td colspan="3">
+		                    	<textarea id="P_ISTL_LMT" name="P_ISTL_LMT" style="width: 100%; height: 50px;" maxlength="4000">${bidPlanDetail.ISTL_LMT}</textarea>
+		                    </td>
+		                </tr>
+		                --%>
+		                <tr>
+		                    <th scope="row"><label for="P_RMK">비고</label></th>
+		                    <td colspan="3">
+		                    	<textarea id="P_RMK" name="P_RMK" style="width: 100%; height: 50px;" maxlength="4000">${bidPlanDetail.RMK}</textarea>
+		                    </td>
+		                </tr>		                
+		                <%-- 계약구분이 [구매] 일 경우 활성화 END --%>
+		                </tbody>
+		            </table>
+		        </div>
+		        
+				<div class="tit_area">		        
+		        	<h4 class="tit">입찰진행순서</h4>
+		        </div>
+				<div class="view_area grlDiv">
+		            <table>
+		                <caption>입찰진행순서</caption>
+		                <colgroup>
+				        	<col style="width: 15%;">						        
+				        	<col style="width: 85%;">						        
+		                </colgroup>
+		                <tbody>
+			                <tr>
+			                    <th scope="row" class="bullet_orange"><label for="P_ANNC_DT">입찰공고일시</label></th>
+			                    <td>
+									<input type="text"  id="P_ANNC_DT" name="P_ANNC_DT" class="w120" date>
+			                        <span class="wave">&nbsp;</span>
+			                        <input type="text" class="float-left" id="P_ANNC_DT_HH" name="P_ANNC_DT_HH" style="width: 50px" maxlength="2" numeric ><span class="wave">:</span>
+			                        <input type="text" class="float-left mr5" id="P_ANNC_DT_MM" name="P_ANNC_DT_MM" style="width: 50px" maxlength="2"  numeric>
+			                    </td>
+			                </tr>
+			                <%-- 입찰설명회 여부가 [예] 일 경우에 활성화 --%>
+			                <c:if test="${empty bidPlanDetail.ROUND_NO or bidPlanDetail.ROUND_NO < 2}">
+			                <tr class="brfsDiv" <c:if test="${bidPlanDetail.BID_BRFS_YN ne 'Y'}"> style="display:none;"</c:if>>
+			                    <th scope="row" id="brfsTh"><label for="P_BRFS_DT">입찰설명회일시</label></th>
+			                    <td>
+									<input type="text"  id="P_BRFS_DT" name="P_BRFS_DT" class="w120" date >
+			                        <span class="wave">&nbsp;</span>
+			                        <input type="text" class="float-left" id="P_BRFS_DT_HH" name="P_BRFS_DT_HH" style="width: 50px" maxlength="2" numeric ><span class="wave">:</span>
+			                        <input type="text" class="float-left" id="P_BRFS_DT_MM" name="P_BRFS_DT_MM" style="width: 50px" maxlength="2" numeric >
+			                    </td>
+			                </tr>
+			                <%-- 입찰설명회 여부가 [예] 일 경우에 활성화 End --%>
+							<tr class="prpdcDiv"<c:if test="${bidPlanDetail.PRPDC_ESS_YN ne 'Y'}"> style="display:none;"</c:if>>
+			                    <th scope="row"><label for="P_PRPDC_SBMT_STDT">제안서제출기간</label></th>
+			                    <td>
+			                    	<div style="display: inline-block;">
+					                    <input type="text"  id="P_PRPDC_SBMT_STDT" name="P_PRPDC_SBMT_STDT" class="w120" date >
+				                        <span class="wave">&nbsp;</span>
+				                        <input type="text" class="float-left" id="P_PRPDC_SBMT_STDT_HH" name="P_PRPDC_SBMT_STDT_HH" style="width: 50px" maxlength="2" numeric ><span class="wave">:</span>
+				                        <input type="text" class="float-left" id="P_PRPDC_SBMT_STDT_MM" name="P_PRPDC_SBMT_STDT_MM" style="width: 50px" maxlength="2" numeric >
+			                        </div>
+			                        <span class="wave">~</span>
+			                        <div style="display: inline-block;">
+					                    <input type="text"  id="P_PRPDC_SBMT_ENDT" name="P_PRPDC_SBMT_ENDT" class="w120" date >
+	                       				<span class="wave">&nbsp;</span>
+				                        <input type="text" class="float-left" id="P_PRPDC_SBMT_ENDT_HH" name="P_PRPDC_SBMT_ENDT_HH" style="width: 50px" maxlength="2" numeric ><span class="wave">:</span>
+				                        <input type="text" class="float-left" id="P_PRPDC_SBMT_ENDT_MM" name="P_PRPDC_SBMT_ENDT_MM" style="width: 50px" maxlength="2" numeric >
+			                        </div>
+			                    </td>
+			                </tr>
+			                </c:if>
+			                <tr class="sbmtDiv"<c:if test="${bidPlanDetail.SBID_MTCD eq '34'}"> style="display:none;"</c:if>>
+			                    <th scope="row" class="bullet_orange"><label for="P_BIDC_SBMT_STDT">입찰서제출기간</label></th>
+			                    <td>
+			                    	<div style="display: inline-block;">
+					                    <input type="text"  id="P_BIDC_SBMT_STDT" name="P_BIDC_SBMT_STDT" class="w120" date >
+				                        <span class="wave">&nbsp;</span>
+				                        <input type="text" class="float-left" id="P_BIDC_SBMT_STDT_HH" name="P_BIDC_SBMT_STDT_HH" style="width: 50px" maxlength="2" numeric ><span class="wave">:</span>
+				                        <input type="text" class="float-left" id="P_BIDC_SBMT_STDT_MM" name="P_BIDC_SBMT_STDT_MM" style="width: 50px" maxlength="2" numeric >
+			                        </div>
+			                        <span class="wave">~</span>
+			                        <div style="display: inline-block;">
+					                    <input type="text"  id="P_BIDC_SBMT_ENDT" name="P_BIDC_SBMT_ENDT" class="w120 edOpDt" date >
+				                        <span class="wave">&nbsp;</span>
+				                        <input type="text" class="float-left edOpDt" id="P_BIDC_SBMT_ENDT_HH" name="P_BIDC_SBMT_ENDT_HH" style="width: 50px" maxlength="2" numeric ><span class="wave">:</span>
+				                        <input type="text" class="float-left edOpDt" id="P_BIDC_SBMT_ENDT_MM" name="P_BIDC_SBMT_ENDT_MM" style="width: 50px" maxlength="2" numeric >
+			                       	</div>
+			                    </td>
+			                </tr>
+			                <tr class="sbmtDiv"<c:if test="${bidPlanDetail.SBID_MTCD eq '34'}"> style="display:none;"</c:if>>
+			                    <th scope="row" class="bullet_orange"><label for="P_OPNG_DT">개찰일시</label></th>
+			                    <td>
+				                    <input type="text" id="P_OPNG_DT" name="P_OPNG_DT" class="w120 edOpDt" date >
+			                        <span class="wave">&nbsp;</span>
+			                        <input type="text" class="float-left edOpDt" id="P_OPNG_DT_HH" name="P_OPNG_DT_HH" style="width: 50px" maxlength="2" numeric ><span class="wave">:</span>
+			                        <input type="text" class="float-left edOpDt" id="P_OPNG_DT_MM" name="P_OPNG_DT_MM" style="width: 50px" maxlength="2" numeric >
+			                    </td>
+			                </tr>
+		                </tbody>
+		            </table>
+		        </div>
+		        
+		        
+	        	<div class="tit_area">
+			       	<h4 class="tit" style="clear: both;">입찰품목</h4>
+					<c:if test="${empty bidPlanDetail.IFC_ID}">
+						<c:if test="${ bidPlanDetail.UNI_ANNC_PSBL_YN eq 'Y' }">
+				        <div class="btn_right">
+				            <button type="button" class="btn btn_s2 btn_c2" id="biprInfoSearchBtn">품목추가</button>
+				            <button type="button" class="btn btn_s2 btn_c2" id="biprInfoDeleteBtn">품목삭제</button>
+				        </div>
+						</c:if>
+			        </c:if>
+		        </div>
+				<div class="view_area" style="margin-bottom: 30px; overflow: auto;">
+		            <table style="width:100%;">
+		                <caption>입찰품목정보</caption>
+		                <colgroup>
+		                    <col style="width: 4%;">
+		                   	<col style="width: 10%;">
+		                   	<col style="width: 10%;">
+		                   	<col style="width: auto;">
+		                   	<col style="width: 15%;">
+		                   	<col style="width: 8%;"> 
+		                   	<col style="width: 6%;">
+		                   	<col style="width: 8%;">
+		                   	<col style="width: 8%;">
+		                </colgroup>
+		                <thead>
+			                <tr>
+			                    <th scope="col" class="txtc">
+									<c:if test="${empty bidPlanDetail.IFC_ID}">선택</c:if>
+									<c:if test="${not empty bidPlanDetail.IFC_ID}">번호</c:if>
+			                    </th>
+			                    <th scope="col" class="txtc">구매요구번호</th>
+			                    <th scope="col" class="txtc">품목번호</th>
+			                    <th scope="col" class="txtc">품명</th>
+			                    <th scope="col" class="txtc">규격</th>
+			                    <th scope="col" class="txtc">단위</th>
+			                    <th scope="col" class="txtc">수량</th>
+			                    <th scope="col" class="txtc">추정단가<br/>(VAT포함)</th>
+			                    <th scope="col" class="txtc">추정금액<br/>(수량*단가)</th>
+			                </tr>
+		                </thead>
+		                <tbody id="biprInfoShowTbdy">
+		                	<c:forEach var="data" items="${bidPrdlsList}" varStatus="status">
+								<tr class="row">
+									<td class="txtc">
+										<c:if test="${empty bidPlanDetail.IFC_ID}"><input type="checkbox" id="biprInfoCbx${status.count }" name="biprInfoCbx"></c:if>
+										<c:if test="${not empty bidPlanDetail.IFC_ID}">${status.count}</c:if>	
+										<input type="hidden" name="P_BID_WAIT_NO" value="${data.BID_WAIT_NO}">
+										<input type="hidden" name="P_ITEM_SN" value="${data.ITEM_SN}">
+										<input type="hidden" name="P_ITEM_NO" value="${data.ITEM_NO}">
+										<input type="hidden" name="P_PCRQ_NO" value="${data.PCRQ_NO}">
+										<input type="hidden" name="P_PCRQ_ITEM_SN" value="${data.ITEM_SN}">
+									</td>
+									<td class="txtc">${data.PCRQ_NO}</td>
+									<td class="txtc">${data.ITEM_NO}</td>
+									<td><input type="hidden" name="P_ITEM_NM" value="${data.ITEM_NM}">${data.ITEM_NM}</td>
+									<td><input type="text" name="P_STND_NM" value="${data.STND_NM}"></td>
+									<td class="txtc">
+										<c:if test="${ empty bidPlanDetail.ANNC_NO }">
+											<input type="hidden" name="P_ITEM_UNNM" value="${data.UNIT}">${data.UNIT}
+										</c:if>
+										<c:if test="${ not empty bidPlanDetail.ANNC_NO }">
+											<input type="hidden" name="P_ITEM_UNNM" value="${data.ITEM_UNNM}">${data.ITEM_UNNM}
+										</c:if>
+									</td>
+									<td class="txtr pr5"><input type="hidden" name="P_ITEM_QTY" value="${data.ITEM_QTY}">${data.ITEM_QTY}</td>
+									<td class="txtr pr5">
+										<c:if test="${ empty bidPlanDetail.ANNC_NO }">
+											${comFn:formatMoney(data.ESTT_UPRC)}
+											<input type="hidden" name="P_RQST_UNIT" value="${data.ESTT_UPRC}">
+										</c:if>
+										<c:if test="${ not empty bidPlanDetail.ANNC_NO }">
+											${comFn:formatMoney(data.RQST_UNIT)}
+											<input type="hidden" name="P_RQST_UNIT" value="${data.RQST_UNIT}">
+										</c:if>
+									</td>
+									<td class="txtr pr5">
+										<c:if test="${ empty bidPlanDetail.ANNC_NO }">
+											${comFn:formatMoney(data.ESTT_UPRC * data.ITEM_QTY)}
+											<input type="hidden" name="P_SCH_UNIT" value="${data.ESTT_UPRC * data.ITEM_QTY}">
+										</c:if>
+										<c:if test="${ not empty bidPlanDetail.ANNC_NO }">
+											${comFn:formatMoney(data.RQST_UNIT * data.ITEM_QTY)}
+											<input type="hidden" name="P_SCH_UNIT" value="${data.RQST_UNIT * data.ITEM_QTY}">
+										</c:if>
+									</td>
+								</tr>
+							</c:forEach>
+		                </tbody>
+		            </table>
+		        </div>
+		        
+				<div class="tit_area">
+	            	<h4 class="tit">첨부파일</h4>
+				</div>
+	            <div class="view_area fileViewer">
+					<!-- 업로드 삽입. -->
+					<script type="text/javascript">
+						DEXT5UPLOAD.config.Mode = 'upload';
+						DEXT5UPLOAD.config.Width = '100%';
+						DEXT5UPLOAD.config.FolderNameRule = '/bid';
+						var dext5Upload = new Dext5Upload("upload");
+					</script>	            	
+				</div>	
+				<div id="upload_fileInfo"></div>
+			
+			    <div class="btn_wrap view_btn">
+					<button type="button" class="btn btn_m btn_orange" id="bidPlanRegistBtn">저장</button>
+			    	<button type="button" class="btn btn_m btn_del" id="listBtn">취소</button>
+			    </div>
+        	</div>
+        </fieldset>
+	</form>
+</div> <!--// content E-->
+
+<form id="listFrm" method="POST">
+	<input type="hidden" name="resourceName" value="${param.resourceName}">
+</form>
+
+<form id="ccpyPopupFrm" method="POST">
+	<input type="hidden" name="resourceName" value="${param.resourceName}">
+	<input type="hidden" name="setMulti" value="Y">
+</form>
+
+<form id="popupFrm" method="POST">
+	<input type="hidden" name="resourceName" value="${param.resourceName}">
+  	<input type="hidden" name="setMulti" value="Y">
+  	<input type="hidden" name="tchnChangerYn" value="Y">
+  	<input type="hidden" name="P_BID_WAIT_NO" value="${bidPlanDetail.BID_WAIT_NO }">
+  	<input type="hidden" name="gbn" value="BID">
+</form>
+
+<form id="fibPopupFrm" method="POST">
+	<input type="hidden" name="resourceName" value="${param.resourceName}">
+</form>
+
+<form id="registFormFrm" method="POST">
+	<input type="hidden" name="resourceName" value="${param.resourceName}">
+	<input type="hidden" name="P_ANNC_NO">
+	<input type="hidden" name="P_ANNC_NGR">
+	<input type="hidden" name="P_ROUND_NO">
+	<input type="hidden" name="P_USR_ID" value="${sessionScope.loginResult.USR_ID}">
+</form>
+
+<form id="elgbEstmKdcdFrm" method="POST">
+	<input type="hidden" name="P_ELGB_ESTM_KDCD">
+</form>
+
+<form id="ajaxItemForm" method="POST">
+	<input type="hidden" name="P_BID_WAIT_NO">
+	<input type="hidden" name="gbn" value="BID">
+</form>
+
+<%-- 파일 VIEW 폼 --%>
+<form id="fileViewFrm" method="POST">
+	<input type="hidden" id="P_VIEW_ATCHMNFL_GROUP_NO" name="P_VIEW_ATCHMNFL_GROUP_NO" value="${bidPlanDetail.REQEST_ATCHMNFL_GROUP_NO}">
+</form>

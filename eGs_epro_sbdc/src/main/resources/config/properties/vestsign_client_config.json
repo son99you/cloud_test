@@ -1,0 +1,29 @@
+{
+	"module-name" : "vestsign_client",
+	"module-version" : "v1.3.4",
+	"secure-mode" : false,
+	"tcp-dump" : true,
+	"param-dump" : true,
+	"engines" : [
+		{
+			"server-ip" : "127.0.0.1",
+			"server-port" : 9000
+		}
+	],
+	"log" : {
+			"log-dir" : "D:\ewGov-3.1.1-64bit\workspace\eGs_epro_ebs\src\main\webapp\vestsign\logs\",
+			"log-prefix": "vs_client_",
+			"log-suffix": ".log",
+			"log-level" : 5
+	},
+	"audit" : {
+		"audit-dir" : "D:\ewGov-3.1.1-64bit\workspace\eGs_epro_ebs\src\main\webapp\vestsign\logs\audit\",
+		"audit-prefix": "vs_client_audit_",
+		"audit-suffix": ".log"
+	},
+	"certificate" : {
+		"servercert" : ".D:\ewGov-3.1.1-64bit\workspace\eGs_epro_ebs\src\main\webapp\vestsign\cert\srvcertsignCert.der",
+		"serverkey" : "D:\ewGov-3.1.1-64bit\workspace\eGs_epro_ebs\src\main\webapp\vestsign\cert\srvcertsignPri.key",
+		"serverpwd" : "43a54c4d69779f259e1d39688aff2a3b"
+	}	
+}

@@ -1,0 +1,625 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * 전자입찰 > 입찰참가검토 Mapper
+ *
+ * <pre>
+ * sqlmap.oda.iep.elbi 
+ *    |_ IproEbidPartcptSttusMapper.xml
+ * 
+ * </pre>
+ * @date : 2015. 02. 23. 오후 5:29:51
+ * @version : 1.0
+ * @author : 은우소프트 손연우
+-->
+<mapper namespace="com.eunwoosoft.ipro.ebid.dao.IproEbidPartcptSttusDao">	
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰참가검토 목록조회_페이징 
+     * 2. 처리내용 :
+     *  	
+     * </pre>
+     * @Query ID : selectBidPartcptSttusListWithPgng
+     * @date : 2015. 02. 13.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 02. 13.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectBidPartcptSttusListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="bidPartcptSttusList"/>
+			<include refid="bidPartcptSttusWhere"/>
+			ORDER BY ANNC_NO DESC, ANNC_NGR DESC
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰참가검토 목록 총 건수 조회 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectBidPartcptSttusListTotcnt
+     * @date : 2015. 02. 23.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 02. 23.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectBidPartcptSttusListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="bidPartcptSttusList"/>
+			<include refid="bidPartcptSttusWhere"/>
+		) T1
+		WHERE 1 = 1		
+	</select>
+
+	<sql id="bidPartcptSttusList">
+		SELECT * FROM (
+			SELECT	ONE.ANNC_NO
+						, ONE.ANNC_NGR
+						,TWO.ROUND_NO
+						,ONE.CONT_SECD
+						,F_CDVAL_INQIRE('CONT_SECD', ONE.CONT_SECD) AS CONT_SECD_NM
+						,ONE.SBID_MTCD
+						,F_CDVAL_INQIRE('SBID_MTCD', ONE.SBID_MTCD) AS SBID_MTCD_NM
+						,ONE.BID_NM
+						,TWO.ANNC_DT
+						,ONE.CONT_MTCD
+						,F_CDVAL_INQIRE('CONT_MTCD', ONE.CONT_MTCD) AS CONT_MTCD_NM
+						,ONE.BID_PSCD
+						,F_CDVAL_INQIRE('BID_PSCD', ONE.BID_PSCD) AS BID_PSCD_NM
+						, CASE 
+						  WHEN	ONE.SBID_MTCD != '70'
+						   THEN		( '1' )
+						   ELSE		( '2' )
+						    END AS BDDPR
+						,ONE.EMRG_YN
+						, ONE.CHRGR_NM
+						, ONE.CHRGR_ID
+						, TWO.BIDC_SBMT_STDT
+						, TWO.BIDC_SBMT_ENDT
+						, ( SELECT COUNT(*)
+						       FROM T_BI_VEND_MST VM
+						     WHERE TWO.ANNC_NO  = VM.ANNC_NO
+						         AND TWO.ANNC_NGR = VM.ANNC_NGR
+						         AND TWO.ROUND_NO = VM.ROUND_NO ) AS OPEN_CNT
+						, CASE
+							WHEN	(	SELECT COUNT(1) 
+											FROM T_BI_VEND_MST 
+											WHERE 1=1 
+											AND ANNC_NO = TWO.ANNC_NO 
+											AND ANNC_NGR = TWO.ANNC_NGR 
+											AND ROUND_NO = TWO.ROUND_NO 
+											AND BID_ELCD IS NULL
+											AND BID_VEND_PSCD NOT IN ('OP01')
+										) &lt; 1
+							THEN		'검토완료'
+							ELSE		'검토전'
+						  END AS ELCD_PRGR_NM                           
+			FROM		T_BI_ROUND TWO
+						, T_BI_MST ONE
+	        WHERE	1=1
+	            AND	ONE.ANNC_NGR = ( SELECT MAX(ANNC_NGR) FROM T_BI_MST WHERE ANNC_NO = ONE.ANNC_NO )
+	            AND	TWO.ANNC_NO = ONE.ANNC_NO
+	            AND	TWO.ANNC_NGR = ONE.ANNC_NGR
+	            AND	TWO.ROUND_NO = (SELECT MAX(ROUND_NO) FROM T_BI_ROUND WHERE ANNC_NO = TWO.ANNC_NO AND ANNC_NGR = TWO.ANNC_NGR)
+	            AND	ONE.BID_PSCD IN ('PF20','PF30')
+	            AND	ONE.BID_MTCD IN ('BID')
+	            AND	NVL(ONE.DEL_AT,'N') != 'Y'
+	        )
+	</sql>
+	
+	<sql id="bidPartcptSttusWhere">
+		<where>
+		<if test='P_BID_NM_S != null and P_BID_NM_S != "" '>
+			AND BID_NM LIKE '%'||#{P_BID_NM_S}||'%'
+		</if>
+		<if test='P_ANNC_NO_S != null and P_ANNC_NO_S != "" '>
+			AND ANNC_NO LIKE '%'||#{P_ANNC_NO_S}||'%'
+		</if>
+		<if test='P_CONT_SECD_S != null and P_CONT_SECD_S != "" '>
+			AND CONT_SECD = #{P_CONT_SECD_S}
+		</if>
+		<if test='P_SBID_MTCD_S != null and P_SBID_MTCD_S != "" '>
+			AND SBID_MTCD = #{P_SBID_MTCD_S}
+		</if>
+		<if test='P_BID_PSCD_S != null and P_BID_PSCD_S != "" '>
+			AND BID_PSCD = #{P_BID_PSCD_S}
+		</if>
+		<if test='P_BIDC_SBMT_ENDT_STDE_S != null and P_BIDC_SBMT_ENDT_STDE_S != "" '>
+			AND TO_CHAR(TO_DATE(BIDC_SBMT_ENDT, 'yyyyMMddhh24miss'), 'yyyyMMdd') >= #{P_BIDC_SBMT_ENDT_STDE_S}
+		</if>
+		<if test='P_BIDC_SBMT_ENDT_ENDE_S != null and P_BIDC_SBMT_ENDT_ENDE_S != "" '>
+			AND TO_CHAR(TO_DATE(BIDC_SBMT_ENDT, 'yyyyMMddhh24miss'), 'yyyyMMdd') &lt;= #{P_BIDC_SBMT_ENDT_ENDE_S}
+		</if>
+		<if test='P_CHRGR_ID_S != null and P_CHRGR_ID_S != "" '>
+			AND CHRGR_ID = #{P_CHRGR_ID_S}
+		</if>		
+		</where>
+	</sql>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰공고 상세 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectBidInfoDetail
+     * @date : 2015. 02. 26.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 02. 26.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectBidInfoDetail" resultType="dataEntity">
+		SELECT	 ONE.ANNC_NO
+					,ONE.ANNC_NGR
+					,TWO.ROUND_NO
+					,ONE.BID_NM
+					,ONE.CONT_SECD
+					,F_CDVAL_INQIRE('CONT_SECD', ONE.CONT_SECD) AS CONT_SECD_NM
+					,ONE.CONT_DECD
+					,F_CDVAL_INQIRE('CONT_DECD', ONE.CONT_DECD) AS CONT_DECD_NM
+					,ONE.CONT_MTCD
+					,F_CDVAL_INQIRE('CONT_MTCD', ONE.CONT_MTCD) AS CONT_MTCD_NM
+					,ONE.BID_PSCD
+					,F_CDVAL_INQIRE('BID_PSCD', ONE.BID_PSCD) AS BID_PSCD_NM
+					,ONE.SBID_MTCD
+					,F_CDVAL_INQIRE('SBID_MTCD', ONE.SBID_MTCD) AS SBID_MTCD_NM
+					,ONE.ESTT_AMT
+					,ONE.ESTT_PRCE
+					,ONE.BSNS_BDG_AMT
+					,ONE.BID_BRFS_YN
+					,ONE.ASSO_SPDM_CD
+					,F_CDVAL_INQIRE('ASSO_SPDM_CD', ONE.ASSO_SPDM_CD) AS ASSO_SPDM_CD_NM
+					,ONE.UPRC_YN
+					,TWO.PRTC_APLY_ENDT
+					,TWO.ANNC_DT
+					,ONE.BRFS_DT
+					,TWO.BIDC_SBMT_STDT
+					,TWO.BIDC_SBMT_ENDT
+					,TWO.PRPDC_SBMT_STDT
+					,TWO.PRPDC_SBMT_ENDT
+					,TWO.OPNG_DT
+					,ONE.BSNS_BDG_STAX_YN
+					, ONE.PRPDC_ESS_YN
+					, ONE.ESTPC_SECD
+					, F_CDVAL_INQIRE('ESTPC_SECD', ONE.ESTPC_SECD) AS ESTPC_SECD_NM
+					, ONE.BASE_AMT
+					, ( SELECT LISTAGG(BFAN_NO,', ') WITHIN GROUP (ORDER BY BFAN_NO) FROM T_BI_BFAN_MST BF WHERE ONE.PRCH_NO = BF.PCAC_NO ) AS BFAN_NO_LIST
+		FROM		T_BI_MST ONE
+					, T_BI_ROUND TWO
+		WHERE 	ONE.ANNC_NO = TWO.ANNC_NO
+		AND		ONE.ANNC_NGR = TWO.ANNC_NGR
+		AND		TWO.ROUND_NO = (SELECT MAX(ROUND_NO) FROM T_BI_ROUND WHERE ANNC_NO = TWO.ANNC_NO AND ANNC_NGR = TWO.ANNC_NGR)
+		AND		ONE.ANNC_NO = #{P_ANNC_NO}
+		AND		ONE.ANNC_NGR = #{P_ANNC_NGR}
+	
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰참가업체 목록 조회 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectBidPartcptEntrpsList
+     * @date : 2015. 02. 26.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 02. 26.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectBidPartcptEntrpsList" resultType="dataEntity">
+		SELECT	VEND_MST.ANNC_NO
+					,VEND_MST.ANNC_NGR
+					,VEND_MST.ROUND_NO
+					,VEND_MST.BID_ELCD
+					,VEND_MST.VEND_REG_NO
+					,CU_MST.VEND_NM
+					,CU_MST.BIZRNO
+					,CU_MST.RPRS_NM
+					,VEND_GRNT.BIDGR_AMT
+					,VEND_GRNT.BIDGR_SECD
+					,F_CDVAL_INQIRE('BIDGR_SECD', VEND_GRNT.BIDGR_SECD) AS BIDGR_SECD_NM
+					,VEND_MST.BID_ABND_YN
+					,VEND_MST.BID_VEND_PSCD
+					,VEND_MST.ESTM_SCR
+					,VEND_MST.ESTM_SCR * (10/ (	SELECT TCHN_SCR_RT 
+																	FROM 	T_BI_MST 
+																	WHERE	ANNC_NO = VEND_MST.ANNC_NO 
+																	AND		ANNC_NGR = VEND_MST.ANNC_NGR) ) AS ESTM_SCR_BASE
+					,VEND_MST.ESTM_ELCD
+					,F_CDVAL_INQIRE('ESTM_ELCD', VEND_MST.ESTM_ELCD) AS ESTM_ELCD_NM
+					,VEND_MST.BID_ELCD
+					,F_CDVAL_INQIRE('BID_ELCD', VEND_MST.BID_ELCD) AS BID_ELCD_NM
+					,VEND_MST.NT_ELGB_RSN
+					,VEND_DTL.BID_TPI_SECD
+					,VEND_DTL.CHRGR_NM
+					,VEND_DTL.TEL_NO
+					,VEND_DTL.EMAL_ADDR
+					,VEND_DTL.SIGN_DT
+					,(	SELECT FILE_GRP_NO
+						FROM	T_BI_VEND_FILE
+						WHERE	ANNC_NO = VEND_MST.ANNC_NO
+						AND		ANNC_NGR = VEND_MST.ANNC_NGR
+						AND		ROUND_NO = VEND_MST.ROUND_NO
+						AND		VEND_REG_NO = VEND_MST.VEND_REG_NO
+						AND		BID_TPI_SECD = 'OP03'
+						AND		BID_SBMT_FSCD = 'DO02') AS FILE_GRP_NO
+		FROM	T_BI_VEND_MST VEND_MST
+					, T_BI_VEND_DTL VEND_DTL
+					, T_BI_VEND_GRNT VEND_GRNT
+					, T_CU_MST CU_MST
+		WHERE 	VEND_MST.ANNC_NO = VEND_DTL.ANNC_NO
+		AND		VEND_MST.ANNC_NGR = VEND_DTL.ANNC_NGR
+		AND		VEND_MST.ROUND_NO = VEND_DTL.ROUND_NO
+		AND		VEND_MST.VEND_REG_NO =  VEND_DTL.VEND_REG_NO
+		AND		VEND_MST.ANNC_NO = VEND_GRNT.ANNC_NO(+)
+		AND		VEND_MST.ANNC_NGR = VEND_GRNT.ANNC_NGR(+)
+		AND		VEND_MST.ROUND_NO = VEND_GRNT.ROUND_NO(+)
+		AND		VEND_MST.VEND_REG_NO =  VEND_GRNT.VEND_REG_NO(+)
+		AND		VEND_MST.VEND_REG_NO =  CU_MST.VEND_REG_NO
+		AND		VEND_GRNT.GRNT_SN(+) = 1
+		AND		VEND_MST.ANNC_NO = #{P_ANNC_NO}
+		AND		VEND_MST.ANNC_NGR = #{P_ANNC_NGR}
+		AND		VEND_MST.ROUND_NO = #{P_ROUND_NO}
+		AND		NVL(VEND_MST.BID_ABND_YN,'N') = 'N'
+		<if test='P_BID_TPI_SECD != null and P_BID_TPI_SECD != "" '>
+			AND VEND_DTL.BID_TPI_SECD= #{P_BID_TPI_SECD}
+		</if>
+		ORDER BY SIGN_DT DESC
+	</select>
+
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰포기신청서조회 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectBidAbandnReqstdocInqire
+     * @date : 2015. 02. 26.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 02. 26.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+	<select id="selectBidAbandnReqstdocInqire" resultType="dataEntity">
+		SELECT	BI.ANNC_NO
+					,BI.ANNC_NGR
+					,ROUND.ROUND_NO
+					,BI.BID_NM
+					,ROUND.ANNC_DT
+					,CU.VEND_NM
+					,HIST.REG_DT
+					,VEND.BID_ABND_RSN
+		FROM 	T_BI_MST BI
+					,T_BI_ROUND ROUND
+					,T_BI_VEND_MST VEND
+					,T_BI_VEND_HIST HIST
+					, T_CU_MST CU
+		WHERE 	BI.ANNC_NO = ROUND.ANNC_NO 
+		AND		BI.ANNC_NGR = ROUND.ANNC_NGR
+		AND		ROUND.ANNC_NO = VEND.ANNC_NO
+		AND		ROUND.ANNC_NGR = VEND.ANNC_NGR
+		AND		ROUND.ROUND_NO = VEND.ROUND_NO
+		AND		VEND.ANNC_NO = HIST.ANNC_NO
+		AND		VEND.ANNC_NGR = HIST.ANNC_NGR
+		AND		VEND.ROUND_NO = HIST.ROUND_NO
+		AND		VEND.VEND_REG_NO = HIST.VEND_REG_NO
+		AND		VEND.BID_VEND_PSCD = HIST.BID_VEND_PSCD
+		AND		VEND.VEND_REG_NO = CU.VEND_REG_NO
+		AND		BI.ANNC_NO = #{P_ANNC_NO}
+		AND		BI.ANNC_NGR = #{P_ANNC_NGR}
+		AND		ROUND.ROUND_NO = #{P_ROUND_NO}
+		AND		VEND.VEND_REG_NO =  #{P_VEND_REG_NO}
+		AND		VEND.BID_ABND_YN = 'Y'
+		AND      VEND.BID_VEND_PSCD = 'OP03'
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰참가신청서/제안서 조회 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectBidPartcptReqstdocInqire
+     * @date : 2015. 02. 26.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 02. 26.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectBidPartcptReqstdocInqire" resultType="dataEntity">
+		SELECT	BONE.ANNC_NO
+					,BONE.ANNC_NGR
+					,ROUND.ROUND_NO
+					,ROUND.ANNC_DT
+					,BONE.BID_NM
+					,BONE.CONT_SECD
+					,F_CDVAL_INQIRE('CONT_SECD',BONE.CONT_SECD) AS CONT_SECD_NM
+					,BONE.CONT_DECD
+					,F_CDVAL_INQIRE('CONT_DECD',BONE.CONT_DECD) AS CONT_DECD_NM
+					,F_CDVAL_INQIRE('CONT_MTCD',BONE.CONT_MTCD) AS CONT_MTCD_NM
+					,BONE.UPRC_YN
+					,CONE.VEND_NM
+					,CONE.RPRS_NM
+					,CONE.BIZRNO
+					,CONE.ADDR_NM
+					,CONE.ADDR_DENM
+					,BTWO.CHRGR_NM
+					,BTWO.TEL_NO
+					,BTWO.EMAL_ADDR
+					,BTWO.SIGN_DT
+					,BENA.FILE_GRP_NO
+					, BENA.BID_TPI_SECD
+		FROM		T_BI_MST BONE
+					,T_BI_ROUND ROUND
+					,T_BI_VEND_MST BNINE
+					,T_BI_VEND_DTL BTWO
+					,T_CU_MST CONE
+					,(
+						SELECT	*
+						FROM 	T_BI_VEND_FILE
+						WHERE	BID_SBMT_FSCD = #{P_BID_SBMT_FSCD}
+						AND		BID_TPI_SECD = #{P_BID_TPI_SECD}
+					 ) BENA
+		WHERE	BONE.ANNC_NO = ROUND.ANNC_NO
+		AND		BONE.ANNC_NGR = ROUND.ANNC_NGR
+		AND		ROUND.ANNC_NO = BNINE.ANNC_NO
+		AND		ROUND.ANNC_NGR = BNINE.ANNC_NGR
+		AND		ROUND.ROUND_NO = BNINE.ROUND_NO
+		AND		BNINE.ANNC_NO = BTWO.ANNC_NO
+		AND		BNINE.ANNC_NGR = BTWO.ANNC_NGR
+		AND		BNINE.ROUND_NO = BTWO.ROUND_NO
+		AND		BNINE.VEND_REG_NO = BTWO.VEND_REG_NO
+		AND		BNINE.VEND_REG_NO = CONE.VEND_REG_NO
+		AND		BNINE.ANNC_NO = BENA.ANNC_NO(+)
+		AND		BNINE.ANNC_NGR = BENA.ANNC_NGR(+)
+		AND		BNINE.ROUND_NO = BENA.ROUND_NO(+)
+		AND		BNINE.VEND_REG_NO = BENA.VEND_REG_NO(+)
+		AND		BONE.ANNC_NO = #{P_ANNC_NO}
+		AND		BONE.ANNC_NGR = #{P_ANNC_NGR}
+		AND		ROUND.ROUND_NO = #{P_ROUND_NO}
+		AND		BNINE.VEND_REG_NO = #{P_VEND_REG_NO}
+		<if test=' P_BID_TPI_SECD != null '>
+		<if test=' P_BID_TPI_SECD.equals("OP01") '>
+		AND		BTWO.BID_TPI_SECD = 'OP03'
+		</if>
+		<if test=' !P_BID_TPI_SECD.equals("OP01") '>
+		AND		BTWO.BID_TPI_SECD = #{P_BID_TPI_SECD}
+		</if>
+		</if>
+	</select>
+
+	<!--  
+     * <pre>
+     * 1. 개요 : 청렴이행각서 조회 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectIntgtyFlflMmrdInqire
+     * @date : 2015. 02. 27.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 02. 27.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+
+
+	<select id="selectIntgtyFlflMmrdInqire" resultType="dataEntity">
+	
+		SELECT	 BONE.BID_NM
+					,CONE.VEND_NM
+					,CONE.RPRS_NM
+					,BZERO.TPI_DT
+		FROM	 T_BI_MST BONE
+				,VECI_PRCOEN2 CONE
+				,T_BI_VEND_DTL BZERO
+		WHERE 	BONE.ANNC_NO = #{P_ANNC_NO}
+		AND		BONE.ANNC_NGR = #{P_ANNC_NGR}
+		AND		BZERO.ANNC_NO = #{P_ANNC_NO}
+		AND		BZERO.ANNC_NGR = #{P_ANNC_NGR}
+		AND		BZERO.VEND_REG_NO = #{P_VEND_REG_NO}
+		AND		BZERO.BID_TPI_SECD = 'OP01'
+		AND		CONE.VEND_REG_NO = #{P_VEND_REG_NO}
+
+	
+	</select>
+
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰보증정보 조회 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectBidAssrncInfoInqire
+     * @date : 2015. 03. 26.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 26.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+
+	<select id="selectBidAssrncInfoInqire" resultType="dataEntity">
+		SELECT	MST.ANNC_NO
+					,MST.ANNC_NGR
+					,ROUND.ROUND_NO
+					,MST.BID_NM
+					,ROUND.ANNC_DT
+		FROM 	T_BI_MST MST
+					,T_BI_ROUND ROUND
+		WHERE 	MST.ANNC_NO = ROUND.ANNC_NO
+		AND		MST.ANNC_NGR = ROUND.ANNC_NGR
+		AND		ROUND.ROUND_NO = ( SELECT MAX(ROUND_NO) FROM T_BI_ROUND WHERE ANNC_NO = MST.ANNC_NO AND ANNC_NGR = MST.ANNC_NGR )
+		AND		MST.ANNC_NO = #{P_ANNC_NO}
+		AND		MST.ANNC_NGR = #{P_ANNC_NGR}
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 업체보증정보 목록
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectEntrpsGrntyInfoList
+     * @date : 2015. 03. 26.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 26.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	
+	<select id="selectEntrpsGrntyInfoList" resultType="dataEntity">
+		SELECT	ANNC_NO
+					,ANNC_NGR
+					,ROUND_NO
+					,VEND_REG_NO
+					,GRNT_SN
+					,BIDGR_SECD
+					,F_CDVAL_INQIRE('BIDGR_SECD', BIDGR_SECD) AS BIDGR_SECD_NM
+					,BIDGR_AMT
+					,BIDGR_NO
+					,BIDGR_AGNM
+					,FILE_GRP_NO
+		FROM 	T_BI_VEND_GRNT
+		WHERE 	ANNC_NO = #{P_ANNC_NO}
+		AND		ANNC_NGR = #{P_ANNC_NGR}
+		AND		ROUND_NO = #{P_ROUND_NO}
+		AND		VEND_REG_NO = #{P_VEND_REG_NO}
+	</select>
+
+
+	<insert id="insertBidAssrncInfoRegist">
+	<selectKey keyProperty="P_GRNT_SN" resultType="int" order="BEFORE">
+			SELECT 	NVL(MAX(GRNT_SN)+1,1) 
+			FROM 	T_BI_VEND_GRNT
+			WHERE 	ANNC_NO = #{P_ANNC_NO, jdbcType=VARCHAR} 
+			AND		ANNC_NGR = #{P_ANNC_NGR, jdbcType=INTEGER}
+			AND		VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+	</selectKey>
+		INSERT INTO T_BI_VEND_GRNT
+		(
+			 ANNC_NO 
+			,ANNC_NGR
+			,VEND_REG_NO
+			,GRNT_SN
+			,BIDGR_SECD
+			,BIDGR_NO
+			,BIDGR_AMT
+<!-- 			,ISSU_INSTT_NM -->
+			,REGR_ID
+			,REG_DT
+			<include refid="ComRegr.RegrColumnClause"/>
+		)
+		VALUES
+		(
+			 #{P_ANNC_NO , jdbcType=VARCHAR}
+			,#{P_ANNC_NGR , jdbcType=INTEGER}
+			,#{P_VEND_REG_NO , jdbcType=VARCHAR}
+			,#{P_GRNT_SN , jdbcType=INTEGER}
+			,#{P_BIDGR_SECD , jdbcType=VARCHAR}
+			,#{P_BIDGR_NO , jdbcType=VARCHAR}
+			,#{P_BIDGR_AMT , jdbcType=INTEGER}
+<!-- 			,#{P_ISSU_INSTT_NM, jdbcType=VARCHAR} -->
+			,#{P_USR_ID, jdbcType=VARCHAR}
+			,#{P_REG_DT, jdbcType=VARCHAR}
+			<include refid="ComRegr.RegrValueClause"/>
+			
+		)
+	
+	</insert>
+
+
+	<delete id="deleteBidAssrncInfo">
+	
+		DELETE FROM T_BI_VEND_GRNT
+		WHERE ANNC_NO = #{P_ANNC_NO}
+		AND	  ANNC_NGR = #{P_ANNC_NGR}
+		AND	  VEND_REG_NO = #{P_VEND_REG_NO}
+	
+	</delete>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 조달의뢰 담당자 정보
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectBidClientInfo
+     * @date : 2015. 03. 26.
+     * @author : 은우소프트 전상훈
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 26.       은우소프트 전상훈              최초 작성 
+     *  =======================================================   
+     -->
+	
+	<select id="selectBidClientInfo" resultType="dataEntity">
+		SELECT	ANNC_NO
+					,ANNC_NGR
+					,RQSTR_NM
+					,RQSTR_EMAL
+					,ESTM_CHRGR_ID
+					,(SELECT MAIL FROM VEOP_PREM WHERE EMP_NO = ESTM_CHRGR_ID) AS TCHQVLN_CHARGER_MAIL
+					,ESTM_CHRGR_NM
+		FROM 	T_BI_MST
+		WHERE 	ANNC_NO = #{P_ANNC_NO}
+		AND		ANNC_NGR = #{P_ANNC_NGR}
+	</select>
+	
+	<!-- 	역경매업체 목록 -->
+	<select id="selectDatpVendList" resultType="dataEntity">
+		SELECT	MST.ANNC_NO
+					,MST.ANNC_NGR
+					,MST.ROUND_NO
+					,MST.TPI_SN
+					,MST.VEND_REG_NO_ENC
+					,A.VEND_NM
+					,MST.BID_VEND_PSCD
+					,MST.TNDR_AMT
+					,MST.REG_DT
+		FROM 	T_BI_DATP_MST MST
+ 					,(  SELECT 	VEND_REG_NO_ENC 
+ 									,'VEND'||ROWNUM AS VEND_NM
+                        FROM(  	SELECT  VEND_REG_NO_ENC 
+                                   				,MIN(REG_DT) AS REG_DT
+                                	FROM    T_BI_DATP_MST
+                                	WHERE 	ANNC_NO = #{P_ANNC_NO}
+                                	AND		ANNC_NGR = #{P_ANNC_NGR}
+                                	AND		ROUND_NO = #{P_ROUND_NO}
+                                	GROUP BY VEND_REG_NO_ENC
+                                	ORDER BY REG_DT)) A
+		WHERE 	ANNC_NO = #{P_ANNC_NO}
+		AND		ANNC_NGR = #{P_ANNC_NGR}
+		AND		ROUND_NO = #{P_ROUND_NO}
+        AND     	MST.VEND_REG_NO_ENC = A.VEND_REG_NO_ENC
+        ORDER BY TPI_SN DESC
+	</select>
+</mapper>

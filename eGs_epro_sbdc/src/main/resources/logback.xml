@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<configuration debug="false">
+
+	<property name="contextName" value="iep" />
+	<property name="LOG_HOME" value="D:/log/ipro_log" />
+	
+	
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"> 
+		<encoder>         
+			<Pattern>[%d{yyyy-MM-dd HH:mm:ss}] %-5level [%logger{36}] %msg%n</Pattern> 
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>DEBUG</level>
+		</filter>
+	</appender>
+	
+	<appender name="ROLLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_HOME}/systemlog.log</file>
+		<!-- <file>${LOG_HOME}/ed-ext.log</file> -->
+		<encoder>
+		    <charset>UTF-8</charset>         
+			<Pattern>[%d{yyyy-MM-dd HH:mm:ss}] %-5level [%logger{36}] %msg%n</Pattern> 
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${LOG_HOME}/systemlog.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+			<!-- <FileNamePattern>${LOG_HOME}/ed-ext.%d{yyyy-MM-dd}.%i.log</FileNamePattern> -->
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
+		
+	</appender>
+    
+    
+     <!-- 3rdparty Loggers -->
+	<logger name="org.springframework">
+		<level value="DEBUG" />
+	</logger>
+	<logger name="org.apache">
+		<level value="DEBUG" />
+	</logger>
+	<logger name="org.mybatis">
+		<level value="DEBUG" />
+	</logger>
+	<logger name="org.apache.commons.dbcp">
+		<level value="DEBUG" />
+	</logger>
+	<logger name="org.apache.commons">
+		<level value="DEBUG" />
+	</logger>
+		
+     <root level="DEBUG"> 
+         <appender-ref ref="STDOUT" />
+         <appender-ref ref="ROLLLING" />
+     </root> 
+ </configuration> 

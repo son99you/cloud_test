@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * sqlmap.ipro.sytm
+ * IproSytmAuthMngeMapper.xml
+ * 
+ * @Author : JanDi_Eun
+ * @Date   : 2018. 2. 28.
+ * 
+ -->
+<mapper namespace="com.eunwoosoft.ipro.sytm.dao.IproSytmAuthMngeDao">
+
+	<select id="selectAuthMgrListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="authMgrList"/>
+			<include refid="authMgrListWhere"/>
+		) T1
+		WHERE 1 = 1
+		ORDER BY AUTH_ID
+ 		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+
+	<select id="selectAuthMgrExcelList" resultType="dataEntity">
+		SELECT * FROM (
+			<include refid="authMgrList"/>
+			<include refid="authMgrListWhere"/>
+		) T1
+		WHERE 1 = 1
+		ORDER BY AUTH_ID
+	</select>
+	
+	<select id="selectAuthMgrListTotcnt" resultType="int">
+ 		SELECT COUNT(1) FROM (
+			<include refid="authMgrList"/>
+			<include refid="authMgrListWhere"/>
+		) T1
+ 	</select>
+	
+	<sql id="authMgrList">
+		SELECT 		AUTH_ID
+		          , AUTH_NM
+		          
+		FROM T_MM_AUTH
+	</sql>
+	
+	<sql id="authMgrListWhere">
+		<where>
+			AND DEL_AT = 'N'
+			AND USE_YN = 'Y'
+			<if test='P_AUTH_NM_S != null and P_AUTH_NM_S != "" '>
+				AND AUTH_NM LIKE '%'||#{P_AUTH_NM_S}||'%'
+			</if>
+		</where>
+	</sql>
+	
+	
+	<delete id="deleteAuthMgrDelt">
+		DELETE FROM T_MM_AUTH_MENU
+		WHERE	1=1
+		AND		AUTH_ID = #{P_AUTH_ID, jdbcType=VARCHAR}
+	</delete>
+
+
+
+	<!-- 권한테이블 저장 -->
+	<insert id="insertAuthMgrItemRegist">
+        INSERT INTO T_MM_AUTH_MENU (
+		                    AUTH_ID
+		                  , MENU_ID
+		                  , READ_AUTH_YN
+		                  , WRT_AUTH_YN
+		                  , DEL_AUTH_YN
+		                  , USE_YN
+		                 <include refid="ComRegr.RegrColumnClause"/>
+        ) VALUES (
+		                    #{P_AUTH_ID, jdbcType=VARCHAR}
+		                  , #{P_MENU_ID, jdbcType=VARCHAR}
+		                  , 'Y'
+		                  , 'Y'
+		                  , 'Y'
+		                  , 'Y'
+		                  <include refid="ComRegr.RegrValueClause"/>
+		)
+	</insert>
+	
+	
+	
+	<select id="selectAuthMenuMgrDetail" resultType="dataEntity">
+		SELECT
+				AUTH_ID
+				,AUTH_NM
+		FROM T_MM_AUTH
+		WHERE 1=1
+		<if test='P_AUTH_ID != null and P_AUTH_ID != "" '>
+			AND AUTH_ID LIKE '%'||#{P_AUTH_ID}||'%'
+		</if>
+	</select>
+	
+	
+	<select id="selectAuthMenuMgrListWithPgng" resultType="dataEntity">
+		SELECT
+				 B.AUTH_ID
+				,B.AUTH_NM
+				,A.MENU_ID
+				,A.MENU_NM
+				,A.SELECT_AT
+		
+		FROM
+		(
+		
+			SELECT 	 MENU_ID
+					,MENU_NM
+					,'Y' AS SELECT_AT
+			FROM T_MM_MENU_MST
+			WHERE 1=1
+			AND  MENU_ID IN (SELECT MENU_ID FROM T_MM_AUTH_MENU WHERE AUTH_ID = #{P_AUTH_ID})
+			AND   USE_YN = 'Y'
+			AND   DEL_AT = 'N'
+			AND   MENU_ID LIKE DECODE(#{P_AUTH_ID}, '5', 'OEP%', 'IEP%')
+			
+			UNION
+			
+			SELECT 	 MENU_ID
+					,MENU_NM
+					,'N' AS SELECT_AT
+			FROM T_MM_MENU_MST
+			WHERE 1=1
+			AND   MENU_ID NOT IN (SELECT MENU_ID FROM T_MM_AUTH_MENU WHERE AUTH_ID = #{P_AUTH_ID})
+			AND   USE_YN = 'Y'
+			AND   DEL_AT = 'N'
+			AND   MENU_ID LIKE DECODE(#{P_AUTH_ID}, '5', 'OEP%', 'IEP%')
+			
+		) A
+		,
+		(
+			SELECT
+					 AUTH_ID
+					,AUTH_NM
+			FROM T_MM_AUTH
+			WHERE 1=1
+			AND   AUTH_ID = #{P_AUTH_ID}
+		) B
+		
+		<!-- <include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="authMenuMgrList"/>
+			<include refid="authMenuMgrListWhere"/>
+			ORDER BY MENU_ID
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/> -->
+	</select>
+	
+	<sql id="authMenuMgrList">
+		SELECT * FROM (
+			SELECT A.AUTH_ID
+                      , A.AUTH_NM
+                      , B.MENU_ID
+                      , C.MENU_NM
+               FROM T_MM_AUTH A
+                      , T_MM_AUTH_MENU B
+                      , T_MM_MENU_MST C
+            WHERE 1=1
+                AND A.DEL_AT = 'N'
+                AND A.USE_YN = 'Y'
+                AND C.USE_YN = 'Y'
+                AND B.MENU_ID = C.MENU_ID
+                AND A.AUTH_ID = B.AUTH_ID
+			<!-- SELECT	MENU.MENU_ID
+						, MENU.MENU_NM
+						, MENU.MENU_ENM
+						, MENU.LNK_URL
+						, MENU.PARAM
+						, MENU.USR_SECD
+						, MENU.MENU_SECD
+						, MENU.LRG_MENU_ID
+						, MENU.PNT_MENU_ID
+						
+						, AUME.READ_AUTH_YN
+						, AUME.WRT_AUTH_YN
+						, AUME.DEL_AUTH_YN
+						
+						, AUTH.AUTH_ID
+						, AUTH.AUTH_NM
+						, AUTH.AUTH_SECD		
+			FROM	  T_MM_MENU_MST MENU
+						, T_MM_AUTH_MENU AUME
+						, T_MM_AUTH AUTH
+			WHERE	1=1
+			AND		MENU.MENU_ID = AUME.MENU_ID
+			AND		AUME.AUTH_ID = AUTH.AUTH_ID
+			AND		MENU.USE_YN = 'Y' -->
+		)
+	</sql>
+	
+	<select id="selectAuthMenuMgrListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="authMenuMgrList"/>
+			<include refid="authMenuMgrListWhere"/>
+		) T1
+		WHERE 1 = 1	
+	</select>
+	
+	<sql id="authMenuMgrListWhere">
+		<where>
+			<if test='P_AUTH_ID != null and P_AUTH_ID != "" '>
+				AND AUTH_ID LIKE '%'||#{P_AUTH_ID}||'%'
+			</if>
+			<if test='P_MENU_NM_S != null and P_MENU_NM_S != "" '>
+				AND MENU_NM LIKE '%'||#{P_MENU_NM_S}||'%'
+			</if>
+			<if test='P_LRG_MENU_ID != null and P_LRG_MENU_ID != "" '>
+				AND LRG_MENU_ID = #{P_LRG_MENU_ID}
+			</if>
+			<if test='P_PNT_MENU_ID != null and P_PNT_MENU_ID != "" '>
+				AND PNT_MENU_ID LIKE '%'||#{P_PNT_MENU_ID}||'%'
+			</if>
+		</where>
+	</sql>
+	
+	
+	
+	
+</mapper>

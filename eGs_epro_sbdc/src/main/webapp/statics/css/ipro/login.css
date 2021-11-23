@@ -1,0 +1,18 @@
+@charset "utf-8";
+/* CSS Document */ 
+
+
+#login-bg { background: #f8f3f0; }
+#logout-bg { background: #fff; }
+
+#login-wrap {margin: 0 auto; padding: 352px 0;  width: 530px; height: 544px; background:url(../../images/ipro/login/bg_login.jpg) no-repeat center 186px;}
+#logout-wrap {margin: 0 auto; padding: 250px  0;  width: 600px; height: 544px }/*, background:url(../../images/kto/layout/bg_2.png) no-repeat -50px 250px */
+/* #logout-wrap {margin: 0 auto; padding: 352px 0;  width: 530px; height: 544px; background:url(../../images/kto/layout/fix_bg.png) no-repeat 50px 410px} */
+/* #logout-wrap {margin: 0 auto; padding: 352px 0;  width: 530px; height: 544px; background:url(../../images/kto/layout/fix_bg.png) no-repeat 90px 410px} */
+#login-wrap .box { padding: 32px 0 0 85px; }
+#login-wrap .box h1 { margin-bottom: 32px; }
+#login-wrap .login { position: relative; width: 305px;}
+#login-wrap input { display: block; }
+#login-wrap .btn_login { position: absolute; top: 0; right: 0;}
+#login-wrap .copy { padding-top: 187px; margin-left: -144px; font-size: 11px; color: #8c8c8c; text-align: center; }
+#logout-wrap .copy { padding-top: 130px;  font-size: 11px; color: #8c8c8c; text-align: center; }

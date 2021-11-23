@@ -1,0 +1,33 @@
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+<script type="text/javascript" src="../library/json3.min.js"></script>
+<script type="text/javascript" src="../library/iecompatibility.js"></script>
+
+<script type="text/javascript" src="../vestsign.js"></script>
+<SCRIPT language=javascript>
+
+    function getVersion() {
+        vest.token.getVersion(function(version){
+            document.getElementById('version').value = version[0].version;
+            document.getElementById('version2').value = version[1].version;
+        }, function(error){
+           alert(error);
+        });
+    };
+
+</SCRIPT>
+<br><br><br>
+<table border="1" align="center" width=50%>
+    <tr>
+        <td align=center><br>
+            VestCert<br><input type='text' id="version"><br><br>
+            VestCertSecurityService<br><input type='text' id="version2"><br><br>
+        </td>
+    </tr>
+    <tr>
+        <td align="center"><br>
+            <input type=button onclick=getVersion(); value="버전요청" style="width:150">
+        </td>
+    </tr>
+</table>

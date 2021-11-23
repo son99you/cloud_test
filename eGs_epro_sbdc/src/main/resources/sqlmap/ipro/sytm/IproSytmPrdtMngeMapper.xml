@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eunwoosoft.ipro.sytm.dao.IproSytmPrdtMngeDao">
+	<select id="selectPrdtMngeListInqireWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="prdtMngeList"/>
+			<include refid="prdtMngeListWhere"/>
+			ORDER BY ITEM_NM
+		)T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+
+	<select id="selectPrdtMngeExcelList" resultType="dataEntity">
+		SELECT ROWNUM AS RNUM, A.* FROM (
+			SELECT * FROM (
+				<include refid="prdtMngeList"/>
+				<include refid="prdtMngeListWhere"/>
+				ORDER BY ITEM_NM
+			)T1
+			WHERE 1 = 1
+		)A
+	</select>
+	
+	<select id="selectPrdtMngeListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM(
+			<include refid="prdtMngeList"/>
+			<include refid="prdtMngeListWhere"/>
+		) T1
+	</select>
+	
+	<sql id="prdtMngeList">
+		SELECT * FROM (
+			SELECT 
+			   M.ITEM_NO
+			   , M.VEND_REG_NO
+			   , M.ITEM_NM
+			   , M.ITEM_UNCD
+			   , M.STND_NM
+			   , M.ITEM_DESC
+			   , M.LLF_CD
+			   , M.LLF_NM
+			   , M.MLF_CD
+			   , M.MLF_NM
+			   , M.SLF_CD
+			   , M.SLF_NM
+			   , M.DLF_CD
+			   , M.DLF_NM
+			   , M.FILE_GRP_NO
+			   , M.RMK
+			   , M.REGR_ID
+			   , M.REGR_NM
+			   , M.REG_DT
+			   , M.MODR_ID
+			   , M.MODR_NM
+			   , M.MOD_DT
+			   , M.CONN_IP
+			   , M.DEL_AT
+			   , GOODSNO
+			FROM V_MM_ITEM_MST M, (SELECT TO_CHAR(GOODSNO) AS GOODSNO FROM V_ESTM_ANNC_TPI_INT2)
+			WHERE 1 = 1
+			AND ITEM_NO = GOODSNO(+)
+		)
+	</sql>
+	
+	<sql id="prdtMngeListWhere">
+		<where>
+			<if test='P_ITEM_NO_S != null and P_ITEM_NO_S != "" '>
+				AND ITEM_NO LIKE '%' ||#{P_ITEM_NO_S} || '%'
+			</if>
+			<if test='P_ITEM_NM_S != null and P_ITEM_NM_S != "" '>
+				AND ITEM_NM LIKE '%' ||#{P_ITEM_NM_S}||'%'
+			</if>
+		</where>
+	</sql>
+	
+	<select id="selectPrdtMngDetail" resultType="dataEntity">
+		SELECT 
+				ITEM_NO
+			   , VEND_REG_NO
+			   , ITEM_NM
+			   , ITEM_UNCD
+			   , STND_NM
+			   , ITEM_DESC
+			   , LLF_CD
+			   , LLF_NM
+			   , MLF_CD
+			   , MLF_NM
+			   , SLF_CD
+			   , SLF_NM
+			   , DLF_CD
+			   , DLF_NM
+			   , FILE_GRP_NO
+			   , RMK
+			   , REGR_ID
+			   , REGR_NM
+			   , REG_DT
+			   , MODR_ID
+			   , MODR_NM
+			   , MOD_DT
+			   , CONN_IP
+			   , DEL_AT
+		FROM V_MM_ITEM_MST
+		WHERE 1 = 1
+		AND ITEM_NO = #{P_ITEM_NO, jdbcType=VARCHAR}
+	</select>
+	
+</mapper>

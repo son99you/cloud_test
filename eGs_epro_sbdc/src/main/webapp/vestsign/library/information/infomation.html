@@ -1,0 +1,121 @@
+<?
+    $da_path=".";
+?>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko">
+<head>
+    <title>인증서 저장매체 안내페이지</title>
+    <meta name="viewport" content="width=640">
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <link rel="stylesheet" href="_css/default.css" type="text/css"media="screen" />
+    <link rel="stylesheet" href="_css/css_04/yetty_contents.css" type="text/css"media="screen" />
+    <!--<link href="http://fonts.googleapis.com/css?family=Open+Sans:800,600,300" rel="stylesheet" type="text/css">-->
+    <!--[if lt IE 9]>
+    <link href="_css/css_04/ie8.css" rel="stylesheet" type="text/css" />
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link href="_css/css_04/ie7.css" rel="stylesheet" type="text/css" />
+    <![endif]-->
+    <!--<script src="_js/jquery-1.10.2.js"></script>-->
+    <script src="_js/jquery-1.8.3.js"></script>
+    <script src="_js/jquery-ui.js"></script>
+
+
+
+</head>
+<body>
+<div class="body">
+    <div id="HeaderWrap">
+        <div class="Header">
+            <h2>인증서 저장매체 안내페이지</h2>
+        </div>
+        <h1>LOTTE CARD</h1>
+    </div>
+    <script>
+
+        $(window).scroll(function(){
+            if($(this).scrollTop() > 48){
+                $(".Menu.Fixed").css({"display": "block"});
+                $(".Menu.Fixed").animate({"top": "0px"});
+                $(".Navi").removeClass().addClass("Menu Navi");
+                $(".UserGuideList").removeClass("Up");
+            }
+
+            if($(this).scrollTop() < 49){
+                $(".Menu.Fixed").css({"display": "none"});
+            }
+        });
+
+
+    </script>
+    <div class="Menu Navi" style="width:560px;">
+        <? include "_inc/navi.html"; ?>
+    </div>
+
+    <div class="Menu Fixed" style="width:560px;">
+        <? include "_inc/navi.html"; ?>
+    </div>
+
+
+    <div id="ConentsWrap">
+        <ul class="UserGuideList">
+            <li class="ico_disk">
+                <h3><strong>하드디스크</strong> 활용하기</h3>
+                <div class="Cont">
+                    내컴퓨터 메뉴를 이용하여 하드디스크에 저장된 기존 공인 인증서를 사용하실 수 있습니다.<br/>
+                    내컴퓨터 메뉴를 사용하기 위해서는 공인인증기관에서 배포하는 <a href="http://download.yettiesoft.com/VestCert/VestCertSetup.msi">인증서관리소프트웨어</a>를 설치하셔야 합니다.<br/>
+                    자세한 사항은 아래 설치 안내 메뉴를 이용하여 주십시오
+                </div>
+                <a class="GoToPage" href="vestCertInstall.html" onclick="javascript:void window.open('vestCertInstall.html','1418180386864','width=500,height=650,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">인증서관리소프트웨어 설치안내 >></a>
+            </li>
+            <li class="ico_usb">
+                <h3><strong>이동식디스크</strong> 활용하기</h3>
+                <div class="Cont">
+                    내컴퓨터 메뉴를 이용하여 이동식디스크에 저장된 기존 공인 인증서를 사용하실 수 있습니다.<br/>내컴퓨터 메뉴를 사용하기 위해서는 공인인증기관에서 배포하는 <a href="http://download.yettiesoft.com/VestCert/VestCertSetup.msi">인증서관리소프트웨어</a>를 설치하셔야 합니다.<br/>
+                    자세한 사항은 아래 설치 안내 메뉴를 이용하여 주십시오
+                </div>
+                <a class="GoToPage" href="vestCertInstall.html" onclick="javascript:void window.open('vestCertInstall.html','1418180386864','width=500,height=650,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">인증서관리소프트웨어 설치안내 >></a>
+            </li>
+            <li class="ico_security">
+                <h3><strong>보안매체</strong> 활용하기</h3>
+                <div class="Cont">
+                    보안매체는 메뉴를 통하여<br/>
+                    한국인터넷진흥원의 심의를 거쳐서 판매되는 가장 안전한 인증서 저장 장치인 보안토큰과<br/>
+                    공인인증서를 하드디스크에 좀 더 안전하게 저장, 관리하게 하기 위하여 공인인증기관에서 배포하는 <a href="#">보안디스크</a>를 이용하실수 있습니다.<br/>
+                    보안매체을 사용하기 위해서는 <a href="http://download.yettiesoft.com/VestCert/VestCertSetup.msi">인증서관리소프트웨어</a>를 설치하셔야 합니다.<br/>
+                    자세한 사항은 아래 상세 보기 메뉴를 이용하여 주십시오.
+                </div>
+                <a class="GoToPage" href="vestCertInstall.html" onclick="javascript:void window.open('vestCertInstall.html','1418180386864','width=500,height=650,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">인증서관리소프트웨어 설치안내 >></a>
+                <a class="GoToPage" href="token.html" onclick="javascript:void window.open('token.html','1418180528601','width=500,height=650,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">보안 디스크 상세 보기 >></a>
+            </li>
+            <li class="ico_finder">
+                <h3><strong>인증서찾기</strong> 저장매체 활용하기</h3>
+                <div class="Cont">
+                    인증서찾기 메뉴를 이용하여 별도의 설치 프로그램 없이 최신 브라우저만으로 공인인증서를 사용하실 수 있습니다.<br/>
+                    (IE9 이상, Chrome v37 이상, Firefox v32 이상, Safari 7 이상)<br/>
+                    인증서 찾기는 국제 표준 규격인 이동용 인증서파일(*.pfx 또는 *.p12)을 이용합니다.<br/>
+                    이동용인증서파일(*.pfx 또는 *.p12) 파일을 가지고 계시지 않다면 <a href="http://download.yettiesoft.com/VestCert/tool/win/npki2pfx.exe">인증서파일생성프로그램</a>을 이용하여 인증서파일을 생성하실 수 있습니다.<br/><br/>
+                    안전한 인증서 이용을 위하여 이동용인증서파일은 반드시 USB 메모리 등 휴대용 저장매체에 보관하는 것을 권장합니다.
+                </div>
+                <a class="GoToPage" href="certificateFile.html" onclick="javascript:void window.open('certificateFile.html','1418180734574','width=500,height=650,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">상세보기 >></a>
+            </li>
+            <li class="ico_phone">
+                <h3><strong>스마트인증</strong> 저장매체 활용하기</h3>
+                <div class="Cont">
+                    스마트인증 메뉴를 통하여 스마트폰에 저장된 공인인증서를 이용할 수 있습니다.
+                    스마트인증 서비스는 이용료가 부과되는 유료서비스이며, 서비스 이용 메뉴를 통하여 서비스 가입을 하신 후 이용하실 수 있습니다. ?
+                    자세한 사항은 아래 상세 보기 메뉴를 이용하여 주십시오
+                </div>
+                <a class="GoToPage" href="#">상세보기 >></a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+</body>
+
+</html>

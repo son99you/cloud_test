@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * sqlmap.ipro.main
+ * IproMainLoginFormMapper.xml
+ * 
+ * @Author : sanghoon_joen
+ * @Date   : 2018. 2. 12.
+ * 
+ -->
+ 
+ <mapper namespace="com.eunwoosoft.ipro.main.dao.IproMainLoginFormDao">
+ 
+ 
+ 	<select id="selectEntrpsMberInqireByBizrNo" resultType="dataEntity">
+        SELECT CU.VEND_REG_NO AS USR_ID
+                  , CU.VEND_NM AS USR_NM
+                  , CU.BIZRNO AS BIZR_NO
+                  , CU.VEND_STCD
+           FROM V_CU_MST CU
+        WHERE 1=1
+            AND CU.BIZRNO = #{P_LOGIN_ID, jdbcType=VARCHAR, javaType=String}
+	 </select>
+	 
+	 <!-- 
+	 * 1. 개요 : 로그인 유저 정보 조회(id)
+	 * 2. 처리내용 : 
+	 *  	
+	 * @Query ID : selectEmplyrInqireById
+	 * @date : 2018. 2. 12.
+	 * @author : sanghoon_joen
+	 -->
+	 <select id="selectEmplyrInqireById" resultType="dataEntity">
+        SELECT UM.USR_ID AS USR_ID
+                  , UM.USR_NM AS USR_NM
+                  , UM.EMPL_NO AS EMPL_NO
+                  , UM.DEPT_NO AS DEPT_NO
+                  , UM.DEPT_NM AS DEPT_NM
+                  , UM.ARA_DEPT_CD AS ARA_DEPT_CD
+                  , UM.OFPS_CD AS OFPS_CD
+                  , UM.OFPS_NM  AS OFPS_NM
+                  , UM.EMAL_ADDR AS EMAL_ADDR
+                  , UM.TEL_NO AS TEL_NO
+                  , UM.CP_NO AS CP_NO
+                  , MM.AUTH_ID
+                  , MM.APPR_AUTH_YN
+                  , UM.STORE
+                  , UM.ORGAN
+                  <!-- , NVL(MM.AUTH_ID, '5') AS AUTH_ID
+                  , NVL(MM.APPR_AUTH_YN, 'N') AS APPR_AUTH_YN -->
+           FROM V_MM_USER UM
+                  , T_MM_USER_MST MM
+        WHERE 1=1
+            AND UM.USR_ID = MM.USR_ID(+)
+            AND UM.USR_ID = #{P_USR_ID, jdbcType=VARCHAR, javaType=String}
+	</select>
+	 
+	 <!-- 
+	 * 1. 개요 : 로그인 유저 정보 조회 (id+pw)
+	 * 2. 처리내용 : 
+	 *  	
+	 * @Query ID : selectEmplyrInqireByIdAndPassword
+	 * @date : 2018. 2. 12.
+	 * @author : sanghoon_joen
+	 -->
+	<select id="selectEmplyrInqireByIdAndPassword" resultType="dataEntity">
+        SELECT UM.USR_ID AS USR_ID
+                  , UM.USR_NM AS USR_NM
+                  , UM.EMPL_NO AS EMPL_NO
+                  , UM.DEPT_NO AS DEPT_NO
+                  , UM.DEPT_NM AS DEPT_NM
+                  , UM.ARA_DEPT_CD AS ARA_DEPT_CD
+                  , UM.OFPS_CD AS OFPS_CD
+                  , UM.OFPS_NM  AS OFPS_NM
+                  , UM.EMAL_ADDR AS EMAL_ADDR
+                  , UM.TEL_NO AS TEL_NO
+                  , UM.CP_NO AS CP_NO
+                  , MM.AUTH_ID
+                  , MM.APPR_AUTH_YN
+                  , UM.STORE
+                  , UM.ORGAN
+                  , MM.VEND_REG_NO
+           FROM V_MM_USER UM
+                  , T_MM_USER_MST MM
+        WHERE 1=1
+            AND UM.USR_ID = MM.USR_ID(+)
+            AND UM.USR_ID = #{P_USR_ID, jdbcType=VARCHAR, javaType=String}
+            AND UM.PWD = F_GET_ENCPASS(#{P_PWD, jdbcType=VARCHAR, javaType=String})
+	</select>
+	
+ 
+ 	<update id="updateLastLoginDt">
+ 		UPDATE 	T_MM_USER_MST
+ 		SET		LT_CONN_DT = TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+ 		WHERE 	USR_ID = #{P_USR_ID, jdbcType=VARCHAR, javaType=String}
+ 	</update>
+		 	
+ 	<select id="selectMainEstmCnt" resultType="dataEntity">
+		SELECT
+			  COUNT(CASE WHEN T1.ESTM_PSCD IN('A001') THEN 1 END) AS ESTM_A1_CNT 
+			 ,COUNT(CASE WHEN T1.ESTM_PSCD IN('A002') THEN 1 END) AS ESTM_A2_CNT 
+			 ,COUNT(CASE WHEN T1.ESTM_PSCD IN('A003' , 'A0031', 'A004', 'A0041') THEN 1 END) AS ESTM_A3_CNT 
+			 ,COUNT(CASE WHEN T1.ESTM_PSCD IN('A005') THEN 1 END) AS ESTM_A5_CNT 
+			 ,COUNT(CASE WHEN T1.ESTM_PSCD IN('C001') THEN 1 END) AS ESTM_C1_CNT 
+			 ,COUNT(CASE WHEN T1.ESTM_PSCD NOT IN('C002') THEN 1 END) AS TOTAL_CNT 
+		FROM T_ESTM_MNG_MST T1
+		WHERE 1=1
+		AND NVL(T1.DEL_AT,'N') = 'N'
+		<!-- AND TO_CHAR(TO_DATE(REG_DT, 'yyyyMMddHH24MISS'), 'yyyyMMdd') >= #{P_BEGIN_DT_S}
+		AND TO_CHAR(TO_DATE(REG_DT, 'yyyyMMddHH24MISS'), 'yyyyMMdd') &lt;= #{P_END_DT_S} -->
+		<if test='P_DEPT_NO != null and P_DEPT_NO != "" '>
+			AND ESTM_CHRG_DEPT_NO = #{P_DEPT_NO}
+		</if>
+		<if test='P_BEGIN_DT_S != null and P_BEGIN_DT_S != "" '>
+			AND TO_CHAR(TO_DATE(REG_DT, 'yyyyMMddHH24MISS'), 'yyyyMMdd') >= #{P_BEGIN_DT_S}
+		</if>
+		<if test='P_END_DT_S != null and P_END_DT_S != "" '>
+			AND TO_CHAR(TO_DATE(REG_DT, 'yyyyMMddHH24MISS'), 'yyyyMMdd') &lt;= #{P_END_DT_S}
+		</if>
+		
+	</select> 
+
+ 	<select id="selectEstmMainList" resultType="dataEntity">
+			SELECT * FROM (
+			<include refid="estmMainList"/>
+			<include refid="estmMainListWhere"/>
+			ORDER BY REG_DT DESC
+		) T1
+		WHERE 1 = 1
+	</select>
+	
+	<sql id="estmMainList">
+		SELECT
+			ESTM_NO
+			,ESTM_NM
+			,ESTM_SECD
+			,ESTM_SENM
+			,ESTM_SPHE_SECD
+			,ESTM_SPHE_SENM
+			,ESTM_OBJ_SECD
+			,ESTM_OBJ_SENM
+			,ESTM_PSCD
+			,ESTM_PSNM
+			,ESTM_INFO_CNTC_NO
+			,ESTM_CHRGR_ID
+			,ESTM_CHRGR_NM
+			,ESTM_CHRG_DEPT_NO
+			,ESTM_CHRG_DEPT_NM
+			,TOTL_ESTM_ST_DT
+			,TO_CHAR(TO_DATE(TOTL_ESTM_ST_DT, 'yyyyMMddHH24MISS'), 'yyyy-MM-dd HH24:MI') AS TOTL_ESTM_ST_DT_F
+			,TOTL_ESTM_END_DT
+			,TO_CHAR(TO_DATE(TOTL_ESTM_END_DT, 'yyyyMMddHH24MISS'), 'yyyy-MM-dd HH24:MI') AS TOTL_ESTM_END_DT_F
+			,REGR_ID
+			,REGR_NM
+			,REG_DT
+			,TO_CHAR(TO_DATE(REG_DT, 'yyyyMMddHH24MISS'), 'yyyy-MM-dd') AS REG_DT_F
+			,MODR_ID
+			,MODR_NM
+			,MOD_DT
+			,CONN_IP
+			,DEL_AT
+		FROM T_ESTM_MNG_MST
+	</sql>
+	
+	<sql id="estmMainListWhere"> 
+		<where> 
+			AND DEL_AT = 'N' 
+			<if test="P_ESTM_PSCD != null and P_ESTM_PSCD != '' ">
+				<if test="P_ESTM_PSCD == 'A003'">		<!-- 진행상태 평가위원순위선정일경우 A003, A0031, A004, A0041 -->
+					AND ESTM_PSCD IN ('A003', 'A0031', 'A004', 'A0041')
+				</if>
+				<if test="P_ESTM_PSCD != 'A003'">
+					AND ESTM_PSCD IN (#{P_ESTM_PSCD})
+				</if>
+			</if>
+			<if test="P_ESTM_PSCD == '' or P_ESTM_PSCD == null ">
+				AND ESTM_PSCD NOT IN ('C002')
+			</if>
+			<if test='P_DEPT_NO != null and P_DEPT_NO != "" '>
+			    AND ESTM_CHRG_DEPT_NO = #{P_DEPT_NO}
+			</if>
+			<if test='P_BEGIN_DT_S != null and P_BEGIN_DT_S != "" '>
+				AND TO_CHAR(TO_DATE(REG_DT, 'yyyyMMddHH24MISS'), 'yyyyMMdd') >= #{P_BEGIN_DT_S}
+			</if>
+			<if test='P_END_DT_S != null and P_END_DT_S != "" '>
+				AND TO_CHAR(TO_DATE(REG_DT, 'yyyyMMddHH24MISS'), 'yyyyMMdd') &lt;= #{P_END_DT_S}
+			</if>
+		</where>
+	</sql>
+ </mapper>

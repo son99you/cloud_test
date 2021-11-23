@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eunwoosoft.ipro.estm.dao.IproEstmSiteMngeDao">
+	<!-- 
+   	 * <pre>
+     * 1. 개요 : 현장설명회 목록조회
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : estiSiteMngeListInqireWithPgng
+	 * @date : 2019. 03. 11
+	 * @author : 은우소프트 맹경열
+     * @history : 
+     *  ====================================================================
+     *  변경일             		작성자                     		변경내용  
+     *  ====================================================================
+	 *	2019. 03. 11.		  은우소프트 맹경열  				최초 작성 
+     *  ====================================================================   
+	-->
+	<select id="estiSiteMngeListInqireWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="estiSiteMngeList"/>
+			<include refid="estiSiteMngeListWhere"/>
+			ORDER BY ANNC_NO DESC ,ANNC_NGR DESC
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<select id="estiSiteMngeListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="estiSiteMngeList"/>
+			<include refid="estiSiteMngeListWhere"/>
+		) T1
+		WHERE 1 = 1
+	</select>
+	
+	<sql id="estiSiteMngeList">
+        SELECT * FROM (
+            SELECT ONE.ANNC_NO
+                      , ONE.ANNC_NGR
+                      , TWO.ROUND_NO
+                      , ONE.BID_PSCD
+                      , F_CDVAL_INQIRE('BID_PSCD', ONE.BID_PSCD) AS BID_PSCD_NM
+                      , ONE.CONT_SECD
+                      , F_CDVAL_INQIRE('CONT_SECD', ONE.CONT_SECD) AS CONT_SECD_NM
+                      , ONE.SBID_MTCD
+                      , F_CDVAL_INQIRE('SBID_MTCD', ONE.SBID_MTCD) AS SBID_MTCD_NM
+                      , ONE.BID_NM
+                      , ONE.EMRG_YN
+                      , ONE.CONT_MTCD
+                      , F_CDVAL_INQIRE('CONT_MTCD', ONE.CONT_MTCD) AS CONT_MTCD_NM
+                      , TWO.ANNC_DT
+                      , ONE.BID_BRFS_YN
+                      , ONE.BID_BRFS_ATND_YN
+                      , ONE.BRFS_DT
+                      , ONE.SITE_BRFS_YN
+                      , ONE.SITE_BRFS_DT
+                      , ( SELECT COUNT(*)
+                             FROM T_BI_BRFS_VEND FOUR
+                          WHERE FOUR.ANNC_NO = ONE.ANNC_NO
+                               AND FOUR.ANNC_NGR = ONE.ANNC_NGR ) AS ATND_VEND_CNT
+                      , ONE.CHRGR_NM
+                      , ONE.CHRGR_ID
+                      , TWO.BIDC_SBMT_ENDT
+                      , ( SELECT COUNT(*)
+                             FROM T_BI_VEND_MST VM
+						  WHERE 1=1
+						      AND TWO.ANNC_NO  = VM.ANNC_NO
+						      AND TWO.ANNC_NGR = VM.ANNC_NGR
+						      AND TWO.ROUND_NO = VM.ROUND_NO ) AS OPEN_CNT
+               FROM T_BI_MST ONE
+                      , T_BI_ROUND TWO
+			WHERE 	1=1
+			    AND ONE.ANNC_NGR = ( SELECT MAX(ANNC_NGR) FROM T_BI_MST WHERE ANNC_NO = ONE.ANNC_NO )
+			    AND ONE.ANNC_NO = TWO.ANNC_NO
+			    AND ONE.ANNC_NGR = TWO.ANNC_NGR
+			    AND NVL(ONE.BID_BRFS_YN,'N') = 'Y'
+			    AND ONE.BID_PSCD IN ('PF20','PF30')
+			    AND NVL(ONE.DEL_AT,'N') != 'Y'
+			    AND ONE.BID_MTCD = 'EST'
+            ) 
+	</sql>
+	<sql id="estiSiteMngeListWhere">
+		<where>
+		<if test='P_BID_NM_S != null and P_BID_NM_S != "" '>
+			AND BID_NM LIKE '%'||#{P_BID_NM_S}||'%'
+		</if>
+		<if test='P_ANNC_NO_S != null and P_ANNC_NO_S != "" '>
+			AND ANNC_NO LIKE '%'||#{P_ANNC_NO_S}|| '%'
+		</if>
+		<if test='P_BRFS_STDT_S != null and P_BRFS_STDT_S != "" '>
+			AND TO_CHAR(TO_DATE(BRFS_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') >= #{P_BRFS_STDT_S}
+		</if>
+		<if test='P_BRFS_ENDT_S != null and P_BRFS_ENDT_S != "" '>
+			AND TO_CHAR(TO_DATE(BRFS_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') &lt;= #{P_BRFS_ENDT_S}
+		</if>
+		<if test='P_BIDC_SBMT_ENDT_STDE_S != null and P_BIDC_SBMT_ENDT_STDE_S != "" '>
+			AND TO_CHAR(TO_DATE(BIDC_SBMT_ENDT, 'yyyyMMddhh24miss'), 'yyyyMMdd') >= #{P_BIDC_SBMT_ENDT_STDE_S}
+		</if>
+		<if test='P_BIDC_SBMT_ENDT_ENDE_S != null and P_BIDC_SBMT_ENDT_ENDE_S != "" '>
+			AND TO_CHAR(TO_DATE(BIDC_SBMT_ENDT, 'yyyyMMddhh24miss'), 'yyyyMMdd') &lt;= #{P_BIDC_SBMT_ENDT_ENDE_S}
+		</if>
+		<if test='P_CONT_SECD_S != null and P_CONT_SECD_S != "" '>
+			AND CONT_SECD = #{P_CONT_SECD_S}
+		</if>
+		<if test='P_SBID_MTCD_S != null and P_SBID_MTCD_S != "" '>
+			AND SBID_MTCD = #{P_SBID_MTCD_S}
+		</if>
+		<if test='P_CHRGR_ID_S != null and P_CHRGR_ID_S != "" '>
+			AND CHRGR_ID = #{P_CHRGR_ID_S}
+		</if>		
+		</where>
+	</sql>
+	
+	<!-- 
+   	 * <pre>
+     * 1. 개요 : 현장설명회 상세조회
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectEstiSiteMngeDetail
+	 * @date : 2019. 03. 11
+	 * @author : 은우소프트 맹경열
+     * @history : 
+     *  ====================================================================
+     *  변경일             		작성자                     		변경내용  
+     *  ====================================================================
+	 *	2019. 03. 11.		  은우소프트 맹경열  				최초 작성 
+     *  ====================================================================   
+	-->
+	<select id="selectEstiSiteMngeDetail" resultType="dataEntity">
+		
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰설명회 참가업체 목록
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectEstDcPeoPartcptEntrpsList
+	 * @date : 2019. 03. 11
+	 * @author : 은우소프트 맹경열
+     * @history : 
+     *  ====================================================================
+     *  변경일             		작성자                     		변경내용  
+     *  ====================================================================
+	 *	2019. 03. 11.		  은우소프트 맹경열  				최초 작성 
+     *  ====================================================================     
+     -->
+	<select id="selectEstDcPeoPartcptEntrpsList" resultType="dataEntity">
+		SELECT	VEND.VEND_REG_NO
+					,MST.VEND_NM
+					,MST.BIZRNO
+					,MST.RPRS_NM
+					,VEND.ATNPE_NM
+					,VEND.ATNPE_TEL_NO
+					,VEND.ATNPE_EMAL
+					,VEND.REG_DT
+		FROM 	T_BI_BRFS_VEND VEND
+					,T_CU_MST MST
+		WHERE 	VEND.VEND_REG_NO = MST.VEND_REG_NO
+		AND		VEND.ANNC_NO = #{P_ANNC_NO}
+		AND		VEND.ANNC_NGR = #{P_ANNC_NGR}
+	</select>		
+	
+</mapper>

@@ -1,0 +1,153 @@
+
+.tableDocs {
+	margin : 0px;
+	padding : 0px;
+}
+
+.tableDocs ul {
+	clear: left;
+}
+	
+.tableDocs ul, li {
+	margin : 0px;
+	padding : 0px;	
+}
+
+.tableTr {
+	list-style: none; 
+	width: 98%; 
+	min-width: 1017px; 
+}
+
+.tableHTd {
+	float:left; 
+	background-color: #f1f8fc; 
+	font-family: '굴림'; 
+	font-size: 12px;
+	line-height: 30px;
+	border: 1px solid #CCCCCC;
+	color: #21527B;
+	text-align: center;
+	height: 32px;
+}
+
+.tableHTd_none_l {
+	float:left; 
+	background-color: #f1f8fc; 
+	font-family: '굴림'; 
+	font-size: 12px;
+	line-height: 30px;
+	border-right: 1px solid #CCCCCC;
+	border-top: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+	color: #21527B;
+	text-align: center;
+	height: 32px;
+}
+
+.tableHTd_none_t {
+	float:left; 
+	background-color: #f1f8fc; 
+	font-family: '굴림'; 
+	font-size: 12px;
+	line-height: 30px;
+	border-right: 1px solid #CCCCCC;
+	border-left: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+	color: #21527B;
+	text-align: center;
+	height: 32px;
+}
+
+.tableHTd_none_l_t {
+	float:left; 
+	background-color: #f1f8fc; 
+	font-family: '굴림'; 
+	font-size: 12px;
+	line-height: 30px;
+	border-right: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+	color: #21527B;
+	text-align: center;
+	height: 32px;
+}
+
+.tableBTd {
+	float:left; 
+	background-color: #FFFFFF; 
+	font-family: '굴림'; 
+	font-size: 12px;
+	line-height: 30px;
+	border: 1px solid #CCCCCC;
+	height: 32px;
+}
+
+.tableBTd_none_l {
+	float:left; 
+	background-color: #FFFFFF; 
+	font-family: '굴림'; 
+	font-size: 12px;
+	line-height: 30px;
+	border-right: 1px solid #CCCCCC;
+	border-top: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+	height: 32px;
+}
+
+.tableBTd_none_t {
+	float:left; 
+	background-color: #FFFFFF; 
+	font-family: '굴림'; 
+	font-size: 12px;
+	line-height: 30px;
+	border-right: 1px solid #CCCCCC;
+	border-left: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+	height: 32px;
+}
+
+.tableBTd_none_l_t {
+	float:left; 
+	background-color: #FFFFFF; 
+	font-family: '굴림'; 
+	font-size: 12px;
+	line-height: 30px;
+	border-right: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+	height: 32px;
+}
+
+/*테이블 타이틀*/
+
+.titable_blue {
+
+	background-color: #f1f8fc;
+
+	padding: 6px 1px 4px;
+
+	color: #21527B;
+
+	font-weight: none;
+
+	text-align: center;
+
+	margin: 2px;
+
+}
+
+.titable_blue_1 {
+
+	background-color: #F4ECED;
+
+}
+/* td 하늘색선 */
+.tab_border {
+	border: solid 2px #f1f8fc;
+}
+/* th 진한하늘색선*/
+.tab_border1 {
+	border: solid 1px #d5ddfd;
+}
+.tab_padding {
+	padding: 5px 5px 5px 5px;
+}

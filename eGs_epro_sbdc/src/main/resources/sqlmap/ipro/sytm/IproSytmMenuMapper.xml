@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * sqlmap.ipro.sytm
+ * IproSytmMenuMapper.xml
+ * 
+ * @Author : jandi_Eun
+ * @Date   : 2018. 2. 28.
+ * 
+ -->
+<mapper namespace="com.eunwoosoft.ipro.sytm.dao.IproSytmMenuDao">
+
+	<select id="selectMenuMgrListInqireWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="menuMgrList"/>
+			<include refid="menuMgrListWhere"/>
+		) T1
+		WHERE 1 = 1
+		ORDER BY MENU_ID
+ 		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+
+	<select id="selectMenuMgrExcelList" resultType="dataEntity">
+		SELECT ROWNUM AS RNUM, A.* FROM (
+			SELECT * FROM (
+				<include refid="menuMgrList"/>
+				<include refid="menuMgrListWhere"/>
+			) T1
+			WHERE 1 = 1
+			ORDER BY MENU_ID
+		)A
+	</select>
+	
+	<select id="selectMenuMgrListTotcnt" resultType="int">
+ 		SELECT COUNT(1) FROM (
+			<include refid="menuMgrList"/>
+			<include refid="menuMgrListWhere"/>
+		) T1
+		ORDER BY MENU_ID
+ 	</select>
+	
+	<sql id="menuMgrList">
+	SELECT * FROM (
+        SELECT B.MENU_NM AS LRG_MENU_NM
+                  , B.MENU_ID AS LRG_MENU_ID
+                  , A.MENU_ID
+                  , A.MENU_NM
+                  , A.LNK_URL
+                  , A.USE_YN
+                  , A.DEL_AT
+           FROM T_MM_MENU_MST A
+                  , ( SELECT MENU_NM
+			                    , MENU_ID
+			                    , LRG_MENU_ID
+			                    , USR_SECD
+			                    , USE_YN
+			                    , DEL_AT
+			             FROM T_MM_MENU_MST B
+			          WHERE B.MENU_ID = SUBSTR(MENU_ID, 1, 6 ) 
+			               AND USE_YN = 'Y'
+			               AND DEL_AT = 'N' ) B
+        WHERE 1=1
+            AND A.LRG_MENU_ID = B.LRG_MENU_ID
+            AND A.USR_SECD = B.USR_SECD
+            AND A.USE_YN = 'Y'
+            AND A.DEL_AT = 'N'
+        ORDER BY MENU_ID
+        )
+	</sql>
+	
+	<sql id="menuMgrListWhere">
+        <where>
+			<!-- <if test='P_LRG_MENU_ID_S != null and P_LRG_MENU_ID_S != "" '>
+				AND LRG_MENU_ID LIKE '%'||#{P_LRG_MENU_ID_S}||'%'
+			</if> -->
+			<if test='P_MENU_ID_S != null and P_MENU_ID_S != "" '>
+				AND MENU_ID LIKE '%'||#{P_MENU_ID_S}||'%'
+			</if>
+			<if test='P_MENU_NM_S != null and P_MENU_NM_S != "" '>
+				AND MENU_NM LIKE '%'||#{P_MENU_NM_S}||'%'
+			</if>
+			<if test='P_LNK_URL_S != null and P_LNK_URL_S != "" '>
+				AND LNK_URL LIKE '%'||#{P_LNK_URL_S}||'%'
+			</if>
+			<if test='P_LRG_MENU_ID_S != null and P_LRG_MENU_ID_S != "" '>
+				AND LRG_MENU_ID = #{P_LRG_MENU_ID_S}
+			</if>
+		</where>
+	</sql>
+	
+	<select id="selectMenuLrgListInqire" resultType="dataEntity">
+        SELECT MENU_NM
+                    , MENU_ID
+                    , LRG_MENU_ID
+                    , USR_SECD
+                    , USE_YN
+                    , DEL_AT
+             FROM T_MM_MENU_MST B
+          WHERE 1 = 1
+          AND B.MENU_ID = SUBSTR(MENU_ID, 1, 6 )
+          AND USE_YN = 'Y'
+          AND DEL_AT = 'N'
+      ORDER BY MENU_ID
+	</select>
+</mapper>

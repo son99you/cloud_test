@@ -1,0 +1,111 @@
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+<script type="text/javascript" src="../library/json3.min.js"></script>
+<script type="text/javascript" src="../library/iecompatibility.js"></script>
+
+<script type="text/javascript" src="../vestsign.js"></script>
+<SCRIPT language=javascript>
+
+  var errorcallback = function (error) {
+    // error = { code, getReason() };
+    if(error.code == -9999) console.log(error.code);  // 취소 버튼 이벤트 error.code: -9999
+    else alert(error.msg);
+  };
+
+  var callback = function (result) {
+      document.getElementById('hashedValue').value = result;
+  };
+
+  function selectedType(radioName) {
+    var checkedValue;
+    var temp = document.getElementsByName( radioName );
+
+    for (var i = 0, ii = temp.length; i < ii; ++i) {
+      if (temp[i].checked)  checkedValue = temp[i].value;
+    }
+    return checkedValue * 1;
+  };
+
+  function encrypt() {
+      var option = {
+          encoding: 'hex',
+          charset: 'UTF-8'
+      };
+
+    var plain = document.getElementById('hashValue').value;
+
+    var args = {
+      algorithm: selectedType('crypt_algo'),
+      mode: selectedType('crypt_mode'),
+      padding: selectedType('crypt_padding')
+    };
+
+    var keys = {
+      key: document.getElementById('crypt_key').value,
+      iv: document.getElementById('crypt_iv').value
+    };
+
+    yettie.encrypt(plain, args, keys, option, callback, errorcallback);
+  };
+
+  function decrypt() {
+      var option = {
+          encoding: 'hex',
+          charset: 'UTF-8'
+      };
+    var plain = document.getElementById('hashedValue').value;
+
+    var args = {
+      algorithm: selectedType('crypt_algo'),
+      mode: selectedType('crypt_mode'),
+      padding: selectedType('crypt_padding')
+    };
+
+    var keys = {
+      key: document.getElementById('crypt_key').value,
+      iv: document.getElementById('crypt_iv').value
+    };
+
+    yettie.decrypt(plain, args, keys, option, function(result) {alert(result);}, errorcallback);
+  };
+
+</SCRIPT>
+<br><br><br>
+<table border="1" align="center" width=50%>
+    <tr>
+        <td align=center><br><br>
+                  암복호화 원문  : <textarea rows='10' style="width:90%" id="hashValue">encrypt test</textarea><br>
+                  암복호화 (된)문  : <textarea rows='10' style="width:90%" id="hashedValue"></textarea><br>
+
+                  암호화 args{} <br>
+                algorithm: 
+                <input type="radio" name="crypt_algo" value="0" checked="true" />SEED
+                <input type="radio" name="crypt_algo" value="1" />AES
+                <input type="radio" name="crypt_algo" value="2" />ARIA
+                <input type="radio" name="crypt_algo" value="3" />TDES
+                <br>
+
+                mode: 
+                <input type="radio" name="crypt_mode" value="0" checked="true" />CBC
+                <input type="radio" name="crypt_mode" value="1" />ECB
+                <br>
+
+                padding: 
+                <input type="radio" name="crypt_padding" value="1" checked="true" />no
+                <input type="radio" name="crypt_padding" value="2" />zero
+                <input type="radio" name="crypt_padding" value="0" />pkcs
+                <br><br>
+
+                암복호화 keys{} <br>
+                key: 
+                <input type="text" id="crypt_key" value="0123456789012345" /><br>
+                iv:
+                <input type="text" id="crypt_iv" value="0123456789012345" /><br><br>
+
+                <input type=button onclick=encrypt() value="Encrypt" style="width:150">
+                <input type=button onclick=decrypt() value="Decrypt" style="width:150">
+                <br><br><br>
+        </td>
+    </tr>
+</table>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd
+		">
+		
+	<context:annotation-config />
+	
+	<!-- $를 사용하려면 상단에 property-placeholder를 지정해야 합니다. -->
+	<context:property-placeholder />	
+
+	
+	<context:component-scan base-package="com.eunwoosoft.comm.*.controller" >
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+	
+	<mvc:annotation-driven/>	
+	
+	<bean id="urlFilenameViewController" class="org.springframework.web.servlet.mvc.UrlFilenameViewController"/>
+	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping" >
+		<property name="mappings">
+			<props>
+				<prop key="/**/*.dx">urlFilenameViewController</prop>
+			</props>
+		</property>		
+	</bean>	
+	
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<property name="contentNegotiationManager">  
+			<bean class="org.springframework.web.accept.ContentNegotiationManager">  
+				<constructor-arg>
+					<bean class="org.springframework.web.accept.PathExtensionContentNegotiationStrategy">
+						<constructor-arg>
+							<map>
+								<entry key="atom" value="application/atom+xml" />
+								<entry key="html" value="text/html" />
+								<entry key="json" value="application/json" />				 				
+				 				<entry key="js" value="text/javascript" />
+				 				<entry key="css" value="text/css" />
+							</map>
+						</constructor-arg>
+					</bean>		
+				</constructor-arg>
+			</bean>			
+		</property>		
+	</bean>	
+	
+	<bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
+		<property name="definitions" value="/WEB-INF/config/tiles/tiles-def.xml"/>
+	</bean>
+	<bean id="tilesUrlBasedViewResolver" class="com.eunwoosoft.frwk.prl.tiles2.FwkTilesUrlBasedViewResolver">
+    	<property name="viewClass" value="com.eunwoosoft.frwk.prl.tiles2.FwkDynamicTilesView" />       	
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+        <property name="tilesDefinitionName" value="defaultLayout" />
+		<property name="tilesBodyAttributeName" value="body.contents" />
+		<property name="tilesDefinitionDelimiter" value="." />
+		<property name="order" value="1" />
+	</bean>	
+	
+	<bean id="beanNameViewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="2" />	
+	
+	<import resource="ew-interceptor.xml"/>
+	 
+	 
+</beans>

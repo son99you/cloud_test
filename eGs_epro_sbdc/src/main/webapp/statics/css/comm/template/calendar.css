@@ -1,0 +1,253 @@
+@charset "utf-8";
+
+/*calendar bigtable*/
+.bigtable{
+    margin-bottom:30px;
+}
+.bigtable th{
+    width: 139px;
+    text-align: center;
+    background-color:#747474;
+    border: 1px solid #747474;
+    color:#FFFFFF;
+    font:12px 'NanumGothicBold' , NanumGothicBold, arial, sans-serif;
+}
+.bigtable td{
+    height: 100px;
+    border:1px solid #d8d8d8;
+    border-top: none;
+    /*position: relative;*/
+    cursor: pointer;
+}
+.bigtable td .tdWrap{
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.bigtable td .tdWrap .markLists{
+    position:absolute;
+    top: 22px;
+    left: 4px;
+    font-size: 11px;
+}
+.bigtable td span{
+    position: absolute;
+    top: 6px;
+    left: 5px;
+    color:#5c5c5c;
+    font:13px 'Dotum' , Dotum, arial, sans-serif;
+}
+.bigtable td .writingBtn{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 19px;
+    height: 19px;
+    background: url('../../images/Ac_writingBtn.png') no-repeat 0 0;
+    text-indent: -999999px;
+}
+.bigtable td .moreBtn{
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
+    background: url('../../images/btn_more.png') no-repeat 0 0;
+    text-indent: -999999px;
+}
+.bigtable td .listLayer{
+    position: absolute;
+    top: 9px;
+    left: 20px;
+}
+.bigtable td .listLayer p{
+    width: 9px;
+    height: 9px;
+    display: inline-block;
+    text-indent: -999999px;
+}
+.bigtable td .listLayer p.square1{
+    background-color: #5cbffa;
+}
+.bigtable td .listLayer p.square2{
+    background-color: #85d7a9;
+}
+.bigtable td .listLayer p.square3{
+    background-color: #9da4f5;
+}
+.bigtable td .listLayer p.square4{
+    background-color: #d59b85;
+}
+.bigtable td:hover , .bigtable td.on{
+    background-color: #ffeee1;
+    font-weight: bold;
+}
+.bigtable td:hover .markLists, .bigtable td.on .markLists{
+    font-weight: normal;
+}
+.bigtable td:hover span ,.bigtable td.sun:hover span , .bigtable td.sat:hover span,
+.bigtable td.on span ,.bigtable td.sun.on span , .bigtable td.sat.on span
+{
+    color:#df7528;
+}
+.bigtable td.sun span{
+    color: red;
+}
+.bigtable td.sat span{
+    color: darkblue;
+}
+.squareList li{
+    float:left;
+}
+.squareList li span{
+    width: 9px;
+    height: 9px;
+    display: inline-block;
+    text-indent: -999999px;
+}
+.squareList li .square4{
+    float:left;
+}
+
+
+/*date pick*/
+/* 달력 style width inline style로 결정*/
+.calendar_wrap{
+    float:left;
+    height: 30px;
+}
+.calendar_wrap input[type=text]{
+    float:left;
+    border: 1px solid #D4D4D4;
+    height : 28px;
+}
+.calendar_wrap button{
+    width: 19px;
+    height: 40px;
+    float:left;
+    margin-left: 5px;
+    margin-top: 5px;
+    background-image:url('../../images/template_btn_calendar_off.png');
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    text-indent: -999999px;
+}
+.calendar_wrap button:hover , .calendar_wrap button.on{
+    background-image:url('../../images/template_btn_calendar_on.png');
+}
+/*date pick 넓이 값지정*/
+/*인풋의 값은 총넓이의 28를 제외한다*/
+.calendar_wrap.w_120 input[type=text]{width: 100px;}
+.calendar_wrap input[type=text]{width: 122px;}
+
+/*달력이미지 위치*/
+.calendar_wrap img.ui-datepicker-trigger{margin:5px 3px; }
+
+
+
+/*jquery datepicker*/
+.ui-datepicker {
+    width: 245px;
+    display: none;
+    background-color: white;
+    border: 1px solid #e8e8e8;
+    border-bottom: none;
+}
+.ui-datepicker .ui-datepicker-header {
+    position: relative;
+    padding: 5px 0;
+    height: 15px;
+}
+.ui-datepicker .ui-datepicker-prev span,
+.ui-datepicker .ui-datepicker-next span {
+    display: block;
+    position: absolute;
+    background-image: url('../../images/template_calendar_btns.png');
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    width: 16px;
+    height: 15px;
+    text-indent: -999999px;
+    cursor: pointer;
+}
+.ui-datepicker .ui-datepicker-prev span{
+    top: 7px;
+    left: 45px;
+}
+.ui-datepicker .ui-datepicker-next span{
+    top: 7px;
+    right: 45px;
+    background-position: -16px 0;
+}
+.ui-datepicker .ui-datepicker-title {
+    font-weight: bold;
+    color:#5c5c5c;
+    font-size: 12px;
+    text-align: center;
+}
+/*.ui-datepicker table tr td:nth-last-child(1) a{
+    color : red ! important;
+}
+.ui-datepicker table tr td:nth-last-child(2) a{
+    color : blue ! important;
+}*/
+.ui-datepicker th {
+    text-align: center;
+    font-weight: bold;
+    border: 0;
+    background-color: #017ac3;
+    color: white;
+    width: 35px;
+    height: 25px;
+}
+.ui-datepicker td {
+    border: 1px solid #e8e8e8;
+}
+.ui-datepicker td span,
+.ui-datepicker td a {
+    display: block;
+    padding-left: 5px;
+    padding-top: 5px;
+    width: 29px;
+    height: 22px;
+    text-align: left;
+    text-decoration: none;
+}
+.ui-datepicker td a:hover{
+    color: #017ac3;
+    border: 2px solid #5cbffa;
+    padding-left: 3px;
+    padding-top: 3px;
+    width: 27px;
+    height: 20px;
+}
+.ui-datepicker td a.ui-state-default.ui-state-highlight{
+	color: #017ac3;
+    border: 2px solid #5cbffa;
+    padding-left: 3px;
+    padding-top: 3px;
+    width: 27px;
+    height: 20px;
+}
+.ui-datepicker .ui-datepicker-buttonpane {
+    background-image: none;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+}
+.ui-datepicker .ui-datepicker-buttonpane button {
+    float: right;
+    cursor: pointer;
+    width: auto;
+    overflow: visible;
+}
+.ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current {
+    float: left;
+}
+/*주말색상지정 2015-06-25*/
+.ui-datepicker-week-end a {color : blue ! important;}
+.ui-datepicker table tr td:first-child a{
+    color : red ! important;
+}
+
+.subscrip_info .calendar_wrap input[type=text]{width: 96px;}

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * 권한관리 > 메뉴 Mapper
+ *
+ * <pre>
+ * sqlmap.comm.menu 
+ *    |_ CommMyMenuMapper.xml
+ * 
+ * </pre>
+ * @date : 2015. 09. 06. 오전 11:41:04
+ * @version : 1.0
+ * @author : 은우소프트 김봉수
+-->
+<mapper namespace="com.eunwoosoft.comm.menu.dao.CommMyMenuDao">	
+
+	<!-- 내부 -->
+	<select id="selectMyMenuListInqire" resultType="dataEntity">
+	SELECT
+		  MENU_ID
+		, MENU_NM
+		, URL_ID
+		, (SELECT LNK_URL FROM T_MM_MENU_MST WHERE 1=1 AND MENU_ID = URL_ID) AS LNK_URL
+		, USE_YN
+        , PARAM
+        , USR_SECD
+        , LRG_MENU_ID
+        
+	FROM
+	(
+		SELECT MENU.MENU_ID
+	                  , MENU.MENU_NM
+	                  ,(
+		                  	SELECT MIN(MENU_ID) AS MENU_ID FROM T_MM_AUTH_MENU
+							WHERE 1=1
+							AND AUTH_ID = AUME.AUTH_ID
+							AND MENU_ID LIKE '%' || MENU.MENU_ID || '%'
+							AND MENU_ID NOT IN (MENU.MENU_ID)
+						) AS URL_ID
+	                  , MENU.USE_YN
+	                  , MENU.PARAM
+	                  , MENU.USR_SECD
+	                  , MENU.LRG_MENU_ID
+	           FROM T_MM_MENU_MST MENU
+	                  , T_MM_AUTH_MENU AUME
+	                  , T_MM_AUTH AUTH
+	                  , T_MM_USER_MST USR
+	        WHERE 1=1
+	            AND MENU.MENU_ID = AUME.MENU_ID
+	            AND AUME.AUTH_ID = AUTH.AUTH_ID
+	            <if test='P_USR_SECD.equals("ipro") '>
+	            AND AUTH.AUTH_ID = USR.AUTH_ID
+	            </if>
+	            <if test='P_USR_SECD.equals("opro") '>
+	            AND AUTH.AUTH_ID = USR.AUTH_ID(+)
+	            </if>	
+	            <if test='P_USR_SECD.equals("inner") '>
+	            AND AUTH.AUTH_ID = USR.AUTH_ID
+	            </if>
+	            AND MENU.USE_YN = 'Y'
+	            AND AUME.USE_YN = 'Y'
+	            AND AUTH.USE_YN = 'Y'
+	            AND MENU.MENU_SECD = 'M'
+	            <if test='P_USR_SECD.equals("ipro") '>
+	            AND MENU.USR_SECD = '0'
+	            </if>
+	            <if test='P_USR_SECD.equals("opro") '>
+	            AND MENU.USR_SECD = '1'
+	                <if test='P_AUTH_ID_S != null and P_AUTH_ID_S != "" '>
+	                AND AUME.AUTH_ID = #{P_AUTH_ID_S, jdbcType=VARCHAR}
+	                </if>
+	            </if>
+	            <if test='P_USR_SECD.equals("inner") '>
+	            AND MENU.USR_SECD = '2'
+	            </if>
+	            <if test='P_USR_ID != null and P_USR_ID != "" '>
+	            AND USR.USR_ID = #{P_USR_ID , jdbcType=VARCHAR}
+	            </if>
+	        ORDER BY TO_NUMBER(MENU.LRG_MENU_ID)
+	)
+        
+        
+        
+        <!-- SELECT MENU.MENU_ID
+                  , MENU.MENU_NM
+                  , MENU.LNK_URL
+                  , ( SELECT MENU_ID
+                         FROM T_MM_MENU_MST
+                       WHERE LNK_URL = MENU.LNK_URL
+                           AND USE_YN = 'Y'
+                           AND DEL_AT = 'N'
+                           AND MENU_SECD IN ('P','S')
+                           <if test='P_USR_SECD.equals("ipro") '>
+                           AND USR_SECD = '0'
+                           </if>
+                           <if test='P_USR_SECD.equals("opro") '>
+                           AND USR_SECD = '1'
+                           </if>
+                           <if test='P_USR_SECD.equals("inner") '>
+                           AND USR_SECD = '2'
+                           </if>
+                           AND MENU_ID IS NOT NULL ) AS URL_ID
+                  , MENU.USE_YN
+                  , MENU.PARAM
+                  , MENU.USR_SECD
+                  , MENU.LRG_MENU_ID
+           FROM T_MM_MENU_MST MENU
+                  , T_MM_AUTH_MENU AUME
+                  , T_MM_AUTH AUTH
+                  , T_MM_USER_MST USR
+        WHERE 1=1
+            AND MENU.MENU_ID = AUME.MENU_ID
+            AND AUME.AUTH_ID = AUTH.AUTH_ID
+            <if test='P_USR_SECD.equals("ipro") '>
+            AND AUTH.AUTH_ID = USR.AUTH_ID
+            </if>
+            <if test='P_USR_SECD.equals("opro") '>
+            AND AUTH.AUTH_ID = USR.AUTH_ID(+)
+            </if>	
+            <if test='P_USR_SECD.equals("inner") '>
+            AND AUTH.AUTH_ID = USR.AUTH_ID
+            </if>
+            AND MENU.USE_YN = 'Y'
+            AND AUME.USE_YN = 'Y'
+            AND AUTH.USE_YN = 'Y'
+            AND MENU.MENU_SECD = 'M'
+            <if test='P_USR_SECD.equals("ipro") '>
+            AND MENU.USR_SECD = '0'
+            </if>
+            <if test='P_USR_SECD.equals("opro") '>
+            AND MENU.USR_SECD = '1'
+                <if test='P_AUTH_ID_S != null and P_AUTH_ID_S != "" '>
+                AND AUME.AUTH_ID = #{P_AUTH_ID_S, jdbcType=VARCHAR}
+                </if>
+            </if>
+            <if test='P_USR_SECD.equals("inner") '>
+            AND MENU.USR_SECD = '2'
+            </if>
+            <if test='P_USR_ID != null and P_USR_ID != "" '>
+            AND USR.USR_ID = #{P_USR_ID , jdbcType=VARCHAR}
+            </if>
+        ORDER BY TO_NUMBER(MENU.LRG_MENU_ID) -->
+	</select>
+
+	<select id="selectMyMenuSubListInqire" resultType="dataEntity">
+        SELECT MENU.MENU_ID
+                  , MENU.MENU_NM
+                  , MENU.LNK_URL
+                  , MENU.USE_YN
+                  , MENU.PARAM
+                  , MENU.USR_SECD
+                  , MENU.LRG_MENU_ID
+                  , MENU.PNT_MENU_ID
+                  , MENU.MENU_SECD
+                  , MENU.MENU_LVL
+           FROM T_MM_MENU_MST MENU
+                  , T_MM_AUTH_MENU AUME
+                  , T_MM_AUTH AUTH
+                  , T_MM_USER_MST USR
+        WHERE 1=1
+            AND MENU.MENU_ID = AUME.MENU_ID
+            AND AUME.AUTH_ID = AUTH.AUTH_ID
+            <if test='P_USR_SECD.equals("ipro") '>
+            AND AUTH.AUTH_ID = USR.AUTH_ID
+            </if>
+            <if test='P_USR_SECD.equals("opro") '>
+            AND AUTH.AUTH_ID = USR.AUTH_ID(+)
+                <if test='P_AUTH_ID_S != null and P_AUTH_ID_S != "" '>
+                AND AUME.AUTH_ID = #{P_AUTH_ID_S, jdbcType=VARCHAR}
+                </if>
+            </if>	
+            <if test='P_USR_SECD.equals("inner") '>
+            AND AUTH.AUTH_ID = USR.AUTH_ID
+            </if>	
+            AND MENU.USE_YN = 'Y'
+            AND AUME.USE_YN = 'Y'
+            AND AUTH.USE_YN = 'Y'
+            AND MENU.MENU_SECD IN ('P', 'S')
+            <if test='P_USR_SECD.equals("ipro") '>
+            AND MENU.USR_SECD = '0'
+            AND USR.USR_ID = #{P_USR_ID , jdbcType=VARCHAR}
+            </if>
+            <if test='P_USR_SECD.equals("opro") '>
+            AND MENU.USR_SECD = '1'
+            </if>
+            <if test='P_USR_SECD.equals("inner") '>
+            AND MENU.USR_SECD = '2'
+            AND USR.USR_ID = #{P_USR_ID , jdbcType=VARCHAR}
+            </if>
+            <if test='P_USR_ID != null and P_USR_ID != "" '>
+            </if>
+            <if test="resourceName != null and resourceName != '' ">
+            	AND LRG_MENU_ID = (SELECT LRG_MENU_ID FROM T_MM_MENU_MST WHERE MENU_ID = #{resourceName})
+            </if>
+            <!-- 추가시작 -->
+            <if test="resourceName == null or resourceName == '' ">
+            	AND LRG_MENU_ID = (SELECT DISTINCT LRG_MENU_ID FROM T_MM_MENU_MST WHERE LNK_URL = #{requestUrl})
+            </if>
+            <!-- 추가종료 -->
+        <if test='P_USR_SECD.equals("ipro") '>
+        ORDER BY TO_NUMBER(MENU.PNT_MENU_ID)
+        </if>
+        <if test='P_USR_SECD.equals("opro") '>
+        ORDER BY	MENU.MENU_ID
+        </if>
+	</select>
+
+</mapper>

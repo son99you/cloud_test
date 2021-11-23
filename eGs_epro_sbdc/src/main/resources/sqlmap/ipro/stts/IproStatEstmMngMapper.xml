@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * sqlmap.ipro.main
+ * IproStatMapper.xml
+ * 
+ * @Author : 
+ * @Date   : 2018. 02. 21.
+ * 
+ -->
+ 
+ <mapper namespace="com.eunwoosoft.ipro.stts.dao.IproSttsEstmMngDao">
+ 
+	<!-- 통계대장 통계대상 조회 -->
+	<select id="selectSttsInfoDetail" resultType="dataEntity">
+        SELECT STTS_CODE
+                  , STTS_VIEW_NAME
+                  , STTS_ORDERBY
+                  , STTS_KEY_COLUMN
+           FROM T_MM_STTS_INFO
+         WHERE STTS_CODE = #{P_STTS_OBJ_SECD_S}
+	</select>
+	
+	
+	<select id="getColList" resultType="dataEntity">
+		<!-- getColList -->
+        SELECT COLUMN_NAME
+                  , COMMENTS
+                  , CODE_GBN
+                  , COLUMN_ORDERBY
+                  , COLUMN_TYPE
+                  , ALIGN
+           FROM ${sttsListCol}
+        WHERE 1=1
+        <if test='colYn != null and colYn != "" '>
+        	<if test='colYn != null and colYn == "Y" '>
+				<!-- <iterate property="sch_colList" prepend="AND" open=" COLUMN_NAME IN(" close=")" conjunction=",">
+					#sch_colList[]#
+				</iterate> -->
+
+				<if test='sch_colList != null'>
+				 AND COLUMN_NAME IN (
+					<foreach separator="," item="item" collection="sch_colList">
+						#{item, jdbcType=VARCHAR}
+					</foreach>
+					)
+				</if>
+					
+			</if>
+			<if test='colYn != null and colYn == "N" '>
+				AND COLUMN_NAME IS NULL
+			</if>
+		</if>
+	</select>
+	
+	<!-- 통계대장 목록 -->
+	<select id="selectSttsList" resultType="dataEntity">
+        SELECT dataColumn
+                  <!-- , TCNT AS totCnt -->
+                  , ( SELECT DECODE(COLUMN_TYPE, NULL, 'TEXT', COLUMN_TYPE)
+                         FROM ${sttsListCol}
+                      WHERE COLUMN_NAME = ${sch_colList_col}) AS columnType
+                  , ( SELECT ALIGN 
+                         FROM ${sttsListCol}
+                      WHERE COLUMN_NAME = ${sch_colList_col}) AS align 
+           FROM ( SELECT ROWNUM AS seq
+                                <if test='rowInqData != null and rowInqData != "" '>
+                                , NVL( ${sch_colList}, null) AS dataColumn
+                                </if>
+                                <if test="rowInqData == null or rowInqData == '' ">
+                                , NVL( ${sch_colList}, null) AS dataColumn
+                                </if>
+                                , COUNT(*) OVER() AS TCNT						
+                         FROM ${sttsViewName}
+                       WHERE 1=1
+						
+                       <if test='rowInqData != null and rowInqData != "" '>
+						    AND
+						    <foreach collection="rowInqData" item="item" index="index" separator="AND">
+					            ${item}
+					        </foreach>
+						</if>
+						
+						<!-- <isNotEmpty property="rowInqData">
+							<iterate property="rowInqData">
+								AND $rowInqData[].[0]$ = $rowInqData[].[2]$
+								AND $rowInqData[].[0]$ $rowInqData[].[1]$
+							</iterate>
+						</isNotEmpty> -->
+					${sttsOrderby}
+					
+				)
+	</select>			
+ 
+ </mapper>
+ 

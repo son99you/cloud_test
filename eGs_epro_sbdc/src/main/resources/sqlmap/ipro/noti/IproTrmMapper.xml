@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+ --> 
+ <mapper namespace="com.eunwoosoft.ipro.noti.dao.IproTrmDao">
+
+	<resultMap id="TRM_CNTN" type="dataEntity">
+    	<result property="TRM_CNTN" column="TRM_CNTN" jdbcType="CLOB" javaType="java.lang.String" />
+    </resultMap>
+ 
+	 <select id="trmListWithPgng" resultType="dataEntity">
+        <include refid="ComPgng.pgngHeaderClause"/>
+        SELECT * FROM (
+		    <include refid="selectTrmList"/>
+			<include refid="selectTrmListWhere"/>
+			ORDER BY REG_DT DESC
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>   
+    </select>
+    
+	 <select id="trmExcelList" resultType="dataEntity">
+        SELECT ROWNUM AS RNUM, A.* FROM(
+	        SELECT * FROM (
+			    <include refid="selectTrmList"/>
+				<include refid="selectTrmListWhere"/>
+				ORDER BY REG_DT DESC
+			) T1
+			WHERE 1 = 1
+        )A
+    </select>
+ 
+    <select id="trmListTotCnt" resultType="int" > 
+		SELECT COUNT(1) FROM ( 
+			<include refid="selectTrmList"/>
+			<include refid="selectTrmListWhere"/>
+		) T1
+		WHERE 1 = 1
+	</select>
+	
+ 	<sql id="selectTrmList">
+        SELECT  TRM_SECD
+        			, F_CDVAL_INQIRE('TRM_SECD', TRM_SECD) AS TRM_SECD_NM
+					, TRM_SN
+					, TTL_NM
+					, TRM_CNTN
+					, USE_YN
+					, FILE_GRP_NO
+					, REGR_ID
+					, REGR_NM
+					, REG_DT
+					, TO_CHAR(TO_DATE(REG_DT, 'yyyyMMddHH24miss'), 'yyyy-MM-dd') AS REG_DT_F
+					, MODR_ID
+					, MODR_NM
+					, MOD_DT
+					, CONN_IP
+					, DEL_AT
+					 , ( SELECT COUNT(*) FROM T_MM_FILE_MST WHERE FILE_GRP_NO = MST.FILE_GRP_NO AND DEL_AT = 'N') AS FILE_CNT
+        FROM T_BA_TRM_MST MST
+	</sql>
+	
+	<sql id="selectTrmListWhere">
+		<where>
+            AND DEL_AT = #{P_DEL_AT, jdbcType=VARCHAR}
+            <if test='P_TRM_SECD != null and P_TRM_SECD != "" '>
+	            AND TRM_SECD = #{P_TRM_SECD, jdbcType=VARCHAR}
+            </if>
+            <if test='P_TTL_NM_S != null and P_TTL_NM_S != "" '>
+                AND TTL_NM LIKE '%'|| #{P_TTL_NM_S} || '%' 
+            </if>
+		</where>
+	</sql>
+	
+	<insert id="trmRegist" useGeneratedKeys="true" keyProperty="P_TRM_SN">
+		<selectKey resultType="int" keyProperty="P_TRM_SN" order="BEFORE">
+			SELECT 	NVL(MAX(TO_NUMBER(TRM_SN)),0)+1 AS TRM_SN
+			FROM T_BA_TRM_MST
+			WHERE TRM_SECD = #{P_TRM_SECD , jdbcType=VARCHAR}
+		</selectKey>
+		INSERT INTO T_BA_TRM_MST (
+                            TRM_SECD
+							, TRM_SN
+							, TTL_NM
+							, TRM_CNTN
+							, USE_YN
+							, FILE_GRP_NO
+							<include refid="ComRegr.RegrColumnClause"/>	
+		) VALUES (
+                            #{P_TRM_SECD , jdbcType=VARCHAR}
+                          , #{P_TRM_SN, jdbcType=VARCHAR}
+                          , #{P_TTL_NM, jdbcType=VARCHAR}
+                          , #{P_TRM_CNTN, jdbcType=VARCHAR}
+                          , #{P_USE_YN, jdbcType=VARCHAR}
+                          , #{P_FILE_GRP_NO, jdbcType=VARCHAR}
+                          <include refid="ComRegr.RegrValueClause"/>	
+		)
+	</insert>
+	
+	<update id="trmUpdt">
+		UPDATE T_BA_TRM_MST
+		      SET TTL_NM = #{P_TTL_NM, jdbcType=VARCHAR}
+                  , TRM_CNTN = #{P_TRM_CNTN, jdbcType=VARCHAR}
+                  , FILE_GRP_NO = #{P_FILE_GRP_NO, jdbcType=VARCHAR}
+                  , DEL_AT = #{P_DEL_AT, jdbcType=VARCHAR}
+                  <include refid="ComRegr.ModrSetClause"/>
+        WHERE TRM_SECD = #{P_TRM_SECD, jdbcType=VARCHAR}
+            AND TRM_SN = #{P_TRM_SN, jdbcType=VARCHAR}    
+	</update>
+
+	<update id="trmDelete">
+		UPDATE T_BA_TRM_MST
+		      SET DEL_AT = #{P_DEL_AT, jdbcType=VARCHAR}
+                  , MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+                  , MODR_ID = #{USR_ID, jdbcType=VARCHAR}
+                  , MODR_NM = #{USR_NM, jdbcType=VARCHAR}
+        WHERE TRM_SECD = #{P_TRM_SECD, jdbcType=VARCHAR}
+            AND TRM_SN = #{P_TRM_SN, jdbcType=VARCHAR} 
+	</update>
+	
+	<select id="trmDetail" resultType="dataEntity" resultMap="TRM_CNTN">
+		SELECT TRM_SECD
+					, TRM_SN
+					, TTL_NM
+					, TRM_CNTN
+					, USE_YN
+					, FILE_GRP_NO
+					, REGR_ID
+					, REGR_NM
+					, REG_DT
+					, MODR_ID
+					, MODR_NM
+					, MOD_DT
+					, CONN_IP
+					, DEL_AT
+		FROM T_BA_TRM_MST
+		WHERE 1 = 1
+		AND DEL_AT = 'N'
+		AND TRM_SECD = #{P_TRM_SECD, jdbcType=VARCHAR}
+		<if test='P_TRM_SN != null and P_TRM_SN != ""' >
+			AND TRM_SN = #{P_TRM_SN, jdbcType=VARCHAR}
+		</if>
+		<if test='P_TTL_NM != null and P_TTL_NM != ""' >
+			AND TTL_NM = #{P_TTL_NM, jdbcType=VARCHAR}
+		</if>
+	</select>
+	
+	<select id="usrInfoDetail" resultType="dataEntity">
+		SELECT USR_ID
+                  , USR_NM
+                  , USR_ENM
+                  , PWD
+                  , EMPL_NO
+                  , DEPT_NO
+                  , DEPT_NM
+                  , ODCD
+                  , OFDT_NM
+                  , OPCD
+                  , OFPS_NM
+                  , TEL_NO
+                  , CP_NO
+                  , FX_NO
+                  , ZIP
+                  , ADDR_NM
+                  , ADDR_DTL_NM
+                  , ADDR_ENM
+                  , EMAL_ADDR
+                  , ESTPC_AUTH_YN
+                  , USR_STCD
+                  , VLD_TE_STDE
+                  , VLD_TE_ENDE
+                  , USE_YN
+                  , LT_CONN_DT
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+                  , AUTH_ID
+		FROM T_MM_USER_MST
+		WHERE USR_ID = #{P_USR_ID, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectTrmAll" resultType="dataEntity">
+		SELECT 
+			  TTL_NM
+		FROM T_BA_TRM_MST
+		WHERE 1 = 1
+		AND USE_YN = 'Y'
+		AND DEL_AT = 'N'
+	</select>
+ </mapper> 

@@ -1,0 +1,18 @@
+@charset "utf-8";
+/* CSS Document */
+
+td.search input { float: left; width: 81.5%;  border-right: 0;}
+td.search button {float: left; width: 29px; height: 30px; background: #c4c4cd url(../../images/icon/icon_search.png) no-repeat center; border: 1px solid #d1d1d1; border-left:0;}
+td.search button:hover { background: #566979 url(../../images/icon/icon_search.png) no-repeat center; }
+
+.button-box { margin: 28px 0 6px; }
+
+.wave { margin: 0 3px; }
+
+
+/* 레이어팝업*/
+#layerPop {width: 250px; padding: 20px 14px;  background: #fff; border: 1px solid #666;  }
+#layerPop span {display: inline-block; margin-top: 6px;font-size: 13px; color: #4c4c4c;}
+#layerPop span.line { margin-left: 20px; border-bottom: 1px solid #4c4c4c; }
+#layerPop input.pop { float: none; margin-right: 3px; border: 1px solid #d1d1d1; }
+#layerPop a { vertical-align: middle;}

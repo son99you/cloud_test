@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <script src="../library/jsrose_crypto.js"></script>
+    <script src="../library/jsrose.js"></script>
+    <script src="../library/SecureCertificateStorage.js"></script>
+    <script src="../library/sloth.js"></script>
+
+    <!--<script src="../library/jsrose_crypto.js"></script>-->
+    <!--<script src="../library/jsrose.js"></script>-->
+    <!--<script src="../library/SecureCertificateStorage.js"></script>-->
+    <!--<script src="../library/sloth.js"></script>-->
+    <!--<script src="./js/jsrose_crypto.js"></script>-->
+    <!--<script src="./js/jsrose.js"></script>-->
+    <!--<script src="./js/SecureCertificateStorage.js"></script>-->
+    <script>
+        //alert(window.navigator.userAgent);
+        var signCertificate = '3082058f30820477a0030201020203076d8a300d06092a864886f70d01010b05003055310b3009060355040613024b5231123010060355040a0c095369676e4b6f72656131153013060355040b0c0c416363726564697465644341311b301906035504030c125369676e4b6f726561205465737420434133301e170d3135303830393138323735305a170d3137303831303134353935395a307e310b3009060355040613024b5231123010060355040a0c095369676e4b6f72656131183016060355040b0c0fed858cec8aa4ed8ab8ec9785eca28531183016060355040b0c0fed858cec8aa4ed8ab8ed9a8cec82ac31183016060355040b0c0fed858cec8aa4ed8ab8eca780eca090310d300b06035504030c047974363230820122300d06092a864886f70d01010105000382010f003082010a02820101009af18dbf4fa48837b3a9a9037e47f28db3c1866ffd46adf76b80d5d29e6683f7f5234d73183d5ef82575edcdf9b262b44d42f3e293e3118ca1e4e5c3b4c65deb70ace106c080c0a89a8388f5d930a614ea9a045cadc89f95d9ec4eb8ec0fbbe68edfc0adbcd101a00b9919973b0414e0bd5bc1e56083853373b95fbcde25eb013ec3b6abfacfc5958db81ba2c25e60b34abcc000ba679ab662581d58381320567e93562d427dad80635e2c24afcb4bbc4f5d87ee3eb9ba96ffa8851163129c018f65086f453871a15118c6835689e0c4fe150de6208412fbb0cd62a8032d42da8d4f060ba098b8ebfd09e99b2953d681009ad10eadc460ea2562f7870b6be5950203010001a382023d308202393081930603551d2304818b30818880140f0433219e193bd0ac90471e9119dd0be50c67e5a16da46b3069310b3009060355040613024b52310d300b060355040a0c044b495341312e302c060355040b0c254b6f7265612043657274696669636174696f6e20417574686f726974792043656e7472616c311b301906035504030c124b697361205465737420526f6f7443412035820135301d0603551d0e041604145a30cfd1ad484ae45cf6dae75e6fbecf66b4c19e300e0603551d0f0101ff0404030206c0307b0603551d200101ff0471306f306d060a2a831a8c9a4405010107305f302d06082b060105050702011621687474703a2f2f7777772e7369676e6b6f7265612e636f6d2f6370732e68746d6c302e06082b0601050507020230221e20c7740020c778c99dc11c0020c2dcd5d8c6a90020c778c99dc11cc785b2c8b2e430630603551d11045c305aa05806092a831a8c9a440a0101a04b30490c04797436323041303f060a2a831a8c9a440a0101013031300b0609608648016503040201a02204209111fd467365c3f2b7dd34d508e08845bfe26dc2dc5c8657d7cd5c9de8f394ac30540603551d1f044d304b3049a047a04586436c6461703a2f2f3231312e3137352e38312e3130323a3638392f6f753d64703970352c6f753d4163637265646974656443412c6f3d5369676e4b6f7265612c633d4b52303a06082b06010505070101042e302c302a06082b06010505073001861e687474703a2f2f3231312e3137352e38312e3130312f6f6373702e706870300d06092a864886f70d01010b050003820101003c24d93a96c89529774f239b033744c40740d8cc8d58d54512135a658ba9ae0f1fbcdc15e81fe5360636592df47e31ef6dead74776590d3099a389d3040bb142030469a362663efbd970c998820c4c1075fc6465db8a4e88c0e754f1d5a536c922346f7d624b47edf8ee6e81bff2837965a766c063158008def094ec5cb4ec6aee0b276549d4f6b4fea05aa5e64c34576c31c7f95b6b3431b1b0d88ee710a33540924d609e947973afcc3a252cb75f2638fb418022d6c18d920285b7adfa6c8c15cd3687a61b558f816f483e2048830675da25716293e4beb722579a803a285e8d23bb4e57938fd6a9e077e225efb58fd1098d287bddd68de6b1561ea26d56a5';
+        var signPrivateKey = '3082053e304806092a864886f70d01050d303b301b06092a864886f70d01050c300e0408450b29f80892e2ed02020800301c06082a831a8c9a44010404107a78eb92f28f76f7f77228d414a0dd4c048204f03891d6ac3eed108d208193fd71deafd55e1bd64899b2fe499bd7d615e145bdaa97efac50acc537bc62503bca252ad4b25634304b961e30e8a9b0342d7671b44819a590ee8025d47ec640fef541752e6f9a72c2832c31b1a1e76f6d0d8b7388c72f209a96774a5b8aaaddb03fdd1ca43601dd3318e07711c4945fe480cee0a196b95b697a24cbd10adfd65f630c969a4b3bb2192dc99c1844dd1004bcddcb2f27646144601205ab8750e014a37e16256045b8a2e6f29fcbc350b1df248d38335bee68fb01883392c869f588b574b5fbe0a9836e1643fac7edb650a6fc1dc41dcc37cd8d510d26f3beeca4b8c817ae0b75a4d3e50119c2530e903895428ba545956c70b4047671890d083a8927cdce8cc60c7a796fd81573965b62bd9716b2c993b87c1eb63e3b05fe6984ea26c3bfdb7e1416b204c2b41207cca41039b69e848efd7bef6b54f87e9daaf7a90c61de69cd65831f0d2f8479bc6d2b1cd28d66cd4cbd26a41bbb55331b080ba1b4c477e42945c8de40889d28bf8154e8d3cd07ea98fbcd9bf4e34f829c1f12663d1a5af0a2a2306a1c12c9512cc0f5bf65da896ad90199fad0a28fd628efc971bebaa5dc074339236432ec37cd90bf07866188829c732bfa235d88343ff41f60c1477345fd037ba38d470f4d5ab5289c072d244f13b70e0b2b1153c9cd1ba1b2d1e022e554ec54d20164c70fb011a5f1ce268b81b140bc4657ebe787505903bf94f397e77c02fbb6d0599bba93c547c57b81aca461093263e028eb8bfb96a6ad19c3661fe51b931b4b26eaee88242791d0776ede9c4e0e4d8e9a33f5b94d23e88b32b5759033f611da765a2cad97920bda2c13fcdffe4e4d3db72e973caf4c38dbec6972c0b47e4e41a11abe0f9818bd18f59006db4d681f4e19e74dca3f968e30a4183b60c738604b6863488cac489c3f5d483de48aba409b1b496f6cec827732605605cde07f07a446fbb649b51d03b53565a871459391487a95f2ae046ef4ac5f6611121463c87b71ff5628e50fd23b0ed70fdda25e8de524a2dc5fb990555db4b33e0afe1362bca074479856e91ee3dccf5fb747ba8f5d7116de7aae81576ea3bdaa9b52fc66d38eb5948181b5fb96dd71ebb12dee977c4abc9efe478be806e8b81c3910e6dcdf2cb739c6ac5ed51a71c06f02cd5350bae71d2cc8ed94c3dcdeae23cfd6abde5444a49d96c34fc98b19122efca28bb122ee148e1f6167501788e6b9e3fa822c76a8e841d5ce3d77098898cacc101d46391918b7d657bc3a411b30af1ccc61fb54f7bbb6c912cb382f8c1a6d5dbfb900c1c9805aa714265d1101dfaa46905f926b8525e01152180f1ed948cca4b4ddecc1105ca9f089540116ddd0e1dae773e252f8f45925a6e4b0e6542a831ea3c1bed7d3cf3acf6b4bf61cb16402a64cc21d04c0680997be6ccda91a0b2d870468112f3d1d4520b9daaf4b79f881be8fdb5adf85f899a287ff2a77c601f8b6c73111110ad05334bd9e73fce7c6bd5e3acd16d91376b3df9c79056e1594897fe73ec5a29c2b43b061c4aa23a157a86964f818c267ac99748cdc2ba019c9eed4e764db9138ef986179421cce66c3692a78fa2cd920f479636c8a45628793bc08ead5649c59e5763c9070574d3ad7dda3e709cd940fc28b4d83f5d89c9fdddbb7e3e3f65306cd02a21919af203adf89ffc4739fe286cc81b99fab1ffefed59c9539c162d5a7a7932a8e0a7d502ae986b91c520e73b63514fb947be322e6946f320bf19badaea6492116f30135492ce2ce';
+        var kmCertificate = '308204c9308203b1a0030201020203076d8b300d06092a864886f70d01010b05003055310b3009060355040613024b5231123010060355040a0c095369676e4b6f72656131153013060355040b0c0c416363726564697465644341311b301906035504030c125369676e4b6f726561205465737420434133301e170d3135303830393138323735305a170d3137303831303134353935395a307e310b3009060355040613024b5231123010060355040a0c095369676e4b6f72656131183016060355040b0c0fed858cec8aa4ed8ab8ec9785eca28531183016060355040b0c0fed858cec8aa4ed8ab8ed9a8cec82ac31183016060355040b0c0fed858cec8aa4ed8ab8eca780eca090310d300b06035504030c047974363230820122300d06092a864886f70d01010105000382010f003082010a0282010100f1a8de2d919ca5dae3a0fb7eeaf4b9ea1f2cfd7ed7fa090203c71d4ab05a4a34a04b4d81104af0cda3e57287cb9f25cad9c9fd9cc7edbfbfbf2d0a9573370eca8fb23aebe14563d458c46f37d6541153cbdd821a883c4c5b6fcd3dc157711b5f6c15aa43d04da8854d8660c0c5a88a903da43d8d70c68d3bb012810ae4599d426eda134e10edd676b6cf0d0bce0a271a0b54567f32ac37ec8def7dbc3457e3a6ae365600854b90bf7277c27512fb7bcfb07a640d551f0e981f7324293efceccc71a3adc4afa8643419b28ce90cdbcd059ccb14228da654be7670724946c5aa13d011fb83bc842e32a690b173eff67bd295f45be2b7bc0954d735d6ae516a6bd70203010001a3820177308201733081930603551d2304818b30818880140f0433219e193bd0ac90471e9119dd0be50c67e5a16da46b3069310b3009060355040613024b52310d300b060355040a0c044b495341312e302c060355040b0c254b6f7265612043657274696669636174696f6e20417574686f726974792043656e7472616c311b301906035504030c124b697361205465737420526f6f7443412035820135301d0603551d0e04160414c83392d954fc19e89cfce1a60465a25a1290b00b300e0603551d0f0101ff040403020520301a0603551d200101ff0410300e300c060a2a831a8c9a440501010d30540603551d1f044d304b3049a047a04586436c6461703a2f2f3231312e3137352e38312e3130323a3638392f6f753d64703970352c6f753d4163637265646974656443412c6f3d5369676e4b6f7265612c633d4b52303a06082b06010505070101042e302c302a06082b06010505073001861e687474703a2f2f3231312e3137352e38312e3130312f6f6373702e706870300d06092a864886f70d01010b0500038201010084f13decbe59e8c4e71b1151835ed32d6488c488b1399ae7f86fadf61ef4db785960b54f99061a6562afefc3b5b1ffc6dc17f5e1781ec0b515b6cebf8d4e9981189df9133ccf7f7cc0b7f6a09b9341d58d02bd2363a11e9b3ea1013fe83aefb39f30ca6176fb99382827b50e3d954d4705f85d5cc3eaedafa2a01341f6333e293915222ce8f07bc7133b7431e29eecdd0d4f3a2f71eaa8fe0a65f534ee3c62cde0a1ae25325c30e18bb583f124a5e440137147c7f751603ff7dedca1fbf6144a076674ec46b0788c4727ef9db02261fd480152f247e99bbe4b2dca5ea77b48a698b058cb8a06413362c51ea03b694678c3d645b15ec94c08e300ab3a93106520';
+        var kmPrivateKey = '3082051e304806092a864886f70d01050d303b301b06092a864886f70d01050c300e04082acc42b36606826c02020800301c06082a831a8c9a44010404106c5e8eaab6321bdb49e210da068c0d36048204d0df18fd02bb5003f7108108f89f182a92febd61bd601baad0eff8b1e15d54b311276b762c2a05e1684aa75588f29e6f0fc685e21ac059c0fdb05b56a84739eed78a4df27dcbef736c4637cbc028fb6c80b26ed85834daf3852439030614266efd1f5694b2e0b7493ce6c3e4044426b95f620edf8510f7842e57fd6fb8eefb811d688d13c407502e9dde6621fddeb326d94657a725216e79e8c85cdd3920859bdbd5c148f02b1f369ecb921bc32684cf922649c0f670dabf22ccc1be4974fec2ce8677c88bc5af80f9afaffdbf9cf1dc21a16beab7247e27809eb329bb0dbe297b6e6bd8ecbe9fa2c1f6f1fce1398c439199527b960a61cd36a8a148003b9b6b0d94184715b44980e3369d9b732889e75ecae16e43db55fd3c40418805b0324fb67ba799bd3efcfea28e55633ef1cc104d3376eb74dbf5e7ccf42aa97d9adc6bc0277d3582e6e2e211a132bb9852262da2595073e9644d8fd559408f346bd5e5e6dfcb6d8e40018a37d9eb9491f5c6d79d1536a0ce7cb86225a38e0a207da3c6f6e69b2407149e5913a7fadd763426f0e8cb00e92b3d1d89e6f6b161f5ff04861ffc41c959cca0d37fabc5b207744a7eca27ecb68195d59dedc3bc87d86668088fda113d3a1c31cab9372118a099b06c57af814a1a2d0f6d5de7b808b2447a54287564fce71d86ca562841e7ffae00c6d9a4006c146edf101a225e3e6f85e5ace113598672c5d014e71abff838b04aadb247bafdb6e9fe5382780357914d2716957ca9e0d959bfd385d0972b38e3b65114b3fba7d5a01dc9feaf0bd145b588a678135d635422f6ac29bdc06eaabc064894156cd645b8173118b24a007fe616a9a744b73b2b0a3293b8a89f5a8f3d3db8fd909dc404b821e908a17c1e402690463718d630c636d8c31257b69707e265aa42f35ed7d6068c08b9fe818da89dd1caaaf0247936c3c3eddd5264305ac508706b318fcfa594e8cf65a33165ef6a59051f69785a8bdd353174c316255f355e365c1d2c20e115cb6a4f5b97a524fb6d81f665a9d93a89e1ef05f2c63bbf7c9388095f833a008cd6882d9a5c85d1e38cb376292c0246006b8225631e654ccb3a25a9801225a9376e3ae2d34c19e6a6d515912cac02059bca83eaae9a04ad6d0df457fda6184f6217a722cbd5f745573a867c54d383a2a38a8670ccf8cdd4d3f13279dfe474c24a6332c6defd14ba576ec7adc345332cdae57fe4310c18533988597e021b55f4c75cf871eb49c5ad7ba51bd7f9ef208ad15323681121cde864c9a5c3c056d43b5a5faeb11ec7c89054b414b91d8b503df2537e06a868ce0c6ebd2f4b744aa7cfb565b66cf59fb24496c377f745ccbc837baca4656e2c87995cf03f3020ccd67f8cefc88fd6e4c1f3977b683680146024a788b9d529d163856ab482170a1b3ca631542e39c9f6cc26f1d4bc318943f34f4da4146920e82d6f958c6570a9de60166289d2757ca30e2ed33b90483cde79d78c7f71fb0d0932f92b6a7a51ce5220cbb27ffec32aea3c2c41823b4ae0fbc1862bd480aabf2554de7b3cc34ade069b818dada6ce6c43f9c3bc30fc0d55d354be9009a096355ddf01b310b472ba356fd8bd3dd1fbcde4297fe105b0dfa1c34058f82bea2c74e848cf8cc4be0eca02eb95c8dbe420a5169a27b0852cd2acddae7d8e65c63ce1f2ace260a08385e27e87c06b91b8906fce217abbeccb90f8e836b64de74ca82bd9c803ccc761b9';
+        var storageList;
+    </script>
+    <script>
+        function clearUpadFiles() {
+            var uploadFiles;
+
+            uploadFiles = document.getElementById('uploadFiles');
+            while (uploadFiles.hasChildNodes()) {
+                uploadFiles.removeChild(uploadFiles.firstChild);
+            }
+        }
+
+        function drop(ev) {
+            var uploadFiles;
+
+            uploadFiles = document.getElementById('uploadFiles');
+
+            ev.preventDefault();
+            var files = ev.dataTransfer.files;
+            for (var iter = 0; iter < files.length; iter++) {
+                var reader = new FileReader();
+                reader.onload = function (file) {
+                    return function (data) {
+                        var li;
+                        li = document.createElement('li');
+
+                        li.innerHTML = file.name + ' (' + data.target.result.length + ' bytes)';
+                        li.setAttribute('fileName', file.name);
+                        li.setAttribute('value', data.target.result);
+
+                        uploadFiles.appendChild(li);
+                    }
+                }(files[iter]);
+                reader.readAsBinaryString(files[iter]);
+            }
+            ;
+
+
+            ev.stopPropagation();
+            ev.preventDefault();
+        }
+        ;
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+        ;
+
+
+        function clearUpadFilesPFX() {
+            var uploadFiles;
+
+            uploadFiles = document.getElementById('uploadFiles{FX');
+            while (uploadFiles.hasChildNodes()) {
+                uploadFiles.removeChild(uploadFiles.firstChild);
+            }
+        }
+
+        function dropPFX(ev) {
+            var uploadFiles;
+
+            uploadFiles = document.getElementById('uploadFilesPFX');
+
+            ev.preventDefault();
+            var files = ev.dataTransfer.files;
+            for (var iter = 0; iter < files.length; iter++) {
+                var reader = new FileReader();
+                reader.onload = function (file) {
+                    return function (data) {
+                        var li;
+                        li = document.createElement('li');
+
+                        li.innerHTML = file.name + ' (' + data.target.result.length + ' bytes)';
+                        li.setAttribute('fileName', file.name);
+                        li.setAttribute('value', data.target.result);
+
+                        uploadFiles.appendChild(li);
+                    }
+                }(files[iter]);
+                reader.readAsBinaryString(files[iter]);
+            }
+            ;
+
+
+            ev.stopPropagation();
+            ev.preventDefault();
+        }
+        ;
+
+        function allowDropPFX(ev) {
+            ev.preventDefault();
+        }
+        ;
+    </script>
+
+    <script>
+        function appAlert(str) {
+            if(typeof(str) === 'undefined'){
+                alert('!!!!');
+            }else {
+                alert(str);
+            }
+        }
+        function addCertificateFromApp(cert, p8) {
+            alert('gogo');
+            var json = {};
+            json.signCertificate = yt.util.decode64(cert);
+            json.signPrivateKey = yt.util.decode64(p8);
+
+            secureCertificateStorage.addCertificateItem(json, function(){
+                alert('정상적으로 추가되었습니다.');
+                get();
+            }, function(msg){
+                alert('실패: ' + msg);
+            });
+        }
+        var yettie = {
+            app: {
+                export: function(code, p12) {
+                    var sender = new Sloth('https://www.html5cert.kr/sloth');
+                    sender.update(code, yt.util.decode64(p12), function(result){
+                        if(result instanceof yt.error) {
+                            alert('ok');
+                        }else {
+                            alert(result.getReason());
+                        }
+                    });
+                }
+            }
+        };
+
+        function add() {
+            var uploadFiles;
+            var json = {};
+
+            uploadFiles = document.getElementById('uploadFiles');
+
+            if (uploadFiles.childNodes.length == 0) {
+                alert('업로드 먼저~');
+                return;
+            }
+
+            for (var iter = 0; iter < uploadFiles.childNodes.length; ++iter) {
+                var node = uploadFiles.childNodes[iter];
+                var bin;
+                var isCert = false;
+                var fileName = node.getAttribute('fileName');
+                bin = node.getAttribute('value');
+
+                if (
+                        (fileName.indexOf('.cer') == fileName.length - 4) ||
+                        (fileName.indexOf('.der') == fileName.length - 4)
+                ) {
+                    /* cert */
+
+                    if (fileName.indexOf('signCert.der') != -1) {
+                        json.signCertificate = bin;
+                    } else if (fileName.indexOf('kmCert.der') != -1) {
+                        json.kmCertificate = bin;
+                    } else if (fileName.indexOf('_sig.cer') == fileName.length - 8) {
+                        json.signCertificate = bin;
+                    } else if (fileName.indexOf('_env.cer') == fileName.length - 8) {
+                        json.kmCertificate = bin;
+                    } else {
+                        console.log(fileName + ' is passed. (unknown cert file name format)');
+                    }
+                } else {
+                    /* pri */
+                    if (fileName.indexOf('signPri.key') != -1) {
+                        json.signPrivateKey = bin;
+                    } else if (fileName.indexOf('kmPri.key') != -1) {
+                        json.kmPrivateKey = bin;
+                    } else if (fileName.indexOf('_sig.key') == fileName.length - 8) {
+                        json.signPrivateKey = bin;
+                    } else if (fileName.indexOf('_env.key') == fileName.length - 8) {
+                        json.kmPrivateKey = bin;
+                    } else {
+                        console.log(fileName + ' is passed. (unknown key file name format)');
+                    }
+                }
+
+
+            }
+            clearUpadFiles();
+
+            secureCertificateStorage.addCertificateItem(json, function(){
+                alert('정상적으로 추가되었습니다.');
+                get();
+            }, viewError);
+        }
+
+        function addPFX(password) {
+            var uploadFiles;
+            var json = {};
+
+            uploadFiles = document.getElementById('uploadFilesPFX');
+
+            if (uploadFiles.childNodes.length == 0) {
+                alert('업로드 먼저~');
+                return;
+            }
+
+            var node = uploadFiles.childNodes[0];
+            var bin;
+            var isCert = false;
+            var fileName = node.getAttribute('fileName');
+            bin = node.getAttribute('value');
+
+            if (
+                    (fileName.indexOf('.pfx') == fileName.length - 4) ||
+                    (fileName.indexOf('.p12') == fileName.length - 4)
+            ) {
+                json.pfx = bin;
+            } else {
+                console.log(fileName + ' is passed. (unknown key file name format)');
+            }
+
+            clearUpadFiles();
+            secureCertificateStorage.addCertificateItemFromPFX(json, password, function(){
+                alert('정상적으로 추가되었습니다.');
+                get();
+            }, viewError);
+        }
+
+        function get() {
+            var ll;
+            ll = document.getElementById('ll');
+
+            while (ll.hasChildNodes()) {
+                ll.removeChild(ll.firstChild);
+            }
+
+            secureCertificateStorage.getCertificateList(function (secureCertificateList) {
+                alert('인증서 갯수: ' + secureCertificateList.length);
+
+                var selectElement = document.getElementById('ll');
+                var optionElement;
+                var index = 0;
+
+                // 초기화
+                while (selectElement.length > 0) {
+                    selectElement.removeChild(selectElement[0]);
+                }
+                index = 0;
+                storageList = secureCertificateList;
+                secureCertificateList.forEach(function(item){
+                    optionElement = document.createElement('option');
+                    optionElement.setAttribute('value', index);
+                    optionElement.appendChild(document.createTextNode(secureCertificateList[index].name));
+                    selectElement.appendChild(optionElement);
+                    index++;
+                });
+            });
+        }
+
+        function clearStorage() {
+            secureCertificateStorage.clearStorage();
+        }
+
+        function addDefaultCertificate() {
+            clearUpadFiles();
+
+//            var json = {
+//                signCertificate: yt.util.hexToBytes(signCertificate),
+//                signPrivateKey: yt.util.hexToBytes(signPrivateKey),
+//                kmCertificate: yt.util.hexToBytes(kmCertificate),
+//                kmPrivateKey: yt.util.hexToBytes(kmPrivateKey)
+//            };
+            var json = {
+                signCertificate: yt.util.hexToBytes(signCertificate),
+                signPrivateKey: yt.util.hexToBytes(signPrivateKey)
+            };
+
+            secureCertificateStorage.addCertificateItem(json, function(){
+                alert('정상적으로 추가되었습니다.');
+                get();
+            }, viewError);
+        }
+
+        function sign(index, plain, password) {
+            secureCertificateStorage.makeSignature(plain, storageList[index], password, undefined, function (result) {
+                document.getElementById('signResult').value = yt.util.bytesToHex(result);
+            }, viewError);
+        }
+
+        function removeCert(index, password) {
+            secureCertificateStorage.verifyPassword(storageList[index], password, function (result) {
+                secureCertificateStorage.removeCertificateItem(storageList[index]);
+            }, viewError);
+        }
+
+        function changePassword(index, oldPassword, newPassword) {
+            secureCertificateStorage.changePassword(storageList[index], oldPassword, newPassword, undefined, function (result) {
+                alert('ok / ' + result);
+            }, viewError);
+        }
+
+        function viewError(error) {
+            if(typeof(error) === ' string') {
+                alert(error);
+            }
+            else if(typeof(error.message) === 'string'){
+                alert(error.message)
+            }
+            else if(typeof(error.getReason) === 'function'){
+                alert(error.getReason());
+            }
+            else{
+                alert(error);
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+<div class="eleven columns omega fullwidth-bar left-only">
+    <div class="main-content clearfix">
+        <div class="post-fullwidth">
+            <section class="clearfix">
+                <div class="heading">
+                    <h2>Web Storage</h2>
+                </div>
+
+                <div>
+                    X.509 인증서와 PKCS8 EncryptedPrivateKeyInfo의 암호화된 비밀키 쌍을 자체 저장소(localStorage)에 저장하고 불러오는 기능.
+                </div>
+                <button onclick='clearStorage();'>저장소 초기화</button>
+                <button onclick='get()'>인증서 목록 가져오기</button>
+                <button onclick='addDefaultCertificate()'>기본인증서 저장</button>
+            </section>
+        </div>
+    </div>
+</div>
+
+<div>
+    <fieldset style='border:1px solid gray;'>
+        <legend>
+            <h3>인증서 목록</h3>
+        </legend>
+        <!--<ul id='ll'>-->
+        <!--</ul>-->
+        <select id="ll"></select>
+    </fieldset>
+</div>
+
+<br>
+
+<div>
+    <fieldset style='border:1px solid gray;'>
+        <legend>
+            전자서명  <button onclick="sign(document.getElementById('ll').value, document.getElementById('plain').value, document.getElementById('password').value)">GO!</button>
+        </legend>
+        <input id="plain" placeholder="plain">
+        <input type="password" id="password" placeholder="password"><br>
+        <textarea id="signResult" style="height: 100px; width: 100%"></textarea>
+    </fieldset>
+</div>
+<div>
+    <fieldset style='border:1px solid gray;'>
+        <legend>
+            비밀번호 변경  <button onclick="changePassword(document.getElementById('ll').value, document.getElementById('oldPassword').value, document.getElementById('newPassword').value)">GO!</button>
+        </legend>
+        <input type="password" id="oldPassword" placeholder="oldPassword">
+        <input type="password" id="newPassword" placeholder="newPassword">
+    </fieldset>
+</div>
+<div>
+    <fieldset style='border:1px solid gray;'>
+        <legend>
+            삭제  <button onclick="removeCert(document.getElementById('ll').value, document.getElementById('removePassword').value)">GO!</button>
+        </legend>
+        <input type="password" id='removePassword' placeholder="removePassword">
+    </fieldset>
+</div>
+<br>
+
+<div>
+    <fieldset style='border:1px solid gray;'>
+        <legend>
+            <h3>인증서 추가</h3>
+        </legend>
+        <br>
+
+        <div style='border:1px solid darkgreen;'>
+            <fieldset style='height:200px;' ondrop='drop(event);' ondragover='allowDrop(event);'>
+                <legend>DROP AREA(cert&key)</legend>
+                <button onclick='add()'>새 인증서 추가</button>
+                <button onclick='clearUpadFiles();'>clear</button>
+                <div id='uploadFiles'></div>
+            </fieldset>
+            <fieldset style='height:200px;' ondrop='dropPFX(event);' ondragover='allowDropPFX(event);'>
+                <legend>DROP AREA(pfx)</legend>
+                <button onclick='addPFX(document.getElementById("addPFXPassword").value)'>새 인증서 추가</button>
+                <button onclick='clearUpadFilesPFX();'>clear</button>
+                <input type="password" placeholder="pfxPassword" id="addPFXPassword">
+
+                <div id='uploadFilesPFX'></div>
+            </fieldset>
+        </div>
+    </fieldset>
+    <fieldset style='border:1px solid gray;'>
+
+    </fieldset>
+</div>
+
+<script>
+    // get();
+    secureCertificateStorage.isSupportBrowser(function(str) {
+        alert(str);
+    }, function(error){
+        alert(error);
+        alert(window.navigator.userAgent);
+    })
+</script>
+</body>
+
+</html>

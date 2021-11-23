@@ -1,0 +1,1437 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * sqlmap.ipro.main
+ * IproStatMapper.xml
+ * 
+ * @Author : 
+ * @Date   : 2018. 02. 21.
+ * 
+ -->
+ 
+ <mapper namespace="com.eunwoosoft.ipro.stat.dao.IproStatDao">
+ 
+	<sql id="bidPblancRegistRegstrList">
+		SELECT	A.PRCURE_BSNS_SE_CD
+					, F_CDVAL_INQIRE('22358', A.PRCURE_BSNS_SE_CD) AS PRCURE_BSNS_SE_NM
+					, A.PRCURE_SE_CD
+					, F_CDVAL_INQIRE('22181', A.PRCURE_SE_CD) AS PRCURE_SE_NM
+					, A.PBLANC_NO
+					, A.PBLANC_ODR
+					, A.PBLANC_NO || '-' || A.PBLANC_ODR AS PBLANC_NO_ODR
+					, A.BID_NM
+					, A.CNTRCT_MTH_CD
+					, F_CDVAL_INQIRE('22026', A.CNTRCT_MTH_CD) AS CNTRCT_MTH_NM
+					, B.PBLANC_DT
+					, TO_CHAR(TO_DATE(B.PBLANC_DT, 'yyyyMMddhh24miss'), 'yyyy-MM-dd') AS PBLANC_DT_XLS
+					, B.BID_DC_PEO_DT
+					, TO_CHAR(TO_DATE(B.BID_DC_PEO_DT, 'yyyyMMddhh24miss'), 'yyyy-MM-dd') AS BID_DC_PEO_DT_XLS
+					, B.BIPA_PRESENTN_END_DT
+					, TO_CHAR(TO_DATE(B.BIPA_PRESENTN_END_DT, 'yyyyMMddhh24miss'), 'yyyy-MM-dd') AS BIPA_PRESENTN_END_DT_XLS
+					, B.OPENG_DT
+					, TO_CHAR(TO_DATE(B.OPENG_DT, 'yyyyMMddhh24miss'), 'yyyy-MM-dd') AS OPENG_DT_XLS
+					, A.BID_CHARGER_ID
+					, A.BID_CHARGER_NM
+					, DECODE(A.BID_PROGRS_STTUS_CD, 'PF60', '낙찰', 'PF99', '유찰', '') AS SCSBID_AT
+		FROM		TEBI_BIPLMA A, TEBI_BITI B
+		WHERE	A.PBLANC_NO = B.PBLANC_NO
+		AND		A.PBLANC_ODR = B.PBLANC_ODR
+		AND		A.PBLANC_NO != 'P2999-99999'
+		AND		NVL(A.DELETE_AT, 'N') = 'N'
+	</sql>
+	
+	<sql id="bidPblancRegistRegstrListByWhere">
+		<if test=' P_PRCURE_BSNS_SE_CD_S != null and P_PRCURE_BSNS_SE_CD_S != "" '>
+			AND A.PRCURE_BSNS_SE_CD = #{P_PRCURE_BSNS_SE_CD_S}
+		</if>
+		<if test=' P_PRCURE_SE_CD_S != null and P_PRCURE_SE_CD_S != "" '>
+		    AND A.PRCURE_SE_CD = #{P_PRCURE_SE_CD_S}
+		</if>
+		<if test=' P_CNTRCT_MTH_CD_S != null and P_CNTRCT_MTH_CD_S != "" '>    
+		    AND A.CNTRCT_MTH_CD = #{P_CNTRCT_MTH_CD_S}
+		</if>
+		<if test=' P_BID_CHARGER_ID_S != null and P_BID_CHARGER_ID_S != "" '>
+		    AND A.BID_CHARGER_ID = #{P_BID_CHARGER_ID_S}
+		</if> 
+		<if test=' P_BID_NM_S != null and P_BID_NM_S != "" '>
+		    AND A.BID_NM LIKE '%'||#{P_BID_NM_S}||'%'
+		</if>
+		<if test='P_PBLANC_DT_STT_S != null and P_PBLANC_DT_STT_S != "" '>
+			AND TO_CHAR(TO_DATE(B.PBLANC_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') >= #{P_PBLANC_DT_STT_S}
+		</if>
+		<if test='P_PBLANC_DT_END_S != null and P_PBLANC_DT_END_S != "" '>
+			AND TO_CHAR(TO_DATE(B.PBLANC_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') &lt;= #{P_PBLANC_DT_END_S}
+		</if>
+		
+	</sql> 
+	
+	<sql id="dfrcmpstRegstrList">
+		SELECT	A.PRCURE_BSNS_SE_CD
+					, F_CDVAL_INQIRE('22358', A.PRCURE_BSNS_SE_CD) AS PRCURE_BSNS_SE_NM
+					, A.PRCURE_SE_CD
+					, F_CDVAL_INQIRE('22181', A.PRCURE_SE_CD) AS PRCURE_SE_NM
+					, A.CNTRCT_NO
+					, A.CHANGE_ODR
+					, A.CNTRCT_NM
+					, B.ENTRPS_REGIST_NO
+					, B.ENTRPS_NM
+					, A.CNTRCT_DE
+					, SUM(C.DFRCMPST_AMOUNT) AS DFRCMPST_AMOUNT
+					, (
+						SELECT	KOEM.EMPL_NM
+						FROM		KOICA.TMUR_KOAC KOAC
+									, KOICA.TMUR_KOEM KOEM 
+						WHERE	KOAC.ACNT_ID = KOEM.EMPL_NO
+						AND		KOAC.LOGIN_ID = A.CNTRCT_CHARGER_ID
+						) AS CNTRCT_CHARGER_NM
+		FROM		TECT_COMA A, TECT_COEN B, TECT_CODE C
+		WHERE	A.CNTRCT_NO = B.CNTRCT_NO
+		AND		A.CHANGE_ODR = B.CHANGE_ODR
+		AND		B.CNTRCT_NO = C.CNTRCT_NO
+		AND		B.CHANGE_ODR = C.CHANGE_ODR
+		AND		B.REPRSNT_ENTRPS_AT = 'Y'
+		AND		C.DELETE_AT = 'N'
+		<if test=' P_PRCURE_BSNS_SE_CD != null and P_PRCURE_BSNS_SE_CD != "" '>
+			AND A.PRCURE_BSNS_SE_CD = #{P_PRCURE_BSNS_SE_CD}
+		</if>
+		<if test=' P_PRCURE_SE_CD != null and P_PRCURE_SE_CD != "" '>
+			AND A.PRCURE_SE_CD = #{P_PRCURE_SE_CD}
+		</if>
+		<if test=' P_ENTRPS_REGIST_NO != null and P_ENTRPS_REGIST_NO != "" '>
+			AND B.ENTRPS_REGIST_NO = #{P_ENTRPS_REGIST_NO}
+		</if>
+		<if test=' P_CNTRCT_NO != null and P_CNTRCT_NO != "" '>
+			AND A.CNTRCT_NO LIKE '%'||#{P_CNTRCT_NO}||'%'
+		</if>
+		<if test=' P_CNTRCT_CHARGER_ID != null and P_CNTRCT_CHARGER_ID != "" '>
+			AND A.CNTRCT_CHARGER_ID = #{P_CNTRCT_CHARGER_ID}
+		</if>
+		<if test=' P_CNTRCT_NM != null and P_CNTRCT_NM != "" '>
+			AND A.CNTRCT_NM LIKE '%'||#{P_CNTRCT_NM}||'%'
+		</if>
+		GROUP BY A.PRCURE_BSNS_SE_CD, A.PRCURE_SE_CD, A.CNTRCT_NO, A.CHANGE_ODR, A.CNTRCT_NM, B.ENTRPS_REGIST_NO, B.ENTRPS_NM, A.CNTRCT_DE, A.CNTRCT_CHARGER_ID
+		ORDER BY A.CNTRCT_NO DESC, A.CHANGE_ODR DESC, B.ENTRPS_NM
+	</sql>
+	
+	<sql id="purcntrRegstrList">
+			SELECT	*
+			FROM		(
+							SELECT	COMA.CNTRCT_NO
+										, COMA.CHANGE_ODR
+										, COMA.PURDMD_NO
+										, COMA.PURDMD_ODR
+										, COMA.ORDER_DEPT_NO
+										, PUDEMA.DEMAND_DEPT_NO
+										, COMA.CNTRCT_NM
+										, (select CNTRCT_DE from TECT_COMA where  CNTRCT_NO = COMA.CNTRCT_NO and  CHANGE_ODR = '0') AS FIRST_CNTRCT_DE
+										, COMA.CNTRCT_DE
+										, COMA.CNTRCT_AMOUNT
+										, COMA.REGISTER_ID
+										, COMA.ETC_MATTER_CN
+										, COMA.CNTRCTPD_BEGIN_DE
+										, COMA.CNTRCTPD_END_DE
+										, COMA.DFRCMPST_RT
+										, COMA.CNTRCT_KND_CD
+										<!-- 2017-08-28 SYW 수정 -->
+										, (
+											SELECT	DISTINCT DFRCMPTS_DE 
+											FROM		TECT_PRSE P
+											WHERE	P.CNTRCT_NO = COEN.CNTRCT_NO
+											AND		P.CHANGE_ODR = COEN.CHANGE_ODR
+											<!-- AND   P.ENTRPS_REGIST_NO(+) = COEN.ENTRPS_REGIST_NO -->
+											AND  		P.ACSN = (SElECT NVL(MAX(ACSN),'0') FROM TECT_PRSE T WHERE T.CNTRCT_NO = COEN.CNTRCT_NO and T.PYMNT_SE_CD = '30' )
+											<!-- AND   P.PYMNT_SN = '0' -->
+										) AS DFRCMPTS_DE
+										, (
+											SELECT	DISTINCT DFRCMPTS_AMOUNT FROM TECT_PRSE P
+											WHERE	P.CNTRCT_NO = COEN.CNTRCT_NO
+											AND		P.CHANGE_ODR = COEN.CHANGE_ODR
+											<!-- AND   P.ENTRPS_REGIST_NO(+) = COEN.ENTRPS_REGIST_NO -->
+											AND		P.ACSN = (SElECT NVL(MAX(ACSN),'0') FROM TECT_PRSE T WHERE T.CNTRCT_NO = COEN.CNTRCT_NO and T.PYMNT_SE_CD = '30' )
+											<!-- AND   P.PYMNT_SN = '0' -->
+										) AS DFRCMPTS_AMOUNT
+										<!-- 2017-08-28 SYW 수정		
+										PRSE.DFRCMPTS_DE,
+										PRSE.DFRCMPTS_AMOUNT, -->
+										, COEN.QOTA_RT
+										, COEN.CNTRCT_AMOUNT AS ENTRPS_CNTRCT_AMOUNT
+										, COEN.ENTRPS_REGIST_NO
+										, (SELECT BDDPR_AMOUNT FROM TEBI_ENPAMA ENPAMA WHERE ENPAMA.ENTRPS_REGIST_NO = COEN.ENTRPS_REGIST_NO AND ENPAMA.PBLANC_NO = BIPLMA.PBLANC_NO AND ENPAMA.PBLANC_ODR = BIPLMA.PBLANC_ODR) AS BDDPR_AMOUNT
+										, (SELECT BIZRNO FROM(SELECT BIZRNO,ENTRPS_REGIST_NO FROM VMUR_ENPA ENPA UNION ALL SELECT BIZRNO,ENTRPS_REGIST_NO FROM TMUR_ENPA ENPA1)A WHERE A.ENTRPS_REGIST_NO = COEN.ENTRPS_REGIST_NO ) AS BIZRNO
+										, (SELECT EMPL_NM FROM VMUR_EMPLMA EMPLMA WHERE EMPLMA.EMPL_ID = COMA.REGISTER_ID) AS REGISTER_NM
+										, COMA.REGIST_DT
+										, PUDEMA.DEMAND_DEPT_NM
+										, PUDEMA.MMRN_AT
+										, CASE WHEN PUDEMA.MMRN_AT = 'Y' THEN '예'
+									     	WHEN PUDEMA.MMRN_AT = 'N' THEN '아니오'
+											END as MMRN_AT_NM
+										, PUDEMA.BSNS_NM
+										, COMA.CNTRCT_CHARGER_DEPT_NO
+										, (SELECT DEPT_NM FROM VMUR_ORGNZT ORG WHERE ORG.DEPT_NO = COMA.CNTRCT_CHARGER_DEPT_NO) as DEPT_NM
+										, PUDEMA.CNTRCT_SE_CD
+										, F_CDVAL_INQIRE('C00001', COMA.CNTRCT_SE_CD) AS CNTRCT_SE_NM
+										, PUDEMA.CNTRCT_DETAIL_SE_CD
+										, F_CDVAL_INQIRE('C00026', COMA.CNTRCT_DETAIL_SE_CD) AS CNTRCT_DETAIL_SE_NM
+										, COMA.CNTRCT_MTH_CD
+										, F_CDVAL_INQIRE('C00002', COMA.CNTRCT_MTH_CD) AS CNTRCT_MTH_NM
+										, PUDEMA.SCSBID_MTH_CD
+										, F_CDVAL_INQIRE('C00006', PUDEMA.SCSBID_MTH_CD) AS SCSBID_MTH_NM
+										, PUDEMA.CNTRCT_BPLC_CD
+										, F_CDVAL_INQIRE('C00023', PUDEMA.CNTRCT_BPLC_CD) AS CNTRCT_BPLC_NM
+										, SECNTA.GVSL_MTRIL_AM
+										, BIPLMA.BID_PRST_CD
+										, F_CDVAL_INQIRE('C00003', BIPLMA.BID_PRST_CD) AS BID_PRST_NM
+										, BIPLMA.PBLANC_NO
+										, BIPLMA.PBLANC_ODR
+										, (SELECT to_char(to_date(PBLANC_DT, 'yyyyMMddHH24MISS'), 'yyyyMMdd') FROM TEBI_BITI WHERE PBLANC_NO = BIPLMA.PBLANC_NO AND PBLANC_ODR =  BIPLMA.PBLANC_ODR) AS  WRITING_DE
+										, BIPLMA.BID_LMT_AMOUNT
+										<!-- 
+											2017-04-04 수정 - HSY
+											PRBI.PLNPRC_AMOUNT,
+										-->
+										, NVL(PRBI.PLNPRC_AMOUNT, COMA.PLNPRC_AMOUNT) AS PLNPRC_AMOUNT
+										, BALA.LAWORD_CD_DETAIL AS LAWORD_CD_NM
+										, to_char(to_date(BITI.OPENG_DT, 'yyyyMMddHH24MISS'), 'yyyyMMdd') as OPENG_DT
+										, COMA.ACPTNC_DEPT_NM
+										, (
+											SELECT	DISTINCT COMPET_DE 
+											FROM		TECT_PRSE P
+											WHERE	P.CNTRCT_NO = COEN.CNTRCT_NO
+											AND		P.CHANGE_ODR = COEN.CHANGE_ODR
+											<!-- AND   P.ENTRPS_REGIST_NO = COEN.ENTRPS_REGIST_NO -->
+											AND		P.ACSN = (SElECT MAX(ACSN) FROM TECT_PRSE T WHERE T.CNTRCT_NO = COEN.CNTRCT_NO and T.PYMNT_SE_CD = '30')
+											<!-- AND   P.PYMNT_SN = '0' -->
+										) AS COMPET_DE
+										, NVL(
+											(
+												SELECT	DISTINCT COMPET_AMOUNT
+												FROM		TECT_PRSE P
+												WHERE	P.CNTRCT_NO = COEN.CNTRCT_NO
+												AND		P.CHANGE_ODR = COEN.CHANGE_ODR
+												<!-- AND   P.ENTRPS_REGIST_NO = COEN.ENTRPS_REGIST_NO -->
+												AND		P.ACSN = (SELECT MAX(ACSN) FROM TECT_PRSE T WHERE T.CNTRCT_NO = COEN.CNTRCT_NO and T.PYMNT_SE_CD = '30')
+												<!-- AND   P.PYMNT_SN = '0' -->
+											),'0'
+										) AS COMPET_AMOUNT
+						    			<!-- PRSE.COMPET_AMOUNT, -->
+										, COEN.ENTRPS_RPRSNTV_NM
+										, COEN.ENTRPS_NM
+										, (select ADDRESS from vmur_enpa where ENTRPS_REGIST_NO = COEN.ENTRPS_REGIST_NO) as ENTRPS_ADRES
+										, NVL(COEN.REPRSNT_ENTRPS_AT,'Y')as REPRSNT_ENTRPS_AT
+										<!-- 
+											2017-03-06 수정 - HSY
+											NVL((SELECT MAX(PBLANC_ODR)FROM TEBI_BIPLMA BI WHERE BIPLMA.PBLANC_NO = BI.PBLANC_NO),'0') as MAXPBLANCODR, 
+										-->
+										<if test='P_MAX_CHANGE_AT != null and P_MAX_CHANGE_AT != "" '>
+										, CASE 
+											WHEN	COMA.CNTRCT_MTH_CD NOT IN ('31', '32', '33', '40')
+											THEN		NVL((SELECT MAX(PBLANC_ODR)FROM TEBI_BIPLMA BI WHERE BIPLMA.PBLANC_NO = BI.PBLANC_NO), '0')
+										    WHEN	COMA.CNTRCT_MTH_CD IN ('31', '32', '33', '40')
+										    THEN		(SELECT C.CHANGE_ODR FROM TECT_COMA C WHERE COMA.CNTRCT_NO = C.CNTRCT_NO and COMA.CHANGE_ODR = C.CHANGE_ODR AND C.CNTRCT_PRST_CD = 'G')
+											END as MAXPBLANCODR
+										</if>
+										, (SELECT MAX(C.CHANGE_ODR) FROM TECT_COMA C WHERE COMA.CNTRCT_NO = C.CNTRCT_NO AND C.CNTRCT_PRST_CD = 'G') AS MAXCHANGEODR
+										<!-- 2017-08-28 SYW 수정
+										NVL((SELECT MAX(ACSN)FROM TECT_PUAC PUAC1 WHERE PUAC1.CNTRCT_NO = COMA.CNTRCT_NO),'0') AS MAXACSN,
+										NVL(PRSE.ACSN,'0') as PRSE_ACSN,
+										NVL(PUAC.ACSN,'0') AS PUAC_ACSN,
+										-->
+										, (SELECT SCSBID_AMOUNT FROM TEBI_ENOP ENOP WHERE ENOP.PBLANC_NO = BIPLMA.PBLANC_NO AND ENOP.PBLANC_ODR = BIPLMA.PBLANC_ODR AND SCSBID_AT = 'Y' ) AS SCSBID_AMOUNT
+										, CASE
+											WHEN	PRBI.PLNPRC_AMOUNT > 0
+											THEN		TRUNC(
+																	(NVL((SELECT BDDPR_AMOUNT FROM TEBI_ENPAMA ENPAMA WHERE ENPAMA.ENTRPS_REGIST_NO = COEN.ENTRPS_REGIST_NO AND ENPAMA.PBLANC_NO = BIPLMA.PBLANC_NO AND ENPAMA.PBLANC_ODR = BIPLMA.PBLANC_ODR),'0')/PRBI.PLNPRC_AMOUNT)*100,3
+																)
+											<!-- 
+												2017-04-04 수정 - HSY
+												ELSE 0 END as SCSBID
+											-->
+											ELSE		NVL(COMA.SCSBID_RT, 0) END as SCSBID
+							 				<!-- 2017-08-28 SYW 추가	 -->
+										, (SELECT CHANGE_RESN FROM TECT_COCH WHERE COMA.CNTRCT_NO = CNTRCT_NO AND COMA.CHANGE_ODR = CHANGE_ODR) AS CHANGE_RESN
+
+										, (SELECT MAX(CNTRCT_DE)||CNTRCT_NO FROM TECT_COMA WHERE CNTRCT_PRST_CD = 'G' AND CNTRCT_KND_CD = 'A' AND CNTRCT_NO = COMA.CNTRCT_NO GROUP BY CNTRCT_NO) AS CNTRCT_NO_ODR
+										
+							FROM		TECT_COMA COMA
+										, TEPO_PUDEMA PUDEMA
+										, TEPO_SECNTA SECNTA
+										, (select * from TEBI_BIPLMA where BID_PRST_CD = 'N') BIPLMA
+										, TEBI_PRBI PRBI
+										, TECT_COEN COEN
+										, TEPO_BALA BALA
+										, TEBI_BITI BITI
+							 <!-- 2017-08-28 SYW 수정
+							 , TECT_PUAC PUAC, TECT_PRSE PRSE
+							 -->
+							WHERE	CNTRCT_PRST_CD = 'G'
+							AND		COMA.CNTRCT_KND_CD = 'A'
+							<!-- AND COMA.CHANGE_ODR = (SELECT MAX(C.CHANGE_ODR) FROM TECT_COMA C WHERE COMA.CNTRCT_NO = C.CNTRCT_NO AND C.CNTRCT_PRST_CD = 'D') -->
+							AND		PUDEMA.PURDMD_NO = COMA.PURDMD_NO
+							AND		PUDEMA.PURDMD_ODR = COMA.PURDMD_ODR
+							AND		PUDEMA.PURDMD_NO = BALA.PURDMD_NO(+)
+							AND		PUDEMA.PURDMD_ODR = BALA.PURDMD_ODR(+)
+							AND		SECNTA.PURDMD_NO(+) = PUDEMA.PURDMD_NO
+							AND		SECNTA.PURDMD_ODR(+) = PUDEMA.PURDMD_ODR
+							AND		BIPLMA.PURDMD_NO(+) = PUDEMA.PURDMD_NO
+							AND		BIPLMA.PURDMD_ODR(+) = PUDEMA.PURDMD_ODR
+							AND		PRBI.PBLANC_NO(+) = BIPLMA.PBLANC_NO
+							AND		PRBI.PBLANC_ODR(+) = BIPLMA.PBLANC_ODR
+							AND		COEN.CNTRCT_NO(+) = COMA.CNTRCT_NO
+							AND		COEN.CHANGE_ODR(+) = COMA.CHANGE_ODR
+							AND		BITI.PBLANC_NO(+) = BIPLMA.PBLANC_NO
+							AND		BITI.PBLANC_ODR(+) = BIPLMA.PBLANC_ODR
+							<!-- 2017-08-28 SYW 수정
+						    AND PUAC.CNTRCT_NO(+) = COMA.CNTRCT_NO
+						    AND PRSE.CNTRCT_NO(+) = PUAC.CNTRCT_NO
+						    -->
+						) A
+						<!-- 
+							2017-03-06 수정 - HSY
+							WHERE A.MAXPBLANCODR IN ((SELECT MAX(A.PBLANC_ODR)FROM TEBI_BIPLMA BI WHERE A.PBLANC_NO = BI.PBLANC_NO),'0')
+						-->
+			<if test='P_MAX_CHANGE_AT != null and P_MAX_CHANGE_AT != "" '>
+			WHERE	A.MAXPBLANCODR IN (
+														CASE 
+															WHEN	A.CNTRCT_MTH_CD NOT IN ('31', '32', '33', '40') 
+															THEN		(SELECT MAX(A.PBLANC_ODR)FROM TEBI_BIPLMA BI WHERE A.PBLANC_NO = BI.PBLANC_NO)
+															WHEN	A.CNTRCT_MTH_CD IN ('31', '32', '33', '40') 
+															THEN		A.CHANGE_ODR
+												    	END ,'0')
+						<!-- 2017-08-28 SYW 수정						    
+						AND A.PUAC_ACSN = A.MAXACSN
+						AND A.PRSE_ACSN = A.MAXACSN
+						-->
+						
+			AND		A.CHANGE_ODR = A.MAXCHANGEODR
+			</if>
+			
+			UNION ALL
+			
+			SELECT	*
+			FROM		(
+							SELECT	COMA.CNTRCT_NO
+										, COMA.CHANGE_ODR
+										, COMA.PURDMD_NO
+										, COMA.PURDMD_ODR
+										, COMA.ORDER_DEPT_NO
+										, null AS DEMAND_DEPT_NO
+										, COMA.CNTRCT_NM
+										, (select CNTRCT_DE from TECT_COMA where  CNTRCT_NO = COMA.CNTRCT_NO and  CHANGE_ODR = '0') AS FIRST_CNTRCT_DE
+										, COMA.CNTRCT_DE
+										, COMA.CNTRCT_AMOUNT
+										, COMA.REGISTER_ID
+										, COMA.ETC_MATTER_CN
+										, COMA.CNTRCTPD_BEGIN_DE
+										, COMA.CNTRCTPD_END_DE
+										, COMA.DFRCMPST_RT
+										, COMA.CNTRCT_KND_CD
+										, null AS DFRCMPTS_DE
+										, null AS DFRCMPTS_AMOUNT
+										, COEN.QOTA_RT
+										, COEN.CNTRCT_AMOUNT AS ENTRPS_CNTRCT_AMOUNT
+										, COEN.ENTRPS_REGIST_NO
+										, null AS BDDPR_AMOUNT
+										, (SELECT BIZRNO FROM(SELECT BIZRNO,ENTRPS_REGIST_NO FROM VMUR_ENPA ENPA UNION ALL SELECT BIZRNO,ENTRPS_REGIST_NO FROM TMUR_ENPA ENPA1)A WHERE A.ENTRPS_REGIST_NO = COEN.ENTRPS_REGIST_NO ) AS BIZRNO
+										, (SELECT EMPL_NM FROM VMUR_EMPLMA EMPLMA WHERE EMPLMA.EMPL_ID = COMA.REGISTER_ID) AS REGISTER_NM
+										, COMA.REGIST_DT
+										, null AS DEMAND_DEPT_NM
+										, COMA.MMRN_AT
+										, CASE
+											WHEN	COMA.MMRN_AT = 'Y' 
+											THEN		'예'
+											WHEN	COMA.MMRN_AT = 'N' 
+											THEN		'아니오'
+										    END as MMRN_AT_NM
+										, null AS BSNS_NM
+										, COMA.CNTRCT_CHARGER_DEPT_NO
+										, (SELECT DEPT_NM FROM VMUR_ORGNZT ORG WHERE ORG.DEPT_NO = COMA.CNTRCT_CHARGER_DEPT_NO) as DEPT_NM
+										, COMA.CNTRCT_SE_CD AS CNTRCT_SE_CD
+										, F_CDVAL_INQIRE('C00001', COMA.CNTRCT_SE_CD) AS CNTRCT_SE_NM
+										, COMA.CNTRCT_DETAIL_SE_CD AS CNTRCT_DETAIL_SE_CD
+										, F_CDVAL_INQIRE('C00026', COMA.CNTRCT_DETAIL_SE_CD) AS CNTRCT_DETAIL_SE_NM
+										, COMA.CNTRCT_MTH_CD
+										, F_CDVAL_INQIRE('C00002', COMA.CNTRCT_MTH_CD) AS CNTRCT_MTH_NM
+										, COMA.SCSBID_MTH_CD AS SCSBID_MTH_CD
+										, F_CDVAL_INQIRE('C00006', COMA.SCSBID_MTH_CD) AS SCSBID_MTH_NM
+										, COMA.CNTRCT_BPLC_CD AS CNTRCT_BPLC_CD
+										, F_CDVAL_INQIRE('C00023', COMA.CNTRCT_BPLC_CD) AS CNTRCT_BPLC_NM
+										, null AS GVSL_MTRIL_AM
+										, null AS BID_PRST_CD
+										, null AS BID_PRST_NM
+										, null AS PBLANC_NO
+										, null AS PBLANC_ODR
+										, null AS WRITING_DE
+										, null AS BID_LMT_AMOUNT
+										, null AS PLNPRC_AMOUNT
+										, LAWORD_CD_DETAIL AS LAWORD_CD_NM
+										, null AS OPENG_DT
+										, COMA.ACPTNC_DEPT_NM
+										, (
+											SELECT	DISTINCT COMPET_DE
+											FROM		TECT_PRSE P
+											WHERE	P.CNTRCT_NO = COEN.CNTRCT_NO
+											AND		P.CHANGE_ODR = COEN.CHANGE_ODR
+											<!-- AND   P.ENTRPS_REGIST_NO = COEN.ENTRPS_REGIST_NO -->
+											AND		P.ACSN = (SElECT MAX(ACSN) FROM TECT_PRSE T WHERE T.CNTRCT_NO = COEN.CNTRCT_NO and T.PYMNT_SE_CD = '30')
+											<!-- AND   P.PYMNT_SN = '0' -->
+										) AS COMPET_DE
+										, (
+											SELECT	DISTINCT COMPET_AMOUNT 
+											FROM		TECT_PRSE P
+										 	WHERE	P.CNTRCT_NO = COEN.CNTRCT_NO
+										 	AND		P.CHANGE_ODR = COEN.CHANGE_ODR
+										 	<!-- AND   P.ENTRPS_REGIST_NO = COEN.ENTRPS_REGIST_NO -->
+										 	AND		P.ACSN = (SELECT MAX(ACSN) FROM TECT_PRSE T WHERE T.CNTRCT_NO = COEN.CNTRCT_NO and T.PYMNT_SE_CD = '30')
+										 	<!-- AND   P.PYMNT_SN = '0' -->
+										) AS COMPET_AMOUNT
+									    <!-- PRSE.COMPET_AMOUNT, -->
+										, COEN.ENTRPS_RPRSNTV_NM
+										, COEN.ENTRPS_NM
+										, (select ADDRESS from vmur_enpa where ENTRPS_REGIST_NO = COEN.ENTRPS_REGIST_NO) as ENTRPS_ADRES
+										, NVL(COEN.REPRSNT_ENTRPS_AT,'Y')as REPRSNT_ENTRPS_AT
+										<if test='P_MAX_CHANGE_AT != null and P_MAX_CHANGE_AT != "" '>
+										, null AS MAXPBLANCODR
+										</if>
+										, (SELECT MAX(C.CHANGE_ODR) FROM TECT_COMA C WHERE COMA.CNTRCT_NO = C.CNTRCT_NO AND C.CNTRCT_PRST_CD = 'G') AS MAXCHANGEODR
+										<!-- 2017-08-28 SYW 수정
+										NVL((SELECT MAX(ACSN)FROM TECT_PUAC PUAC1 WHERE PUAC1.CNTRCT_NO = COMA.CNTRCT_NO),'0') AS MAXACSN,
+										NVL(PRSE.ACSN,'0') as PRSE_ACSN,
+										NVL(PUAC.ACSN,'0') AS PUAC_ACSN,
+										-->
+										, null as SCSBID_AMOUNT
+										, 0 as SCSBID
+										 <!-- 2017-08-28 SYW 추가	 -->
+										, (SELECT CHANGE_RESN FROM TECT_COCH WHERE COMA.CNTRCT_NO = CNTRCT_NO AND COMA.CHANGE_ODR = CHANGE_ODR) AS CHANGE_RESN
+										, (SELECT MAX(CNTRCT_DE)||CNTRCT_NO FROM TECT_COMA WHERE CNTRCT_PRST_CD = 'G' AND CNTRCT_KND_CD = 'B' AND CNTRCT_NO = COMA.CNTRCT_NO GROUP BY CNTRCT_NO) AS CNTRCT_NO_ODR
+										
+							FROM		TECT_COMA COMA
+										, TECT_COEN COEN
+										<!-- 2017-08-28 SYW 수정
+										, TECT_PUAC PUAC, TECT_PRSE PRSE
+										-->
+							WHERE	CNTRCT_PRST_CD = 'G'
+							AND		COMA.CNTRCT_KND_CD = 'B'
+							AND		COEN.CNTRCT_NO(+) = COMA.CNTRCT_NO
+							AND		COEN.CHANGE_ODR(+) = COMA.CHANGE_ODR
+										<!-- 2017-08-28 SYW 수정
+									    AND PUAC.CNTRCT_NO(+) = COMA.CNTRCT_NO
+									    AND PRSE.CNTRCT_NO(+) = PUAC.CNTRCT_NO
+									    -->
+						) B
+			WHERE	1=1
+						<!-- 2017-08-28 SYW 수정
+						AND B.PUAC_ACSN = B.MAXACSN
+						AND B.PRSE_ACSN = B.MAXACSN
+						-->
+			<if test='P_MAX_CHANGE_AT != null and P_MAX_CHANGE_AT != "" '>
+			AND		B.CHANGE_ODR = B.MAXCHANGEODR
+			</if>
+			
+	</sql>
+	
+	<sql id="purcntrRegstrListWhere">
+		<where>
+			<if test='P_CNTRCT_NM_S != null and P_CNTRCT_NM_S != "" '>
+				AND CNTRCT_NM LIKE '%'||#{P_CNTRCT_NM_S}||'%'
+			</if>
+			<if test='P_BSNS_NM_S != null and P_BSNS_NM_S != "" '>
+				AND BSNS_NM LIKE '%'||#{P_BSNS_NM_S}||'%'
+			</if>
+			<if test='P_CNTRCT_MTH_CD_S != null and P_CNTRCT_MTH_CD_S != "" '>
+				AND CNTRCT_MTH_CD = #{P_CNTRCT_MTH_CD_S}
+			</if>
+			<if test='P_CNTRCT_SE_CD_S != null and P_CNTRCT_SE_CD_S != "" '>
+				AND CNTRCT_SE_CD = #{P_CNTRCT_SE_CD_S}
+			</if>
+			<if test='P_CNTRCT_BPLC_CD_S != null and P_CNTRCT_BPLC_CD_S != "" '>
+				AND CNTRCT_BPLC_CD = #{P_CNTRCT_BPLC_CD_S}
+			</if>
+			<if test='P_MMRN_AT_S != null and P_MMRN_AT_S != "" '>
+				AND MMRN_AT = #{P_MMRN_AT_S}
+			</if>
+			<if test='P_DEMAND_DEPT_NM_S != null and P_DEMAND_DEPT_NM_S != "" '>
+				AND DEMAND_DEPT_NM = #{P_DEMAND_DEPT_NM_S}
+			</if>
+			<if test='P_CNTRCT_NO_S != null and P_CNTRCT_NO_S != "" '>
+				AND CNTRCT_NO = #{P_CNTRCT_NO_S}
+			</if>
+			<if test='P_CNTRCT_BEGIN_DE_S != null and P_CNTRCT_BEGIN_DE_S != "" '>
+				AND DECODE(CNTRCT_DE, NULL, SYSDATE, TO_DATE(CNTRCT_DE, 'yyyyMMddHH24MISS')) >= #{P_CNTRCT_BEGIN_DE_S}
+			</if>
+			<if test='P_CNTRCT_END_DE_S != null and P_CNTRCT_END_DE_S != "" '>
+				AND DECODE(CNTRCT_DE, NULL, SYSDATE, TO_DATE(CNTRCT_DE, 'yyyyMMddHH24MISS')) &lt;= #{P_CNTRCT_END_DE_S}
+			</if>
+		</where>
+	</sql>
+	
+	<sql id="changeCntrctRegstrList">
+		SELECT	CO.CNTRCT_NO
+					,CO.CHANGE_ODR
+					,CO.PBLANC_NO
+					,CO.PBLANC_ODR
+					,CO.CNTRCT_SE_CD
+					,CO.CNTRCT_DETAIL_SE_CD
+					,CO.CNTRCT_PRST_CD
+					,CO.CNTRCT_NM
+					,CO.CNTRCT_DE
+					,CO.CNTRCT_AMOUNT
+					,CO.CNTRCTPD_BEGIN_DE
+					,CO.CNTRCTPD_END_DE
+					,CO.DFRCMPST_RT
+					,CO.CRYMY_AMOUNT
+					,CO.CRYMY_RT
+					,CO.WARANT_GLD_RT
+					,CO.ETC_MATTER_CN
+					,CO.CNTRCT_CHARGER_ID
+					,CO.CNTRCT_CHARGER_DEPT_NO
+					,CO.CNTRCT_END_AT
+					,CO.CNTRCT_END_DE
+					,CO.CNTRCT_END_OPETR_ID
+					,CO.CNTRCT_TRMNAT_DT
+					,CO.CNTRCT_TRMNAT_RESN_CN
+					,CO.CNTRCT_TRMNAT_OPETR_ID
+					,CO.REGISTER_ID
+					,CO.REGIST_DT
+					,CO.UPDUSR_ID
+					,CO.UPDT_DT
+					,CO.DELETE_AT
+					,CO.FATOFA_CNTRCT_SE_CD
+					,CO.COPCNTR_SE_CD
+					,CO.FLAW_MENDNG_PD_CN
+					,CO.PURDMD_NO
+					,CO.PURDMD_ODR
+					,CO.SAROK_BID_AT
+					,CO.CNTRCT_CNCLS_MTH_CD
+					,CO.STMPTAX_AT
+					,CO.STMPTAX_AMOUNT
+					,CO.CNTRCT_ASSRNC_MTH_CD
+					,CO.SANCTN_DOC_ID
+					,CO.SANCTN_REQUST_DT
+					,CO.WRITING_DE
+					,CO.CNTRCT_KND_CD
+					,CO.BSNS_NM
+					,CO.SCSBID_MTH_CD
+					,CO.ORDER_DEPT_NO
+					,CO.LAWORD_CD
+					,CO.BSNS_MINE_NO
+					,CO.BSNS_MINE_NM
+					,CO.SHARE_CN
+					,PU.CNTRCT_BPLC_CD
+					,PU.MMRN_AT
+					,COCH.CNTRCTPD_CHANGE_AT
+					,COCH.CNTRCTAMOUNT_CHANGE_AT
+					,COCH.ESWO_SCOPE_CHANGE_AT
+					,COCH.CNTRCT_CHGHY_CN
+					,COCH.BEFORE_CNTRCT_DE
+					,COCH.BEFORE_CNTRCT_AMOUNT
+					,COCH.BEFORE_CNTRCT_BEGIN_DE
+					,COCH.BEFORE_CNTRCT_END_DE
+					,COCH.CHANGE_BASIS
+					,COCH.TASK_CHANGE_CN
+					,COCH.ENTRPS_CHANGE_AT
+					,COCH.CHANGE_RESN
+		FROM		TECT_COMA CO
+					, TECT_COCH COCH
+					, TEPO_PUDEMA PU
+		WHERE	CO.CNTRCT_NO = COCH.CNTRCT_NO 
+		AND		CO.CHANGE_ODR = COCH.CHANGE_ODR
+		AND		CO.PURDMD_NO = PU.PURDMD_NO
+		AND		CO.PURDMD_ODR = PU.PURDMD_ODR
+		AND		CO.CNTRCT_KND_CD = 'A'
+		AND		CO.CNTRCT_PRST_CD = 'G'
+		
+		UNION ALL
+  
+		SELECT	CO.CNTRCT_NO
+					,CO.CHANGE_ODR
+					,CO.PBLANC_NO
+					,CO.PBLANC_ODR
+					,CO.CNTRCT_SE_CD
+					,CO.CNTRCT_DETAIL_SE_CD
+					,CO.CNTRCT_PRST_CD
+					,CO.CNTRCT_NM
+					,CO.CNTRCT_DE
+					,CO.CNTRCT_AMOUNT
+					,CO.CNTRCTPD_BEGIN_DE
+					,CO.CNTRCTPD_END_DE
+					,CO.DFRCMPST_RT
+					,CO.CRYMY_AMOUNT
+					,CO.CRYMY_RT
+					,CO.WARANT_GLD_RT
+					,CO.ETC_MATTER_CN
+					,CO.CNTRCT_CHARGER_ID
+					,CO.CNTRCT_CHARGER_DEPT_NO
+					,CO.CNTRCT_END_AT
+					,CO.CNTRCT_END_DE
+					,CO.CNTRCT_END_OPETR_ID
+					,CO.CNTRCT_TRMNAT_DT
+					,CO.CNTRCT_TRMNAT_RESN_CN
+					,CO.CNTRCT_TRMNAT_OPETR_ID
+					,CO.REGISTER_ID
+					,CO.REGIST_DT
+					,CO.UPDUSR_ID
+					,CO.UPDT_DT
+					,CO.DELETE_AT
+					,CO.FATOFA_CNTRCT_SE_CD
+					,CO.COPCNTR_SE_CD
+					,CO.FLAW_MENDNG_PD_CN
+					,CO.PURDMD_NO
+					,CO.PURDMD_ODR
+					,CO.SAROK_BID_AT
+					,CO.CNTRCT_CNCLS_MTH_CD
+					,CO.STMPTAX_AT
+					,CO.STMPTAX_AMOUNT
+					,CO.CNTRCT_ASSRNC_MTH_CD
+					,CO.SANCTN_DOC_ID
+					,CO.SANCTN_REQUST_DT
+					,CO.WRITING_DE
+					,CO.CNTRCT_KND_CD
+					,CO.BSNS_NM
+					,CO.SCSBID_MTH_CD
+					,CO.ORDER_DEPT_NO
+					,CO.LAWORD_CD
+					,CO.BSNS_MINE_NO
+					,CO.BSNS_MINE_NM
+					,CO.SHARE_CN
+					,'' as CNTRCT_BPLC_CD
+					,'' as MMRN_AT
+					,COCH.CNTRCTPD_CHANGE_AT
+					,COCH.CNTRCTAMOUNT_CHANGE_AT
+					,COCH.ESWO_SCOPE_CHANGE_AT
+					,COCH.CNTRCT_CHGHY_CN
+					,COCH.BEFORE_CNTRCT_DE
+					,COCH.BEFORE_CNTRCT_AMOUNT
+					,COCH.BEFORE_CNTRCT_BEGIN_DE
+					,COCH.BEFORE_CNTRCT_END_DE
+					,COCH.CHANGE_BASIS
+					,COCH.TASK_CHANGE_CN
+					,COCH.ENTRPS_CHANGE_AT
+					,COCH.CHANGE_RESN
+		FROM		TECT_COMA CO
+					, TECT_COCH COCH
+		WHERE	CO.CNTRCT_NO = COCH.CNTRCT_NO 
+		AND		CO.CHANGE_ODR = COCH.CHANGE_ODR
+		AND		CO.CNTRCT_KND_CD = 'B'
+		AND		CO.CNTRCT_PRST_CD = 'G'
+
+
+	</sql>
+	
+	<sql id="changeCntrctRegstrListWhere">
+		<where>
+			<if test='P_CNTRCT_NM_S != null and P_CNTRCT_NM_S != "" '>
+				AND CNTRCT_NM LIKE '%'||#{P_CNTRCT_NM_S}||'%'
+			</if>
+			<if test='P_CNTRCT_NO_S != null and P_CNTRCT_NO_S != "" '>
+				AND CNTRCT_NO = #{P_CNTRCT_NO_S}
+			</if>
+			<if test='P_MMRN_AT_S != null and P_MMRN_AT_S != "" '>
+				AND MMRN_AT = #{P_MMRN_AT_S}
+			</if>
+			<if test='P_CNTRCT_BPLC_CD_S != null and P_CNTRCT_BPLC_CD_S != "" '>
+				AND CNTRCT_BPLC_CD = #{P_CNTRCT_BPLC_CD_S}
+			</if>
+			<if test='P_CNTRECT_DE_BEGIN_S != null and P_CNTRECT_DE_BEGIN_S != "" '>
+				AND TO_CHAR(TO_DATE(CNTRCT_DE, 'yyyyMMdd'),'yyyy-MM-dd') >= #{P_CNTRECT_DE_BEGIN_S}
+			</if>
+			<if test='P_CNTRECT_DE_END_S != null and P_CNTRECT_DE_END_S != "" '>
+				AND TO_CHAR(TO_DATE(CNTRCT_DE, 'yyyyMMdd'),'yyyy-MM-dd') &lt;= #{P_CNTRECT_DE_END_S}
+			</if>
+			<if test='P_BEFORE_CNTRCT_BEGIN_DE_S != null and P_BEFORE_CNTRCT_BEGIN_DE_S != "" '>
+				AND TO_DATE(CNTRCTPD_BEGIN_DE, 'yyyy-MM-dd') >= #{P_BEFORE_CNTRCT_BEGIN_DE_S}
+			</if>
+			<if test='P_BEFORE_CNTRCT_END_DE_S != null and P_BEFORE_CNTRCT_END_DE_S != "" '>
+				AND TO_DATE(CNTRCTPD_END_DE, 'yyyy-MM-dd') &lt;= #{P_BEFORE_CNTRCT_END_DE_S}
+			</if>
+		</where>
+	</sql>
+	
+	<sql id="entrpsAcctoAcmsltList">
+		SELECT	A.ENTRPS_REGIST_NO
+					, A.BIZRNO
+					, A.ENTRPS_NM
+					, A.RPRSNTV_NM
+					, C.CNTRCT_CNT
+		FROM		(
+						SELECT	ENTRPS_REGIST_NO
+									,BIZRNO
+									,ENTRPS_NM
+									,RPRSNTV_NM
+			  			FROM		VMUR_ENPA V1
+			  			
+			  			UNION ALL
+			  			
+			  			SELECT	ENTRPS_REGIST_NO
+									,BIZRNO
+									,ENTRPS_NM
+									,RPRSNTV_NM
+			  			FROM		TMUR_ENPA T1
+					) A
+					, (
+						SELECT	DISTINCT B.ENTRPS_REGIST_NO
+			  			FROM		TECT_COMA A
+			     					, TECT_COEN B
+			  			WHERE	1=1
+						AND		A.CNTRCT_NO = B.CNTRCT_NO
+						AND		A.CHANGE_ODR =B.CHANGE_ODR
+						AND		A.CNTRCT_PRST_CD= 'G' 
+					) B
+			  		,(
+						SELECT	COUNT(*) as CNTRCT_CNT
+									, ENTRPS_REGIST_NO
+						FROM		TECT_COEN COEN
+									, TECT_COMA COMA
+									, TEPO_PUDEMA PUDEMA
+						WHERE	COEN.CNTRCT_NO = COMA.CNTRCT_NO
+						AND		COEN.CHANGE_ODR = COMA.CHANGE_ODR
+						AND		PUDEMA.PURDMD_NO = COMA.PURDMD_NO
+						AND		PUDEMA.PROGRS_STTUS_CD = '8'
+						AND		COMA.CHANGE_ODR = (SELECT MAX(CHANGE_ODR) FROM TECT_COMA COMA1 WHERE COMA.CNTRCT_NO = COMA1.CNTRCT_NO AND COMA1.CNTRCT_PRST_CD = 'G')
+						GROUP BY	ENTRPS_REGIST_NO
+					) C
+	 	WHERE	A.ENTRPS_REGIST_NO = B.ENTRPS_REGIST_NO
+	 	AND		A.ENTRPS_REGIST_NO = C.ENTRPS_REGIST_NO
+	</sql>
+	
+	<sql id="entrpsAcctoAcmsltListWhere">
+		<where>
+		CNTRCT_CNT NOT IN('0')
+			<if test='P_BIZRNO_S != null and P_BIZRNO_S != "" '>
+				AND BIZRNO LIKE '%'||#{P_BIZRNO_S}||'%'
+			</if>
+			<if test='P_ENTRPS_NM_S != null and P_ENTRPS_NM_S != "" '>
+				AND ENTRPS_NM LIKE '%'||#{P_ENTRPS_NM_S}||'%'
+			</if>
+		</where>
+	</sql>
+	
+	<sql id="entrpsacctoacmsltInfo">
+		
+		SELECT
+			COMA.CNTRCT_NO,
+			COMA.CHANGE_ODR,
+			COMA.CNTRCT_NM,
+			COMA.CNTRCT_DE,
+			COMA.CNTRCT_CHARGER_DEPT_NO,
+			PUDEMA.BSNS_NM,
+			(SELECT DEPT_NM FROM VMUR_ORGNZT ORG WHERE ORG.DEPT_NO = COMA.CNTRCT_CHARGER_DEPT_NO) as DEPT_NM  ,
+			COMA.CNTRCT_AMOUNT
+		 	, NVL(A.COMPET_AMOUNT, 0 )    AS     COMPET_AMOUNT
+		FROM TECT_COEN COEN ,TECT_COMA COMA, TEPO_PUDEMA PUDEMA
+		, (SELECT MAX(PRSE.COMPET_AMOUNT) AS COMPET_AMOUNT, PRSE.CNTRCT_NO, PRSE.ENTRPS_REGIST_NO, PRSE.CHANGE_ODR  FROM TECT_PRSE PRSE
+			WHERE 1=1
+			  AND PRSE.PYMNT_SE_CD = '30'
+			  AND PRSE.ENTRPS_REGIST_NO = #{P_ENTRPS_REGIST_NO,jdbcType=VARCHAR}
+		 GROUP BY PRSE.CNTRCT_NO, PRSE.ENTRPS_REGIST_NO, PRSE.CHANGE_ODR
+			  ) A 
+		WHERE COEN.CNTRCT_NO = COMA.CNTRCT_NO
+		AND COEN.CHANGE_ODR = COMA.CHANGE_ODR
+		AND PUDEMA.PURDMD_NO = COMA.PURDMD_NO
+		AND PUDEMA.PROGRS_STTUS_CD = '8' 
+		AND COEN.ENTRPS_REGIST_NO = #{P_ENTRPS_REGIST_NO,jdbcType=VARCHAR}
+		AND COMA.CHANGE_ODR = (SELECT MAX(CHANGE_ODR) FROM TECT_COMA COMA1 WHERE COMA.CNTRCT_NO = COMA1.CNTRCT_NO AND COMA1.CNTRCT_PRST_CD = 'G')
+		AND COEN.ENTRPS_REGIST_NO = A.ENTRPS_REGIST_NO(+)
+		AND COEN.CNTRCT_NO = A.CNTRCT_NO(+)
+		AND COEN.CHANGE_ODR = A.CHANGE_ODR(+)
+	</sql>
+	
+	<sql id="entrpsacctoacmsltInfoWhere">
+		<where>
+			<if test='P_BIZRNO_S != null and P_BIZRNO_S != "" '>
+				AND BIZRNO LIKE '%'||#{P_BIZRNO_S}||'%'
+			</if>
+			<if test='P_ENTRPS_NM_S != null and P_ENTRPS_NM_S != "" '>
+				AND ENTRPS_NM LIKE '%'||#{P_ENTRPS_NM_S}||'%'
+			</if>
+		</where>
+	</sql>	
+ 
+	<!--  
+     * <pre>
+     * 1. 개요 : 입찰공고등록대장목록_페이징 
+     * 2. 처리내용 : 입찰공고등록대장의 페이징 처리된 목록 조회
+     *  	
+     * </pre>
+     * @Query ID : selectBidPblancRegistRegstrListWithPgng
+     * @date : 2018. 02. 27.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2018. 02. 27.       은우소프트 맹경열              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectBidPblancRegistRegstrListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="bidPblancRegistRegstrList"/>
+			<include refid="bidPblancRegistRegstrListByWhere"/>
+			ORDER BY A.PBLANC_NO DESC, A.PBLANC_ODR
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>	
+	<select id="selectBidPblancRegistRegstrListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="bidPblancRegistRegstrList"/>
+			<include refid="bidPblancRegistRegstrListByWhere"/>
+		) T1
+		WHERE 1 = 1		
+	</select>	
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 지체상금대장목록_페이징 
+     * 2. 처리내용 : 지체상금대장의 페이징 처리된 목록 조회
+     *  	
+     * </pre>
+     * @Query ID : selectDfrcmpstRegstrListWithPgng
+     * @date : 2018. 02. 27.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2018. 02. 27.       은우소프트 맹경열              최초 작성 
+     *  =======================================================  
+     -->
+	<select id="selectDfrcmpstRegstrListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="dfrcmpstRegstrList"/>
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	<select id="selectDfrcmpstRegstrListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="dfrcmpstRegstrList"/>
+		) T1
+		WHERE 1 = 1		
+	</select>	
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 계약요약상세 조회
+     * 2. 처리내용 : 계약요약상세 조회
+     *  	
+     * </pre>
+     * @Query ID : selectCntrctSumryDetail
+     * @date : 2018. 02. 27.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2018. 02. 27.       은우소프트 맹경열              최초 작성 
+     *  =======================================================  
+     -->
+	<select id="selectCntrctSumryDetail" resultType="dataEntity">
+		SELECT F_CDVAL_INQIRE('22358', T1.PRCURE_BSNS_SE_CD) AS PRCURE_BSNS_SE_NM
+			     , F_CDVAL_INQIRE('22181', T1.PRCURE_SE_CD) AS PRCURE_SE_NM
+			     , T1.CNTRCT_NO
+			     , T1.CHANGE_ODR
+			     , T1.CNTRCT_NM
+			     , T1.ENTRPS_NM
+			     , T1.CNTRCT_DE
+			     , T1.DFRCMPST_AMOUNT
+			     , (SELECT KOEM.EMPL_NM
+					  FROM KOICA.TMUR_KOAC KOAC
+                             , KOICA.TMUR_KOEM KOEM 
+                     WHERE KOAC.ACNT_ID = KOEM.EMPL_NO
+                         AND KOAC.LOGIN_ID = T1.CNTRCT_CHARGER_ID) AS CNTRCT_CHARGER_NM
+		  FROM (SELECT A.PRCURE_BSNS_SE_CD
+							 , A.PRCURE_SE_CD
+				             , A.CNTRCT_NO
+				             , A.CHANGE_ODR
+				             , A.CNTRCT_NM
+				             , B.ENTRPS_NM
+				             , A.CNTRCT_DE
+				             , SUM(C.DFRCMPST_AMOUNT) AS DFRCMPST_AMOUNT
+				             , A.CNTRCT_CHARGER_ID
+				      FROM TECT_COMA A, TECT_COEN B, TECT_CODE C
+					WHERE A.CNTRCT_NO = B.CNTRCT_NO
+					    AND A.CHANGE_ODR = B.CHANGE_ODR
+					    AND B.CNTRCT_NO = C.CNTRCT_NO
+					    AND B.CHANGE_ODR = C.CHANGE_ODR
+					    AND B.REPRSNT_ENTRPS_AT = 'Y'
+					    AND C.DELETE_AT = 'N'
+			            AND A.CNTRCT_NO = #{P_CNTRCT_NO}
+					    AND A.CHANGE_ODR = #{P_CHANGE_ODR}
+			         GROUP BY A.PRCURE_BSNS_SE_CD, A.PRCURE_SE_CD, A.CNTRCT_NO, A.CHANGE_ODR, A.CNTRCT_NM, B.ENTRPS_NM, A.CNTRCT_DE, A.CNTRCT_CHARGER_ID    
+		        ) T1
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 지체상금명세목록 
+     * 2. 처리내용 : 지체상금명세의 목록 조회
+     *  	
+     * </pre>
+     * @Query ID : selectDfrcmpstDtlsList
+     * @date : 2018. 02. 27.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2018. 02. 27.       은우소프트 맹경열              최초 작성 
+     *  =======================================================  
+     -->
+	<select id="selectDfrcmpstDtlsList" resultType="dataEntity">
+	      SELECT CNTRCT_NO
+			,CHANGE_ODR
+			,ENTRPS_REGIST_NO
+			, (SELECT ENTRPS_NM FROM VECI_PRCOEN V WHERE V.ENTRPS_REGIST_NO = A.ENTRPS_REGIST_NO) AS ENTRPS_NM
+			,A.DFRCMPST_EXCUT_SN
+			,DFRCMPST_AMOUNT
+			,DFRCMPST_CN
+			,DFRCMPST_PROCESS_DT
+			,DFRCMPST_OPETR_ID
+			,REGISTER_ID
+			,REGIST_DT
+			,UPDUSR_ID
+			,UPDT_DT
+			,DELETE_AT
+			,DTRN_CN
+			,DELAY_DAYCNT
+			,DFRCMPST_TRGAMT
+			,DFRCMPST_RT
+			,B.TOT_DFRCMPST_TRGAMT
+		   FROM TECT_CODE A ,
+		   (
+		   		SELECT DFRCMPST_EXCUT_SN,SUM(DFRCMPST_TRGAMT) AS TOT_DFRCMPST_TRGAMT
+		   		FROM TECT_CODE
+		   		WHERE CNTRCT_NO = #{P_CNTRCT_NO}
+		    	AND CHANGE_ODR = #{P_CHANGE_ODR}
+		   		GROUP BY DFRCMPST_EXCUT_SN
+		   ) B
+		 WHERE CNTRCT_NO = #{P_CNTRCT_NO}
+		     AND CHANGE_ODR = #{P_CHANGE_ODR}
+             AND A.DFRCMPST_EXCUT_SN = B.DFRCMPST_EXCUT_SN
+		     AND DELETE_AT = 'N'
+		  ORDER BY DFRCMPST_EXCUT_SN ASC
+		     
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 해당 지체상금내역 조회 
+     * 2. 처리내용 : 하나의 지체상금내역 건을 조회한다.
+     *  	
+     * </pre>
+     * @Query ID : selectDfrcmpstDetailInqire
+     * @date : 2018. 02. 28.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2018. 02. 28.       은우소프트 맹경열              최초 작성 
+     *  ======================================================= 
+     -->
+	<select id="selectDfrcmpstDetailInqire" resultType="dataEntity">
+		SELECT CNTRCT_NO
+					,CHANGE_ODR
+					,ENTRPS_REGIST_NO
+					, (SELECT ENTRPS_NM FROM VECI_PRCOEN V WHERE V.ENTRPS_REGIST_NO = A.ENTRPS_REGIST_NO) AS ENTRPS_NM
+					,DFRCMPST_EXCUT_SN
+					,DFRCMPST_AMOUNT
+					,DFRCMPST_CN
+					,DFRCMPST_PROCESS_DT
+					,DFRCMPST_OPETR_ID
+					,REGISTER_ID
+					,REGIST_DT
+					,UPDUSR_ID
+					,UPDT_DT
+					,DELETE_AT
+					,DTRN_CN
+					,DELAY_DAYCNT
+					,DFRCMPST_TRGAMT
+					,DFRCMPST_RT
+		   FROM TECT_CODE A
+		 WHERE CNTRCT_NO = #{P_CNTRCT_NO}
+		     AND CHANGE_ODR = #{P_CHANGE_ODR}
+     	     AND ENTRPS_REGIST_NO = #{P_ENTRPS_REGIST_NO}
+	    	 AND DFRCMPST_EXCUT_SN = #{P_DFRCMPST_EXCUT_SN}
+		     AND DELETE_AT = 'N'
+		   ORDER BY DFRCMPST_EXCUT_SN ASC, ENTRPS_REGIST_NO 
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 지체상금내역 수정
+     * 2. 처리내용 : 입력한 지체상금내역을 수정 처리한다.
+     *  	
+     * </pre>
+     * @Query ID : dfrcmpstRegstrModify
+     * @date : 2018. 02. 28.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2018. 02. 28.       은우소프트 맹경열              최초 작성 
+     *  =======================================================   
+     -->
+	<update id="dfrcmpstRegstrModify">
+		UPDATE TECT_CODE
+		SET DFRCMPST_TRGAMT = #{P_DFRCMPST_TRGAMT},
+		DFRCMPST_PROCESS_DT = #{P_DFRCMPST_PROCESS_DT},
+		DELAY_DAYCNT = #{P_DELAY_DAYCNT},
+		DFRCMPST_RT = #{P_DFRCMPST_RT},
+		DFRCMPST_CN = #{P_DFRCMPST_CN},
+		DFRCMPST_AMOUNT = #{P_DFRCMPST_AMOUNT}
+	 	WHERE CNTRCT_NO = #{P_CNTRCT_NO}
+	    AND CHANGE_ODR = #{P_CHANGE_ODR}
+	    AND ENTRPS_REGIST_NO = #{P_ENTRPS_REGIST_NO}
+	    AND DFRCMPST_EXCUT_SN = #{P_DFRCMPST_EXCUT_SN}
+	</update>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 지체상금내역 삭제
+     * 2. 처리내용 : 입력한 지체상금내역을 삭제사유 입력후 삭제처리한다.
+     *  	
+     * </pre>
+     * @Query ID : cancelDfrcmpstRegist
+     * @date : 2018. 02. 28.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2018. 02. 28.       은우소프트 맹경열              최초 작성 
+     *  =======================================================   
+     -->
+	<update id="cancelDfrcmpstRegist">
+		UPDATE TECT_CODE
+		SET DELETE_AT = 'Y' 
+		, DTRN_CN = #{P_DTRN_CN} 
+	 	WHERE CNTRCT_NO = #{P_CNTRCT_NO}
+	    AND CHANGE_ODR = #{P_CHANGE_ODR}
+	    AND ENTRPS_REGIST_NO = #{P_ENTRPS_REGIST_NO}
+	    AND DFRCMPST_EXCUT_SN = #{P_DFRCMPST_EXCUT_SN}
+	</update>
+
+	<!--  
+     * <pre>
+     * 1. 개요 : 계약관리대장목록_페이징 
+     * 2. 처리내용 : 계약관리대장의 페이징 처리된 목록 조회
+     *  	
+     * </pre>
+     * @Query ID : purcntrRegstrListInqireWithPgng
+     * @date : 2018. 02. 28.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2018. 02. 28.       은우소프트 맹경열              최초 작성 
+     *  =======================================================   
+     -->	
+	<select id="purcntrRegstrListInqireWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="purcntrRegstrList"/>
+		) T1
+			<include refid="purcntrRegstrListWhere"/>
+			<!--  
+			ORDER BY CNTRCT_NO_ODR DESC, CHANGE_ODR DESC, QOTA_RT DESC , ENTRPS_NM DESC
+			-->
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<select id="purcntrRegstrListTot" resultType="dataEntity">
+		SELECT R1.*, ROWNUM AS RNUM FROM(SELECT * FROM (
+			<include refid="purcntrRegstrList"/>
+		) T1)R1
+		ORDER BY CNTRCT_DE DESC, CNTRCT_NO DESC
+	</select>
+	
+	<select id="purcntrRegstrListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="purcntrRegstrList"/>
+		) T1
+			<include refid="purcntrRegstrListWhere"/>
+	</select>
+
+	<!--  
+     * <pre>
+     * 1. 개요 : 변경계약대장목록_페이징 
+     * 2. 처리내용 : 변경계약대장의 페이징 처리된 목록 조회
+     *  	
+     * </pre>
+     * @Query ID : purcntrRegstrListInqireWithPgng
+     * @date : 2018. 03. 02.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2018. 03. 02.       은우소프트 맹경열              최초 작성 
+     *  =======================================================   
+     -->		
+	<select id="changeCntrctRegstrListInqireWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="changeCntrctRegstrList"/>
+		) T1
+			<include refid="changeCntrctRegstrListWhere"/>
+			ORDER BY CNTRCT_DE DESC, CNTRCT_NO DESC
+			<!-- ORDER BY DECODE(SUBSTR(CNTRCT_NO,1,2),'PC',1,'OF',3,2), CNTRCT_NO DESC, CHANGE_ODR DESC -->
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<select id="changeCntrctRegstrListTot" resultType="dataEntity">
+		SELECT	CNTRCT_NO
+					,CHANGE_ODR
+					,PBLANC_NO
+					,PBLANC_ODR
+					,CNTRCT_SE_CD
+					,CNTRCT_DETAIL_SE_CD
+					,CNTRCT_PRST_CD
+					,CNTRCT_NM
+					,TO_CHAR(TO_DATE(CNTRCT_DE, 'yyyyMMdd'), 'yyyy-MM-dd') as CNTRCT_DE
+					,CNTRCT_AMOUNT
+					,CNTRCTPD_BEGIN_DE
+					,CNTRCTPD_END_DE
+					,DFRCMPST_RT
+					,CRYMY_AMOUNT
+					,CRYMY_RT
+					,WARANT_GLD_RT
+					,ETC_MATTER_CN
+					,CNTRCT_CHARGER_ID
+					,CNTRCT_CHARGER_DEPT_NO
+					,CNTRCT_END_AT
+					,CNTRCT_END_DE
+					,CNTRCT_END_OPETR_ID
+					,CNTRCT_TRMNAT_DT
+					,CNTRCT_TRMNAT_RESN_CN
+					,CNTRCT_TRMNAT_OPETR_ID
+					,REGISTER_ID
+					,REGIST_DT
+					,UPDUSR_ID
+					,UPDT_DT
+					,DELETE_AT
+					,FATOFA_CNTRCT_SE_CD
+					,COPCNTR_SE_CD
+					,FLAW_MENDNG_PD_CN
+					,PURDMD_NO
+					,PURDMD_ODR
+					,SAROK_BID_AT
+					,CNTRCT_CNCLS_MTH_CD
+					,STMPTAX_AT
+					,STMPTAX_AMOUNT
+					,CNTRCT_ASSRNC_MTH_CD
+					,SANCTN_DOC_ID
+					,SANCTN_REQUST_DT
+					,WRITING_DE
+					,CNTRCT_KND_CD
+					,BSNS_NM
+					,SCSBID_MTH_CD
+					,ORDER_DEPT_NO
+					,LAWORD_CD
+					,BSNS_MINE_NO
+					,BSNS_MINE_NM
+					,SHARE_CN
+					,CNTRCT_BPLC_CD
+					,MMRN_AT
+					, CNTRCTPD_CHANGE_AT_NM ||CNTRCTAMOUNT_CHANGE_AT_NM ||ESWO_SCOPE_CHANGE_AT_NM AS AT_NM
+					,CNTRCTPD_CHANGE_AT
+					,CNTRCTAMOUNT_CHANGE_AT
+					,ESWO_SCOPE_CHANGE_AT
+					,CNTRCT_CHGHY_CN
+					,BEFORE_CNTRCT_DE
+					,BEFORE_CNTRCT_AMOUNT
+					,BEFORE_CNTRCT_BEGIN_DE
+					,BEFORE_CNTRCT_END_DE
+					,CHANGE_BASIS
+					,TASK_CHANGE_CN
+					,ENTRPS_CHANGE_AT
+					,CHANGE_RESN
+					,TOT_CNTRCT_AMOUNT
+					,TOT_CNTRCTPD_BEGIN_DE
+					,TOT_CNTRCTPD_END_DE
+					,BEFORE_TOT_CNTRCTPD_BEGIN_DE
+					,BEFORE_TOT_CNTRCTPD_END_DE
+					,BEFORE_TOT_CNTRCT_AMOUNT
+		FROM		(
+						SELECT	CO.CNTRCT_NO
+									,CO.CHANGE_ODR
+									,CO.PBLANC_NO
+									,CO.PBLANC_ODR
+									,CO.CNTRCT_SE_CD
+									,CO.CNTRCT_DETAIL_SE_CD
+									,CO.CNTRCT_PRST_CD
+									,CO.CNTRCT_NM
+									,CO.CNTRCT_DE
+									,CO.CNTRCT_AMOUNT
+									,TO_CHAR(TO_DATE(CO.CNTRCTPD_BEGIN_DE, 'yyyyMMdd'), 'yyyy-MM-dd') as CNTRCTPD_BEGIN_DE
+									,TO_CHAR(TO_DATE(CO.CNTRCTPD_END_DE, 'yyyyMMdd'), 'yyyy-MM-dd') as CNTRCTPD_END_DE
+									,CO.DFRCMPST_RT
+									,CO.CRYMY_AMOUNT
+									,CO.CRYMY_RT
+									,CO.WARANT_GLD_RT
+									,CO.ETC_MATTER_CN
+									,CO.CNTRCT_CHARGER_ID
+									,CO.CNTRCT_CHARGER_DEPT_NO
+									,CO.CNTRCT_END_AT
+									,CO.CNTRCT_END_DE
+									,CO.CNTRCT_END_OPETR_ID
+									,CO.CNTRCT_TRMNAT_DT
+									,CO.CNTRCT_TRMNAT_RESN_CN
+									,CO.CNTRCT_TRMNAT_OPETR_ID
+									,CO.REGISTER_ID
+									,CO.REGIST_DT
+									,CO.UPDUSR_ID
+									,CO.UPDT_DT
+									,CO.DELETE_AT
+									,CO.FATOFA_CNTRCT_SE_CD
+									,CO.COPCNTR_SE_CD
+									,CO.FLAW_MENDNG_PD_CN
+									,CO.PURDMD_NO
+									,CO.PURDMD_ODR
+									,CO.SAROK_BID_AT
+									,CO.CNTRCT_CNCLS_MTH_CD
+									,CO.STMPTAX_AT
+									,CO.STMPTAX_AMOUNT
+									,CO.CNTRCT_ASSRNC_MTH_CD
+									,CO.SANCTN_DOC_ID
+									,CO.SANCTN_REQUST_DT
+									,CO.WRITING_DE
+									,CO.CNTRCT_KND_CD
+									,CO.BSNS_NM
+									,CO.SCSBID_MTH_CD
+									,CO.ORDER_DEPT_NO
+									,CO.LAWORD_CD
+									,CO.BSNS_MINE_NO
+									,CO.BSNS_MINE_NM
+									,CO.SHARE_CN
+									,PU.CNTRCT_BPLC_CD
+									,PU.MMRN_AT
+									,DECODE(COCH.CNTRCTPD_CHANGE_AT, 'Y', '기간변경') AS CNTRCTPD_CHANGE_AT_NM
+									,CASE WHEN COCH.CNTRCTPD_CHANGE_AT = 'Y' AND COCH.CNTRCTAMOUNT_CHANGE_AT = 'Y' THEN ',금액변경'
+									 WHEN COCH.CNTRCTAMOUNT_CHANGE_AT = 'Y' THEN '금액변경'
+									 ELSE ''
+									 END AS CNTRCTAMOUNT_CHANGE_AT_NM
+									,CASE WHEN (COCH.CNTRCTPD_CHANGE_AT = 'Y' OR COCH.CNTRCTAMOUNT_CHANGE_AT = 'Y') AND COCH.ESWO_SCOPE_CHANGE_AT = 'Y'  THEN ',과업변경'
+									 WHEN COCH.ESWO_SCOPE_CHANGE_AT = 'Y' THEN '과업변경'
+									 ELSE ''
+									 END AS ESWO_SCOPE_CHANGE_AT_NM
+									,COCH.CNTRCTPD_CHANGE_AT
+									,COCH.CNTRCTAMOUNT_CHANGE_AT
+									,COCH.ESWO_SCOPE_CHANGE_AT
+									,COCH.CNTRCT_CHGHY_CN
+									,TO_CHAR(TO_DATE(COCH.BEFORE_CNTRCT_DE, 'yyyyMMdd'), 'yyyy-MM-dd') as BEFORE_CNTRCT_DE
+									,COCH.BEFORE_CNTRCT_AMOUNT
+									,TO_CHAR(TO_DATE(COCH.BEFORE_CNTRCT_BEGIN_DE, 'yyyyMMdd'), 'yyyy-MM-dd') as BEFORE_CNTRCT_BEGIN_DE
+									,TO_CHAR(TO_DATE(COCH.BEFORE_CNTRCT_END_DE, 'yyyyMMdd'), 'yyyy-MM-dd') as BEFORE_CNTRCT_END_DE
+									,COCH.CHANGE_BASIS
+									,COCH.TASK_CHANGE_CN
+									,COCH.ENTRPS_CHANGE_AT
+									,COCH.CHANGE_RESN
+									,CO.TOT_CNTRCT_AMOUNT
+									,TO_CHAR(TO_DATE(CO.TOT_CNTRCTPD_BEGIN_DE, 'yyyyMMdd'), 'yyyy-MM-dd') as TOT_CNTRCTPD_BEGIN_DE
+									,TO_CHAR(TO_DATE(CO.TOT_CNTRCTPD_END_DE, 'yyyyMMdd'), 'yyyy-MM-dd') as TOT_CNTRCTPD_END_DE
+									,TO_CHAR(TO_DATE(COCH.BEFORE_TOT_CNTRCTPD_BEGIN_DE, 'yyyyMMdd'), 'yyyy-MM-dd') as BEFORE_TOT_CNTRCTPD_BEGIN_DE
+									,TO_CHAR(TO_DATE(COCH.BEFORE_TOT_CNTRCTPD_END_DE, 'yyyyMMdd'), 'yyyy-MM-dd') as BEFORE_TOT_CNTRCTPD_END_DE
+									,COCH.BEFORE_TOT_CNTRCT_AMOUNT
+						FROM		TECT_COMA CO
+									, TECT_COCH COCH
+									, TEPO_PUDEMA PU
+						WHERE	CO.CNTRCT_NO = COCH.CNTRCT_NO AND CO.CHANGE_ODR = COCH.CHANGE_ODR
+						AND		CO.PURDMD_NO = PU.PURDMD_NO
+						AND		CO.PURDMD_ODR = PU.PURDMD_ODR
+						AND		CO.CNTRCT_KND_CD = 'A'
+						AND		CO.CNTRCT_PRST_CD = 'G'
+						
+						UNION ALL
+		  
+		  				SELECT	CO.CNTRCT_NO
+									,CO.CHANGE_ODR
+									,CO.PBLANC_NO
+									,CO.PBLANC_ODR
+									,CO.CNTRCT_SE_CD
+									,CO.CNTRCT_DETAIL_SE_CD
+									,CO.CNTRCT_PRST_CD
+									,CO.CNTRCT_NM
+									,CO.CNTRCT_DE
+									,CO.CNTRCT_AMOUNT
+									,TO_CHAR(TO_DATE(CO.CNTRCTPD_BEGIN_DE, 'yyyyMMdd'), 'yyyy-MM-dd') as CNTRCTPD_BEGIN_DE
+									,TO_CHAR(TO_DATE(CO.CNTRCTPD_END_DE, 'yyyyMMdd'), 'yyyy-MM-dd') as CNTRCTPD_END_DE
+									,CO.DFRCMPST_RT
+									,CO.CRYMY_AMOUNT
+									,CO.CRYMY_RT
+									,CO.WARANT_GLD_RT
+									,CO.ETC_MATTER_CN
+									,CO.CNTRCT_CHARGER_ID
+									,CO.CNTRCT_CHARGER_DEPT_NO
+									,CO.CNTRCT_END_AT
+									,CO.CNTRCT_END_DE
+									,CO.CNTRCT_END_OPETR_ID
+									,CO.CNTRCT_TRMNAT_DT
+									,CO.CNTRCT_TRMNAT_RESN_CN
+									,CO.CNTRCT_TRMNAT_OPETR_ID
+									,CO.REGISTER_ID
+									,CO.REGIST_DT
+									,CO.UPDUSR_ID
+									,CO.UPDT_DT
+									,CO.DELETE_AT
+									,CO.FATOFA_CNTRCT_SE_CD
+									,CO.COPCNTR_SE_CD
+									,CO.FLAW_MENDNG_PD_CN
+									,CO.PURDMD_NO
+									,CO.PURDMD_ODR
+									,CO.SAROK_BID_AT
+									,CO.CNTRCT_CNCLS_MTH_CD
+									,CO.STMPTAX_AT
+									,CO.STMPTAX_AMOUNT
+									,CO.CNTRCT_ASSRNC_MTH_CD
+									,CO.SANCTN_DOC_ID
+									,CO.SANCTN_REQUST_DT
+									,CO.WRITING_DE
+									,CO.CNTRCT_KND_CD
+									,CO.BSNS_NM
+									,CO.SCSBID_MTH_CD
+									,CO.ORDER_DEPT_NO
+									,CO.LAWORD_CD
+									,CO.BSNS_MINE_NO
+									,CO.BSNS_MINE_NM
+									,CO.SHARE_CN
+									,'' as CNTRCT_BPLC_CD
+									,'' as MMRN_AT
+									,DECODE(COCH.CNTRCTPD_CHANGE_AT, 'Y', '기간변경') AS CNTRCTPD_CHANGE_AT_NM
+									,CASE WHEN COCH.CNTRCTPD_CHANGE_AT = 'Y' AND COCH.CNTRCTAMOUNT_CHANGE_AT = 'Y' THEN ',금액변경'
+									 WHEN COCH.CNTRCTAMOUNT_CHANGE_AT = 'Y' THEN '금액변경'
+									 ELSE ''
+									 END AS CNTRCTAMOUNT_CHANGE_AT_NM
+									,CASE WHEN (COCH.CNTRCTPD_CHANGE_AT = 'Y' OR COCH.CNTRCTAMOUNT_CHANGE_AT = 'Y') AND COCH.ESWO_SCOPE_CHANGE_AT = 'Y'  THEN ',과업변경'
+									 WHEN COCH.ESWO_SCOPE_CHANGE_AT = 'Y' THEN '과업변경'
+									 ELSE ''
+									 END AS ESWO_SCOPE_CHANGE_AT_NM
+									,COCH.CNTRCTPD_CHANGE_AT
+									,COCH.CNTRCTAMOUNT_CHANGE_AT
+									,COCH.ESWO_SCOPE_CHANGE_AT
+									,COCH.CNTRCT_CHGHY_CN
+									,TO_CHAR(TO_DATE(COCH.BEFORE_CNTRCT_DE, 'yyyyMMdd'), 'yyyy-MM-dd') as BEFORE_CNTRCT_DE
+									,COCH.BEFORE_CNTRCT_AMOUNT
+									,TO_CHAR(TO_DATE(COCH.BEFORE_CNTRCT_BEGIN_DE, 'yyyyMMdd'), 'yyyy-MM-dd') as BEFORE_CNTRCT_BEGIN_DE
+									,TO_CHAR(TO_DATE(COCH.BEFORE_CNTRCT_END_DE, 'yyyyMMdd'), 'yyyy-MM-dd') as BEFORE_CNTRCT_END_DE
+									,COCH.CHANGE_BASIS
+									,COCH.TASK_CHANGE_CN
+									,COCH.ENTRPS_CHANGE_AT
+									,COCH.CHANGE_RESN
+									,CO.TOT_CNTRCT_AMOUNT
+									,TO_CHAR(TO_DATE(CO.TOT_CNTRCTPD_BEGIN_DE, 'yyyyMMdd'), 'yyyy-MM-dd') as TOT_CNTRCTPD_BEGIN_DE
+									,TO_CHAR(TO_DATE(CO.TOT_CNTRCTPD_END_DE, 'yyyyMMdd'), 'yyyy-MM-dd') as TOT_CNTRCTPD_END_DE
+									,TO_CHAR(TO_DATE(COCH.BEFORE_TOT_CNTRCTPD_BEGIN_DE, 'yyyyMMdd'), 'yyyy-MM-dd') as BEFORE_TOT_CNTRCTPD_BEGIN_DE
+									,TO_CHAR(TO_DATE(COCH.BEFORE_TOT_CNTRCTPD_END_DE, 'yyyyMMdd'), 'yyyy-MM-dd') as BEFORE_TOT_CNTRCTPD_END_DE
+									,COCH.BEFORE_TOT_CNTRCT_AMOUNT
+						FROM		TECT_COMA CO
+									, TECT_COCH COCH
+						WHERE	CO.CNTRCT_NO = COCH.CNTRCT_NO AND CO.CHANGE_ODR = COCH.CHANGE_ODR
+						AND		CO.CNTRCT_KND_CD = 'B'
+						AND		CO.CNTRCT_PRST_CD = 'G'
+					)
+		<include refid="changeCntrctRegstrListWhere"/>
+		ORDER BY CNTRCT_DE DESC, CNTRCT_NO DESC
+	</select>
+
+	<select id="changeCntrctRegstrListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="changeCntrctRegstrList"/>
+		) T1
+			<include refid="changeCntrctRegstrListWhere"/>
+	</select>
+
+	<!--  
+     * <pre>
+     * 1. 개요 : 업체별실적목록_페이징 
+     * 2. 처리내용 : 업체별실적목록 페이징 처리된 목록 조회
+     *  	
+     * </pre>
+     * @Query ID : purcntrRegstrListInqireWithPgng
+     * @date : 2018. 03. 02.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2018. 03. 02.       은우소프트 맹경열              최초 작성 
+     *  =======================================================   
+     -->			
+	<select id="entrpsAcctoAcmsltListInqireWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="entrpsAcctoAcmsltList"/>
+		) T1
+			<include refid="entrpsAcctoAcmsltListWhere"/>
+			ORDER BY CNTRCT_CNT DESC
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<select id="entrpsAcctoAcmsltListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="entrpsAcctoAcmsltList"/>
+		) T1
+			<include refid="entrpsAcctoAcmsltListWhere"/>
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 업체별실적목록_상세
+     * 2. 처리내용 : 업체별실적목록 상세 처리된 목록 조회
+     *  	
+     * </pre>
+     * @Query ID : entrpsacctoacmsltInfoDetail
+     * @date : 2018. 03. 05.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2018. 03. 05.       은우소프트 맹경열              최초 작성 
+     *  =======================================================   
+     -->	
+	<select id="entrpsacctoacmsltInfoDetail" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="entrpsacctoacmsltInfo"/>
+		) T1
+			<include refid="entrpsacctoacmsltInfoWhere"/>
+			ORDER BY CNTRCT_NO DESC, CHANGE_ODR DESC
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<select id="entrpsacctoacmsltInfoDetailTot" resultType="dataEntity">
+	SELECT R1.*, ROWNUM AS RNUM FROM (SELECT * FROM (
+			<include refid="entrpsacctoacmsltInfo"/>
+		) T1)R1
+	</select>
+	
+	<select id="entrpsacctoacmsltEntrpsInfoDetail"  resultType="dataEntity">
+		SELECT * FROM(SELECT ENTRPS_REGIST_NO
+			,BIZRNO
+			,ENTRPS_NM
+			,RPRSNTV_NM
+			FROM VMUR_ENPA
+			UNION ALL
+			SELECT ENTRPS_REGIST_NO
+			,BIZRNO
+			,ENTRPS_NM
+			,RPRSNTV_NM
+			FROM TMUR_ENPA )A
+			WHERE A.ENTRPS_REGIST_NO =  #{P_ENTRPS_REGIST_NO, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="entrpsacctoacmsltInfoDetailTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="entrpsacctoacmsltInfo"/>
+		) T1
+			<include refid="entrpsacctoacmsltInfoWhere"/>
+	</select>						
+ 
+ </mapper>
+ 

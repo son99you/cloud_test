@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eunwoosoft.ipro.vend.dao.IproVendSnctDao">
+ 
+ 	<select id="selectSnctVendListWithPgng" resultType="dataEntity"> 
+		<include refid="ComPgng.pgngHeaderClause"/>  
+		SELECT * FROM (
+			<include refid="snctVendList"/>
+			<include refid="snctVendListWhere"/> 
+		) T1
+		ORDER BY GNRT_DE DESC
+		<include refid="ComPgng.pgngTailClause"/> 
+	</select>
+	
+	<select id="selectSnctVendListTotCnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="snctVendList"/>
+			<include refid="snctVendListWhere"/> 
+		) T1
+		WHERE 1 = 1		 
+	</select>
+	
+	<sql id="snctVendList">
+	SELECT * FROM (
+        SELECT M.VEND_REG_NO
+                  , M.VEND_NM
+                  , M.BIZRNO
+                  , S.SNCT_SN
+                  , S.GNRT_DE
+                  , S.SNCT_STCD
+                  , F_CDVAL_INQIRE('SNCT_STCD', S.SNCT_STCD) AS SNCT_STCD_NM
+                  , S.SNCT_STDE
+                  , S.SNCT_ENDE
+                  , S.SNCT_RSN_CNTN
+                  , S.PROCR_NM
+           FROM T_CU_MST M
+                  , T_CU_SNCT S
+        WHERE M.VEND_REG_NO = S.VEND_REG_NO
+             AND M.DEL_AT = 'N'
+             AND S.DEL_AT = 'N'
+       )
+	</sql>
+	
+	<sql id="snctVendListWhere">
+		<where>
+			1=1
+			<if test='P_VEND_NM_S != null and P_VEND_NM_S != "" '>
+				AND VEND_NM LIKE '%'|| #{P_VEND_NM_S} || '%'
+			</if>
+			<if test='P_BIZRNO_S != null and P_BIZRNO_S != "" '>
+				AND BIZRNO LIKE '%'|| #{P_BIZRNO_S} || '%'
+			</if>
+			<if test='P_GNRT_BEGIN_DE_S != null and P_GNRT_BEGIN_DE_S != "" '>
+				AND TO_CHAR(TO_DATE(GNRT_DE, 'yyyyMMdd'), 'yyyyMMdd') >= #{P_GNRT_BEGIN_DE_S}
+			</if>
+			<if test='P_GNRT_END_DE_S != null and P_GNRT_END_DE_S != "" '>
+				AND TO_CHAR(TO_DATE(GNRT_DE, 'yyyyMMdd'), 'yyyyMMdd') &lt;= #{P_GNRT_END_DE_S}
+			</if>
+			<if test='P_SNCT_STCD_S != null and P_SNCT_STCD_S != "" '>
+				AND SNCT_STCD = #{P_SNCT_STCD_S}
+			</if>
+		</where>
+	</sql>
+	
+	
+	<select id="selectSnctVendDetail" resultType="dataEntity">
+        SELECT M.VEND_REG_NO
+                  , M.VEND_NM
+                  , M.BIZRNO
+                  , S.SNCT_SN
+                  , S.SNCT_STCD
+                  , F_CDVAL_INQIRE('SNCT_STCD', S.SNCT_STCD) AS SNCT_STCD_NM
+                  , S.SNCT_STDE
+                  , S.SNCT_ENDE
+                  , S.SNCT_RSN_CNTN
+                  , S.SNCT_BSS_CNTN
+                  , S.RMK
+           FROM T_CU_MST M
+                  , T_CU_SNCT S
+        WHERE M.VEND_REG_NO = S.VEND_REG_NO
+             AND M.DEL_AT = 'N'
+             AND S.DEL_AT = 'N'
+             AND M.VEND_REG_NO = #{P_VEND_REG_NO}
+             AND S.SNCT_SN = #{P_SNCT_SN}
+             
+	</select>
+ 	
+ </mapper>

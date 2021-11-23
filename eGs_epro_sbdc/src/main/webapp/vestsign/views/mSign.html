@@ -1,0 +1,80 @@
+<!Doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>인증서전자서명</title>
+
+    <link type="text/css" rel="stylesheet" href="../styles/css/mCommon.css?revision=e54ce34"/>
+    <link type="text/css" rel="stylesheet" href="../styles/css/jquery-ui.css?revision=e54ce34">
+
+    <script type="text/javascript" src="../styles/js/jquery-1.11.0.min.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../styles/js/jquery-ui.js?revision=e54ce34"></script>
+
+    <script type="text/javascript" src="../scripts/__GobalValue__.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../languages/mSign.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../languages/policiesLang.js?revision=e54ce34"></script>
+
+</head>
+<body>
+<div>
+    <!-- Top -->
+    <div class="CERT_title">
+        <div class="TITLE_div">
+            <p id="title">
+                <script>document.write(mSignLang(0));</script>
+            </p>
+        </div>
+        <div class="xBtn" id="x_btn" alt="닫기">닫기</div>
+    </div>
+
+    <div class="titleDivision_div">
+        <div class="titleDivisionLine"></div>
+    </div>
+    <!-- middle -->
+    <div class="CERT_contents">
+        <!-- 배너 영역 600px * 140px -->
+        <div class="BANNER"></div>
+        <!-- 인증서리스트 화면 ul -->
+        <div class="CERT_list">
+            <ul id="dialogSignTab_list"/>
+        </div>
+
+        <!-- 비밀번호 입력창 -->
+        <form id="pinForm" name="pinForm" method="post" onsubmit="return false;">
+            <div class="FORM_wrap">
+                <div class="PW_div" id="passwordBox">
+                    <input type="password" autocomplete="off" id="pin"/>
+                </div>
+            </div>
+        </form>
+
+        <!-- 확인 취소 버튼 -->
+        <div class="BTN_common">
+            <div id="commonBtn" class="commonForm">
+                <div class="confirm_btn" id="confirm_btn">
+                    <p>
+                        <script>document.write(mSignLang(1));</script>
+                    </p>
+                </div>
+                <div class="cancel_btn" id="cancel_btn">
+                    <p>
+                        <script>document.write(mSignLang(2));</script>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- footer -->
+    <div class="copyright" id="copyright">
+        Copyright 2016 By YETTIESOFT.ALL right reserved.
+    </div>
+</div>
+</body>
+
+<script type="text/javascript" src="../library/mobileKeySafer.js?revision=e54ce34"></script>
+<script type="text/javascript" src="../scripts/mSign.js?revision=e54ce34"></script>
+<script type="text/javascript" src="../library/policies.js?revision=e54ce34"></script>
+<!-- <script type="text/javascript" src="../library/dragiframe.js"></script> -->
+</html>

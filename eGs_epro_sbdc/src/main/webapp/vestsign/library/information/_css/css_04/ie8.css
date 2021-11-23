@@ -1,0 +1,7 @@
+.IconMenu {
+	background:url(../_img/ico_menu.png) no-repeat 0 0;
+}
+
+.IconMenu.Closed {
+	background:url(../_img/ico_closed.png) no-repeat 0 0;
+}

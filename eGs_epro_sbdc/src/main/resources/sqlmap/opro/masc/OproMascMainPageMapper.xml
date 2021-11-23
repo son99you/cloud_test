@@ -1,0 +1,1271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * 메인 > 메인페이지 Mapper
+ *
+ * <pre>
+ * sqlmap.oda.iep.masc
+ *    |_ IepMascMainPageMapper.xml
+ * 
+ * </pre>
+ * @date : 2015. 3. 23. 오후 4:02:17
+ * @version : 1.0
+ * @author : 은우소프트 김봉수
+-->
+
+<mapper namespace="com.eunwoosoft.opro.masc.dao.OproMascMainPageDao">	
+
+	<!--  
+     * <pre>
+     * 1. 개요 : 공고 전 업무 카운트 조회 
+     * 2. 처리내용 : 공고 전 업무가 진행중인 카운트 수 조회
+     *  	
+     * </pre>
+     * @Query ID : selectPblancBefJobCntInqire
+     * @date : 2015. 3. 23.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 3. 23.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectPblancBefJobCntInqire" resultType="dataEntity">
+		SELECT '1' AS SN, COUNT(PRCURE_REQEST_NO) AS CNT 
+		   FROM TEBI_PRREMA
+		 WHERE BID_PLAN_FLFL_AT = 'N'
+		     AND ESTMT_FLFL_AT = 'N'
+		     AND PRVSTL_FLFL_AT = 'N'
+		     AND BID_UN_TRGET_AT = 'N'
+		UNION ALL
+		SELECT '2' AS SN, COUNT(BEFFAT_PBLANC_NO) AS CNT
+		   FROM TEBI_BEPU
+		 WHERE NVL(DELETE_AT, 'N') = 'N'
+		     AND SYSDATE BETWEEN TO_DATE(BEFFAT_PBLANC_BEGIN_DE, 'YYYYMMDD') AND TO_DATE(BEFFAT_PBLANC_END_DE, 'YYYYMMDD')
+		UNION ALL
+		SELECT '3' AS SN, COUNT(ESTMT_NO) AS CNT
+		   FROM TEPN_ESREMA
+		 WHERE ESTMT_PRST_CD NOT IN ('PD10', 'PD94')
+		 AND TO_DATE(REQUST_CLOS_DE, 'YYYYMMDD') >= SYSDATE
+		UNION ALL 
+		SELECT '4' AS SN, COUNT(PBLANC_NO) AS CNT 
+		   FROM TEBI_BIPLMA
+		 WHERE BID_PROGRS_STTUS_CD IN ('PF10')
+		     AND PBLANC_NO != 'P2999-99999'
+		     AND NVL(DELETE_AT, 'N') = 'N'
+		     AND	BID_CHARGER_ID = #{P_USER_ID} 
+		UNION ALL 
+		SELECT '5' AS SN, COUNT(PBLANC_NO) AS CNT 
+		   FROM TEBI_BIPLMA
+		 WHERE BID_DETAIL_PRST_CD IN ('PE90', 'PE91', 'PE92', 'PE93')
+		     AND PBLANC_NO != 'P2999-99999'
+		     AND NVL(DELETE_AT, 'N') = 'N'
+		     AND	BID_CHARGER_ID = #{P_USER_ID} 
+		UNION ALL 
+		SELECT '6' AS SN, COUNT(PBLANC_NO) AS CNT 
+		   FROM TEBI_BIPLMA
+		 WHERE BID_DETAIL_PRST_CD IN ('PE94')
+		     AND PBLANC_NO != 'P2999-99999' 
+		     AND NVL(DELETE_AT, 'N') = 'N'
+		     AND	BID_CHARGER_ID = #{P_USER_ID} 
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 공고 업무 카운트 조회 
+     * 2. 처리내용 : 공고 업무가 진행중인 카운트 수 조회
+     *  	
+     * </pre>
+     * @Query ID : selectPblancJobCntInqire
+     * @date : 2015. 3. 23.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 3. 23.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectPblancJobCntInqire" resultType="dataEntity">
+		SELECT '1' AS SN, COUNT(PBLANC_NO) AS CNT
+		   FROM TEBI_BIPLMA
+		 WHERE BID_PROGRS_STTUS_CD IN ('PF20', 'PF30') 
+		     AND NVL(DELETE_AT, 'N') = 'N' 
+		     AND PBLANC_NO != 'P2999-99999'
+		     <if test=' P_PRCURE_BSNS_SE_CD != null and P_PRCURE_BSNS_SE_CD != "" '>
+		     AND PRCURE_BSNS_SE_CD = #{P_PRCURE_BSNS_SE_CD}
+		     </if>
+		     AND	BID_CHARGER_ID = #{P_USER_ID} 
+		UNION ALL
+		SELECT '2' AS SN, COUNT(A.PBLANC_NO) AS CNT
+		   FROM TEBI_BIPLMA A, TEBI_BITI B
+		 WHERE SYSDATE BETWEEN TO_DATE(B.PBLANC_DT, 'YYYYMMDDHH24MISS') AND TO_DATE(B.PARE_END_DT, 'YYYYMMDDHH24MISS')
+		     AND A.PBLANC_NO = B.PBLANC_NO
+		     AND A.PBLANC_ODR = B.PBLANC_ODR
+		     AND A.PBLANC_NO != 'P2999-99999'
+		     AND A.BID_PROGRS_STTUS_CD IN ('PF20')
+             AND A.BID_DC_PEO_CD IN ('BPYY', 'BPYN')
+		     AND NVL(A.DELETE_AT, 'N') = 'N' 
+		     <if test=' P_PRCURE_BSNS_SE_CD != null and P_PRCURE_BSNS_SE_CD != "" '>
+		     AND A.PRCURE_BSNS_SE_CD = #{P_PRCURE_BSNS_SE_CD}
+		     </if>
+		     AND	A.BID_CHARGER_ID = #{P_USER_ID} 
+		UNION ALL
+		SELECT '3' AS SN, COUNT(A.PBLANC_NO) AS CNT
+		   FROM TEBI_BIPLMA A, TEBI_BITI B
+		 WHERE SYSDATE BETWEEN TO_DATE(B.PARE_BEGIN_DT, 'YYYYMMDDHH24MISS') AND TO_DATE(B.PARE_END_DT, 'YYYYMMDDHH24MISS')
+		     AND A.PBLANC_NO = B.PBLANC_NO
+		     AND A.PBLANC_ODR = B.PBLANC_ODR
+		     AND A.BID_PROGRS_STTUS_CD = 'PF20'
+		     AND A.PBLANC_NO != 'P2999-99999'
+		     AND NVL(A.DELETE_AT, 'N') = 'N' 
+		     <if test=' P_PRCURE_BSNS_SE_CD != null and P_PRCURE_BSNS_SE_CD != "" '>
+		     AND A.PRCURE_BSNS_SE_CD = #{P_PRCURE_BSNS_SE_CD}
+		     </if>
+		     AND	A.BID_CHARGER_ID = #{P_USER_ID} 
+		UNION ALL
+		SELECT '4' AS SN, COUNT(A.PBLANC_NO) AS CNT 
+		   FROM TEBI_BIPLMA A, TEBI_BITI B
+		 WHERE A.PBLANC_NO = B.PBLANC_NO
+		           AND A.PBLANC_ODR = B.PBLANC_ODR
+		           AND A.BID_PROGRS_STTUS_CD IN ('PF20', 'PF30')
+		     AND SYSDATE BETWEEN TO_DATE('19000101000000', 'YYYYMMDDHH24MISS') AND TO_DATE(B.OPENG_DT, 'YYYYMMDDHH24MISS')
+		     AND NOT EXISTS(SELECT * FROM TEBI_PRBI WHERE PBLANC_NO = A.PBLANC_NO AND PBLANC_ODR = A.PBLANC_ODR)
+		     AND A.COMPNO_PRDPRC_SE_CD != '180002'
+		     AND A.PBLANC_NO != 'P2999-99999'
+		     AND NVL(A.DELETE_AT, 'N') = 'N'
+		     <if test=' P_PRCURE_BSNS_SE_CD != null and P_PRCURE_BSNS_SE_CD != "" '>
+		     AND A.PRCURE_BSNS_SE_CD = #{P_PRCURE_BSNS_SE_CD}
+		     </if>
+		     AND	A.BID_CHARGER_ID = #{P_USER_ID} 
+		UNION ALL
+		SELECT '5' AS SN, COUNT(A.PBLANC_NO) AS CNT
+		   FROM TEBI_BIPLMA A, TEBI_BITI B
+		 WHERE SYSDATE BETWEEN TO_DATE(B.BIPA_PRESENTN_BEGIN_DT, 'YYYYMMDDHH24MISS') AND TO_DATE(B.BIPA_PRESENTN_END_DT, 'YYYYMMDDHH24MISS')
+		     AND A.PBLANC_NO = B.PBLANC_NO
+		     AND A.PBLANC_ODR = B.PBLANC_ODR
+		     AND A.BID_PROGRS_STTUS_CD NOT IN ('PF99')
+		     AND A.PBLANC_NO != 'P2999-99999'
+		     AND NVL(A.DELETE_AT, 'N') = 'N' 
+		     <if test=' P_PRCURE_BSNS_SE_CD != null and P_PRCURE_BSNS_SE_CD != "" '>
+		     AND A.PRCURE_BSNS_SE_CD = #{P_PRCURE_BSNS_SE_CD}
+		     </if>
+		     AND	A.BID_CHARGER_ID = #{P_USER_ID} 
+		UNION ALL 
+ 		SELECT '6' AS SN, COUNT(A.PBLANC_NO) AS CNT 
+		   FROM TEBI_BIPLMA A, TEBI_BITI B
+		 WHERE A.PBLANC_NO = B.PBLANC_NO
+		     AND A.PBLANC_ODR = B.PBLANC_ODR
+		     AND A.BID_PROGRS_STTUS_CD IN ('PF20', 'PF30')
+		     AND SYSDATE > TO_DATE(B.BIPA_PRESENTN_END_DT, 'YYYYMMDDHH24MISS')
+		     AND A.PBLANC_NO != 'P2999-99999'
+		     AND NVL(A.DELETE_AT, 'N') = 'N'
+		     <if test=' P_PRCURE_BSNS_SE_CD != null and P_PRCURE_BSNS_SE_CD != "" '>
+		     AND A.PRCURE_BSNS_SE_CD = #{P_PRCURE_BSNS_SE_CD}
+		     </if>
+		     AND	A.BID_CHARGER_ID = #{P_USER_ID} 
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 개찰 후 업무 카운트 조회 
+     * 2. 처리내용 : 개찰 후 업무가 진행중인 카운트 수 조회
+     *  	
+     * </pre>
+     * @Query ID : selectOpengAfJobCntInqire
+     * @date : 2015. 3. 23.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 3. 23.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectOpengAfJobCntInqire" resultType="dataEntity">
+		SELECT '1' AS SN, COUNT(A.PBLANC_NO) AS CNT
+		   FROM TEBI_BIPLMA A, TEBI_TEEVPL B
+		 WHERE A.PBLANC_NO = B.PBLANC_NO
+             AND A.PBLANC_ODR = B.PBLANC_ODR
+             AND B.DELETE_AT = 'N'
+             AND A.TCHQVLN_CHARGER_ID = #{P_USER_ID} 
+		     AND B.EVL_COMPT_DT IS NULL
+		UNION ALL 
+		SELECT '2' AS SN, COUNT(PBLANC_NO) AS CNT
+		   FROM (SELECT A.PBLANC_NO, A.PBLANC_ODR
+	                   FROM TEBI_BIPLMA A, TEBI_NEPRJUDI B
+	                 WHERE A.PBLANC_NO = B.PBLANC_NO
+	                     AND A.PBLANC_ODR = B.PBLANC_ODR
+	                     AND A.BID_PROGRS_STTUS_CD = 'PF50'
+	                     AND B.NTAT_PROPER_DSPTH_SE_CD = '270000'
+	                     AND A.PBLANC_NO != 'P2999-99999'
+	                     AND NVL(A.DELETE_AT, 'N') = 'N'
+	                     <if test=' P_PRCURE_BSNS_SE_CD != null and P_PRCURE_BSNS_SE_CD != "" '>
+					     AND A.PRCURE_BSNS_SE_CD = #{P_PRCURE_BSNS_SE_CD}
+					     </if>
+					     AND	A.BID_CHARGER_ID = #{P_USER_ID} 
+	                  GROUP BY A.PBLANC_NO, A.PBLANC_ODR )
+		UNION ALL 
+		SELECT '3' AS SN, COUNT(PBLANC_NO) AS CNT
+		   FROM (SELECT A.PBLANC_NO, A.PBLANC_ODR
+	                   FROM TEBI_BIPLMA A, TEBI_NEPRJUDI B
+	                 WHERE A.PBLANC_NO = B.PBLANC_NO
+	                     AND A.PBLANC_ODR = B.PBLANC_ODR
+	                     AND A.BID_PROGRS_STTUS_CD = 'PF50'
+	                     AND B.NTAT_PROPER_DSPTH_SE_CD = '270001'
+	                     AND A.PBLANC_NO != 'P2999-99999'
+	                     AND NVL(A.DELETE_AT, 'N') = 'N'
+	                     <if test=' P_PRCURE_BSNS_SE_CD != null and P_PRCURE_BSNS_SE_CD != "" '>
+					     AND A.PRCURE_BSNS_SE_CD = #{P_PRCURE_BSNS_SE_CD}
+					     </if>
+					     AND	A.BID_CHARGER_ID = #{P_USER_ID} 
+	                  GROUP BY A.PBLANC_NO, A.PBLANC_ODR )
+		UNION ALL 
+		SELECT '4' AS SN, COUNT(PRVSTL_NO) AS CNT 
+		   FROM TEPN_VOPRMA
+		 WHERE PRVSTL_PRST_CD IN ('PO10', 'PO20', 'PO30', 'PO40', 'PO50')
+		    AND TO_DATE(PRVSTL_DT,'YYYYMMDDHH24MISS') >=	SYSDATE
+		    <if test=' P_PRCURE_BSNS_SE_CD != null and P_PRCURE_BSNS_SE_CD != "" '>
+	       	AND PRCURE_BSNS_SE_CD = #{P_PRCURE_BSNS_SE_CD}
+	       	</if>
+	       	AND PRVSTL_INNER_CHARGER_ID = #{P_USER_ID}
+		UNION ALL 
+		SELECT '5' AS SN, COUNT(PBLANC_NO) AS CNT 
+		   FROM TEBI_BIPLMA
+		 WHERE BID_PROGRS_STTUS_CD IN ('PF50')
+		     AND PBLANC_NO LIKE '%'||TO_CHAR(SYSDATE, 'YYYY')||'%'
+		     AND PBLANC_NO != 'P2999-99999'
+		     AND NVL(DELETE_AT, 'N') = 'N'
+		     <if test=' P_PRCURE_BSNS_SE_CD != null and P_PRCURE_BSNS_SE_CD != "" '>
+		     AND PRCURE_BSNS_SE_CD = #{P_PRCURE_BSNS_SE_CD}
+		     </if>
+		     AND	BID_CHARGER_ID = #{P_USER_ID} 
+		UNION ALL
+		SELECT '6' AS SN, COUNT(PBLANC_NO) AS CNT
+		  FROM (SELECT PBLANC_NO
+			            FROM TEBI_BIPLMA
+			          WHERE BID_PROGRS_STTUS_CD IN ('PF60')
+				           AND PBLANC_NO LIKE '%'||TO_CHAR(SYSDATE, 'YYYY')||'%'
+				           AND NVL(DELETE_AT, 'N') = 'N'
+				           AND NVL(CNTRCT_FLFL_AT, 'N') = 'N'
+						   <if test=' P_PRCURE_BSNS_SE_CD != null and P_PRCURE_BSNS_SE_CD != "" '>
+					       AND PRCURE_BSNS_SE_CD = #{P_PRCURE_BSNS_SE_CD}
+					       </if>
+					       AND BID_CHARGER_ID = #{P_USER_ID}           
+			        UNION ALL
+			        SELECT PRVSTL_NO AS PBLANC_NO
+			            FROM TEPN_VOPRMA
+			          WHERE PRVSTL_PRST_CD = 'PO60'
+				           AND PRVSTL_DT LIKE '%'||TO_CHAR(SYSDATE, 'YYYY')||'%'
+				           AND NVL(CNTRCT_FLFL_AT, 'N') != 'Y'
+						   <if test=' P_PRCURE_BSNS_SE_CD != null and P_PRCURE_BSNS_SE_CD != "" '>
+					       AND PRCURE_BSNS_SE_CD = #{P_PRCURE_BSNS_SE_CD}
+					       </if>
+					       AND PRVSTL_INNER_CHARGER_ID = #{P_USER_ID}            
+					  )     
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 계약업무 카운트 조회 
+     * 2. 처리내용 : 계약 업무가 진행중인 카운트 수 조회
+     *  	
+     * </pre>
+     * @Query ID : selectCntrctJobCntInqire
+     * @date : 2015. 5. 28.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 5. 28.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectCntrctJobCntInqire" resultType="dataEntity">
+		SELECT '1' AS SN, COUNT(1) AS CNT 
+		  FROM TECT_CORE
+		 WHERE NVL(CNTRCT_FLFL_AT, 'N') = 'N'
+		UNION ALL
+		SELECT '2' AS SN, COUNT(CNTRCT_WRITNG_CNT) AS CNT
+          FROM (SELECT '1' AS CNTRCT_WRITNG_CNT
+	                  FROM TEBI_BIPLMA
+	                WHERE BID_PROGRS_STTUS_CD = 'PF60'
+	                    AND NVL(CNTRCT_FLFL_AT, 'N') != 'Y'
+	                    AND NVL(DELETE_AT, 'N') != 'Y'
+	                    AND PBLANC_NO NOT IN ('2015-00014', '2011-00014', '2009-00003')
+	                    AND BID_CHARGER_ID = #{P_USER_ID}
+	               UNION ALL
+	               SELECT '1' AS CNTRCT_WRITNG_CNT
+ 	                  FROM TECT_COMA
+	                WHERE NVL(DELETE_AT, 'N') != 'Y'
+	                    AND CNTRCT_PRST_CD IN  ('CT10', 'CT20', 'CT30', 'CT35', 'CT36', 'CT37', 'CT40')
+	                    AND PRCURE_CNTRCT_KND_CD IN ('EG10', 'EG30')
+	                    AND CNTRCT_CHARGER_ID = #{P_USER_ID}
+	               UNION ALL
+	               SELECT '1' AS CNTRCT_WRITNG_CNT
+	                  FROM TEPN_VOPRMA
+	                WHERE PRVSTL_PRST_CD = 'PO60'
+	                    AND NVL(CNTRCT_FLFL_AT, 'N') != 'Y'
+	                    AND PRVSTL_INNER_CHARGER_ID = #{P_USER_ID}
+	               )
+		UNION ALL
+		SELECT '3' AS SN, COUNT(1) AS CNT
+           FROM TECT_COMA
+          WHERE CNTRCT_PRST_CD IN ('CT10', 'CT20', 'CT30', 'CT35', 'CT36', 'CT37', 'CT40')
+              AND PRCURE_CNTRCT_KND_CD IN ('EG20')
+              AND NVL(DELETE_AT, 'N') = 'N'
+              AND CNTRCT_CHARGER_ID = #{P_USER_ID}
+        UNION ALL      
+		SELECT '4' AS SN, COUNT(1) AS CNT 
+		  FROM TECT_COMA
+		 WHERE CNTRCT_PRST_CD IN ('CT50', 'CT60')
+		   AND NVL(DELETE_AT, 'N') = 'N'
+		   AND CNTRCT_CHARGER_ID = #{P_USER_ID}
+		UNION ALL
+		SELECT '5' AS SN, COUNT(1) AS CNT 
+		  FROM TECT_COMA
+		 WHERE CNTRCT_PRST_CD IN ('CT70')
+		   AND NVL(DELETE_AT, 'N') = 'N'
+		   AND CNTRCT_CHARGER_ID = #{P_USER_ID}
+		UNION ALL
+		SELECT '6' AS SN, COUNT(1) AS CNT 
+		  FROM TECT_ACPRMA
+		 WHERE CRTF_PRST_CD IN ('RP20', 'RP30')
+		   AND NVL(DELETE_AT, 'N') = 'N'
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 부서별 발주계획 카운트 조회 
+     * 2. 처리내용 : 부서별 발주계획 카운트 수 조회
+     *  	
+     * </pre>
+     * @Query ID : selectDeptAcctoOrderPlanCntInqire
+     * @date : 2015. 3. 24.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 3. 24.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectDeptAcctoOrderPlanCntInqire" resultType="dataEntity">
+		SELECT MAX(DEPT_CNT_A) AS DEPT_CNT_A 
+			     , MAX(DEPT_CNT_B) AS DEPT_CNT_B
+			     , MAX(DEPT_CNT_C) AS DEPT_CNT_C
+			     , MAX(DEPT_CNT_D) AS DEPT_CNT_D
+			     , MAX(DEPT_CNT_E) AS DEPT_CNT_E
+			     , MAX(DEPT_CNT_F) AS DEPT_CNT_F
+			     , MAX(DEPT_CNT_G) AS DEPT_CNT_G
+		  FROM (SELECT COUNT(ORPL_NO) AS DEPT_CNT_A, 0 AS DEPT_CNT_B, 0 AS DEPT_CNT_C, 0 AS DEPT_CNT_D, 0 AS DEPT_CNT_E, 0 AS DEPT_CNT_F, 0 AS DEPT_CNT_G
+			          FROM TEBI_YEORPL
+			         WHERE GNRL_BID_AT = 'N'
+			             AND ORPR_ERA_YM LIKE '%'||TO_CHAR(SYSDATE, 'YYYY')||'%'
+			             AND DELETE_AT = 'N'
+			             AND DEPT_NO IN ( SELECT DEPT_NO 
+						                             FROM TEOP_ARACDEMA
+						                            WHERE PRCURE_OVSEA_AREA_CD = 'A10001'
+						                                AND DELETE_AT = 'N'
+						                                AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN VALID_BEGIN_DE AND VALID_END_DE)
+			        UNION ALL
+			        SELECT 0 AS DEPT_CNT_A, COUNT(ORPL_NO) AS DEPT_CNT_B, 0 AS DEPT_CNT_C, 0 AS DEPT_CNT_D, 0 AS DEPT_CNT_E, 0 AS DEPT_CNT_F, 0 AS DEPT_CNT_G
+			          FROM TEBI_YEORPL
+			         WHERE GNRL_BID_AT = 'N'
+			             AND ORPR_ERA_YM LIKE '%'||TO_CHAR(SYSDATE, 'YYYY')||'%'
+			             AND DELETE_AT = 'N'
+			             AND DEPT_NO IN ( SELECT DEPT_NO 
+						                             FROM TEOP_ARACDEMA
+						                            WHERE PRCURE_OVSEA_AREA_CD = 'A10002'
+						                                AND DELETE_AT = 'N'
+						                                AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN VALID_BEGIN_DE AND VALID_END_DE)                                                   
+			        UNION ALL
+			        SELECT 0 AS DEPT_CNT_A, 0 AS DEPT_CNT_B, COUNT(ORPL_NO) AS DEPT_CNT_C, 0 AS DEPT_CNT_D, 0 AS DEPT_CNT_E, 0 AS DEPT_CNT_F, 0 AS DEPT_CNT_G
+			          FROM TEBI_YEORPL
+			         WHERE GNRL_BID_AT = 'N'
+			             AND ORPR_ERA_YM LIKE '%'||TO_CHAR(SYSDATE, 'YYYY')||'%'
+			             AND DELETE_AT = 'N'
+			             AND DEPT_NO IN ( SELECT DEPT_NO 
+						                             FROM TEOP_ARACDEMA
+						                            WHERE PRCURE_OVSEA_AREA_CD = 'A10003'
+						                                AND DELETE_AT = 'N'
+						                                AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN VALID_BEGIN_DE AND VALID_END_DE)                                                   
+			        UNION ALL
+			        SELECT 0 AS DEPT_CNT_A, 0 AS DEPT_CNT_B, 0 AS DEPT_CNT_C, COUNT(ORPL_NO) AS DEPT_CNT_D, 0 AS DEPT_CNT_E, 0 AS DEPT_CNT_F, 0 AS DEPT_CNT_G
+			          FROM TEBI_YEORPL
+			         WHERE GNRL_BID_AT = 'N'
+			             AND ORPR_ERA_YM LIKE '%'||TO_CHAR(SYSDATE, 'YYYY')||'%'
+			             AND DELETE_AT = 'N'
+			             AND DEPT_NO IN ( SELECT DEPT_NO 
+						                             FROM TEOP_ARACDEMA
+						                            WHERE PRCURE_OVSEA_AREA_CD = 'A10004'
+						                                AND DELETE_AT = 'N'
+						                                AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN VALID_BEGIN_DE AND VALID_END_DE)                                                   
+			        UNION ALL
+			        SELECT 0 AS DEPT_CNT_A, 0 AS DEPT_CNT_B, 0 AS DEPT_CNT_C, 0 AS DEPT_CNT_D, COUNT(ORPL_NO) AS DEPT_CNT_E, 0 AS DEPT_CNT_F, 0 AS DEPT_CNT_G
+			          FROM TEBI_YEORPL
+			         WHERE GNRL_BID_AT = 'N'
+			             AND ORPR_ERA_YM LIKE '%'||TO_CHAR(SYSDATE, 'YYYY')||'%'
+			             AND DELETE_AT = 'N'
+			             AND DEPT_NO IN ( SELECT DEPT_NO 
+						                             FROM TEOP_ARACDEMA
+						                            WHERE PRCURE_OVSEA_AREA_CD = 'A10005'
+						                                AND DELETE_AT = 'N'
+						                                AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN VALID_BEGIN_DE AND VALID_END_DE)                                                   
+			        UNION ALL
+			        SELECT 0 AS DEPT_CNT_A, 0 AS DEPT_CNT_B, 0 AS DEPT_CNT_C, 0 AS DEPT_CNT_D, 0 AS DEPT_CNT_E, COUNT(ORPL_NO) AS DEPT_CNT_F, 0 AS DEPT_CNT_G
+			          FROM TEBI_YEORPL
+			         WHERE GNRL_BID_AT = 'N'
+			             AND ORPR_ERA_YM LIKE '%'||TO_CHAR(SYSDATE, 'YYYY')||'%'
+			             AND DELETE_AT = 'N'
+			             AND DEPT_NO IN ( SELECT DEPT_NO 
+						                             FROM TEOP_ARACDEMA
+						                            WHERE PRCURE_OVSEA_AREA_CD = 'A10006'
+						                                AND DELETE_AT = 'N'
+						                                AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN VALID_BEGIN_DE AND VALID_END_DE)                                                   
+			        UNION ALL
+			        SELECT 0 AS DEPT_CNT_A, 0 AS DEPT_CNT_B, 0 AS DEPT_CNT_C, 0 AS DEPT_CNT_D, 0 AS DEPT_CNT_E, 0 AS DEPT_CNT_F, COUNT(ORPL_NO) AS DEPT_CNT_G
+			          FROM TEBI_YEORPL
+			         WHERE GNRL_BID_AT = 'N'
+			             AND ORPR_ERA_YM LIKE '%'||TO_CHAR(SYSDATE, 'YYYY')||'%'
+			             AND DELETE_AT = 'N'
+			             AND DEPT_NO IN ( SELECT DEPT_NO 
+						                             FROM TEOP_ARACDEMA
+						                            WHERE PRCURE_OVSEA_AREA_CD = 'A10007'
+						                                AND DELETE_AT = 'N'
+						                                AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN VALID_BEGIN_DE AND VALID_END_DE)                                                   
+					)
+	
+	
+	<!-- 
+		SELECT COUNT(DECODE(DEPT_NO, '690110', '1', '690120', '1')) AS DEPT_CNT_A
+			     , COUNT(DECODE(DEPT_NO, '680210', '1')) AS DEPT_CNT_B
+			     , COUNT(DECODE(DEPT_NO, '611111', '1')) AS DEPT_CNT_C
+			     , COUNT(DECODE(DEPT_NO, '680310', '1')) AS DEPT_CNT_D
+			     , COUNT(DECODE(DEPT_NO, '680320', '1')) AS DEPT_CNT_E
+			     , COUNT(DECODE(DEPT_NO, '680230', '1')) AS DEPT_CNT_F
+			     , COUNT(DECODE(DEPT_NO, '680410', '1')) AS DEPT_CNT_G
+		   FROM TEBI_YEORPL
+		 WHERE GNRL_BID_AT = 'N'
+		     AND ORPR_ERA_YM LIKE '%'||TO_CHAR(SYSDATE, 'YYYY')||'%'
+		 -->     
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 부서별 입찰공고 카운트 조회 
+     * 2. 처리내용 : 부서별 입찰공고 카운트 수 조회
+     *  	
+     * </pre>
+     * @Query ID : selectDeptAcctoBidPblancCntInqire
+     * @date : 2015. 3. 24.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 3. 24.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectDeptAcctoBidPblancCntInqire" resultType="dataEntity">
+		SELECT MAX(DEPT_CNT_A) AS DEPT_CNT_A 
+			     , MAX(DEPT_CNT_B) AS DEPT_CNT_B
+			     , MAX(DEPT_CNT_C) AS DEPT_CNT_C
+			     , MAX(DEPT_CNT_D) AS DEPT_CNT_D
+			     , MAX(DEPT_CNT_E) AS DEPT_CNT_E
+			     , MAX(DEPT_CNT_F) AS DEPT_CNT_F
+			     , MAX(DEPT_CNT_G) AS DEPT_CNT_G
+		  FROM (SELECT COUNT(PBLANC_NO) AS DEPT_CNT_A, 0 AS DEPT_CNT_B, 0 AS DEPT_CNT_C, 0 AS DEPT_CNT_D, 0 AS DEPT_CNT_E, 0 AS DEPT_CNT_F, 0 AS DEPT_CNT_G
+		          FROM TEBI_BIPLMA
+		         WHERE PRCURE_BSNS_SE_CD = 'ABID'
+		             AND PBLANC_NO != 'P2999-99999'
+		             AND DELETE_AT = 'N'
+		             AND BID_PROGRS_STTUS_CD IN ('PF20', 'PF30', 'PF50')
+		             AND BID_CLIENT_DEPT_NO IN (SELECT DEPT_NO 
+						                                          FROM TEOP_ARACDEMA
+						                                         WHERE PRCURE_OVSEA_AREA_CD = 'A10001'
+						                                           AND DELETE_AT = 'N'
+						                                           AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN VALID_BEGIN_DE AND VALID_END_DE)
+		        UNION ALL
+		        SELECT 0 AS DEPT_CNT_A, COUNT(PBLANC_NO) AS DEPT_CNT_B, 0 AS DEPT_CNT_C, 0 AS DEPT_CNT_D, 0 AS DEPT_CNT_E, 0 AS DEPT_CNT_F, 0 AS DEPT_CNT_G
+		          FROM TEBI_BIPLMA
+		         WHERE PRCURE_BSNS_SE_CD = 'ABID'
+		             AND PBLANC_NO != 'P2999-99999'
+		             AND DELETE_AT = 'N'
+		             AND BID_PROGRS_STTUS_CD IN ('PF20', 'PF30', 'PF50')
+		             AND BID_CLIENT_DEPT_NO IN (SELECT DEPT_NO 
+						                                          FROM TEOP_ARACDEMA
+						                                         WHERE PRCURE_OVSEA_AREA_CD = 'A10002'
+						                                           AND DELETE_AT = 'N'
+						                                           AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN VALID_BEGIN_DE AND VALID_END_DE)                                                   
+		        UNION ALL
+		        SELECT 0 AS DEPT_CNT_A, 0 AS DEPT_CNT_B, COUNT(PBLANC_NO) AS DEPT_CNT_C, 0 AS DEPT_CNT_D, 0 AS DEPT_CNT_E, 0 AS DEPT_CNT_F, 0 AS DEPT_CNT_G
+		          FROM TEBI_BIPLMA
+		         WHERE PRCURE_BSNS_SE_CD = 'ABID'
+		             AND PBLANC_NO != 'P2999-99999'
+		             AND DELETE_AT = 'N'
+		             AND BID_PROGRS_STTUS_CD IN ('PF20', 'PF30', 'PF50')
+		             AND BID_CLIENT_DEPT_NO IN (SELECT DEPT_NO 
+						                                          FROM TEOP_ARACDEMA
+						                                         WHERE PRCURE_OVSEA_AREA_CD = 'A10003'
+						                                           AND DELETE_AT = 'N'
+						                                           AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN VALID_BEGIN_DE AND VALID_END_DE)                                                   
+		        UNION ALL
+		        SELECT 0 AS DEPT_CNT_A, 0 AS DEPT_CNT_B, 0 AS DEPT_CNT_C, COUNT(PBLANC_NO) AS DEPT_CNT_D, 0 AS DEPT_CNT_E, 0 AS DEPT_CNT_F, 0 AS DEPT_CNT_G
+		          FROM TEBI_BIPLMA
+		         WHERE PRCURE_BSNS_SE_CD = 'ABID'
+		             AND PBLANC_NO != 'P2999-99999'
+		             AND DELETE_AT = 'N'
+		             AND BID_PROGRS_STTUS_CD IN ('PF20', 'PF30', 'PF50')
+		             AND BID_CLIENT_DEPT_NO IN (SELECT DEPT_NO 
+						                                          FROM TEOP_ARACDEMA
+						                                         WHERE PRCURE_OVSEA_AREA_CD = 'A10004'
+						                                           AND DELETE_AT = 'N'
+						                                           AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN VALID_BEGIN_DE AND VALID_END_DE)                                                   
+		        UNION ALL
+		        SELECT 0 AS DEPT_CNT_A, 0 AS DEPT_CNT_B, 0 AS DEPT_CNT_C, 0 AS DEPT_CNT_D, COUNT(PBLANC_NO) AS DEPT_CNT_E, 0 AS DEPT_CNT_F, 0 AS DEPT_CNT_G
+		          FROM TEBI_BIPLMA
+		         WHERE PRCURE_BSNS_SE_CD = 'ABID'
+		             AND PBLANC_NO != 'P2999-99999'
+		             AND DELETE_AT = 'N'
+		             AND BID_PROGRS_STTUS_CD IN ('PF20', 'PF30', 'PF50')
+		             AND BID_CLIENT_DEPT_NO IN (SELECT DEPT_NO 
+						                                          FROM TEOP_ARACDEMA
+						                                         WHERE PRCURE_OVSEA_AREA_CD = 'A10005'
+						                                           AND DELETE_AT = 'N'
+						                                           AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN VALID_BEGIN_DE AND VALID_END_DE)                                                   
+		        UNION ALL
+		        SELECT 0 AS DEPT_CNT_A, 0 AS DEPT_CNT_B, 0 AS DEPT_CNT_C, 0 AS DEPT_CNT_D, 0 AS DEPT_CNT_E, COUNT(PBLANC_NO) AS DEPT_CNT_F, 0 AS DEPT_CNT_G
+		          FROM TEBI_BIPLMA
+		         WHERE PRCURE_BSNS_SE_CD = 'ABID'
+		             AND PBLANC_NO != 'P2999-99999'
+		             AND DELETE_AT = 'N'
+		             AND BID_PROGRS_STTUS_CD IN ('PF20', 'PF30', 'PF50')
+		             AND BID_CLIENT_DEPT_NO IN (SELECT DEPT_NO 
+						                                          FROM TEOP_ARACDEMA
+						                                         WHERE PRCURE_OVSEA_AREA_CD = 'A10006'
+						                                           AND DELETE_AT = 'N'
+						                                           AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN VALID_BEGIN_DE AND VALID_END_DE)                                                   
+		        UNION ALL
+		        SELECT 0 AS DEPT_CNT_A, 0 AS DEPT_CNT_B, 0 AS DEPT_CNT_C, 0 AS DEPT_CNT_D, 0 AS DEPT_CNT_E, 0 AS DEPT_CNT_F, COUNT(PBLANC_NO) AS DEPT_CNT_G
+		          FROM TEBI_BIPLMA
+		         WHERE PRCURE_BSNS_SE_CD = 'ABID'
+		             AND PBLANC_NO != 'P2999-99999'
+		             AND DELETE_AT = 'N'
+		             AND BID_PROGRS_STTUS_CD IN ('PF20', 'PF30', 'PF50')
+		             AND BID_CLIENT_DEPT_NO IN (SELECT DEPT_NO 
+						                                          FROM TEOP_ARACDEMA
+						                                         WHERE PRCURE_OVSEA_AREA_CD = 'A10007'
+						                                           AND DELETE_AT = 'N'
+						                                           AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN VALID_BEGIN_DE AND VALID_END_DE)                                                   
+             
+		)
+	
+	
+	
+	<!-- 
+		SELECT COUNT(DECODE(BID_CLIENT_DEPT_NO, '690110', '1', '690120', '1')) AS DEPT_CNT_A
+			     , COUNT(DECODE(BID_CLIENT_DEPT_NO, '680210', '1')) AS DEPT_CNT_B
+			     , COUNT(DECODE(BID_CLIENT_DEPT_NO, '611111', '1')) AS DEPT_CNT_C
+			     , COUNT(DECODE(BID_CLIENT_DEPT_NO, '680310', '1')) AS DEPT_CNT_D
+			     , COUNT(DECODE(BID_CLIENT_DEPT_NO, '680320', '1')) AS DEPT_CNT_E
+			     , COUNT(DECODE(BID_CLIENT_DEPT_NO, '680230', '1')) AS DEPT_CNT_F
+			     , COUNT(DECODE(BID_CLIENT_DEPT_NO, '680410', '1')) AS DEPT_CNT_G
+		   FROM TEBI_BIPLMA
+		 WHERE PRCURE_BSNS_SE_CD = 'ABID'
+		     AND PBLANC_NO != 'P2999-99999'
+		     AND NVL(DELETE_AT, 'N') = 'N'
+		     AND BID_PROGRS_STTUS_CD IN ('PF20', 'PF30', 'PF50')
+		      -->
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 일반행정 카운트 조회 
+     * 2. 처리내용 : 일반행정 카운트 수 조회
+     *  	
+     * </pre>
+     * @Query ID : selectGnrlAdministCntInqire
+     * @date : 2015. 3. 24.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 3. 24.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectGnrlAdministCntInqire" resultType="dataEntity">
+		SELECT MAX(ORD_CNT) AS ORD_CNT
+		    	 , MAX(BID_CNT) AS BID_CNT
+		  FROM (SELECT COUNT(DEPT_NO) AS ORD_CNT, 0 AS BID_CNT
+			           FROM TEBI_YEORPL
+			         WHERE GNRL_BID_AT = 'Y'
+			             AND ORPR_ERA_YM LIKE '%'||TO_CHAR(SYSDATE, 'YYYY')||'%'
+			        UNION ALL             
+			        SELECT 0 AS ORD_CNT, COUNT(PBLANC_NO) AS BID_CNT
+			           FROM TEBI_BIPLMA
+			         WHERE PRCURE_BSNS_SE_CD = 'GBID'
+			             AND PBLANC_NO != 'P2999-99999'
+			             AND NVL(DELETE_AT, 'N') = 'N'
+			             AND BID_PROGRS_STTUS_CD IN ('PF20', 'PF30', 'PF50'))
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 기타공고 카운트 조회 
+     * 2. 처리내용 : 기타공고 카운트 수 조회
+     *  	
+     * </pre>
+     * @Query ID : selectEtcPblancCntInqire
+     * @date : 2015. 3. 24.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 3. 24.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectEtcPblancCntInqire" resultType="dataEntity">
+		SELECT MAX(ORD_CNT) AS ORD_CNT
+		     	 , MAX(BID_CNT) AS BID_CNT
+		  FROM (SELECT 0 AS ORD_CNT, COUNT(PBLANC_NO) AS BID_CNT
+			           FROM TEBI_BIPLMA
+			         WHERE PRCURE_BSNS_SE_CD = 'ABID'
+			             AND PBLANC_NO != 'P2999-99999'
+			             AND NVL(DELETE_AT, 'N') = 'N'
+    					 AND BID_PROGRS_STTUS_CD IN ('PF20', 'PF30', 'PF50')
+			             AND BID_CLIENT_DEPT_NO NOT IN (SELECT DEPT_NO 
+						                                                   FROM TEOP_ARACDEMA 
+						                                                 WHERE PRCURE_OVSEA_AREA_CD IN ('A10001', 'A10002', 'A10003', 'A10004', 'A10005', 'A10006', 'A10007')
+						                                                     AND DELETE_AT = 'N'
+						                                                     AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN VALID_BEGIN_DE AND VALID_END_DE
+						                                                 )
+			        UNION ALL
+			        SELECT COUNT(DEPT_NO) AS ORD_CNT, 0 AS BID_CNT
+			           FROM TEBI_YEORPL
+			         WHERE GNRL_BID_AT = 'N'
+			             AND ORPR_ERA_YM LIKE '%'||TO_CHAR(SYSDATE, 'YYYY')||'%'
+			             AND DEPT_NO  NOT IN (SELECT DEPT_NO 
+		                                                   FROM TEOP_ARACDEMA 
+		                                                 WHERE PRCURE_OVSEA_AREA_CD IN ('A10001', 'A10002', 'A10003', 'A10004', 'A10005', 'A10006', 'A10007')
+		                                                     AND DELETE_AT = 'N'
+						                                     AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN VALID_BEGIN_DE AND VALID_END_DE
+		                                                 ))
+
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 부서별공고 목록
+     * 2. 처리내용 : 부서별공고 목록
+     *  	
+     * </pre>
+     * @Query ID : selectDeptAcctoPblancList
+     * @date : 2015. 3. 26.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 3. 26.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectDeptAcctoPblancList" resultType="dataEntity">
+		SELECT ROWNUM RN
+				  ,T.*
+		FROM ( 
+					SELECT A.PBLANC_NO 
+						     , A.PBLANC_ODR
+						     , A.BID_NM
+						     , B.PBLANC_DT
+					   FROM TEBI_BIPLMA A, TEBI_BITI B
+					 WHERE A.PBLANC_NO = B.PBLANC_NO
+					     AND A.PBLANC_ODR = B.PBLANC_ODR
+					     AND A.PRCURE_BSNS_SE_CD = 'ABID'
+					     AND A.PBLANC_NO != 'P2999-99999'
+					     AND NVL(A.DELETE_AT, 'N') = 'N'
+					     AND A.BID_PROGRS_STTUS_CD IN ('PF20', 'PF30', 'PF50') 
+					     AND A.BID_CLIENT_DEPT_NO IN (SELECT DEPT_NO 
+					                                                   FROM TEOP_ARACDEMA 
+					                                                 WHERE PRCURE_OVSEA_AREA_CD = #{P_PRCURE_OVSEA_AREA_CD}
+					                                                     AND DELETE_AT = 'N'
+						                                     			 AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN VALID_BEGIN_DE AND VALID_END_DE)
+					  ORDER BY B.PBLANC_DT DESC, A.PBLANC_NO DESC, A.PBLANC_ODR DESC
+				) T
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 부서별 발주계획 목록
+     * 2. 처리내용 : 부서별 발주계획 목록
+     *  	
+     * </pre>
+     * @Query ID : selectDeptAcctoOrderPlanList
+     * @date : 2015. 3. 26.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 3. 26.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectDeptAcctoOrderPlanList" resultType="dataEntity">
+		SELECT ROWNUM RN
+				  ,T.*
+		FROM ( 
+					SELECT YEORPL.ORPL_NO
+						     , YEORPL.RECIPCONTY_NM
+						     , NVL(BUMA.KOREAN_BSNS_NM,YEORPL.BSNS_NM) AS BSNS_NM
+						     , YEORPL.ORPR_ERA_YM
+						     , YEORPL.REGIST_DT
+					   FROM TEBI_YEORPL YEORPL
+					   			,TIPJ_BUMA BUMA
+					 WHERE YEORPL.BSNS_NO = BUMA.BSNS_NO(+)
+					 	 AND	GNRL_BID_AT = 'N'
+					 	 AND ORPR_ERA_YM LIKE '%'||TO_CHAR(SYSDATE, 'YYYY')||'%'
+					     AND DEPT_NO IN (SELECT DEPT_NO 
+								                   FROM TEOP_ARACDEMA 
+								                 WHERE PRCURE_OVSEA_AREA_CD = #{P_PRCURE_OVSEA_AREA_CD}
+								                     AND DELETE_AT = 'N'
+						                             AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN VALID_BEGIN_DE AND VALID_END_DE)
+					 ORDER BY YEORPL.ORPR_ERA_YM DESC, YEORPL.REGIST_DT DESC, YEORPL.ORPL_NO DESC								                 
+				) T								                   
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 부서별 일반 공고 목록
+     * 2. 처리내용 : 부서별 일반 공고 목록
+     *  	
+     * </pre>
+     * @Query ID : selectDeptAcctoGnrlPblancList
+     * @date : 2015. 3. 26.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 3. 26.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectDeptAcctoGnrlPblancList" resultType="dataEntity">
+		SELECT ROWNUM RN
+				  ,T.*
+		FROM (  
+					SELECT A.PBLANC_NO
+						     , A.PBLANC_ODR
+						     , A.BID_NM
+						     , B.PBLANC_DT
+					   FROM TEBI_BIPLMA A, TEBI_BITI B
+					 WHERE A.PBLANC_NO = B.PBLANC_NO
+					     AND A.PBLANC_ODR = B.PBLANC_ODR
+						 AND A.PRCURE_BSNS_SE_CD = 'GBID'
+						 AND A.PBLANC_NO != 'P2999-99999'
+						 AND NVL(A.DELETE_AT, 'N') = 'N'
+						 AND A.BID_PROGRS_STTUS_CD IN ('PF20', 'PF30', 'PF50')
+				  	 ORDER BY B.PBLANC_DT DESC, A.PBLANC_NO DESC, A.PBLANC_ODR DESC
+				) T
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 부서별 일반 발주계획 목록
+     * 2. 처리내용 : 부서별 일반 발주계획 목록
+     *  	
+     * </pre>
+     * @Query ID : selectDeptAcctoGnrlOrderPlanList
+     * @date : 2015. 3. 26.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 3. 26.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectDeptAcctoGnrlOrderPlanList" resultType="dataEntity">
+		SELECT ROWNUM RN
+				  ,T.*
+		FROM ( 
+					SELECT YEORPL.ORPL_NO
+						     , YEORPL.RECIPCONTY_NM
+						     , NVL(BUMA.KOREAN_BSNS_NM,YEORPL.BSNS_NM) AS BSNS_NM
+						     , YEORPL.ORPR_ERA_YM
+						     , YEORPL.REGIST_DT
+					   FROM TEBI_YEORPL YEORPL
+					   			,TIPJ_BUMA BUMA
+					 WHERE YEORPL.BSNS_NO = BUMA.BSNS_NO(+)
+			         	 AND GNRL_BID_AT = 'Y'
+			             AND ORPR_ERA_YM LIKE '%'||TO_CHAR(SYSDATE, 'YYYY')||'%'
+			         ORDER BY YEORPL.ORPR_ERA_YM DESC, YEORPL.REGIST_DT DESC, YEORPL.ORPL_NO DESC
+				) T
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 부서별 기타 공고 목록
+     * 2. 처리내용 : 부서별 기타 공고 목록
+     *  	
+     * </pre>
+     * @Query ID : selectDeptAcctoEtcPblancList
+     * @date : 2015. 3. 26.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 3. 26.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectDeptAcctoEtcPblancList" resultType="dataEntity">
+		SELECT ROWNUM RN
+				  ,T.*
+		FROM (  
+					SELECT A.PBLANC_NO
+						     , A.PBLANC_ODR
+						     , A.BID_NM
+						     , B.PBLANC_DT
+					   FROM TEBI_BIPLMA A, TEBI_BITI B
+					 WHERE A.PBLANC_NO = B.PBLANC_NO
+					     AND A.PBLANC_ODR = B.PBLANC_ODR
+					     AND A.PBLANC_NO != 'P2999-99999'
+			             AND A.PRCURE_BSNS_SE_CD = 'ABID'
+			             AND NVL(DELETE_AT, 'N') = 'N'
+			   			 AND BID_PROGRS_STTUS_CD IN ('PF20', 'PF30', 'PF50')
+						 AND A.BID_CLIENT_DEPT_NO NOT IN (SELECT DEPT_NO 
+							                                                  FROM TEOP_ARACDEMA 
+							                                                 WHERE PRCURE_OVSEA_AREA_CD IN ('A10001', 'A10002', 'A10003', 'A10004', 'A10005', 'A10006', 'A10007')
+							                                                      AND DELETE_AT = 'N'
+						                                     			 		  AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN VALID_BEGIN_DE AND VALID_END_DE)
+					ORDER BY B.PBLANC_DT DESC, A.PBLANC_NO DESC, A.PBLANC_ODR DESC
+				) T							                                                
+		
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 부서별 기타 발주계획 목록
+     * 2. 처리내용 : 부서별 기타 발주계획 목록
+     *  	
+     * </pre>
+     * @Query ID : selectDeptAcctoEtcOrderPlanList
+     * @date : 2015. 3. 26.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 3. 26.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectDeptAcctoEtcOrderPlanList" resultType="dataEntity">
+		SELECT ROWNUM RN
+				  ,T.*
+		FROM ( 
+					SELECT YEORPL.ORPL_NO
+						     , YEORPL.RECIPCONTY_NM
+						     , NVL(BUMA.KOREAN_BSNS_NM,YEORPL.BSNS_NM) AS BSNS_NM
+						     , YEORPL.ORPR_ERA_YM
+						     , YEORPL.REGIST_DT
+					   FROM TEBI_YEORPL YEORPL
+					   			,TIPJ_BUMA BUMA
+					 WHERE YEORPL.BSNS_NO = BUMA.BSNS_NO(+)
+			         	 AND GNRL_BID_AT = 'N'
+			         	 AND ORPR_ERA_YM LIKE '%'||TO_CHAR(SYSDATE, 'YYYY')||'%'
+			             AND DEPT_NO  NOT IN (SELECT DEPT_NO 
+			                                               FROM TEOP_ARACDEMA 
+			                                             WHERE PRCURE_OVSEA_AREA_CD IN ('A10001', 'A10002', 'A10003', 'A10004', 'A10005', 'A10006', 'A10007')
+			                                                 AND DELETE_AT = 'N'
+						                                     AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN VALID_BEGIN_DE AND VALID_END_DE)
+			         ORDER BY YEORPL.ORPR_ERA_YM DESC, YEORPL.REGIST_DT DESC, YEORPL.ORPL_NO DESC
+				) T
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 달력 사전공고 목록
+     * 2. 처리내용 : 달력 사전공고 목록
+     *  	
+     * </pre>
+     * @Query ID : selectCldrBeffatPblancList
+     * @date : 2015. 3. 30.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 3. 30.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectCldrBeffatPblancList" resultType="dataEntity">
+		SELECT SUBSTR(BEFFAT_PBLANC_END_DE, 7,2) AS BEFFAT_PBLANC_DATE
+		   FROM TEBI_BEPU
+		 WHERE NVL(DELETE_AT, 'N') = 'N'
+		     AND SUBSTR(BEFFAT_PBLANC_END_DE, 1,6) = #{P_YEAR_MONTH}
+		 GROUP BY SUBSTR(BEFFAT_PBLANC_END_DE, 7,2)
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 달력 입찰공고 목록
+     * 2. 처리내용 : 달력 입찰공고 목록
+     *  	
+     * </pre>
+     * @Query ID : selectCldrBidPblancList
+     * @date : 2015. 3. 30.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 3. 30.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectCldrBidPblancList" resultType="dataEntity">
+		SELECT SUBSTR(B.PBLANC_DT, 7,2) AS BID_PBLANC_DATE
+		   FROM TEBI_BIPLMA A, TEBI_BITI B
+		 WHERE A.PBLANC_NO = B.PBLANC_NO
+		     AND A.PBLANC_ODR = B.PBLANC_ODR
+		     AND A.PBLANC_NO != 'P2999-99999'
+		     AND NVL(A.DELETE_AT, 'N') = 'N'
+		     AND A.BID_PROGRS_STTUS_CD IN ('PF20', 'PF30', 'PF50')
+		     AND SUBSTR(B.PBLANC_DT, 1,6) = #{P_YEAR_MONTH}
+		 GROUP BY SUBSTR(B.PBLANC_DT, 7,2)
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 달력 입찰설명회 목록
+     * 2. 처리내용 : 달력 입찰설명회 목록
+     *  	
+     * </pre>
+     * @Query ID : selectCldrBidDcPeoList
+     * @date : 2015. 3. 30.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 3. 30.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectCldrBidDcPeoList" resultType="dataEntity">
+		SELECT SUBSTR(B.BID_DC_PEO_DT, 7,2) AS BID_DC_PEO_DATE
+		   FROM TEBI_BIPLMA A, TEBI_BITI B
+		 WHERE A.PBLANC_NO = B.PBLANC_NO
+		     AND A.PBLANC_ODR = B.PBLANC_ODR
+		     AND A.PBLANC_NO != 'P2999-99999'
+		     AND NVL(A.DELETE_AT, 'N') = 'N'
+		     AND A.BID_PROGRS_STTUS_CD IN ('PF20', 'PF30', 'PF50')
+		     AND SUBSTR(B.BID_DC_PEO_DT, 1,6) = #{P_YEAR_MONTH}
+		 GROUP BY SUBSTR(B.BID_DC_PEO_DT, 7,2)
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 달력 참가마감 목록
+     * 2. 처리내용 : 달력 참가마감 목록
+     *  	
+     * </pre>
+     * @Query ID : selectCldrPareEndList
+     * @date : 2015. 3. 30.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 3. 30.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectCldrPareEndList" resultType="dataEntity">
+		SELECT SUBSTR(B.PARE_END_DT, 7,2) AS PARE_END_DATE
+		   FROM TEBI_BIPLMA A, TEBI_BITI B
+		 WHERE A.PBLANC_NO = B.PBLANC_NO
+		     AND A.PBLANC_ODR = B.PBLANC_ODR
+		     AND A.PBLANC_NO != 'P2999-99999'
+		     AND NVL(A.DELETE_AT, 'N') = 'N'
+		     AND A.BID_PROGRS_STTUS_CD IN ('PF20', 'PF30', 'PF50')
+		     AND SUBSTR(B.PARE_END_DT, 1,6) = #{P_YEAR_MONTH}
+		 GROUP BY SUBSTR(B.PARE_END_DT, 7,2)
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 달력 입찰서제출 목록
+     * 2. 처리내용 : 달력 입찰서제출 목록
+     *  	
+     * </pre>
+     * @Query ID : selectCldrBidDocsuList
+     * @date : 2015. 3. 30.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 3. 30.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectCldrBidDocsuList" resultType="dataEntity">
+		SELECT SUBSTR(B.BIPA_PRESENTN_END_DT, 7,2) AS BID_DOCSU_DATE
+		   FROM TEBI_BIPLMA A, TEBI_BITI B
+		 WHERE A.PBLANC_NO = B.PBLANC_NO
+		     AND A.PBLANC_ODR = B.PBLANC_ODR
+		     AND A.PBLANC_NO != 'P2999-99999'
+		     AND NVL(A.DELETE_AT, 'N') = 'N'
+		     AND A.BID_PROGRS_STTUS_CD IN ('PF20', 'PF30', 'PF50')
+		     AND SUBSTR(B.BIPA_PRESENTN_END_DT, 1,6) = #{P_YEAR_MONTH}
+		 GROUP BY SUBSTR(B.BIPA_PRESENTN_END_DT, 7,2)
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 달력 개찰 목록
+     * 2. 처리내용 : 달력 개찰 목록
+     *  	
+     * </pre>
+     * @Query ID : selectCldrOpengList
+     * @date : 2015. 3. 30.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 3. 30.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectCldrOpengList" resultType="dataEntity">
+		SELECT SUBSTR(B.OPENG_DT, 7,2) AS OPENG_DATE
+		   FROM TEBI_BIPLMA A, TEBI_BITI B
+		 WHERE A.PBLANC_NO = B.PBLANC_NO
+		     AND A.PBLANC_ODR = B.PBLANC_ODR
+		     AND A.PBLANC_NO != 'P2999-99999'
+		     AND NVL(A.DELETE_AT, 'N') = 'N'
+		     AND A.BID_PROGRS_STTUS_CD IN ('PF20', 'PF30', 'PF50')
+		     AND SUBSTR(B.OPENG_DT, 1,6) = #{P_YEAR_MONTH}
+		 GROUP BY SUBSTR(B.OPENG_DT, 7,2)
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : TODO 목록
+     * 2. 처리내용 : TODO 목록
+     *  	
+     * </pre>
+     * @Query ID : selectToDoList
+     * @date : 2015. 3. 31.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 3. 31.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectToDoList" resultType="dataEntity">
+		  SELECT '1' AS GUBUN_SN 
+	                 , A.PBLANC_NO AS TODO_NO
+	                 , A.PBLANC_ODR AS TODO_ODR
+	                 , A.BID_NM AS TODO_NM
+	                 , A.BID_PROGRS_STTUS_CD AS TODO_STTUS_CD
+	         FROM TEBI_BIPLMA A, TEBI_TEEVPL B
+	       WHERE A.PBLANC_NO = B.PBLANC_NO
+	           AND A.PBLANC_ODR = B.PBLANC_ODR
+	           AND A.PBLANC_NO != 'P2999-99999'
+	           AND NVL(A.DELETE_AT, 'N') = 'N'
+	           AND A.BID_PROGRS_STTUS_CD IN ('PF20', 'PF30', 'PF50')
+		      AND SUBSTR(B.TCHQVLN_DE, 1, 8) = #{P_TODAY}
+		UNION ALL
+		SELECT '2' AS GUBUN_SN
+		<include refid="toDoList"/>
+		   AND SUBSTR(B.PBLANC_DT, 1, 8) = #{P_TODAY}
+		UNION ALL
+		SELECT '3' AS GUBUN_SN
+		<include refid="toDoList"/>
+		   AND SUBSTR(B.BID_DC_PEO_DT, 1, 8) = #{P_TODAY}
+		UNION ALL
+		SELECT '4' AS GUBUN_SN
+		<include refid="toDoList"/>
+		   AND SUBSTR(B.PARE_END_DT, 1, 8) = #{P_TODAY}
+		UNION ALL
+		SELECT '5' AS GUBUN_SN
+		<include refid="toDoList"/>
+		   AND SUBSTR(B.BIPA_PRESENTN_END_DT, 1, 8) = #{P_TODAY}
+		UNION ALL
+		SELECT '6' AS GUBUN_SN
+		<include refid="toDoList"/>
+		   AND SUBSTR(B.OPENG_DT, 1, 8) = #{P_TODAY}
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : TODO 목록
+     * 2. 처리내용 : TODO 목록
+     *  	
+     * </pre>
+     * @Query ID : toDoList
+     * @date : 2015. 3. 31.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 3. 31.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	 <sql id="toDoList">
+     			, A.PBLANC_NO AS TODO_NO
+		     	, A.PBLANC_ODR AS TODO_ODR
+		     	, A.BID_NM AS TODO_NM
+		     	, A.BID_PROGRS_STTUS_CD AS TODO_STTUS_CD
+		 FROM TEBI_BIPLMA A, TEBI_BITI B
+	   WHERE A.PBLANC_NO = B.PBLANC_NO
+		   AND A.PBLANC_ODR = B.PBLANC_ODR
+		   AND A.PBLANC_NO != 'P2999-99999'
+		   AND NVL(A.DELETE_AT, 'N') = 'N'
+		   AND A.BID_PROGRS_STTUS_CD IN ('PF20', 'PF30', 'PF50')
+     </sql>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 메인공지 목록
+     * 2. 처리내용 : 메인공지 목록
+     *  	
+     * </pre>
+     * @Query ID : selectMainNoticeList
+     * @date : 2015. 5. 28.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 5. 28.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectMainNoticeList" resultType="dataEntity">
+		SELECT * 
+		  FROM (SELECT NTT_SN
+							 , SJ_NM
+						     , REGIST_DT
+					   FROM KOICA.TPBB_UNBUNO
+					 WHERE NVL(DELETE_AT,'N') = 'N'
+			             AND ELPR_BSNO = #{P_ELPR_BSNO}
+			          ORDER BY REGIST_DT DESC
+			            ) T1
+		  WHERE ROWNUM <![CDATA[ < ]]> #{P_NOTICE_CNT}
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : db 시간
+     * 2. 처리내용 : db 시간
+     *  	
+     * </pre>
+     * @Query ID : selectDbTime
+     * @date : 2015. 08. 26.
+     * @author : 은우소프트 전상훈
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 08. 26.       은우소프트 전상훈              최초 작성 
+     *  =======================================================   
+     -->
+	
+	<select id="selectDbTime" resultType="String">
+		SELECT 	TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS') AS SERVER_TIME
+		FROM		DUAL
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 메인 입찰공고 TAB 목록
+     * 2. 처리내용 : 메인 입찰공고 TAB 목록
+     *  	
+     * </pre>
+     * @Query ID : selectMainPblancTabList
+     * @date : 2016. 02. 24.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2016. 02. 24.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectMainPblancTabList" resultType="dataEntity">
+		SELECT * 
+		  FROM (SELECT BIPLMA.PBLANC_NO
+						     , BIPLMA.PBLANC_ODR
+						     , BIPLMA.BID_NM
+						     , BITI.PBLANC_DT
+						     , BIPLMA.BID_PROGRS_STTUS_CD
+					  FROM TEBI_BIPLMA BIPLMA
+					     	, TEBI_BITI BITI
+					 WHERE BIPLMA.PBLANC_NO = BITI.PBLANC_NO
+					     AND BIPLMA.PBLANC_ODR = BITI.PBLANC_ODR
+					     AND BIPLMA.BID_PROGRS_STTUS_CD = #{P_BID_PROGRS_STTUS_CD}
+					     AND BIPLMA.DELETE_AT = 'N'
+					     AND BIPLMA.PBLANC_NO != 'P2999-99999' 
+					 ORDER BY BIPLMA.PBLANC_NO DESC
+			            ) T1
+		  WHERE ROWNUM <![CDATA[ < ]]> #{P_NOTICE_CNT}
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 메인 사전공고 TAB 목록
+     * 2. 처리내용 : 메인 사전공고 TAB 목록
+     *  	
+     * </pre>
+     * @Query ID : selectMainBeffatPblancTabList
+     * @date : 2016. 02. 24.
+     * @author : 은우소프트 김봉수
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2016. 02. 24.       은우소프트 김봉수              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectMainBeffatPblancTabList" resultType="dataEntity">
+		SELECT * 
+		  FROM (SELECT BEFFAT_PBLANC_NO
+						     , BEFFAT_PBLANC_NM
+						     , BEFFAT_PBLANC_BEGIN_DE
+					  FROM TEBI_BEPU
+					 WHERE DELETE_AT = 'N'
+					     AND TO_CHAR(SYSDATE,'YYYYMMDD') BETWEEN BEFFAT_PBLANC_BEGIN_DE AND BEFFAT_PBLANC_END_DE
+					     AND BID_PROGRS_STTUS_CD = #{P_BID_PROGRS_STTUS_CD}
+					 ORDER BY BEFFAT_PBLANC_BEGIN_DE DESC
+			            ) T1
+		  WHERE ROWNUM <![CDATA[ < ]]> #{P_NOTICE_CNT}
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 달력 기술평가 목록
+     * 2. 처리내용 : 달력 기술평가 목록
+     *  	
+     * </pre>
+     * @Query ID : selectCldrTchqvlnList
+     * @date : 2016. 12. 13.
+     * @author : KOICA 김경희
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2016. 12. 13.       KOICA 김경희            최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectCldrTchqvlnList" resultType="dataEntity">
+	   SELECT SUBSTR(TCHQVLN_DE, 7,2) AS TCHQVLN_DATE
+	     FROM TEBI_TEEVPL
+	   WHERE NVL(DELETE_AT, 'N') = 'N'
+	       AND SUBSTR(TCHQVLN_DE, 1,6) = #{P_YEAR_MONTH}
+  GROUP BY SUBSTR(TCHQVLN_DE, 7,2)
+	</select>
+</mapper>

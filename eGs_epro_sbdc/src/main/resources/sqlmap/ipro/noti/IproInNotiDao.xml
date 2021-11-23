@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+ --> 
+ <mapper namespace="com.eunwoosoft.ipro.noti.dao.IproInNotiDao">
+
+	 <select id="inNoticeBoardListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/> 
+		SELECT * FROM (
+			<include refid="selectInNotiBoardList"/>
+			<include refid="selectInNotiBoardWhere"/>
+			ORDER BY REGIST_DT DESC
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>   
+	</select>
+ 
+	<select id="inNoticeBoardListTotCnt" resultType="int"> 
+		SELECT COUNT(1) FROM ( 
+			<include refid="selectInNotiBoardList"/>
+			<include refid="selectInNotiBoardWhere"/>
+			ORDER BY REGIST_DT DESC
+		) T1
+		WHERE 1 = 1
+	</select> 
+	
+ <sql id="selectInNotiBoardList">
+ 	SELECT    
+				  A.NTT_SN
+				, A.ELPR_BSNO
+				, A.NOTICE_AT
+				, A.SJ_NM
+				, A.CN
+				, A.NOTICE_POPUP_PERM_AT
+				, A.NOTICE_BEGIN_DT
+				, A.NOTICE_END_DT
+				, A.ATCHMNFL_GROUP_NO
+				, A.REGISTER_ID
+				, A.REGIST_DT
+				, A.UPDUSR_ID
+				, A.UPDT_DT
+				, A.DELETE_AT
+				, A.MURE_CD
+				, A.INQIRE_CO
+				, A.USE_AT
+				, A.INNER_BSNO
+				, A.PRCURE_SE_CD
+				, (SELECT  COUNT(*)
+					FROM TMDM_ATFI
+					WHERE ATCHMNFL_GROUP_NO = A.ATCHMNFL_GROUP_NO
+					AND	NVL(DELETE_AT,'N') = 'N'
+			     ) AS FILE_CNT
+				, (SELECT EMPL_NM FROM TMUR_KOEM B WHERE 1=1 AND A.REGISTER_ID = B.EMPL_NO ) AS REGISTER_NM
+				, F_CDVAL_INQIRE('C00001', A.PRCURE_SE_CD) AS PRCURE_SE_NM
+		FROM TEOP_UNBUNO A
+	</sql>
+	
+	<sql id="selectInNotiBoardWhere">
+		<where>
+		 	1=1
+		 	AND  ELPR_BSNO = #{P_ELPR_BSNO , jdbcType=VARCHAR}  
+		 	AND DELETE_AT =  'N' 
+		 	<if test='P_SJ_NM_S != null and P_SJ_NM_S != "" '> 
+				AND A.SJ_NM LIKE '%'|| #{P_SJ_NM_S} || '%'  
+			</if>
+		</where>
+	</sql>
+
+	<resultMap id="inNoticeBoardDetailDataEntity" type="dataEntity">
+    	<result property="CN" column="CN" jdbcType="CLOB" javaType="java.lang.String" />
+	</resultMap>	
+	<select id="inNoticeBoardDetail" resultMap="inNoticeBoardDetailDataEntity">
+	SELECT      
+				  A.NTT_SN
+				, A.ELPR_BSNO
+				, A.NOTICE_AT
+				, A.SJ_NM
+				, A.CN
+				, A.NOTICE_POPUP_PERM_AT
+				, A.NOTICE_BEGIN_DT
+				, A.NOTICE_END_DT
+				, A.ATCHMNFL_GROUP_NO
+				, A.REGISTER_ID
+				, A.REGIST_DT
+				, A.UPDUSR_ID
+				, A.UPDT_DT 
+				, A.DELETE_AT
+				, A.MURE_CD
+				, A.INQIRE_CO
+				, A.USE_AT
+				, A.INNER_BSNO
+				, A.PRCURE_SE_CD
+				, (SELECT  COUNT(*)
+					FROM TMDM_ATFI
+					WHERE ATCHMNFL_GROUP_NO = A.ATCHMNFL_GROUP_NO
+					AND	NVL(DELETE_AT,'N') = 'N'
+			     ) AS FILE_CNT
+				, (SELECT EMPL_NM FROM TMUR_KOEM B WHERE 1=1 AND A.REGISTER_ID = B.EMPL_NO ) AS REGISTER_NM
+				, (SELECT EMAIL_ADRES FROM TMUR_KOEM B WHERE 1=1 AND A.REGISTER_ID = B.EMPL_NO ) AS EMAIL_ADRES	
+				, F_CDVAL_INQIRE('C00001', A.PRCURE_SE_CD) AS PRCURE_SE_NM
+		FROM TEOP_UNBUNO A
+		WHERE 1=1
+		AND A.NTT_SN = #{P_NTT_SN, jdbcType=VARCHAR}
+	</select> 
+	
+	<!-- 
+		공통 게시판 등록
+	 -->
+	 	<insert id="inNoticeBoardRegist" useGeneratedKeys="true" keyProperty="P_NTT_SN">
+		<selectKey resultType="int" keyProperty="P_NTT_SN" order="BEFORE">
+			SELECT 	NVL(MAX(TO_NUMBER(NTT_SN)),0)+1 
+			FROM 	TEOP_UNBUNO
+		</selectKey>
+		INSERT INTO 
+		    TEOP_UNBUNO(
+		          NTT_SN
+		        , ELPR_BSNO
+		        , NOTICE_AT
+		        , SJ_NM
+		        , CN
+		        , NOTICE_POPUP_PERM_AT
+		        <if test='P_NOTICE_BEGIN_DT != null and P_NOTICE_BEGIN_DT != "" '>
+		        , NOTICE_BEGIN_DT
+		        </if>
+		        <if test='P_NOTICE_END_DT != null and P_NOTICE_END_DT != "" '>
+		        , NOTICE_END_DT
+		        </if>
+		        , MURE_CD
+		        , ATCHMNFL_GROUP_NO
+		        , REGISTER_ID
+		        , REGIST_DT
+		        , UPDUSR_ID
+				, UPDT_DT
+		        , DELETE_AT
+		        )
+		   VALUES(
+		          #{P_NTT_SN, jdbcType=VARCHAR}
+		        , #{P_ELPR_BSNO , jdbcType=VARCHAR}
+		        , NVL(#{P_NOTICE_AT, jdbcType=VARCHAR, javaType=String}, 'N')
+		        , #{P_SJ_NM}
+		        , #{P_CN}
+		        , NVL(#{P_NOTICE_POPUP_PERM_AT, jdbcType=VARCHAR, javaType=String}, 'N')
+		        <if test='P_NOTICE_BEGIN_DT != null and P_NOTICE_BEGIN_DT != "" '>
+		        , REPLACE(#{P_NOTICE_BEGIN_DT, jdbcType=VARCHAR, javaType=String}, '-', '') || '000000'
+		        </if> 
+		        <if test='P_NOTICE_END_DT != null and P_NOTICE_END_DT != "" '>
+		        , REPLACE(#{P_NOTICE_END_DT, jdbcType=VARCHAR, javaType=String}, '-', '') || '000000'
+		        </if> 
+		        , NVL(#{P_MURE_CD, jdbcType=VARCHAR, javaType=String}, 'N')
+		        , #{atchFileGroupNo}
+		        , #{P_USER_ID}
+		        , #{P_REGIST_DT} 
+		        , #{P_USER_ID}
+		        , #{P_REGIST_DT}
+		        , 'N'
+		         )  
+	</insert>
+	 
+	<update id="inNoticeBoardUpdate">
+		UPDATE TEOP_UNBUNO SET
+		        NOTICE_POPUP_PERM_AT = NVL(#{P_NOTICE_POPUP_PERM_AT, jdbcType=VARCHAR, javaType=String}, 'N')
+		        <if test='P_NOTICE_BEGIN_DT != null and P_NOTICE_BEGIN_DT != "" '>
+		        , NOTICE_BEGIN_DT = REPLACE(#{P_NOTICE_BEGIN_DT, jdbcType=VARCHAR, javaType=String}, '-', '') || '000000'
+		        </if> 
+		        <if test='P_NOTICE_END_DT != null and P_NOTICE_END_DT != "" '>
+		        , NOTICE_END_DT = REPLACE(#{P_NOTICE_END_DT, jdbcType=VARCHAR, javaType=String}, '-', '') || '000000'
+		        </if>
+		        , MURE_CD = NVL(#{P_MURE_CD, jdbcType=VARCHAR, javaType=String}, 'N')
+		        , SJ_NM = #{P_SJ_NM}
+		        , CN = #{P_CN}
+		        , ATCHMNFL_GROUP_NO = #{P_ATCHMNFL_GROUP_NO, jdbcType=VARCHAR, javaType=String}
+		        , UPDUSR_ID = #{P_USER_ID}
+		        , UPDT_DT = #{P_UPDT_DT}   
+	    WHERE NTT_SN = #{P_NTT_SN}        
+	</update>
+	
+	<update id="inNoticeBoardDelete">
+		UPDATE TEOP_UNBUNO SET 
+			DELETE_AT = 'Y'  
+		  , UPDUSR_ID = #{P_USER_ID} 
+		  , UPDT_DT = #{P_UPDT_DT}
+		  WHERE	NTT_SN = #{P_NTT_SN}
+	</update>
+	
+<!-- 
+	<select id="noticeBoardDetail" resultType="dataEntity">
+	SELECT      
+				  A.NTT_SN
+				, A.ELPR_BSNO
+				, A.NOTICE_AT
+				, A.SJ_NM
+				, A.CN
+				, A.NOTICE_POPUP_PERM_AT
+				, A.NOTICE_BEGIN_DT
+				, A.NOTICE_END_DT
+				, A.ATCHMNFL_GROUP_NO
+				, A.REGISTER_ID
+				, A.REGIST_DT
+				, A.UPDUSR_ID
+				, A.UPDT_DT 
+				, A.DELETE_AT
+				, A.MURE_CD
+				, A.INQIRE_CO
+				, A.USE_AT
+				, A.INNER_BSNO
+				, A.PRCURE_SE_CD
+				, (SELECT  COUNT(*)
+					FROM TMDM_ATFI
+					WHERE ATCHMNFL_GROUP_NO = A.ATCHMNFL_GROUP_NO
+					AND	NVL(DELETE_AT,'N') = 'N'
+			     ) AS FILE_CNT
+				, (SELECT EMPL_NM FROM TMUR_KOEM B WHERE 1=1 AND A.REGISTER_ID = B.EMPL_NO ) AS REGISTER_NM
+				, (SELECT EMAIL_ADRES FROM TMUR_KOEM B WHERE 1=1 AND A.REGISTER_ID = B.EMPL_NO ) AS EMAIL_ADRES	
+				, F_CDVAL_INQIRE('C00001', A.PRCURE_SE_CD) AS PRCURE_SE_NM
+		FROM TEOP_UNBUNO A
+		WHERE 1=1
+		AND A.NTT_SN = #{P_NTT_SN, jdbcType=VARCHAR}
+	</select> 
+	 -->
+ </mapper> 

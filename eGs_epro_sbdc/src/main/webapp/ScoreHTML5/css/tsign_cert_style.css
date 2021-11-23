@@ -1,0 +1,198 @@
+@charset "utf-8";
+
+
+/************************************************
+ 인증서 선택창 스타일 정의
+ #tsign__cert-wrapper 클래스 하위
+ ************************************************/
+
+/* 전체 기본 스타일 정의 */
+.tsign__cert-wrapper * {margin:0; padding:0;font-size:13px;text-align:left;}
+.tsign__cert-wrapper caption {visibility:hidden;width:0;height:0;line-height:0;font-size:0;}
+.tsign__cert-wrapper img {border:none;max-width:100%;}
+.tsign__cert-wrapper ul,
+.tsign__cert-wrapper ol,
+.tsign__cert-wrapper li {list-style:none;margin:0; padding:0;}
+.tsign__cert-wrapper a {display:inline-block;color:#000;text-decoration:none;-webkit-tap-highlight-color:rgba(0,0,0,0);}
+.tsign__cert-wrapper a:link,
+.tsign__cert-wrapper a:visited,
+.tsign__cert-wrapper a:hover,
+.tsign__cert-wrapper a:active {color:#000;text-decoration:none;outline:none;}
+.tsign__cert-wrapper input,
+.tsign__cert-wrapper button {display:inline-block;vertical-align:middle;background:none;padding:0;color:#000;}
+.tsign__cert-wrapper span {display:inline-block;font-weight: inherit;}
+.tsign__cert-wrapper ::-webkit-input-placeholder {color: #000;} /* Chrome/Opera/Safari */
+.tsign__cert-wrapper ::-moz-placeholder {color: #000;} /* Firefox 19+ */
+.tsign__cert-wrapper :-ms-input-placeholder {color: #000;} /* IE 10+ */
+.tsign__cert-wrapper :-moz-placeholder {color: #000;} /* Firefox 18- */
+
+/* 반투명 배경 포함 */
+.tsignCertBgWrapper {position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,0.4);z-index:1000;}
+
+.tsign__cert-wrapper {box-sizing: border-box; position:absolute;left:50%;top:15%;margin-left:-250px;width: 500px; font-size: 11.5px; color: #000; line-height:1.2; background: #ffffff;font-family: '맑은 고딕',MalgunGothic,'돋움',Dotum,'굴림',Gulim,tahoma,verdana,Apple Gothic,sans-serif;border-radius: 15px!important;z-index:1500; }
+.tsign__cert-wrapper .tsign__cert-area .tsign__stit1 {margin:0; padding: 20px 0 10px; font-size: 14px;color:#000; line-height:1.2;text-align: left;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__stit2 {margin:0; padding: 0 0 10px 0; font-size: 12px;color:#000; line-height:1.2;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-p-style {font-size:12px;color:#000;font-weight:bold;margin:20px 0 0 0;padding:0;text-align:center;}
+
+
+/* 인증서 선택 목록(테이블) */
+.tsign__cert-wrapper .tsign__cert-area {padding: 55px 20px 20px 20px;position:relative;}/* content:'╳'; */
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-header {box-sizing:border-box;position: absolute;left:0;top:0;width:100%; padding: 0 20px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-header h1 {float : left; box-sizing:border-box;display:inline-block;font-size: 24px; color: #000; font-weight: bold; line-height:1.2; margin:0; height: 55px; padding: 10px 0 0 0;border-top:3px solid #337ab7;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-header .tsign__cert-close {position: absolute; right: 20px; top: 13px; width:14px;height:14px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-logo {display: table; box-sizing: border-box; width: 100%; border: 1px solid #ddd; background: #fff; }
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-logo p {display: table-cell; vertical-align: middle; text-align: center; height: 70px; }
+
+/* 인증서 저장 위치 선택 */
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-loc-list:after {content:"";display:block;clear:both;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-loc-list {list-style: none; margin: -4px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-loc-list > li {box-sizing: border-box;float:left; width: 20%; list-style: none; position:relative;padding:4px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-loc-list > li > a {box-sizing: border-box;display: block; color: #000; border: 1px solid #ddd; text-align: center; background: #fff; height:94px;font-size:11px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-loc-list > li > a em {display:block;margin:0 auto;padding-top:70px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-loc-list > li.selected > a {border: 3px solid #515151; background:#e3eff8;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-loc-list > li.selected > ul {display:table;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-loc-list > li.selected > a em {background-position:center 14px;padding-top:68px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-loc-list > li.disabled > a {opacity:0.3;cursor:default;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-loc-list > li > ul {box-sizing: border-box;white-space:nowrap;display:none;position:absolute;left:4px;top:105px;border:3px solid #515151;background:#fff;z-index:1;padding:5px 0;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-loc-list > li > ul:before {content:"";display:block; width:0;height:0;border-top:8px solid none;border-bottom:8px solid #515151;border-right: 8px solid transparent;border-left: 8px solid  transparent;position:absolute;left:35px;top:-8px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-loc-list > li > ul.tsign__loc-ul a {display:block;padding:5px 10px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-loc-list > li > ul.tsign__loc-ul a:hover {background:#e3eff8;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-loc-list > li > ul.tsign__cert-loc-list {width:360px;left:auto;right:4px;padding:0 10px;margin:0;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-loc-list > li > ul.tsign__cert-loc-list:before {left:auto;right:35px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-loc-list > li > ul.tsign__cert-loc-list > li {border:none;width:25%;padding:0;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-loc-list > li > ul.tsign__cert-loc-list > li > a {border:none;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-loc-list > li > ul.ds-none {display:none;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-loc-list > li > img {width:70px;height:90px;}
+
+/* 인증서 선택 영역 */
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-container {border:1px solid #313131;height:140px;overflow-y:auto;background: #ffffff;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-container table {border-collapse: collapse; outline: none; table-layout: fixed; width: 100%; }
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-container table tbody tr {cursor:pointer;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-container table tbody tr td {border:none;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-container table tr td { padding: 0 5px; height:27px; text-align: center;background-color: #fff; color:#515151;font-size: 13px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-container table tr th { padding: 0 5px; height:27px; text-align: center;background-color: #eaeaea; color:#515151;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-container table tr th + th {border-left:1px solid #8a8a8a;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-container table tr td div,
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-container table tr th div {overflow: hidden; white-space: nowrap; text-overflow: ellipsis; word-wrap: normal;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-container table tr td.tsign__gubun {text-align:left;background:#fff; padding-left:25px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-container table tr td.tsign__gubun_renew {text-align:left;background:#fff; padding-left:25px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-container table tr td.tsign__gubun_expired {text-align:left;background:#fff;padding-left:25px;}
+
+.tsign__cert-wrapper .tsign__cert-area .y_resize {position: absolute; top: 0; left: 0; width: 7px; height: 102%; background: transparent; cursor: col-resize; }
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-container table tr.selected td {background-color:#e3eff8;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-container table tr.selected td {font-weight:bold;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-container table tr td.tsign__cert-nocert {background:#e3eff8;line-height:1.4;padding:10px 5px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-mng-btns {border:1px solid #ddd;border-width:0 1px 1px 1px;padding:6px 0 8px;text-align:center;background:#fff;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-mng-btns a {font-size:12px;border:1px solid #c5c5c5;line-height:0;padding:11px 10px;}
+
+/* 인증서 암호 입력 */
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-pw-input {margin: 0 0 10px 0; border: 1px solid #ddd; background: #fff; padding: 15px 20px; }
+.tsign__cert-wrapper .tsign__cert-area .tsign__pw-input {position: relative; }
+.tsign__cert-wrapper .tsign__cert-area .tsign__pw-input input {box-sizing: border-box; font-size:12px; height: 35px; border: 2px solid #175f95; width: 100%; padding: 0 50px 0 12px; background:#fff; color:#000;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__pw-input a {position: absolute; right: 2px; top: 2px; background: #e3eff8; width: 40px; height: 31px;text-indent:-9999px;}
+
+/* 하단 버튼영역 */
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-buttons {text-align: center; padding: 20px 0 0 0; }
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-buttons .tsign__btn-blue {width: 140px; line-height:0; padding:18px 0; font-size: 14px; font-weight: bold; text-align: center; border: 1px solid #9a9a9a; background: #175f95; color: #fff;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-buttons .tsign__btn-gray {width: 140px; line-height:0; padding:18px 0; font-size: 14px; font-weight: bold; text-align: center; border: 1px solid #9a9a9a; background: #fff;}
+
+/* 인증서 가져오기/상세정보 등 */
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-main {border:1px solid #ddd;background:#fff;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-main li {min-height:100px;padding-left:120px;position:relative;cursor:pointer;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-main li + li {border-top:1px solid #ddd;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-main li:hover {background-color:#dae2fa;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-main dt {font-size:14px;font-weight:bold;color:#000;padding:15px 0 5px;margin-bottom:5px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-main dd {font-size:12px;color:#000;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-main dd a {width:36px;height:36px;position:absolute;right:20px;bottom:6px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-export-main {border:1px solid #ddd;background:#fff;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-export-main li {min-height:100px;padding-left:120px;position:relative;cursor:pointer;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-export-main li + li {border-top:1px solid #ddd;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-export-main li:hover {background-color:#dae2fa;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-export-main dt {font-size:14px;font-weight:bold;color:#000;padding:15px 0 5px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-export-main dd {font-size:12px;color:#000;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-export-main dd a {width:36px;height:36px;position:absolute;right:20px;bottom:6px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-device {border:1px solid #ddd;background:#fff;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-device .tsign__cert-import-list {font-size:12px;padding:25px 0 20px 145px;line-height:24px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-device .tsign__cert-import-list li + li {margin-top:15px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-device .tsign__cert-import-list a {font-size:12px;font-weight:bold;line-height:0;padding:15px 12px;color:#fff;background:#175f95;margin-top:10px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-device .tsign__cert-import-list .tsign__relayManualURL {font-size:12px;font-weight:bold;background-color:transparent;color:#0600fa;margin:0px;padding:0px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-device .tsign__cert-import-number {padding:13px;background:#e5ecff;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-device .tsign__cert-import-number dt {display:inline-block;font-size:11px;font-weight:bold;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-device .tsign__cert-import-number dd {display:inline-block;padding-left:10px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-device .tsign__cert-import-number dd input[type=text] {width:100px;height:36px;border:1px solid #ddd;background:#fff;text-align:center;font-size:18px;font-weight:bold;color:#000;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-export-device {border:1px solid #ddd;background:#fff;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-export-device .tsign__cert-export-list {font-size:11px;padding:25px 0 20px 145px;line-height:1.4;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-export-device .tsign__cert-export-list li + li {margin-top:15px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-export-device .tsign__cert-export-list a {font-size:11px;font-weight:bold;line-height:0;padding:15px 12px;color:#fff;background:#175f95;margin-top:10px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-export-device .tsign__cert-export-number {padding:13px;background:#e5ecff;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-export-device .tsign__cert-export-number dt {display:inline-block;font-size:11px;font-weight:bold;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-export-device .tsign__cert-export-number dd {display:inline-block;padding-left:10px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-export-device .tsign__cert-export-number dd input[type=text] {width:100px;height:36px;border:1px solid #ddd;background:#fff;text-align:center;font-size:18px;font-weight:bold;color:#000;margin-left:10px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-direct {border:1px solid #ddd;background:#fff;height:210px;padding:20px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-direct p {text-align:center;font-size:11px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-direct .tsign__cert-import-area {border:2px dashed #9eacd0;text-align:center;padding:75px 10px 10px 10px;margin:10px 0;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-direct .tsign__cert-import-area strong {color:#2b40ab;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-direct .tsign__input-file-label {float:right;cursor:pointer;display:inline-block;line-height:0; width:110px; padding:12px 0; text-align: center; border: 1px solid #ddd; background: #fff; color: #000;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-direct .tsign__input-file-label input[type=file] {opacity:0;line-height:0;width:0;height:0;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-direct .tsign__input-file-label em {font-style:normal;font-size: 12px; font-weight: bold; padding-left:18px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-main {border:0px;background:#fff;height:210px;padding:20px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-main p {text-align:left;margin-left:5px;font-size:11px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-main .tsign__cert-import-area {border:2px dashed #9eacd0;text-align:center;padding:75px 10px 10px 10px;margin:10px 0;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-main .tsign__cert-import-area strong {color:#2b40ab;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-main .tsign__input-file-label-left {float:left;cursor:pointer;display:inline-block;line-height:0; width:170px; margin-top:5px; padding:12px 0; text-align: center; border: 1px solid #ddd; background: #fff; color: #000;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-main .tsign__input-file-label-right {float:right;cursor:pointer;display:inline-block;line-height:0; width:110px; margin-top:5px; padding:12px 0; text-align: center; border: 1px solid #ddd; background: #fff; color: #000;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-main .tsign__input-file-label-right input[type=file] {opacity:0;line-height:0;width:0;height:0;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-main .tsign__input-file-label-left em {font-style:normal;font-size: 12px; font-weight: bold; padding-left:18px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-import-main .tsign__input-file-label-right em {font-style:normal;font-size: 12px; font-weight: bold; padding-left:18px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-infobox {border:1px solid #ddd;background:#fff;height:250px;overflow-y:auto;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-infobox h3 {text-align:center;font-size:11px;padding:10px 0;color:#000;line-height:1.2; margin:0; }
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-infobox2 {border:1px solid #ddd;background:#fff;height:160px;overflow-y:auto;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-infobox2 h3 {text-align:center;font-size:11px;padding:10px 0;color:#000;line-height:1.2; margin:0; }
+.tsign__cert-wrapper .tsign__cert-area .tsign__tbl-view1-wrap {width:96%;background: #f8f8f8;padding:10px 0;margin: 0 2% 2% 2%;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__tbl-view1 {width:100%;border-collapse:collapse;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__tbl-view1 tbody th {padding:5px 5px 5px 20px;font-weight:bold;text-align:left;vertical-align:top;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__tbl-view1 tbody td {padding:5px 20px 5px 5px;vertical-align:top;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__tbl-view2 {width:100%;border-collapse:collapse;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__tbl-view2 tbody th {padding:10px 10px 10px 20px;border-bottom:1px dotted #ddd;font-weight:bold;text-align:left;font-size:11px;vertical-align:top;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__tbl-view2 tbody td {padding:10px 20px 10px 10px;border-bottom:1px dotted #ddd;font-size:11px;vertical-align:top;word-break:break-all;word-wrap:break-word;white-space:normal;}
+
+/* 인증서 관리 */
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-mng-list:after {content:"";display:block;clear:both;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-mng-list > li {box-sizing:border-box;float:left;width:33.3333%;padding:1px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-mng-list > li > a {box-sizing:border-box;display:block;height:60px;padding-top:40px;text-align:center;font-size:11px;background:#fff;border:1px solid #ddd;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-mng-list > li > a:hover {border:2px solid #175f95;padding-top:39px;background-position:center 12px;color:#2b40ab;font-weight:bold;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-copy-area {display:none;position:fixed;left:0;right:0;top:0;bottom:0;background:rgba(0,0,0,0.4);z-index:9999999;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-copy-area .tsign__cert-copy-inbox {background:#fff;width:440px;margin: 20% auto 0 auto;padding:0 20px 20px 20px;position:relative;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-copy-area .tsign__cert-loc-list li {margin: 0 -1px -1px 0;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-copy-area .tsign__copy-close {position: absolute; right: 15px; top: 15px; width:14px;height:14px;}
+
+/* 인증서 암호변경 */
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-pw-change {border:1px solid #ddd;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-pw-head {font-size:11px;text-align:center;padding:12px 0;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-pw-head strong {color:#2b40ab;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-pw-body {background:#fff;padding:0 20px 20px 20px;border-top:1px solid #ddd;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-pw-body .tsign__stit2 {margin-top:15px;}
+.tsign__cert-wrapper .tsign__cert-area .tsign__cert-pw-body hr {height:0;width:100%;margin-top:20px;border:1px solid #ddd;border-width:1px 0 0 0;}
+
+/* DOM TEMPLATE */
+/*#tsign__cert-wrapper .tsign__dom-template {display:none;}*/
+
+/* 브라우저인증서 사용고객 안내 */
+/*.tsign__cert-wrapper .tsign__guide-area {box-sizing: border-box;position: absolute; top: 0; right: -310px; width: 310px; padding: 40px 15px 15px 15px; background: #dae2fa;letter-spacing:-1px; }*/
+/*.tsign__cert-wrapper .tsign__guide-area .tsign__guide-head {padding:0 0 20px 95px;background:url(../img/img_guide.png) 10px 5px no-repeat;}*/
+/*.tsign__cert-wrapper .tsign__guide-area .tsign__guide-head h1 {font-size: 24px;font-weight:normal;line-height:1.2; margin:0; padding:0 0 10px 0;}*/
+/*.tsign__cert-wrapper .tsign__guide-area .tsign__guide-head h1 em {color:#2b40ab;font-style:normal;}*/
+/*.tsign__cert-wrapper .tsign__guide-area .tsign__guide-head .tsign__guide-ul li + li {margin-top:5px;}*/
+/*.tsign__cert-wrapper .tsign__guide-area .tsign__guide-close {position: absolute; right: 20px; top: 13px; width:14px;height:14px;background:url(../img/ico_btn_x2.png) center center no-repeat;}*/
+/*.tsign__cert-wrapper .tsign__guide-area .tsign__guide-ul {}*/
+/*.tsign__cert-wrapper .tsign__guide-area .tsign__guide-body {border: 1px solid #ddd;background:#fff;}*/
+/*.tsign__cert-wrapper .tsign__guide-area .tsign__guide-body .tsign__guide-p {padding: 7px 10px;background:#f8f8f8;color:#2b40ab;font-weight:bold;}*/
+/*.tsign__cert-wrapper .tsign__guide-area .tsign__guide-body .tsign__guide-box {border-top:1px solid #ddd;padding: 15px 10px;}*/
+/*.tsign__cert-wrapper .tsign__guide-area .tsign__guide-body .tsign__guide-box h2 {font-size:14px;line-height:1.2; margin:0; padding:0 0 15px 0;}*/
+/*.tsign__cert-wrapper .tsign__guide-area .tsign__guide-body .tsign__guide-box li {padding-left:25px;position:relative;}*/
+/*.tsign__cert-wrapper .tsign__guide-area .tsign__guide-body .tsign__guide-box li + li {margin-top:15px;}*/
+/*.tsign__cert-wrapper .tsign__guide-area .tsign__guide-body .tsign__guide-box li em {position:absolute;left:0;top:-2px;display:inline-block;width:20px;height:20px;border-radius:10px;background:#909fcd;text-align:center;line-height:20px;font-weight:bold;color:#fff;font-style:normal;}*/
+
+.tsign__cert-import-area.is-dragover {
+    background-color: #c8e7ff!important;
+}

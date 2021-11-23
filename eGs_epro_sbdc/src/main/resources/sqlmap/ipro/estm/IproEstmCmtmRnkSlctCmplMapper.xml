@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+ --> 
+<mapper namespace="com.eunwoosoft.ipro.estm.dao.IproEstmCmtmRnkSlctCmplDao">
+
+
+	<select id="selectCmtmRnkSlctCmplList" resultType="dataEntity">
+        <include refid="ComPgng.pgngHeaderClause"/>
+        SELECT * FROM (
+		    <include refid="cmtmRnkSlctProgList"/>
+			<include refid="cmtmRnkSlctProgListWhere"/>
+			ORDER BY TO_NUMBER(ESTM_NO) DESC
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>   
+    </select>
+    
+    <select id="selectCmtmRnkSlctCmplListExcelDwld" resultType="dataEntity">
+        SELECT ROWNUM AS RNUM, T1.* FROM (
+		    <include refid="cmtmRnkSlctProgList"/>
+			<include refid="cmtmRnkSlctProgListWhere"/>
+			ORDER BY TO_NUMBER(ESTM_NO) DESC
+		) T1
+		WHERE 1 = 1
+    </select>
+    
+    
+    
+    <select id="selectCmtmRnkSlctCmplListTotCnt" resultType="int" > 
+		SELECT COUNT(1) FROM ( 
+			<include refid="cmtmRnkSlctProgList"/>
+			<include refid="cmtmRnkSlctProgListWhere"/>
+		) T1
+		WHERE 1 = 1
+	</select>
+    
+    
+    <sql id="cmtmRnkSlctProgList">
+        SELECT ESTM_NO
+                  , ESTM_SECD
+                  , ESTM_SENM
+                  , F_CDVAL_INQIRE('ESTM_SECD', ESTM_SECD) AS ESTM_SECD_NM
+                  , ESTM_PSCD
+                  , ESTM_PSNM
+                  , F_CDVAL_INQIRE('ESTM_PSCD', ESTM_PSCD) AS ESTM_PSCD_NM
+                  , ESTM_NM
+                  , TOTL_ESTM_ST_DT
+                  , TOTL_ESTM_END_DT
+                  , TO_CHAR(TO_DATE(TOTL_ESTM_ST_DT, 'yyyyMMddHH24miss'), 'yyyy-MM-dd HH:mi:ss') || '~' || TO_CHAR(TO_DATE(TOTL_ESTM_END_DT, 'yyyyMMddHH24miss'), 'yyyy-MM-dd HH:mi:ss') AS TOTL_ESTM_DT_ALL
+                  , ESTM_CHRG_DEPT_NM
+                  , 	REAL_ESTM_YN
+                  , DECODE(REAL_ESTM_YN, 'Y', '실제', 'N', '모의', '-') AS REAL_ESTM_NM
+                  , REG_DT
+                  , REGR_NM
+                  , ( SELECT MAX(ESTM_CMTM_SLCT_NGR) FROM T_ESTM_CMTM CM WHERE M.ESTM_NO = CM.ESTM_NO GROUP BY CM.ESTM_NO ) AS MAX_ESTM_CMTM_SLCT_NGR
+           FROM T_ESTM_MNG_MST M
+	</sql>
+	
+	<sql id="cmtmRnkSlctProgListWhere">
+		<where>
+            AND DEL_AT = #{P_DEL_AT, jdbcType=VARCHAR}
+            <if test='loginResult.AUTH_ID != "1"'>
+            	AND PRIO_RNK_SLCT_DEPT_NO = #{loginResult.DEPT_NO, jdbcType=VARCHAR}
+            </if>
+            
+            <if test='P_ESTM_PSCD_GBN_S != null and P_ESTM_PSCD_GBN_S != "" '>
+                <if test='P_ESTM_PSCD_GBN_S.equals("RNK_SLCT_PROG")'>
+                AND ESTM_PSCD IN ( 'A003', 'A0031') 
+                </if>
+                <if test='P_ESTM_PSCD_GBN_S.equals("RNK_SLCT_CMPL")'>
+                AND ESTM_PSCD IN ( 'A004', 'A005', 'C001', 'C002' ) 
+                </if>
+            </if>
+            <if test='P_ESTM_NO_S != null and P_ESTM_NO_S != "" '>
+	            AND ESTM_NO LIKE '%'|| #{P_ESTM_NO_S} || '%'
+            </if>
+            <if test='P_ESTM_NM_S != null and P_ESTM_NM_S != "" '>
+                AND ESTM_NM LIKE '%'|| #{P_ESTM_NM_S} || '%' 
+            </if>
+            <if test='P_ESTM_SECD_S != null and P_ESTM_SECD_S != "" '>
+                AND ESTM_SECD = #{P_ESTM_SECD_S}
+            </if>
+            <if test='P_ESTM_PSCD_S != null and P_ESTM_PSCD_S != "" '>
+                AND ESTM_PSCD = #{P_ESTM_PSCD_S}
+            </if>
+            <if test='P_ESTM_CHRG_DEPT_NO_S != null and P_ESTM_CHRG_DEPT_NO_S != "" '>
+                AND ESTM_CHRG_DEPT_NO = #{P_ESTM_CHRG_DEPT_NO_S}
+            </if>
+            <if test='P_REG_BEGIN_DT_S != null and P_REG_BEGIN_DT_S != "" '>
+                AND TO_CHAR(TO_DATE(REG_DT, 'yyyyMMddHH24miss'), 'yyyyMMdd') >= #{P_REG_BEGIN_DT_S}
+            </if>
+            <if test='P_REG_END_DT_S != null and P_REG_END_DT_S != "" '>
+                AND TO_CHAR(TO_DATE(REG_DT, 'yyyyMMddHH24miss'), 'yyyyMMdd') &lt;= #{P_REG_END_DT_S}
+            </if>
+		</where>
+	</sql>
+	
+	<select id="selectEstmMngMstDetail" resultType="dataEntity">
+        SELECT M.ESTM_NO
+                  , M.ESTM_NM
+                  , M.ESTM_SECD
+                  , M.ESTM_SENM
+                  , F_CDVAL_INQIRE('ESTM_SECD', M.ESTM_SECD) AS ESTM_SECD_NM
+                  , M.ESTM_SPHE_SECD
+                  , M.ESTM_SPHE_SENM
+                  , ( SELECT ESTM_SPHE_SENM FROM T_ESTM_SPHE_MST A WHERE M.ESTM_SPHE_SECD = A.ESTM_SPHE_SECD ) AS ESTM_SPHE_SECD_NM
+                  , M.ESTM_OBJ_SECD
+                  , M.ESTM_OBJ_SENM
+                  , F_CDVAL_INQIRE('ESTM_OBJ_SECD', M.ESTM_OBJ_SECD) AS ESTM_OBJ_SECD_NM
+                  , M.ESTM_PSCD
+                  , M.ESTM_PSNM
+                  , F_CDVAL_INQIRE('ESTM_PSCD', M.ESTM_PSCD) AS ESTM_PSCD_NM
+                  , M.ESTM_INFO_CNTC_NO
+                  , M.ESTM_CHRGR_ID
+                  , M.ESTM_CHRGR_NM
+                  , M.ESTM_CHRG_DEPT_NO
+                  , M.ESTM_CHRG_DEPT_NM
+                  , M.TOTL_ESTM_ST_DT
+                  , M.TOTL_ESTM_END_DT
+                  , M.MXMN_SCR_EXCP_YN
+                  , M.OUT_CMTM_SLCT_MTHD_SECD
+                  , M.OUT_CMTM_SLCT_MTNM
+                  , F_CDVAL_INQIRE('ESTM_CMTM_SLCT_MTHD', M.OUT_CMTM_SLCT_MTHD_SECD) AS OUT_CMTM_SLCT_MTHD_SECD_NM
+                  , M.OUT_ESTM_CMTM_CNT
+                  , M.OUT_ESTM_CMTM_TMES
+                  , M.INN_CMTM_SLCT_MTHD_SECD
+                  , M.INN_CMTM_SLCT_MTNM
+                  , F_CDVAL_INQIRE('ESTM_CMTM_SLCT_MTHD', M.INN_CMTM_SLCT_MTHD_SECD) AS INN_CMTM_SLCT_MTHD_SECD_NM
+                  , M.INN_ESTM_CMTM_CNT
+                  , M.INN_ESTM_CMTM_TMES
+                  , M.FIX_ESTM_CMTM_CNT
+                  , M.PRIO_RNK_SLCT_PE_ID
+                  , M.PRIO_RNK_SLCT_PE_NM
+                  , M.PRIO_RNK_SLCT_DEPT_NO
+                  , M.PRIO_RNK_SLCT_DEPT_NM
+                  , M.RMK
+                  , M.REAL_ESTM_YN
+                  , DECODE(M.REAL_ESTM_YN, 'Y', '실제', 'N', '모의', '-') AS REAL_ESTM_NM
+                  , ( SELECT MAX(ESTM_CMTM_SLCT_NGR) FROM T_ESTM_CMTM CM WHERE M.ESTM_NO = CM.ESTM_NO GROUP BY CM.ESTM_NO ) AS MAX_ESTM_CMTM_SLCT_NGR
+                  , M.CLC_RUL
+           FROM T_ESTM_MNG_MST M
+         WHERE 1=1
+             AND ESTM_NO = #{P_ESTM_NO, jdbcType=VARCHAR}   
+	</select>
+	
+	<select id="selectEstmFile" resultType="dataEntity">
+        SELECT ESTM_NO
+                  , FILE_GRP_NO
+                  , ESTM_FSCD
+                  , ESTM_FSNM
+                  <include refid="ComRegr.selectColumnClause"/>
+           FROM T_ESTM_FILE
+         WHERE 1=1
+             AND ESTM_NO = #{P_ESTM_NO, jdbcType=VARCHAR}
+             AND DEL_AT = #{P_DEL_AT, jdbcType=VARCHAR}
+             <if test='P_ESTM_FSCD != null and P_ESTM_FSCD != "" '>
+                 AND ESTM_FSCD = #{P_ESTM_FSCD, jdbcType=VARCHAR}
+             </if>
+	</select>
+	
+	
+	<select id="selectEstmCmtmList" resultType="dataEntity">
+        SELECT ESTM_NO
+                  , ESTM_CMTM_NO
+                  , ESTM_CMTM_SLCT_NGR
+                  , PRIO_RNK
+                  , SLCT_YN
+                  , ESTM_CMTM_NM
+                  , INO_CMTM_SECD
+                  , INO_CMTM_SENM
+                  , F_CDVAL_INQIRE('INO_CMTM_SECD', INO_CMTM_SECD) AS INO_CMTM_SECD_NM
+                  , ESTM_SPHE_SECD
+                  , ESTM_SPHE_SENM
+                  , ( SELECT ESTM_SPHE_SENM FROM T_ESTM_SPHE_MST A WHERE CM.ESTM_SPHE_SECD = A.ESTM_SPHE_SECD ) AS ESTM_SPHE_SECD_NM
+                  , LLF_SECD
+                  , LLF_NM
+                  , F_CDVAL_INQIRE('LLF_SECD', LLF_SECD) AS LLF_SECD_NM
+                  , CNTN_SECD
+                  , CNTN_NM
+                  , F_CDVAL_INQIRE('CNTN_SECD', CNTN_SECD) AS CNTN_SECD_NM
+                  , MLF_SECD
+                  , MLF_NM
+                  , F_CDVAL_INQIRE('MLF_SECD', MLF_SECD) AS MLF_SECD_NM
+                  , SLF_SECD
+                  , SLF_NM
+                  , F_CDVAL_INQIRE('SLF_SECD', SLF_SECD) AS SLF_SECD_NM
+                  , CP_NO
+                  , EMAL
+                  , LINE_TYP_SECD
+                  , LINE_TYP_SENM
+                  , F_CDVAL_INQIRE('LINE_TYP_SECD', LINE_TYP_SECD) AS LINE_TYP_SECD_NM
+                  , SLCT_SECD
+                  , SLCT_SENM
+                  , F_CDVAL_INQIRE('SLCT_SECD', SLCT_SECD) AS SLCT_SECD_NM
+                  , RMK
+                  <include refid="ComRegr.selectColumnClause"/>
+           FROM T_ESTM_CMTM CM
+        WHERE 1=1
+            AND ESTM_NO = #{P_ESTM_NO, jdbcType=VARCHAR}
+            <if test='P_INO_CMTM_SECD != null and P_INO_CMTM_SECD != "" '>
+                AND CM.INO_CMTM_SECD = #{P_INO_CMTM_SECD, jdbcType=VARCHAR}
+            </if>
+            <if test='P_ESTM_CMTM_SLCT_NGR != null and P_ESTM_CMTM_SLCT_NGR != "" '>
+                AND CM.ESTM_CMTM_SLCT_NGR = #{P_ESTM_CMTM_SLCT_NGR, jdbcType=INTEGER}
+            </if>
+            <if test='P_SLCT_SECD != null and P_SLCT_SECD != "" '>
+                AND CM.SLCT_SECD = #{P_SLCT_SECD, jdbcType=VARCHAR}
+            </if>
+        ORDER BY PRIO_RNK
+	</select>
+	
+	<update id="updateEstmCmtmPrioRnk">
+        UPDATE T_ESTM_CMTM
+             SET PRIO_RNK = #{P_PRIO_RNK, jdbcType=INTEGER}
+       WHERE ESTM_NO = #{P_ESTM_NO, jdbcType=VARCHAR}
+           AND ESTM_CMTM_NO = #{P_ESTM_CMTM_NO, jdbcType=VARCHAR}
+           <if test='P_ESTM_CMTM_SLCT_NGR != null and P_ESTM_CMTM_SLCT_NGR != "" '>
+           AND ESTM_CMTM_SLCT_NGR = #{P_ESTM_CMTM_SLCT_NGR, jdbcType=INTEGER}
+           </if>
+	</update>
+
+</mapper>

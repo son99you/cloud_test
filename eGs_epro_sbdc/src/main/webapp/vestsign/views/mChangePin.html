@@ -1,0 +1,110 @@
+<!Doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>인증서 비밀번호 변경</title>
+
+    <link type="text/css" rel="stylesheet" href="../styles/css/mCommon.css?revision=e54ce34"/>
+    <link type="text/css" rel="stylesheet" href="../styles/css/jquery-ui.css?revision=e54ce34">
+
+    <script type="text/javascript" src="../styles/js/jquery-1.11.0.min.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../styles/js/jquery-ui.js?revision=e54ce34"></script>
+
+    <script type="text/javascript" src="../scripts/__GobalValue__.js?revision=e54ce34"></script>
+    <script type="text/javascript" src="../languages/mChangePin.js?revision=e54ce34"></script>
+
+</head>
+<body>
+<div>
+    <!-- Top -->
+    <div class="CERT_title">
+        <div class="TITLE_div">
+            <p id="title">
+                <script>document.write(mChangePinLang(0));</script>
+            </p>
+        </div>
+        <div class="xBtn" id="x_btn" alt="닫기">닫기</div>
+    </div>
+
+    <div class="titleDivision_div">
+        <div class="titleDivisionLine"></div>
+    </div>
+
+    <!-- middle -->
+    <div class="CERT_contents">
+        <!-- middle 상단 -->
+        <div class="changepin_contents">
+            <!-- 인증서리스트 화면 ul -->
+            <div class="CERT_list CERT_one">
+                <ul id="dialogSignTab_list"/>
+            </div>
+
+            <div class="PIN_info_wrap">
+                <div class="PIN_alert"></div>
+                <div class="PIN_info">
+                    <p>
+                        <script>document.write(mChangePinLang(3));</script>
+                    </p>
+                    <p>
+                        <script>document.write(mChangePinLang(4));</script>
+                    </p>
+                    <p>
+                        <script>document.write(mChangePinLang(15));</script>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <hr class="contDivisionLine">
+
+        <!-- middle 하단 -->
+        <form id="pinForm" name="pinForm" method="post" onsubmit="return false;">
+            <div class="PIN_input">
+                <div class="pw_wrap">
+                    <div class="pw_text">
+                        <script>document.write(mChangePinLang(5));</script>
+                    </div>
+                    <input type="password" autocomplete="off" class="pw_textbox" id="pin"/>
+                </div>
+                <div class="pw_wrap">
+                    <div class="pw_text">
+                        <script>document.write(mChangePinLang(6));</script>
+                    </div>
+                    <input type="password" autocomplete="off" class="pw_textbox" id="newPin"/>
+                </div>
+                <div class="pw_wrap">
+                    <div class="pw_text">
+                        <script>document.write(mChangePinLang(7));</script>
+                    </div>
+                    <input type="password" autocomplete="off" class="pw_textbox" id="checkNewPin"/>
+                </div>
+            </div>
+        </form>
+
+        <!-- 확인 취소 버튼 -->
+        <div class="BTN_common">
+            <div id="commonBtn" class="commonForm">
+                <div class="confirm_btn" id="confirm_btn">
+                    <p>
+                        <script>document.write(mChangePinLang(1));</script>
+                    </p>
+                </div>
+                <div class="cancel_btn" id="cancel_btn">
+                    <p>
+                        <script>document.write(mChangePinLang(2));</script>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <div class="copyright">
+        Copyright 2016 By YETTIESOFT.ALL right reserved.
+    </div>
+</div>
+</body>
+
+<script type="text/javascript" src="../library/mobileKeySafer.js?revision=e54ce34"></script>
+<script type="text/javascript" src="../scripts/mChangePin.js?revision=e54ce34"></script>
+<!-- <script type="text/javascript" src="../library/dragiframe.js"></script> -->
+</html>

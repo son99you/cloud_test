@@ -1,0 +1,64 @@
+		<ul class="Navigation clearfix">
+			<li class="li_01 on"><a class="GoTo_Disk">하드디스크</a></li>
+			<li class="li_02"><a class="GoTo_USB">이동디스크</a></li>
+			<li class="li_03"><a class="GoTo_Security">보안매체</a></li>
+			<li class="li_04"><a class="GoTo_Finder">인증서찾기</a></li>
+			<li class="li_05"><a class="GoTo_Phone">스마트찾기</a></li>
+		</ul>
+		
+		<script>
+			$(document).ready(function() { 
+				function scrollToElement(selector, time, verticalOffset) {
+				    time = typeof(time) != 'undefined' ? time : 1000;
+				    verticalOffset = typeof(verticalOffset) != 'undefined' ? verticalOffset : 0;
+				    element = $(selector);
+				    offset = element.offset();
+				    offsetTop = offset.top + verticalOffset;
+				    $('html, body').animate({
+				        scrollTop: offsetTop
+				    }, time);           
+				}
+				
+				$('ul.Navigation li.li_01').click(function () {
+					$("ul.Navigation li").removeClass("on");
+					$("ul.Navigation li.li_01").addClass("on");
+				});
+				
+				$('ul.Navigation li.li_02').click(function () {
+					$("ul.Navigation li").removeClass("on");
+					$("ul.Navigation li.li_02").addClass("on");
+				});
+				
+				$('ul.Navigation li.li_03').click(function () {
+					$("ul.Navigation li").removeClass("on");
+					$("ul.Navigation li.li_03").addClass("on");
+				});
+				
+				$('ul.Navigation li.li_04').click(function () {
+					$("ul.Navigation li").removeClass("on");
+					$("ul.Navigation li.li_04").addClass("on");
+				});
+				
+				$('ul.Navigation li.li_05').click(function () {
+					$("ul.Navigation li").removeClass("on");
+					$("ul.Navigation li.li_05").addClass("on");
+				});
+				
+				
+				$('a.GoTo_Disk').click(function () {
+					scrollToElement('.ico_disk', 500, -45);			
+				});
+				$('a.GoTo_USB').click(function () {
+					scrollToElement('.ico_usb', 500, -45);
+				});
+				$('a.GoTo_Security').click(function () {
+					scrollToElement('.ico_security', 500, -45);
+				});
+				$('a.GoTo_Finder').click(function () {
+					scrollToElement('.ico_finder', 500, -45);
+				});
+				$('a.GoTo_Phone').click(function () {
+					scrollToElement('.ico_phone', 500, -45);
+				});
+			});
+		</script>

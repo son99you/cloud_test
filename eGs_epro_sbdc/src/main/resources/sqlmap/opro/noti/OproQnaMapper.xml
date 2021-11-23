@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+ --> 
+ <mapper namespace="com.eunwoosoft.opro.noti.dao.OproQnaDao">
+	<resultMap id="Cntn" type="dataEntity">
+    	<result property="BBS_CNTN" column="BBS_CNTN" jdbcType="CLOB" javaType="java.lang.String" />
+    </resultMap>
+ 
+	 <select id="qnaListWithPgng" resultType="dataEntity" resultMap="Cntn">
+		<include refid="ComPgng.pgngHeaderClause"/> 
+		SELECT * FROM (
+			<include refid="selectQnaList"/>
+			<include refid="selectQnaWhere"/>
+			ORDER BY RE_REF DESC, RE_SEQ ASC,REG_DT DESC
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>   
+	</select>
+
+	 <select id="qnaExcelList" resultType="dataEntity" resultMap="Cntn">
+		SELECT ROWNUM AS RNUM, T1.* FROM (
+			<include refid="selectQnaList"/>
+			<include refid="selectQnaWhere"/>
+			ORDER BY RE_REF DESC, RE_SEQ ASC,REG_DT DESC
+		) T1
+		WHERE 1 = 1
+	</select>
+ 
+	<select id="qnaListTotCnt" resultType="int" > 
+		SELECT COUNT(1) FROM ( 
+			<include refid="selectQnaList"/>
+			<include refid="selectQnaWhere"/>
+		) T1
+		WHERE 1 = 1
+	</select> 
+	
+	 <sql id="selectQnaList">
+ 		SELECT    
+				BBS_SECD
+				,BBS_SN
+				,TTL_NM
+				,BBS_CNTN
+				,NVL(INQ_CNT,0) AS INQ_CNT
+				,BBS_PSCD
+				,NTC_YN
+				,USE_YN
+				,RQRD_YN
+				,PPUP_YN
+				,PPUP_STDE
+				,PPUP_ENDE
+				,FILE_GRP_NO
+				,REGR_ID
+				,REGR_NM
+				,REG_DT
+				,TO_CHAR(TO_DATE(REG_DT, 'yyyyMMddHH24miss'), 'yyyy-MM-dd') AS REG_DT_F
+				,MODR_ID
+				,MODR_NM
+				,MOD_DT
+				,CONN_IP
+				,DEL_AT
+			   ,RE_LEV
+			   ,RE_REF
+			   ,RE_SEQ
+			  , ( SELECT COUNT(*) FROM T_MM_FILE_MST WHERE FILE_GRP_NO = MST.FILE_GRP_NO AND DEL_AT = 'N') AS FILE_CNT
+				<!-- ,(SELECT VEND_NM FROM T_MB_MST A WHERE MST.VEND_REG_NO = A.VEND_REG_NO) AS VEND_NM -->
+		FROM T_BA_MST MST
+		WHERE	RE_REF IN (
+				SELECT
+			  		RE_REF
+				FROM T_BA_MST MST
+				WHERE 1 = 1
+			 	<if test='P_TTL_NM_S != null and P_TTL_NM_S != "" '>
+	                AND TTL_NM LIKE '%'|| #{P_TTL_NM_S} || '%' 
+	            </if>
+	            <if test='P_REGR_NM_S != null and P_REGR_NM_S != "" '>
+	                AND REGR_NM LIKE '%'|| #{P_REGR_NM_S}||'%'
+	            </if>
+			)
+	</sql>
+	
+	<sql id="selectQnaWhere">
+		AND  BBS_SECD = #{P_BBS_SECD , jdbcType=VARCHAR}  
+	 	AND  USE_SECD = #{P_USE_SECD , jdbcType=VARCHAR}  
+	 	AND DEL_AT =  'N'
+	</sql>
+	
+	
+	<!-- 첨부파일 select -->
+	<select id="selectFileListInqireByFileGrpNo" resultType="dataEntity">
+		SELECT	FILE_GRP_NO
+					, FILE_SN
+					, ATCH_FSCD
+					, TSK_SECD
+					, SV_FILE_NM
+					, SYS_FILE_NM
+					, FILE_SZ
+					, FILE_LCTN
+					, FILE_DOC_NM
+					, FILE_DESC
+					, OPEN_YN
+					, TSK_VKEY1
+					, TSK_VKEY2
+					, TSK_VKEY3
+					, RMK
+		FROM		T_MM_FILE_MST T1
+		WHERE	T1.FILE_GRP_NO = #{P_FILE_GRP_NO, jdbcType=VARCHAR}	
+		AND		T1.DEL_AT IN ('N')
+	</select>
+	
+	<select id="qnaDetail" resultType="dataEntity" resultMap="Cntn">
+		SELECT   BBS_SECD
+				,BBS_SN
+				,VEND_REG_NO
+				,USE_SECD
+				,TTL_NM
+				,BBS_CNTN
+				,INQ_CNT
+				,BBS_PSCD
+				,NTC_YN
+				,USE_YN
+				,RQRD_YN
+				,PPUP_YN
+				,PPUP_STDE
+				,PPUP_ENDE
+				,FILE_GRP_NO
+				,REGR_ID
+				,REGR_NM
+				,REG_DT
+				,MODR_ID
+				,MODR_NM
+				,MOD_DT
+				,CONN_IP
+				,DEL_AT
+				,(SELECT DECODE(COUNT(*),'0','N','Y') FROM T_BA_MST WHERE 1 = 1 AND RE_REF =  #{P_BBS_SN, jdbcType=VARCHAR} AND BBS_SN != #{P_BBS_SN, jdbcType=VARCHAR} AND DEL_AT ='N') AS REPLY_YN
+				, ( SELECT
+								EMAL_ADDR
+
+						FROM V_MM_USER
+						WHERE 1=1
+						AND USR_ID = A.REGR_ID
+						UNION
+						SELECT
+								EMAL AS EMAL_ADDR
+
+
+						FROM V_MM_ESTM_CMTM_MST
+						WHERE 1=1
+						AND ESTM_CMTM_NO = A.REGR_ID ) AS EMAL_ADDR
+		FROM T_BA_MST A
+		WHERE 1=1
+		AND A.BBS_SN = #{P_BBS_SN, jdbcType=VARCHAR}
+		AND A.BBS_SECD   = #{P_BBS_SECD , jdbcType=VARCHAR}  
+	</select>
+	
+	<insert id="qnaBoardRegist" useGeneratedKeys="true" keyProperty="P_BBS_SN">
+		<selectKey resultType="int" keyProperty="P_BBS_SN" order="BEFORE">
+			SELECT 	NVL(MAX(TO_NUMBER(BBS_SN)),0)+1
+			FROM 	T_BA_MST
+			WHERE BBS_SECD = #{P_BBS_SECD , jdbcType=VARCHAR}
+		</selectKey>
+		INSERT INTO T_BA_MST(
+		        BBS_SECD
+				,BBS_SN
+				,VEND_REG_NO
+				,USE_SECD
+				,TTL_NM
+				,BBS_CNTN
+				,BBS_PSCD
+				,USE_YN
+				,RQRD_YN
+				,PPUP_YN
+				,PPUP_STDE
+				,PPUP_ENDE
+				,FILE_GRP_NO
+				,REGR_ID
+				,REGR_NM
+				,REG_DT
+				,MODR_ID
+				,MODR_NM
+				,MOD_DT
+				,CONN_IP
+				,DEL_AT
+				,RE_REF
+				,RE_SEQ
+				,RE_LEV
+		        )
+		   VALUES(
+		         #{P_BBS_SECD     ,jdbcType=VARCHAR}
+				,#{P_BBS_SN       ,jdbcType=VARCHAR}
+				,#{P_VEND_REG_NO   ,jdbcType=VARCHAR}
+				,#{P_USE_SECD     ,jdbcType=VARCHAR}
+				,#{P_TTL_NM       ,jdbcType=VARCHAR}
+				,#{P_BBS_CNTN     ,jdbcType=CLOB}
+				,#{P_BBS_PSCD     ,jdbcType=VARCHAR}
+				,#{P_USE_YN       ,jdbcType=VARCHAR}
+				,#{P_RQRD_YN      ,jdbcType=VARCHAR}
+				,#{P_PPUP_YN      ,jdbcType=VARCHAR}
+				,#{P_PPUP_STDE    ,jdbcType=VARCHAR}
+				,#{P_PPUP_ENDE    ,jdbcType=VARCHAR}
+				,#{P_FILE_GRP_NO  ,jdbcType=VARCHAR}
+				,#{P_REGR_ID      ,jdbcType=VARCHAR}
+				,#{P_USR_NM      ,jdbcType=VARCHAR}
+				,#{P_REG_DT       ,jdbcType=VARCHAR}
+				,#{P_REGR_ID      ,jdbcType=VARCHAR}
+				,#{P_USR_NM      ,jdbcType=VARCHAR}
+				,#{P_MOD_DT       ,jdbcType=VARCHAR}
+				,#{P_CONN_IP      ,jdbcType=VARCHAR}
+				,#{P_DEL_AT       ,jdbcType=VARCHAR}
+				,#{P_BBS_SN       ,jdbcType=VARCHAR}
+				,0
+				,0
+		         )  
+	</insert>
+	
+	<update id="qnaBoardDelete">
+		UPDATE T_BA_MST SET  
+			DEL_AT = 'Y' 
+		   , MOD_DT = #{P_MOD_DT}  
+		   , MODR_ID = #{P_REGR_ID}  
+		   , MODR_NM = #{P_USR_NM}  
+		  WHERE BBS_SN = #{P_BBS_SN} 
+		  AND BBS_SECD   = #{P_BBS_SECD , jdbcType=VARCHAR}
+	</update>
+	
+	<update id="qnaReplyDelete">
+		UPDATE T_BA_MST SET  
+			DEL_AT = 'Y' 
+		   , MOD_DT = #{P_MOD_DT}  
+		   , MODR_ID = #{P_REGR_ID}  
+		   , MODR_NM = #{P_USR_NM}  
+		  WHERE RE_REF = #{P_BBS_SN}
+		   AND BBS_SECD   = #{P_BBS_SECD , jdbcType=VARCHAR} 
+	</update>
+	
+	<update id="qnaBoardUpdate">
+		UPDATE T_BA_MST SET
+		         TTL_NM = #{P_TTL_NM , jdbcType=VARCHAR}  
+		         , FILE_GRP_NO = #{P_FILE_GRP_NO , jdbcType=VARCHAR}  
+		        , BBS_CNTN = #{P_BBS_CNTN , jdbcType=VARCHAR}  
+		        , MODR_ID = #{P_REGR_ID , jdbcType=VARCHAR}
+		        , MODR_NM = #{P_USR_NM , jdbcType=VARCHAR}
+		        , MOD_DT = #{P_MOD_DT , jdbcType=VARCHAR}
+		        , CONN_IP = #{P_CONN_IP , jdbcType=VARCHAR}
+	    WHERE BBS_SN = #{P_BBS_SN , jdbcType=VARCHAR}        
+	     AND BBS_SECD   = #{P_BBS_SECD , jdbcType=VARCHAR}   
+	</update>
+	
+	<select id="usrInfoDetail" resultType="dataEntity">
+		SELECT USR_ID
+                  , USR_NM
+                  , USR_ENM
+                  , PWD
+                  , EMPL_NO
+                  , DEPT_NO
+                  , DEPT_NM
+                  , ODCD
+                  , OFDT_NM
+                  , OPCD
+                  , OFPS_NM
+                  , TEL_NO
+                  , CP_NO
+                  , FX_NO
+                  , ZIP
+                  , ADDR_NM
+                  , ADDR_DTL_NM
+                  , ADDR_ENM
+                  , EMAL_ADDR
+                  , ESTPC_AUTH_YN
+                  , USR_STCD
+                  , VLD_TE_STDE
+                  , VLD_TE_ENDE
+                  , USE_YN
+                  , LT_CONN_DT
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+                  , AUTH_ID
+		FROM T_MM_USER_MST
+		WHERE USR_ID = #{P_REGR_ID, jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updateInqCntBaMst">
+		UPDATE	T_BA_MST
+		SET		INQ_CNT = (NVL(INQ_CNT,0)+1)
+		WHERE	1=1
+		AND		BBS_SECD = #{P_BBS_SECD}
+		AND		BBS_SN = #{P_BBS_SN}
+	</update>
+ </mapper> 

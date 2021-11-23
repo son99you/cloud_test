@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * sqlmap.ipro.sytm
+ * IproSytmCodeMngeMapper.xml
+ * 
+ * @Author : JanDi_Eun
+ * @Date   : 2019. 1. 30.
+ * 
+ -->
+<mapper namespace="com.eunwoosoft.ipro.sytm.dao.IproSytmCodeMngeDao">
+
+	<select id="codeMngeListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="codeMngeList"/>
+			<include refid="codeMngeListWhere"/>
+		) T1
+		WHERE 1 = 1
+		ORDER BY CD_ID, ORD_SN
+ 		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<select id="codeMngeExcelList" resultType="dataEntity">
+		SELECT * FROM (
+			<include refid="codeMngeList"/>
+			<include refid="codeMngeListWhere"/>
+		) T1
+		WHERE 1 = 1
+		ORDER BY CD_ID, ORD_SN
+	</select>
+	
+	<select id="codeMngeListTotCnt" resultType="int">
+ 		SELECT COUNT(1) FROM (
+			<include refid="codeMngeList"/>
+			<include refid="codeMngeListWhere"/>
+		) T1
+ 	</select>
+	
+	<sql id="codeMngeList">
+        SELECT CD_ID
+                  , CD_DTL_ID
+                  , CD_NM
+                  , CD_DTL_NM
+                  , ORD_SN
+                  , USE_YN
+                  , RMK
+                  , ETC_VAL1
+                  , ETC_VAL2
+                  , ETC_VAL3
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+                  , CHNG_PSBL_YN
+           FROM T_MM_CODE_MST
+	</sql>
+	
+	<sql id="codeMngeListWhere">
+        <where>
+            AND DEL_AT = 'N'
+            AND USE_YN = 'Y'
+			<if test='P_CD_ID_S != null and P_CD_ID_S != "" '>
+				AND CD_ID LIKE '%'||#{P_CD_ID_S}||'%'
+			</if>
+			<if test='P_CD_DTL_NM_S != null and P_CD_DTL_NM_S != "" '>
+				AND CD_DTL_NM LIKE '%'||#{P_CD_DTL_NM_S}||'%'
+			</if>
+			<if test='P_CD_NM_S != null and P_CD_NM_S != "" '>
+				AND CD_NM LIKE '%'||#{P_CD_NM_S}||'%'
+			</if>
+		</where>
+	</sql>
+</mapper>

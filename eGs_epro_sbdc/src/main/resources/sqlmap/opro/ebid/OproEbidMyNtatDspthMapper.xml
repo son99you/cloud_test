@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * 전자입찰 > 나의 협상통보 Mapper
+ *
+ * <pre>
+ * sqlmap.oda.iep.elbi 
+ *    |_ OepElbiMyNtatDspthMapper.xml
+ * 
+ * </pre>
+ * @date : 2015. 03. 24 오후 7:20:54
+ * @version : 1.0
+ * @author : 은우소프트 손연우
+-->
+<mapper namespace="com.eunwoosoft.opro.ebid.dao.OproEbidMyNtatDspthDao">	
+	<!--  
+     * <pre>
+     * 1. 개요 : 나의 협상통보 목록조회_페이징 
+     * 2. 처리내용 :
+     *  	
+     * </pre>
+     * @Query ID : selectMyNtatDspthListWithPgng
+     * @date : 2015. 03. 24.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 03. 24.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectMyNtatDspthListWithPgng" resultType="dataEntity">
+		<include refid="ComPgng.pgngHeaderClause"/>
+		SELECT * FROM (
+			<include refid="myNtatDspthList"/>
+			<include refid="myNtatDspthWhere"/>
+			ORDER BY ANNC_NO DESC ,ANNC_NGR DESC
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 나의 협상통보 목록총건수조회 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectMyNtatDspthListTotcnt
+     * @date : 2015. 02. 23.
+     * @author : 은우소프트 손연우
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2015. 02. 23.       은우소프트 손연우              최초 작성 
+     *  =======================================================   
+     -->
+	<select id="selectMyNtatDspthListTotcnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="myNtatDspthList"/>
+			<include refid="myNtatDspthWhere"/>
+		) T1
+		WHERE 1 = 1		
+	</select>
+
+	<sql id="myNtatDspthList">
+		SELECT A.* 
+		FROM (
+					SELECT 	ONE.ANNC_NO
+								,ONE.ANNC_NGR
+								,TWO.ROUND_NO
+								,ONE.CONT_SECD
+								,F_CDVAL_INQIRE('CONT_SECD', ONE.CONT_SECD) AS CONT_SECD_NM
+								,ONE.BID_NM
+								,ONE.CONT_MTCD
+								,F_CDVAL_INQIRE('CONT_MTCD', ONE.CONT_MTCD) AS CONT_MTCD_NM
+								,TWO.ANNC_DT
+								,ONE.BID_PSCD
+								,F_CDVAL_INQIRE('BID_PSCD', ONE.BID_PSCD) AS BID_PSCD_NM
+			                    ,NVL(COSUEN.ASSO_VEND_REG_NO,NEPRJUDI.VEND_REG_NO) AS VEND_REG_NO
+			                    ,DECODE(COSUEN.ASSO_VEND_REG_NO, COSUEN.VEND_REG_NO,'Y','N') AS REPRSNT_ENTRPS_AT
+			                    ,NEPRJUDI.NEGO_DT
+			                    ,VEND.BID_VEND_PSCD
+			                    ,NEPRJUDI.NEGO_NTFC_YN
+					FROM  	T_BI_MST ONE
+								,T_BI_ROUND TWO
+								,T_BI_VEND_MST VEND
+								,T_BI_VEND_BIOP NEPRJUDI
+								,T_BI_VEND_ASSO COSUEN
+					WHERE 	ONE.ANNC_NO = TWO.ANNC_NO
+					AND    	ONE.ANNC_NGR = TWO.ANNC_NGR
+					AND		ONE.ANNC_NO = VEND.ANNC_NO
+					AND		ONE.ANNC_NGR = VEND.ANNC_NGR
+					AND		TWO.ROUND_NO = VEND.ROUND_NO
+					AND		VEND.ANNC_NO = NEPRJUDI.ANNC_NO
+					AND		VEND.ANNC_NGR = NEPRJUDI.ANNC_NGR
+					AND		VEND.ROUND_NO = NEPRJUDI.ROUND_NO
+					AND		VEND.VEND_REG_NO = NEPRJUDI.VEND_REG_NO
+					AND		NEPRJUDI.ANNC_NO = COSUEN.ANNC_NO(+)
+					AND		NEPRJUDI.ANNC_NGR = COSUEN.ANNC_NGR(+)
+					AND		NEPRJUDI.ROUND_NO = COSUEN.ROUND_NO(+)
+					AND		NEPRJUDI.VEND_REG_NO = COSUEN.VEND_REG_NO(+)
+					AND		VEND.BID_VEND_PSCD = 'OP08'
+					AND		NEPRJUDI.NEGO_NTFC_YN = 'Y'
+				) A
+		WHERE	VEND_REG_NO = #{P_VEND_REG_NO}
+	</sql>
+	
+	<sql id="myNtatDspthWhere">
+		<if test='P_BID_NM_S != null and P_BID_NM_S != "" '>
+			AND BID_NM LIKE '%'||#{P_BID_NM_S}||'%'
+		</if>
+		<if test='P_CONT_SECD_S != null and P_CONT_SECD_S != "" '>
+			AND CONT_SECD = #{P_CONT_SECD_S}
+		</if>
+		<if test='P_ANNC_STDT_S != null and P_ANNC_STDT_S != "" '>
+			AND TO_CHAR(TO_DATE(ANNC_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') >= #{P_ANNC_STDT_S}
+		</if>
+		<if test='P_ANNC_ENDT_S != null and P_ANNC_ENDT_S != "" '>
+			AND TO_CHAR(TO_DATE(ANNC_DT, 'yyyyMMddhh24miss'), 'yyyyMMdd') &lt;= #{P_ANNC_ENDT_S}
+		</if>
+	</sql>
+
+	<select id="selectMyNtatDspthDetail" resultType="dataEntity">
+		SELECT 	BI.ANNC_NO
+					,BI.ANNC_NGR
+					,ROUND.ROUND_NO
+					,BI.BID_NM
+					,BI.CONT_SECD
+					,F_CDVAL_INQIRE('CONT_SECD', BI.CONT_SECD ) AS CONT_SECD_NM
+					,BI.CONT_DECD
+					,F_CDVAL_INQIRE('CONT_DECD', BI.CONT_DECD ) AS CONT_DECD_NM
+					,BI.ANNC_SECD
+					,F_CDVAL_INQIRE('ANNC_SECD', BI.ANNC_SECD ) AS ANNC_SECD_NM
+					,ROUND.ANNC_DT 
+					,BIOP.NEGO_CNTN
+					,BIOP.NEGO_DT
+		FROM	 	T_BI_MST BI
+					,T_BI_ROUND ROUND
+					,T_BI_VEND_MST VEND
+					,T_BI_VEND_BIOP BIOP
+		WHERE 	BI.ANNC_NO = ROUND.ANNC_NO
+		AND		BI.ANNC_NGR = ROUND.ANNC_NGR
+		AND		ROUND.ANNC_NO = VEND.ANNC_NO
+		AND		ROUND.ANNC_NGR = VEND.ANNC_NGR
+		AND		ROUND.ROUND_NO = VEND.ROUND_NO
+		AND		VEND.ANNC_NO = BIOP.ANNC_NO
+		AND		VEND.ANNC_NGR = BIOP.ANNC_NGR
+		AND		VEND.ROUND_NO = BIOP.ROUND_NO
+		AND 		VEND.VEND_REG_NO = BIOP.VEND_REG_NO
+		AND		VEND.BID_VEND_PSCD = 'OP08'
+		AND		BIOP.NEGO_NTFC_YN = 'Y'
+		AND		VEND.ANNC_NO = #{P_ANNC_NO}
+		AND		VEND.ANNC_NGR = #{P_ANNC_NGR}
+		AND		VEND.ROUND_NO = #{P_ROUND_NO}
+		AND		VEND.VEND_REG_NO = #{P_VEND_REG_NO}
+	</select>
+	
+</mapper>

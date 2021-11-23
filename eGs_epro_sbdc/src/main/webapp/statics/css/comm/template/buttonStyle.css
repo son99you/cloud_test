@@ -1,0 +1,180 @@
+@charset "utf-8";
+
+.T_btnLayer{
+    margin : 10px 0;
+}
+.T_btnLayer button , .T_btnLayer a{
+    float:left;
+    text-align: center;
+}
+.T_btnLayer.ab{position: absolute;}
+.T_btnLayer.fl{float: left; clear: both;}
+.T_btnLayer.fr{float: right; clear: both;}
+.T_btnLayer.n_m{margin: 10px;}
+.T_btnLayer.mt_5{margin-top: 5px;}
+.T_btnLayer.mb_5{margin-bottom: 5px;}
+.T_btnLayer.mt_2{margin-top: 2px;}
+.T_btnLayer.cn{clear: none ! important;}
+.T_btnLayer.mr_25{margin-right: 25px;}
+.T_btnLayer.mt_22{margin-top: 22px;}
+.T_btnLayer.ml_10{margin-top: 10px;}
+/*기본 스타일*/
+button.whiteGray , button.grayBtn , button.blueBtn{
+    font-family:"NanumGothic", NanumGothic, Dotum, "NanumGothic", Arial, sans-serif;
+    margin-left:3px;
+    margin-right:2px;
+    float:left;
+}
+.T_btnLayer a.whiteGray , .T_btnLayer a.grayBtn , .T_btnLayer a.blueBtn{
+    font-family:"NanumGothic", NanumGothic, Dotum, "NanumGothic", Arial, sans-serif;
+    margin-left:3px;
+    margin-right:2px;
+    float:left;
+}
+/*하단 위치 스타일*/
+.T_btnLayer.bt_L{
+    position:absolute;
+    bottom: 3px;
+    left: 3px;
+}
+.T_btnLayer.bt_R{
+    position:absolute;
+    bottom: 3px;
+    right: 3px;
+}
+/*사이즈*/
+.T_btnLayer a.L ,button.L{
+    padding:3px 14px 4px;
+    font-size:13px;
+    /*ie hack padding bug fix*/
+    padding:3px 14px 4px\0;
+}
+.T_btnLayer a.M ,button.M{
+    padding:5px 10px;    
+    font-size:12px;
+    /*ie hack padding bug fix*/
+    padding:4px 10px\0;
+}
+.T_btnLayer a.MM.grayBtn , button.MM.grayBtn{
+    padding : 10px 25px;
+    font-size:12px;
+    border-radius: 1px;
+    margin: 7px 10px 0 0;
+    /*ie hack padding bug fix*/
+    padding : 8px 23px\0;
+}
+.T_btnLayer a.S , button.S{
+    padding:3px 15px;
+    /*ie hack padding bug fix*/
+    padding:1px 15px\0;
+}
+/*타입 아이콘*/
+.T_btnLayer a.ico , button.ico{
+    padding:6px 8px;
+    /*ie hack padding bug fix*/
+    padding:5px 8px\0;
+}
+.T_btnLayer a.ico img , button.ico img{
+    margin-right:3px;
+    width:15px;
+    height:14px;
+}
+/*사각형 스타일*/
+.T_btnLayer a.square , button.square{
+    padding:2px;
+}
+/*컬러 스타일*/
+/*블루*/
+.T_btnLayer a.blueBtn , button.blueBtn{
+    border:1px solid #016CAC;
+    color:white;
+    background-color:#017AC3;
+    background-image: url('../../images/template_ico_right_arrow.png');
+    background-repeat: no-repeat;
+    background-position: right center;
+}
+.T_btnLayer a.blueBtn:hover , .T_btnLayer a.blueBtn.on,
+button.blueBtn:hover , button.blueBtn.on{
+    border:1px solid #0049b4;
+    background-color:#0055d1;
+}
+/*gray*/
+.T_btnLayer a.grayBtn,
+button.grayBtn{
+    border:1px solid #666666;
+    color:white;
+    background-color: #666666;
+    border-radius: 3px;
+}
+.T_btnLayer a.grayBtn:hover , .T_btnLayer a.grayBtn.on,
+button.grayBtn:hover , button.grayBtn.on{
+    background-color:#292929;
+    border:1px solid #1b1b1b;
+}
+/*whiteGray*/
+.T_btnLayer a.whiteGray, button.whiteGray{
+    border:1px solid #c6c6c6;
+    color:#666666;
+    background-color: #d9d9d9;
+    border-radius: 5px;
+}
+.T_btnLayer a.whiteGray:hover , .T_btnLayer a.whiteGray.on,
+button.whiteGray:hover , button.whiteGray.on{
+    background-color:#ffffff;
+    border:1px solid #c6c6c6;
+}
+/*게시판 버튼*/
+.T_btnLayer a.iconWhite , button.iconWhite{
+    background-color: white;
+    border:1px solid #ccc;
+    width: 68px;
+    height: 23px;
+    text-align: center;
+    border-radius: 3px;
+    margin-left: 5px;
+    text-indent: 15px;
+    background-repeat: no-repeat;
+    background-position: 9px center;
+    color:#555555;
+}
+.T_btnLayer a.iconWhite.type1, button.iconWhite.type1{
+    background-image: url('../../images/upArrowIcon.png');
+}
+.T_btnLayer a.iconWhite.type2, button.iconWhite.type2{
+    background-image: url('../../images/downArrowIcon.png');
+}
+.T_btnLayer a.iconWhite.type3 , button.iconWhite.type3{
+    background-image: url('../../images/printIcon.png');
+    background-position: 9px 5px;
+    width: 58px;
+    text-indent: 15px;
+}
+.T_btnLayer a:hover{
+    text-decoration: none ! important;
+}
+button[disabled=disabled],button:disabled {
+    opacity: 0.5 ! important;	
+}
+button[disabled=disabled]:hover,button:disabled:hover{
+	cursor: not-allowed;
+}
+.T_btnLayer span.buttonLabel{
+    float: left;
+    margin-left: 5px;
+    font-family: NanumGothicBold , "NanumGothicBold" , Dotum, "NanumGothic", Arial, sans-serif;
+    margin-right: 5px;
+    margin-top: 2px;
+    font-size: 15px;
+}
+
+.T_btnLayerFile{
+    margin-bottom : 5px;
+}
+.T_btnLayerFile button , .T_btnLayerFile a{
+    float:left;
+    text-align: center;
+}
+.T_btnLayerFile.ab{position: absolute;}
+.T_btnLayerFile.fl{float: left; clear: both;}
+.T_btnLayerFile.fr{float: right; clear: both;}
+.T_btnLayerFile.cn{clear: none ! important;}

@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eunwoosoft.opro.user.dao.OproUserVendInfoDao">
+
+	<select id="selectVendInfoDetail" resultType="dataEntity">
+        SELECT
+        		ARA_DEPT_CD
+				, VEND_REG_NO
+				, VEND_NM
+				, BIZRNO
+				, RPRS_NM
+				, BCNM
+				, BTNM
+				, TEL_NO
+				, EMAL_ADDR
+				, ADDR_NM
+				, VEND_CD
+				, BSNS_CD
+				, BSNS_NM
+				, CORP_REG_NO
+				, CHRGR_NM
+				, CHRGR_TEL_NO
+				, CHRGR_EMAL
+				, BKCD
+				, ACNO
+				, VEND_STCD
+				, WOMAN_YN
+				, HANDICAP_YN
+				, NEW_TECH_YN
+				, ECO_FRIENDLY_YN
+				, SER_HANDICAP_YN
+				, MAN_HANDICAP_YN
+				, SOCIAL_YN
+				, SMALL_YN
+				, SMMAN_YN
+				, SOCIAL_YN2
+				, HANDICAP_ST_CORP_YN
+				, NEP_YN
+				, CLIENT_TAX_TYPE
+				, INNO_TYPE_YN
+				, INNO_SHOP_YN
+				, VENTURE_YN
+				, TR_PUR_YN
+				, TR_TECH_YN
+		FROM V_CU_MST
+        WHERE VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectVendChrgrInfoDetail" resultType="dataEntity">
+        SELECT VEND_REG_NO
+                  , USR_SN
+                  , USR_NM
+                  , USR_ENM
+                  , TEL_NO
+                  , CP_NO
+                  , FX_NO
+                  , ZIP
+                  , ADDR_NM
+                  , ADDR_DENM
+                  , ADDR_ENM
+                  , EMAL_ADDR
+                  , USR_STCD
+                  , DEPT_NO
+                  , DEPT_NM
+                  , ODCD
+                  , ODNM
+                  , OPCD
+                  , OPNM
+                  , USR_TYCD
+                  , MNGR_YN
+                  , USE_YN
+                  , FNGR_REG_YN
+                  , LT_CONN_DT
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+                  , DLGT_YN
+           FROM T_CU_USER
+        WHERE VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+             AND DEL_AT = 'N'
+             AND USR_SN = 1
+	</select>
+	
+	<select id="selectVendAcctInfoList" resultType="dataEntity">
+        SELECT C.VEND_REG_NO
+                  , C.ACC_SN
+                  , DECRYPT_VAR('AES256', C.ACNO, '') AS ACNO
+                  , C.BKCD
+                  , C.BKNM
+                  , C.DPSO
+                  , C.ORD_SN
+                  , F.FILE_GRP_NO
+                  , F.FILE_SN
+                  , F.SYS_FILE_NM
+                  , C.BNK_BRNC_NM
+                  , C.DEL_AT
+                  , F.FILE_DOC_SECD
+           FROM T_CU_ACCT C
+                  , T_MM_FILE_MST F
+         WHERE 1=1
+             AND C.FILE_GRP_NO = F.FILE_GRP_NO(+)
+             AND DECRYPT_VAR('AES256', C.ACNO, '') = F.TSK_VKEY1
+             AND C.VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+             AND C.DEL_AT = 'N'
+             AND F.DEL_AT = 'N'
+         ORDER BY ACC_SN
+	</select>
+	
+	
+	<select id="selectVendAcctInfo" resultType="dataEntity">
+         SELECT VEND_REG_NO
+                  , ACC_SN
+                  , DECRYPT_VAR('AES256', ACNO, '') AS ACNO
+                  , BKCD
+                  , BKNM
+                  , DPSO
+                  , ORD_SN
+                  , BNK_BRNC_NM
+                  , DEL_AT
+                  , FILE_GRP_NO
+           FROM T_CU_ACCT
+         WHERE VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+             AND DEL_AT = 'N'
+	</select>
+	
+	
+	<select id="selectVendAcctFileGrpNoInqire" resultType="dataEntity">
+        SELECT DISTINCT FILE_GRP_NO AS FILE_GRP_NO
+          FROM T_CU_ACCT
+        WHERE VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectVendAcqsInfoList" resultType="dataEntity">
+        SELECT C.VEND_REG_NO
+                  , C.CTT_ACQS_SN
+                  , C.CTT_NM
+                  , C.ACQS_DE
+                  , C.ACQS_AGNM
+                  , C.RMK
+                  , C.DEL_AT
+                  , C.VLD_STDE
+                  , C.VLD_ENDE
+                  , C.DATA_CD
+                  , C.FILE_GRP_NO
+                  , F.FILE_SN
+                  , F.SYS_FILE_NM
+           FROM T_CU_CTT_ACQS C
+                  , T_MM_FILE_MST F
+         WHERE 1=1
+             AND C.FILE_GRP_NO = F.FILE_GRP_NO(+)
+             AND C.DATA_CD = F.TSK_VKEY1
+             AND C.VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+             AND C.DEL_AT = 'N'
+             AND F.DEL_AT = 'N'
+         ORDER BY CTT_ACQS_SN
+	</select>
+	
+	<select id="selectVendAcqsFileGrpNoInqire" resultType="dataEntity">
+        SELECT DISTINCT FILE_GRP_NO AS FILE_GRP_NO
+          FROM T_CU_CTT_ACQS
+        WHERE VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+	</select>
+	
+	
+	<update id="updateVendStcd">
+        UPDATE T_CU_MST
+              SET VEND_STCD = #{P_VEND_STCD, jdbcType=VARCHAR}
+                   , MODR_ID = #{USR_ID}
+                   , MODR_NM = #{USR_NM}
+                   , MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+          WHERE VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+	</update>
+	
+	<insert id="insertApprVendProgHist">
+		<selectKey keyProperty="P_APPR_SN" resultType="int" order="BEFORE">
+            SELECT NVL(MAX(APPR_SN)+1, 1)
+            FROM T_CU_APPR_HIST
+            WHERE VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+		</selectKey>
+        INSERT INTO T_CU_APPR_HIST (
+          VEND_REG_NO
+        , APPR_SN
+        , VEND_APPR_STCD
+        , APPR_CNTN
+        , APPR_PE_ID
+        , APPR_DT
+        , LT_CONN_DT
+        <include refid="ComRegr.RegrColumnClause"/>
+        ) VALUES (
+          #{P_VEND_REG_NO, jdbcType=VARCHAR}
+        , #{P_APPR_SN, jdbcType=VARCHAR}
+        , #{P_VEND_APPR_STCD, jdbcType=VARCHAR}
+        , #{P_APPR_CNTN, jdbcType=VARCHAR}
+        , #{P_APPR_PE_ID, jdbcType=VARCHAR}
+        , #{P_APPR_DT, jdbcType=VARCHAR}
+        , #{P_LT_CONN_DT, jdbcType=VARCHAR}
+        <include refid="ComRegr.RegrValueClause"/>
+        )
+	</insert>
+	
+	<update id="updateVendInfo">
+        UPDATE T_CU_MST
+              SET MODR_ID = #{USR_ID}
+                   , MODR_NM = #{USR_NM}
+                   , MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+                   <if test='P_VEND_STCD != null and P_VEND_STCD != "" '>, VEND_STCD = #{P_VEND_STCD, jdbcType=VARCHAR}</if>
+                   <if test='P_RERN_NUMB != null and P_RERN_NUMB != "" '>, RERN_NUMB = #{P_RERN_NUMB, jdbcType=VARCHAR}</if>
+                   <if test='P_TYPE_GUBN != null and P_TYPE_GUBN != "" '>, TYPE_GUBN = #{P_TYPE_GUBN, jdbcType=VARCHAR}</if>
+                   <if test='P_SPCL_ITEM != null and P_SPCL_ITEM != "" '>, SPCL_ITEM = #{P_SPCL_ITEM, jdbcType=VARCHAR}</if>
+                   <if test='P_RRNO != null and P_RRNO != "" '>, RRNO = #{P_RRNO, jdbcType=VARCHAR}</if>
+                   <if test='P_SPLY_VEND_SECD != null and P_SPLY_VEND_SECD != "" '>, SPLY_VEND_SECD = #{P_SPLY_VEND_SECD, jdbcType=VARCHAR}</if>
+                   <if test='P_CPTL_AMT != null and P_CPTL_AMT != "" '>, CPTL_AMT = #{P_CPTL_AMT, jdbcType=INTEGER}</if>
+                   <if test='P_MMBR_CNT != null and P_MMBR_CNT != "" '>, MMBR_CNT = #{P_MMBR_CNT, jdbcType=VARCHAR}</if>
+                   <if test='P_ESTB_DE != null and P_ESTB_DE != "" '>, ESTB_DE = #{P_ESTB_DE, jdbcType=VARCHAR}</if>
+                   <if test='P_ID != null and P_ID != "" '>, ID = #{P_ID, jdbcType=VARCHAR}</if>
+                   <if test='P_BIZRNO != null and P_BIZRNO != "" '>, BIZRNO = #{P_BIZRNO, jdbcType=VARCHAR}</if>
+                   <if test='P_CORP_REG_NO != null and P_CORP_REG_NO != "" '>, CORP_REG_NO = #{P_CORP_REG_NO, jdbcType=VARCHAR}</if>
+                   <if test='P_VEND_NM != null and P_VEND_NM != "" '>, VEND_NM = #{P_VEND_NM, jdbcType=VARCHAR}</if>
+                   <if test='P_VEND_ENM != null and P_VEND_ENM != "" '>, VEND_ENM = #{P_VEND_ENM, jdbcType=VARCHAR}</if>
+                   <if test='P_PWD != null and P_PWD != "" '>, PWD = #{P_PWD, jdbcType=VARCHAR}</if>
+                   <if test='P_RPRS_NM != null and P_RPRS_NM != "" '>, RPRS_NM = #{P_RPRS_NM, jdbcType=VARCHAR}</if>
+                   <if test='P_RPRS_ENM != null and P_RPRS_ENM != "" '>, RPRS_ENM = #{P_RPRS_ENM, jdbcType=VARCHAR}</if>
+                   <if test='P_TEL_NO != null and P_TEL_NO != "" '>, TEL_NO = #{P_TEL_NO, jdbcType=VARCHAR}</if>
+                   <if test='P_FX_NO != null and P_FX_NO != "" '>, FX_NO = #{P_FX_NO, jdbcType=VARCHAR}</if>
+                   <if test='P_ZIP != null and P_ZIP != "" '>, ZIP = #{P_ZIP, jdbcType=VARCHAR}</if>
+                   <if test='P_ADDR_NM != null and P_ADDR_NM != "" '>, ADDR_NM = #{P_ADDR_NM, jdbcType=VARCHAR}</if>
+                   <if test='P_ADDR_DENM != null and P_ADDR_DENM != "" '>, ADDR_DENM = #{P_ADDR_DENM, jdbcType=VARCHAR}</if>
+                   <if test='P_ADDR_ENM != null and P_ADDR_ENM != "" '>, ADDR_ENM = #{P_ADDR_ENM, jdbcType=VARCHAR}</if>
+                   <if test='P_EMAL_ADDR != null and P_EMAL_ADDR != "" '>, EMAL_ADDR = #{P_EMAL_ADDR, jdbcType=VARCHAR}</if>
+                   <if test='P_BTCD != null and P_BTCD != "" '>, BTCD = #{P_BTCD, jdbcType=VARCHAR}</if>
+                   <if test='P_BTNM != null and P_BTNM != "" '>, BTNM = #{P_BTNM, jdbcType=VARCHAR}</if>
+                   <if test='P_BCCD != null and P_BCCD != "" '>, BCCD = #{P_BCCD, jdbcType=VARCHAR}</if>
+                   <if test='P_BCNM != null and P_BCNM != "" '>, BCNM = #{P_BCNM, jdbcType=VARCHAR}</if>
+                   <if test='P_ESTB_YR != null and P_ESTB_YR != "" '>, ESTB_YR = #{P_ESTB_YR, jdbcType=VARCHAR}</if>
+                   <if test='P_CORP_TPCD != null and P_CORP_TPCD != "" '>, CORP_TPCD = #{P_CORP_TPCD, jdbcType=VARCHAR}</if>
+                   <if test='P_CORP_TYP_NM != null and P_CORP_TYP_NM != "" '>, CORP_TYP_NM = #{P_CORP_TYP_NM, jdbcType=VARCHAR}</if>
+                   <if test='P_HMPG_ADDR != null and P_HMPG_ADDR != "" '>, HMPG_ADDR = #{P_HMPG_ADDR, jdbcType=VARCHAR}</if>
+                   <if test='P_MBSH_CLA_AGRT_YN != null and P_MBSH_CLA_AGRT_YN != "" '>, MBSH_CLA_AGRT_YN = #{P_MBSH_CLA_AGRT_YN, jdbcType=VARCHAR}</if>
+                   <if test='P_MBSH_CLA_AGRT_DT != null and P_MBSH_CLA_AGRT_DT != "" '>, MBSH_CLA_AGRT_DT = #{P_MBSH_CLA_AGRT_DT, jdbcType=VARCHAR}</if>
+                   <if test='P_CERT_SBMT_YN != null and P_CERT_SBMT_YN != "" '>, CERT_SBMT_YN = #{P_CERT_SBMT_YN, jdbcType=VARCHAR}</if>
+                   <if test='P_USE_YN != null and P_USE_YN != "" '>, USE_YN = #{P_USE_YN, jdbcType=VARCHAR}</if>
+                   <if test='P_LT_CONN_DT != null and P_LT_CONN_DT != "" '>, LT_CONN_DT = #{P_LT_CONN_DT, jdbcType=VARCHAR}</if>
+                   <if test='P_CONN_IP != null and P_CONN_IP != "" '>, CONN_IP = #{P_CONN_IP, jdbcType=VARCHAR}</if>
+                   <if test='P_DEL_AT != null and P_DEL_AT != "" '>, DEL_AT = #{P_DEL_AT, jdbcType=VARCHAR}</if>
+                   <if test='P_PRTN_TYCD != null and P_PRTN_TYCD != "" '>, PRTN_TYCD = #{P_PRTN_TYCD, jdbcType=VARCHAR}</if>
+                   <if test='P_CMPP_LCTN != null and P_CMPP_LCTN != "" '>, CMPP_LCTN = #{P_CMPP_LCTN, jdbcType=VARCHAR}</if>
+                   <if test='P_CCN_SPHE != null and P_CCN_SPHE != "" '>, CCN_SPHE = #{P_CCN_SPHE, jdbcType=VARCHAR}</if>
+                   <if test='P_TCHN_SPHE != null and P_TCHN_SPHE != "" '>, TCHN_SPHE = #{P_TCHN_SPHE, jdbcType=VARCHAR}</if>
+                   <!-- 업체정보 수정에 따른 수정 비고 변경 -->
+                   <if test='P_MOD_RMK != null and P_MOD_RMK != "" '>, MOD_RMK = #{P_MOD_RMK, jdbcType=VARCHAR}</if>
+          WHERE VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateVendChrgrInfo">
+         UPDATE T_CU_USER
+               SET MODR_ID = #{USR_ID}
+                   , MODR_NM = #{USR_NM}
+                   , MOD_DT = TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+                   <if test='P_USR_NM != null and P_USR_NM != "" '>, USR_NM = #{P_USR_NM, jdbcType=VARCHAR}</if>
+                   <if test='P_USR_ENM != null and P_USR_ENM != "" '>, USR_ENM = #{P_USR_ENM, jdbcType=VARCHAR}</if>
+                   <if test='P_TEL_NO != null and P_TEL_NO != "" '>, TEL_NO = #{P_TEL_NO, jdbcType=VARCHAR}</if>
+                   <if test='P_CP_NO != null and P_CP_NO != "" '>, CP_NO = #{P_CP_NO, jdbcType=VARCHAR}</if>
+                   <if test='P_FX_NO != null and P_FX_NO != "" '>, FX_NO = #{P_FX_NO, jdbcType=VARCHAR}</if>
+                   <if test='P_ZIP != null and P_ZIP != "" '>, ZIP = #{P_ZIP, jdbcType=VARCHAR}</if>
+                   <if test='P_ADDR_NM != null and P_ADDR_NM != "" '>, ADDR_NM = #{P_ADDR_NM, jdbcType=VARCHAR}</if>
+                   <if test='P_ADDR_DENM != null and P_ADDR_DENM != "" '>, ADDR_DENM = #{P_ADDR_DENM, jdbcType=VARCHAR}</if>
+                   <if test='P_ADDR_ENM != null and P_ADDR_ENM != "" '>, ADDR_ENM = #{P_ADDR_ENM, jdbcType=VARCHAR}</if>
+                   <if test='P_EMAL_ADDR != null and P_EMAL_ADDR != "" '>, EMAL_ADDR = #{P_EMAL_ADDR, jdbcType=VARCHAR}</if>
+                   <if test='P_USR_STCD != null and P_USR_STCD != "" '>, USR_STCD = #{P_USR_STCD, jdbcType=VARCHAR}</if>
+                   <if test='P_DEPT_NO != null and P_DEPT_NO != "" '>, DEPT_NO = #{P_DEPT_NO, jdbcType=VARCHAR}</if>
+                   <if test='P_DEPT_NM != null and P_DEPT_NM != "" '>, DEPT_NM = #{P_DEPT_NM, jdbcType=VARCHAR}</if>
+                   <if test='P_ODCD != null and P_ODCD != "" '>, ODCD = #{P_ODCD, jdbcType=VARCHAR}</if>
+                   <if test='P_ODNM != null and P_ODNM != "" '>, ODNM = #{P_ODNM, jdbcType=VARCHAR}</if>
+                   <if test='P_OPCD != null and P_OPCD != "" '>, OPCD = #{P_OPCD, jdbcType=VARCHAR}</if>
+                   <if test='P_OPNM != null and P_OPNM != "" '>, OPNM = #{P_OPNM, jdbcType=VARCHAR}</if>
+                   <if test='P_USR_TYCD != null and P_USR_TYCD != "" '>, USR_TYCD = #{P_USR_TYCD, jdbcType=VARCHAR}</if>
+                   <if test='P_MNGR_YN != null and P_MNGR_YN != "" '>, MNGR_YN = #{P_MNGR_YN, jdbcType=VARCHAR}</if>
+                   <if test='P_USE_YN != null and P_USE_YN != "" '>, USE_YN = #{P_USE_YN, jdbcType=VARCHAR}</if>
+                   <if test='P_FNGR_REG_YN != null and P_FNGR_REG_YN != "" '>, FNGR_REG_YN = #{P_FNGR_REG_YN, jdbcType=VARCHAR}</if>
+                   <if test='P_LT_CONN_DT != null and P_LT_CONN_DT != "" '>, LT_CONN_DT = #{P_LT_CONN_DT, jdbcType=VARCHAR}</if>
+                   <if test='P_CONN_IP != null and P_CONN_IP != "" '>, CONN_IP = #{P_CONN_IP, jdbcType=VARCHAR}</if>
+                   <if test='P_DEL_AT != null and P_DEL_AT != "" '>, DEL_AT = #{P_DEL_AT, jdbcType=VARCHAR}</if>
+                   <if test='P_DLGT_YN != null and P_DLGT_YN != "" '>, DLGT_YN = #{P_DLGT_YN, jdbcType=VARCHAR}</if>
+          WHERE VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR} 
+              AND USR_SN = #{P_USR_SN, jdbcType=INTEGER}
+	</update>
+	
+	<select id="getBknm" resultType="dataEntity">
+        SELECT CD_DTL_NM AS P_BKNM
+           FROM T_MM_CODE_MST
+        WHERE DEL_AT = 'N'
+             AND USE_YN = 'Y'
+             AND CD_ID = 'BKCD'
+             AND CD_DTL_ID = #{P_BKCD, jdbcType=VARCHAR}
+	</select>
+	
+	<delete id="deleteVendAcctInfoList">
+        DELETE FROM T_CU_ACCT
+        WHERE VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+	</delete>
+	
+	
+	<insert id="insertVendAcctInfoList">
+        INSERT INTO T_CU_ACCT (
+          VEND_REG_NO
+        , ACC_SN
+        , ACNO
+        , BKCD
+        , BKNM
+        , DPSO
+        , ORD_SN
+        , FILE_GRP_NO
+        <include refid="ComRegr.RegrColumnClause"/>
+        , BNK_BRNC_NM
+        ) VALUES (
+          #{P_VEND_REG_NO, jdbcType=VARCHAR}
+        , #{P_ACC_SN, jdbcType=INTEGER}
+        , ENCRYPT_VAR('AES256', #{P_ACNO, jdbcType=VARCHAR}, '')
+        , #{P_BKCD, jdbcType=VARCHAR}
+        , #{P_BKNM, jdbcType=VARCHAR}
+        , #{P_DPSO, jdbcType=VARCHAR}
+        , #{P_ORD_SN, jdbcType=INTEGER}
+        , #{P_FILE_GRP_NO, jdbcType=VARCHAR}
+        <include refid="ComRegr.RegrValueClause"/>
+        , #{P_BNK_BRNC_NM, jdbcType=VARCHAR}
+        )
+	</insert>
+	
+	<delete id="deleteVendAcqsInfoList">
+		DELETE FROM T_CU_CTT_ACQS
+        WHERE VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+	</delete>
+	
+	
+	<select id="getCttNm" resultType="dataEntity">
+        SELECT CD_DTL_NM AS P_CTT_NM
+           FROM T_MM_CODE_MST
+        WHERE DEL_AT = 'N'
+             AND USE_YN = 'Y'
+             AND CD_ID = 'DATA_CD'
+             AND CD_DTL_ID = #{P_DATA_CD, jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="insertVendAcqsInfoList">
+        INSERT INTO T_CU_CTT_ACQS (
+          VEND_REG_NO
+        , CTT_ACQS_SN
+        , CTT_NM
+        , ACQS_DE
+        , ACQS_AGNM
+        , RMK
+        <include refid="ComRegr.RegrColumnClause"/>
+        , VLD_STDE
+        , VLD_ENDE
+        , DATA_CD
+        , FILE_GRP_NO
+        ) VALUES (
+          #{P_VEND_REG_NO, jdbcType=VARCHAR}
+        , #{P_CTT_ACQS_SN, jdbcType=INTEGER}
+        , #{P_CTT_NM, jdbcType=VARCHAR}
+        , #{P_ACQS_DE, jdbcType=VARCHAR}
+        , #{P_ACQS_AGNM, jdbcType=VARCHAR}
+        , #{P_RMK, jdbcType=VARCHAR}
+        <include refid="ComRegr.RegrValueClause"/>
+        , #{P_VLD_STDE, jdbcType=VARCHAR}
+        , #{P_VLD_ENDE, jdbcType=VARCHAR}
+        , #{P_DATA_CD, jdbcType=VARCHAR}
+        , #{P_FILE_GRP_NO, jdbcType=VARCHAR}
+        )
+	</insert>
+	
+	
+	<select id="selectVendItemList" resultType="dataEntity">
+        SELECT VEND_REG_NO
+                  , ITEM_NO
+                  , MKN_YN
+                  , SPLY_YN
+                  , ITEM_NM
+                  , G2B_CLS_NO
+                  , FRM_APPR_NO
+                  , FRM_APPR_AGNM
+                  , FRM_APPR_DE
+                  , YY3_SL_AMT
+                  , DLGT_ITEM_YN
+                  , ITEM_UPRC
+                  , LLF_CD
+                  , LLF_NM
+                  , MLF_CD
+                  , MLF_NM
+                  , SLF_CD
+                  , SLF_NM
+                  , DLF_CD
+                  , DLF_NM
+                  , DEL_AT
+           FROM T_CU_VEND_ITEM
+        WHERE VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+             AND DEL_AT = 'N'
+          ORDER BY ITEM_NO
+	</select>
+	
+	
+	<delete id="deleteVendItemList">
+        DELETE FROM T_CU_VEND_ITEM
+        WHERE VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+	</delete>
+	
+	<insert id="insertVendItemList">
+        INSERT INTO T_CU_VEND_ITEM (
+          VEND_REG_NO
+        , ITEM_NO
+        , MKN_YN
+        , SPLY_YN
+        , ITEM_NM
+        , G2B_CLS_NO
+        , FRM_APPR_NO
+        , FRM_APPR_AGNM
+        , FRM_APPR_DE
+        , YY3_SL_AMT
+        , DLGT_ITEM_YN
+        <include refid="ComRegr.RegrColumnClause"/>
+        , LLF_NM
+        , MLF_NM
+        , SLF_NM
+        , DLF_NM
+        , ITEM_UPRC
+        , LLF_CD
+        , MLF_CD
+        , SLF_CD
+        , DLF_CD
+        ) VALUES (
+          #{P_VEND_REG_NO, jdbcType=VARCHAR}
+        , #{P_ITEM_NO, jdbcType=VARCHAR}
+        , #{P_MKN_YN, jdbcType=VARCHAR}
+        , #{P_SPLY_YN, jdbcType=VARCHAR}
+        , #{P_ITEM_NM, jdbcType=VARCHAR}
+        , #{P_G2B_CLS_NO, jdbcType=VARCHAR}
+        , #{P_FRM_APPR_NO, jdbcType=VARCHAR}
+        , #{P_FRM_APPR_AGNM, jdbcType=VARCHAR}
+        , #{P_FRM_APPR_DE, jdbcType=VARCHAR}
+        , #{P_YY3_SL_AMT, jdbcType=INTEGER}
+        , #{P_DLGT_ITEM_YN, jdbcType=VARCHAR}
+        <include refid="ComRegr.RegrValueClause"/>
+        , #{P_LLF_NM, jdbcType=VARCHAR}
+        , #{P_MLF_NM, jdbcType=VARCHAR}
+        , #{P_SLF_NM, jdbcType=VARCHAR}
+        , #{P_DLF_NM, jdbcType=VARCHAR}
+        , #{P_ITEM_UPRC, jdbcType=INTEGER}
+        , #{P_LLF_CD, jdbcType=VARCHAR}
+        , #{P_MLF_CD, jdbcType=VARCHAR}
+        , #{P_SLF_CD, jdbcType=VARCHAR}
+        , #{P_DLF_CD, jdbcType=VARCHAR}
+        )
+	</insert>
+	
+	<select id="selectVendAtchDocList" resultType="dataEntity">
+        SELECT VEND_REG_NO
+                  , VEND_DOC_FSCD
+                  , FILE_GRP_NO
+                  , ORD_SN
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+           FROM T_CU_FILE_MST
+        WHERE VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+        AND DEL_AT = 'N'
+        <if test='P_FILE_GRP_NO != null and P_FILE_GRP_NO != "" '>
+	    AND FILE_GRP_NO = #{P_FILE_GRP_NO, jdbcType=VARCHAR}
+        </if>
+        <if test='P_VEND_DOC_FSCD != null and P_VEND_DOC_FSCD != "" '>
+	    AND VEND_DOC_FSCD = #{P_VEND_DOC_FSCD, jdbcType=VARCHAR}
+        </if>
+	</select>
+	
+	<insert id="insertVendAtchDocList">
+        INSERT INTO T_CU_FILE_MST (
+          VEND_REG_NO
+        , VEND_DOC_FSCD
+        , FILE_GRP_NO
+        , ORD_SN
+        <include refid="ComRegr.RegrColumnClause"/>
+        ) VALUES (
+          #{P_VEND_REG_NO, jdbcType=VARCHAR}
+        , #{P_VEND_DOC_FSCD, jdbcType=VARCHAR}
+        , #{P_FILE_GRP_NO, jdbcType=VARCHAR}
+        , #{P_ORD_SN, jdbcType=VARCHAR}
+        <include refid="ComRegr.RegrValueClause"/>
+        )
+	</insert>
+	
+	<delete id="deleteVendAtchDocList">
+        DELETE FROM T_CU_FILE_MST
+        WHERE VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+        <if test='P_VEND_DOC_FSCD != null and P_VEND_DOC_FSCD != "" '>
+	    AND VEND_DOC_FSCD = #{P_VEND_DOC_FSCD, jdbcType=VARCHAR}
+        </if>
+	</delete>
+	
+	<update id="updateVendAtchDocList">
+        UPDATE T_CU_FILE_MST
+              SET DEL_AT = 'Y'
+         WHERE VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+         <if test='P_VEND_DOC_FSCD != null and P_VEND_DOC_FSCD != "" '>
+              AND VEND_DOC_FSCD = #{P_VEND_DOC_FSCD, jdbcType=VARCHAR}
+         </if>
+	</update>
+	
+	<update id="updtVendPwd">
+		UPDATE T_CU_MST
+              SET PWD = #{P_PWD, jdbcType=VARCHAR}
+         WHERE VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+	</update>
+	
+	<select id="selectVendRtnProgList" resultType="dataEntity">	
+        SELECT VEND_REG_NO
+                  , APPR_SN
+                  , VEND_APPR_STCD
+                  , F_CDVAL_INQIRE('VEND_APPR_STCD', VEND_APPR_STCD) AS VEND_APPR_STCD_NM
+                  , APPR_CNTN
+                  , APPR_PE_ID
+                  , ( SELECT USERNAME FROM V_SSO_USER V WHERE A.APPR_PE_ID = V.USERID ) AS APPR_PE_NM
+                  , APPR_DT
+                  , LT_CONN_DT
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+           FROM T_CU_APPR_HIST A
+         WHERE 1=1 
+            AND DEL_AT = 'N'
+            AND VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+            AND VEND_APPR_STCD = 'D'
+            AND ROWNUM = 1
+         ORDER BY REG_DT DESC	
+	</select>
+	
+</mapper>

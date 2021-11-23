@@ -1,0 +1,178 @@
+@charset "utf-8";
+/* 
+	Copyright(c) 2018 Onlinepowers
+	http://www.onlinepowers.com
+*/
+
+
+/* --- font ---*/
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 200;
+	src: url(../../../statics/css/font/NotoSans-DemiLight.eot) format('eot');
+	src: url(../../../statics/css/font/NotoSans-DemiLight.otf) format('otf');
+}
+
+
+/* --- reset ---*/
+html, body, div, span, iframe,
+h1, h2, h3, h4, h5, h6, p,
+a, address, em, img, strong,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	box-sizing: border-box; 
+}
+html, body {
+	height: 100%;
+	font-size: 13px;
+	line-height: 1;
+	font-weight: 400;
+	letter-spacing: -0.5px;
+	font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+}
+address,em {font-style:normal; font-weight:normal; }
+a {text-decoration:none; color: #555;}
+img {vertical-align: middle;}
+
+ 
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+ol, ul {
+	list-style: none;
+}
+
+
+/* --- table ---*/
+table {
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+	table-layout: fixed;
+}
+
+
+
+
+/* --- form ---*/
+input,select,textarea,button {
+	font-size: 13px;
+	line-height: 13px;
+	font-weight: 200;
+	letter-spacing: -0.5px;
+	font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+	vertical-align: middle;
+}
+input[type="text"],
+input[type="search"],
+input[type="password"] {
+	width:100%; 
+	padding:0 12px; 
+	height: 30px; 
+	/* color:#333;  */
+	border: 1px solid #e0e0e0;
+	background:#fff; 
+	box-sizing: border-box;
+}
+button {
+	padding: 0;
+	border: 0 none;
+	background-color: transparent;
+	cursor: pointer;
+}
+input[type="radio"] {
+	margin: 0;
+	padding: 0;
+}
+select{
+	width:100%; 
+	padding-left:12px;  
+	height:30px; 
+	color:#354052; 
+	border:1px solid #e0e0e0; 
+	background:#fff url(../../../statics/images/opro/keri/select_arrow.png) no-repeat right 10px center;
+	background-size:10px 7px;
+	-webkit-appearance: none;  
+	-moz-appearance: none; 
+	-ms-appearance: none; 
+	-o-appearance: none; 
+	appearance: none; 
+	cursor:pointer;
+} 
+select::-ms-expand{display:none;} /* ie10 select화살표 지우기 */
+
+
+/* mobile reset */
+body {-webkit-text-size-adjust:none } /* 뷰표트 변환시 폰트크기 자동확대 방지 */
+input[type='text'],
+input[type='password'],
+input[type='submit'],
+input[type='search'], textarea {-webkit-appearance:none; border-radius:0; }
+input[type='checkbox'] {background:#666; -webkit-appearance:checkbox; }
+button, input[type='button'],
+input[type='submit'],
+input[type='reset'],
+input[type='file'] {-webkit-appearance:button; border-radius:0; }
+input[type='search']::-webkit-search-cancel-button {-webkit-appearance:none; }
+
+
+
+/* placeholder */ 
+::-webkit-input-placeholder {color:#a3a3a3; }
+::-moz-placeholder {color:#a3a3a3; } /* firefox 19+ */
+:-moz-placeholder {color:#a3a3a3; }
+:-ms-input-placeholder {color:#a3a3a3; } /* ie */
+
+
+
+/* textaarea */
+textarea{
+	width:100%; 
+	padding:10px;  
+	height:150px; 
+	color:#666;
+	border:1px solid #ccc; 
+	resize:none; 
+	box-sizing: border-box;
+}
+textarea:focus{outline:0;}
+
+
+/* clear */
+.clear:after {
+	display: block;
+	content: '';
+	clear: both;
+}
+
+
+/* ellipsis */
+.ellipsis{
+	display: -webkit-box;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	-webkit-box-orient: vertical;
+	word-wrap: break-word;
+	/* white-space: nowrap */ /* 줄바꿈x */
+}
+
+ 
+
+/* hide */
+caption,
+legend {position:absolute; visibility:hidden; width:0; height:0; font-size:0; line-height:0;  overflow:hidden;}
+
+ /* 대체 텍스트 숨김 */
+.ir_pm {display:block; overflow:hidden; font-size:0px; line-height:0; text-indent:-9999px; } /* 사용된 이미지내 의미있는 텍스트의 대체텍스트를 제공할때 */
+.ir_wa {display:block; overflow:hidden; position:relative; z-index:-1; width:100%; height:100%; } /* 중요한 이미지 대체텍스트로 이미지off시에도 대체 텍스트를 보여주고자 할때 */
+.screen_out {overflow:hidden; position:absolute; width:0; height:0; line-height:0; text-indent:-9999px; } /* 대체텍스트가 아닌 접근성을 위한 숨김텍스트를 제공할때 */

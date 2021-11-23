@@ -1,0 +1,41 @@
+@charset "utf-8";
+
+td {
+	font-size: 10pt;
+}
+
+th {
+	font-size: 10pt;
+    font-weight: bold;
+    text-align: center;
+}
+
+.border1 {
+	width:650px; 
+	/*border: 2px solid #000000 !important;*/ 
+    margin: 0px;
+    padding: 0px;
+    border-spacing: 0px;
+}
+
+.border2 {
+	width:95%; 
+    margin: 5px;
+    padding: 5px;
+    border-spacing: 0px;
+}
+
+/* 계약서 타이틀 */
+.first_title {
+    text-align: center;
+    font-size: 18pt;
+    font-weight: bold;
+    color: #000000;
+    line-height: 50px;
+    margin-top: 20px;
+    text-decoration: underline;
+}
+
+.txtl{text-align:left !important;}
+.txtc{text-align:center !important;}
+.txtr{text-align:right !important;}

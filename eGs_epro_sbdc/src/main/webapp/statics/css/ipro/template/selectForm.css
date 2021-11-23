@@ -1,0 +1,83 @@
+@charset "utf-8";
+
+.selectLayer2.mr_10{margin-right : 10px ! important;}
+.selectLayer2.mr_5{margin-right : 5px ! important;}
+.selectLayer3.mr_10{margin-right : 10px ! important;}
+.selectLayer3.mr_5{margin-right : 5px ! important;}
+.selectLayer2.w_116{ width: 116px; }
+.selectLayer2.w_116 ul{ width: 114px; }
+
+/* Select style 1*/
+.selectLayer{ position:relative; line-height:normal; display:inline-block; *display:inline; vertical-align:middle; background:#fff; *zoom:1; width: 75px; float: left; margin: 10px 0 0 20px;}
+.selectLayer *{ margin:0; padding:0; cursor:pointer; font-size:12px;}
+.selectLayer .myValue{ position:relative; z-index:2; left:0; top:0; color:#666; line-height:19px; _line-height:normal; text-align:left; overflow:visible; background:transparent;}
+.selectLayer .myValue.selected{ font-weight:bold;}
+.selectLayer button.myValue{ height:21px; width:100%; text-indent:8px; *text-indent:0; *padding-left:5px;}
+.selectLayer div.myValue{ height:19px; text-indent:8px;}
+.selectLayer .ctrl{ position:absolute; top:0; right:0; width:18px; height:19px; background:#fff;}
+.selectLayer .arrow{ position:absolute; width:0; height:0; top:9px; right:6px; line-height:0; font-size:0; border-top:3px solid #999; border-left:3px solid #fff; border-right:3px solid #fff;}
+.selectLayer ul{ top:20px; left:0; width:100%; list-style:none; background:#f5f5f5; overflow:hidden; position: absolute; z-index: 10; padding:5px 0; border:1px solid #d9d9d9;}
+.selectLayer ul.aList{ display:none;}
+.selectLayer.open ul.aList{ display:block;}
+.selectLayer ul.iList{ display:none;}
+.selectLayer.open ul.iList{ display:block;}
+.selectLayer li{ position:relative; overflow:hidden; white-space:nowrap; height:23px;}
+.selectLayer li input.option{ position:absolute; width:100%; height:20px; line-height:20px;}
+.selectLayer li label{ position:absolute; left:0; top:0; width:100%; text-indent:8px; *text-indent:0px; height:23px; line-height:23px; color:#000; background:#f5f5f5;}
+.selectLayer li a{ display:block; text-indent:8px; *text-indent:8px; height:23px; line-height:23px; color:#000; background:#f5f5f5; text-decoration:none;}
+/*.selectLayer li label:hover , .selectLayer li a:hover{ background:#e2e2e2;}*/
+
+/* Select style 2*/
+.selectLayer2{ position:relative; line-height:normal; display:inline-block; *display:inline; vertical-align:middle; background:#fff; *zoom:1; float: left; margin: 2px 0 0 0px;}
+.selectLayer2 *{ margin:0; padding:0; cursor:pointer; font-size:12px;}
+.selectLayer2 .myValue{ position:relative; z-index:2; left:0; top:0; color:#666; line-height:27px; _line-height:normal; text-align:left; overflow:visible; background:transparent;}
+.selectLayer2 div.myValue{ height:26px; text-indent:11px; border: 1px solid #D4D4D4;}
+.selectLayer2 .ctrl{ position:absolute; top:0; right:0; width:28px; height:26px; background:#fff; border:1px solid #D4D4D4;}
+.selectLayer2 .arrow{ position:absolute; width:0; height:0; top:11px; right:10px; line-height:0; font-size:0; border-top:4px solid #999; border-left:4px solid #fff; border-right:4px solid #fff;}
+.selectLayer2 ul{ top:28px; left:0; width:220px; list-style:none; background:#f5f5f5; overflow:hidden; position: absolute; z-index: 10; padding:5px 0; border:1px solid #d9d9d9; border-top:none;}
+.selectLayer2 ul.aList{ display:none;}
+.selectLayer2.open ul.aList{ display:block;}
+.selectLayer2 li{ position:relative; overflow:hidden; white-space:nowrap; height:28px;}
+.selectLayer2 li input.option{ position:absolute; width:100%; height:20px; line-height:20px;}
+.selectLayer2 ul.iList{ display:none;}
+.selectLayer2.open ul.iList{ display:block;}
+.selectLayer2 li label{ position:absolute; left:0; top:0; width:100%; text-indent:11px; *text-indent:7; height:28px; line-height:26px; color:#000; background: #f5f5f5; }
+.selectLayer2 li a{ display:block; text-indent:11px; *text-indent:7px; height:28px; line-height:26px; color:#000; background:#f5f5f5; text-decoration:none;}
+.selectLayer2:hover , .selectLayer2:focus{background-color:#ecf8ff}
+.selectLayer2:hover .ctrl , .selectLayer2:focus .ctrl{border:1px solid #7dcaf8; background-color:#c9e4f3;}
+.selectLayer2:hover .myValue , .selectLayer2:focus .myValue{border:1px solid #7dcaf8;}
+.selectLayer2:hover .arrow , .selectLayer2:focus .arrow{border-top:4px solid #017ac3; border-left:4px solid #c9e4f3; border-right:4px solid #c9e4f3;}
+/*.selectLayer2 li label:hover , .selectLayer2 li a:hover{ background:#e2e2e2;}*/
+
+
+/*selectLayer3*/
+.selectLayer3{ position: relative; width: 98px; height: 30px; float: left; }
+.selectLayer3 img{ width: 79px; height: 30px; }
+.selectLayer3 .myValue{ position: relative; cursor: pointer; width: 98px; height: 30px; }
+.selectLayer3 .ctrl{ position:absolute; top:8px; right:0; width:28px; height:15px; background:#fff; border-right:1px solid #D4D4D4; }
+.selectLayer3 .arrow{ position:absolute; width:0; height:0; top:5px; right:10px; line-height:0; font-size:0; border-top:4px solid #999; border-left:4px solid #fff; border-right:4px solid #fff; }
+.selectLayer3 .aList{ width: 79px; border: 6px solid #017ac3; position: absolute; top: -36px; left: -4px; z-index: 5; }
+
+/*selectLayer4*/
+/* Select style 1*/
+.selectLayer4{ position:relative; line-height:normal; display:inline-block; *display:inline; vertical-align:middle; background:#fff; *zoom:1; width: 95px; float: left; margin: 6px 0 0 10px;}
+.selectLayer4 *{ margin:0; padding:0; cursor:pointer; font-size:12px;}
+.selectLayer4 .myValue{ position:relative; z-index:2; left:0; top:0; color:#666; line-height:19px; _line-height:normal; text-align:left; overflow:visible; background:transparent;}
+.selectLayer4 div.myValue{ height:19px; text-indent:8px;}
+.selectLayer4 .ctrl{ position:absolute; top:0; right:0; width:18px; height:19px; background:#fff;}
+.selectLayer4 .arrow{ position:absolute; width:0; height:0; top:9px; right:6px; line-height:0; font-size:0; border-top:3px solid #999; border-left:3px solid #fff; border-right:3px solid #fff;}
+.selectLayer4 ul{ top:20px; left:0; width:100%; list-style:none; background:#f5f5f5; overflow:hidden; position: absolute; z-index: 10; padding:5px 0; border:1px solid #d9d9d9;}
+.selectLayer4 ul.aList{ display:none;}
+.selectLayer4.open ul.aList{ display:block;}
+.selectLayer4 ul.iList{ display:none;}
+.selectLayer4.open ul.iList{ display:block;}
+.selectLayer4 li{ position:relative; overflow:hidden; white-space:nowrap; height:23px;}
+.selectLayer4 li input.option{ position:absolute; width:100%; height:20px; line-height:20px;}
+.selectLayer4 li label{ position:absolute; left:0; top:0; width:100%; text-indent:8px; *text-indent:7; height: 23px; line-height: 23px; color:#000; background: #f5f5f5; }
+.selectLayer4 li a{ display:block; text-indent:8px; *text-indent:8px; height:23px; line-height:23px; color:#000; background:#f5f5f5; text-decoration:none;}
+/*.selectLayer4 li label:hover , .selectLayer4 li a:hover{ background:#e2e2e2;}*/
+
+.selectLayer select , .selectLayer2 select, .selectLayer4 select{
+    width: 100% ! important;
+    height: 28px ! important;
+}

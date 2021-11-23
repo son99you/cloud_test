@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eunwoosoft.ipro.vend.dao.IproVendSplyItemDao">
+ 
+ 	<select id="selectSplyItemMngListWithPgng" resultType="dataEntity"> 
+		SELECT R2.* FROM (
+			SELECT R1.*, ROWNUM AS RNUM FROM (  
+		SELECT * FROM (
+			<include refid="splyItemMngList"/>
+			<include refid="splyItemMngListWhere"/> 
+		) T1
+		<![CDATA[	) R1 WHERE ROWNUM <= (NVL(#{P_PAGE_NO, jdbcType=INTEGER}, 1) - 1) * NVL(#{P_PAGE_SIZE, jdbcType=INTEGER}, 20) + NVL(#{P_PAGE_SIZE, jdbcType=INTEGER}, 20) 
+	 	) R2 WHERE R2.RNUM > (NVL(#{P_PAGE_NO, jdbcType=INTEGER}, 1) - 1) * NVL(#{P_PAGE_SIZE, jdbcType=INTEGER}, 20)
+	 ]]>
+	</select>
+	
+	<select id="selectSplyItemMngListTotCnt" resultType="int">
+		SELECT COUNT(1) FROM (
+			<include refid="splyItemMngList"/>
+			<include refid="splyItemMngListWhere"/> 
+		) T1
+		WHERE 1 = 1		 
+	</select>
+	
+	<sql id="splyItemMngList">
+	<!-- SELECT * FROM (
+        SELECT VEND_REG_NO
+                  , ( SELECT VEND_NM FROM T_CU_MST C WHERE C.VEND_REG_NO = V.VEND_REG_NO ) AS VEND_NM
+                  , ITEM_NO
+                  , MKN_YN
+                  , SPLY_YN
+                  , ITEM_NM
+                  , G2B_CLS_NO
+                  , FRM_APPR_NO
+                  , FRM_APPR_AGNM
+                  , FRM_APPR_DE
+                  , YY3_SL_AMT
+                  , DLGT_ITEM_YN
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+                  , LLF_NM
+                  , MLF_NM
+                  , SLF_NM
+                  , DLF_NM
+                  , ITEM_UPRC
+                  , LLF_CD
+                  , MLF_CD
+                  , SLF_CD
+                  , DLF_CD
+           FROM T_CU_VEND_ITEM V
+       ) -->
+       
+        SELECT * FROM (
+            SELECT M.VEND_REG_NO
+                      , M.VEND_NM
+                      , M.BIZRNO
+                      , I.ITEM_NO
+                      , I.ITEM_NM
+                      , I.ITEM_UPRC
+                      , NVL(C.CONT_CNT, 0) AS CONT_CNT
+               FROM T_CU_MST M
+                      , T_CU_VEND_ITEM I
+                      , ( SELECT COUNT(*) AS CONT_CNT
+		                             , VEND_REG_NO
+			                  FROM T_CT_MST CT
+			                         , T_CT_VEND VEND
+			                WHERE CT.CONT_NO = VEND.CONT_NO
+			                    AND CT.CHNG_NGR = VEND.CHNG_NGR
+			                    AND CT.CONT_PSCD = 'CT80'
+			                    AND CT.DEL_AT = 'N'
+			                GROUP BY VEND_REG_NO
+                      ) C
+            WHERE 1=1
+                AND M.VEND_REG_NO = I.VEND_REG_NO
+                AND I.VEND_REG_NO = C.VEND_REG_NO(+)
+                AND M.DEL_AT = 'N'
+            ORDER BY CONT_CNT DESC
+        )
+	</sql>
+	
+	<sql id="splyItemMngListWhere">
+		<where>
+			1=1
+			<if test='P_ITEM_NO_S != null and P_ITEM_NO_S != "" '>
+				AND ITEM_NO LIKE '%'|| #{P_ITEM_NO_S} || '%'
+			</if>
+			<if test='P_ITEM_NM_S != null and P_ITEM_NM_S != "" '>
+				AND ITEM_NM LIKE '%'|| #{P_ITEM_NM_S} || '%'
+			</if>
+			<if test='P_VEND_NM_S != null and P_VEND_NM_S != "" '>
+				AND VEND_NM LIKE '%'|| #{P_VEND_NM_S} || '%'
+			</if>
+		</where>
+	</sql>
+	
+		<!--  
+     * <pre>
+     * 1. 개요 : 구매의뢰 물품 정보 조회
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectPaItemInfo
+     * @date : 2019. 05. 29.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2019. 05. 29.       은우소프트 맹경열              최초 작성 
+     *  =======================================================   
+     -->	
+	<select id="selectItemAnncInfo" resultType="dataEntity">
+		SELECT	MST.ANNC_NO
+					, MST.ANNC_NGR
+					, MST.BID_NM
+					, MST.CHRGR_NM
+					, MST.CHRGR_TEL_NO
+					, RND.ROUND_NO
+					, RND.BIDC_SBMT_STDT
+					, RND.BIDC_SBMT_ENDT
+					, TO_CHAR(TO_DATE(RND.BIDC_SBMT_STDT, 'yyyyMMdd'), 'yyyy-MM-dd') AS BIDC_SBMT_STDT_STR
+					, TO_CHAR(TO_DATE(RND.BIDC_SBMT_ENDT, 'yyyyMMdd'), 'yyyy-MM-dd') AS BIDC_SBMT_ENDT_STR					
+					, CU.VEND_NM
+					, USR.EMAL_ADDR
+		FROM		T_BI_MST MST
+					, T_BI_ROUND RND
+					, T_BI_VEND_MST VEND
+					, T_CU_MST CU
+					, T_CU_USER USR
+		WHERE	1=1
+		AND		( SELECT MAX(ANNC_NGR) FROM T_BI_MST WHERE ANNC_NO = MST.ANNC_NO )		
+		AND		MST.ANNC_NO = RND.ANNC_NO
+		AND		MST.ANNC_NGR = RND.ANNC_NGR
+		AND		( SELECT MAX(ROUND_NO) FROM T_BI_ROUND WHERE ANNC_NO = RND.ANNC_NO AND ANNC_NGR = RND.ANNC_NGR )
+		AND		RND.ANNC_NO = VEND.ANNC_NO
+		AND		RND.ANNC_NGR = VEND.ANNC_NGR
+		AND		RND.ROUND_NO = VEND.ROUND_NO
+		AND		VEND.ANNC_NO = CU.ANNC_NO
+		AND		VEND.ANNC_NGR = CU.ANNC_NGR
+		AND		VEND.ROUND_NO = CU.ROUND_NO
+		AND		VEND.VEND_REG_NO = CU.VEND_REG_NO
+		AND		CU.VEND_REG_NO = USR.VEND_REG_NO
+		AND		USR.USER_SN = '1'
+		AND		MST.ANNC_NO = #{P_ANNC_NO}
+		AND		EXISTS ( 
+								SELECT	ANNC_NO 
+								FROM		T_BI_ITEM
+								WHERE	1=1
+								<foreach separator="," item="item_no" collection="P_ITEM_NO_LIST" open="(" close=")" >
+									#{item_no, jdbcType=VARCHAR}
+								</foreach>
+								)
+	</select>
+	
+	<select id="selectVendRegNoUsrInfo" resultType="dataEntity">
+        SELECT VEND_REG_NO
+                  , USR_SN
+                  , USR_NM
+                  , TEL_NO
+                  , CP_NO
+                  , EMAL_ADDR
+                  , DLGT_YN
+           FROM T_CU_USER
+        WHERE 1=1
+            AND DEL_AT = 'N'
+            AND DLGT_YN = 'Y'
+            <if test='P_VEND_REG_NO != null and P_VEND_REG_NO != "" '>
+            AND VEND_REG_NO = #{P_VEND_REG_NO}
+            </if>
+            <!-- <if test='P_VEND_REG_NO_LIST != null and P_VEND_REG_NO_LIST != "" '>
+            	AND VEND_REG_NO IN 
+	            <foreach separator="," item="vend_reg_no" collection="P_VEND_REG_NO_LIST" open="(" close=")" >
+	                #{vend_reg_no, jdbcType=VARCHAR}
+	            </foreach>
+            </if> -->
+        
+	</select>
+ 	
+ </mapper>

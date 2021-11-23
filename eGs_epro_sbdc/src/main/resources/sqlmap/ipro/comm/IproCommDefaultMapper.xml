@@ -1,0 +1,631 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+ * 기술평가 > 조달공통 Mapper
+ *
+ * <pre>
+ * sqlmap.oda.iep.prcm
+ *    |_ IepPrcmPrcureCmmnMapper.xml
+ * 
+ * </pre>
+ * @date : 2015. 02. 09. 오후 3:20:00
+ * @version : 1.0
+ * @author : 은우소프트 김봉수
+-->
+<mapper namespace="com.eunwoosoft.ipro.comm.dao.IproCommDefaultDao">	
+
+	<!--  
+     * <pre>
+     * 1. 개요 : 공통 첨부 파일 정보 조회(단건)
+     * 2. 처리내용 :
+     *  	TABLE : T_MM_FILE_MST(공통첨부파일)
+     -->
+	<select id="selectCmmnFileInfoInqire" resultType="dataEntity">
+        SELECT 	FILE_GRP_NO
+                  , FILE_SN
+                  , ATCH_FSCD
+                  , TSK_SECD
+                  , SV_FILE_NM
+                  , SYS_FILE_NM
+                  , FILE_SZ
+                  , FILE_LCTN
+                  , FILE_DOC_NM
+                  , FILE_DESC
+                  , OPEN_YN
+                  , TSK_VKEY1
+                  , TSK_VKEY2
+                  , TSK_VKEY3
+                  , RMK
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+           FROM T_MM_FILE_MST
+        WHERE FILE_SN =  #{P_FILE_SN , jdbcType=VARCHAR}
+        <if test="P_FILE_GRP_NO != null and P_FILE_GRP_NO != '' ">
+            AND FILE_GRP_NO = #{P_FILE_GRP_NO , jdbcType=VARCHAR}
+        </if>
+	</select>
+	
+	
+	<select id="selectCmmnImstarsFileInfo" resultType="dataEntity">
+        SELECT 	REQST_NO
+                  , FILE_ID
+                  , FILE_SN
+                  , REPLACE(FILE_STRE_COURS, '/gfsdata/imstars/upload') AS FILE_STRE_COURS
+                  , STRE_FILE_NM
+                  , WON_FILE_NM
+                  , FILE_EXTSN
+                  , FILE_CN
+                  , FILE_MG
+                  , REGIST_DT
+                  , REGISTER_ID
+                  , CHANGE_DT
+                  , CHANGER_ID
+                  , USE_AT
+           FROM SPORT_REQST_FILEDETAILINFO
+        WHERE FILE_ID =  #{P_FILE_ID, jdbcType=VARCHAR}
+        <if test="P_REQST_NO != null and P_REQST_NO != '' ">
+            AND REQST_NO = #{P_REQST_NO, jdbcType=VARCHAR}
+        </if>	
+        <if test="P_FILE_SN != null and P_FILE_SN != '' ">
+            AND FILE_SN = #{P_FILE_SN, jdbcType=VARCHAR}
+        </if>	
+	</select>
+	
+	<select id="selectCmmnImstarsDetailFileInfo" resultType="dataEntity">
+        SELECT FILE_ID
+                  , FILE_SN
+                  , REPLACE(FILE_STRE_COURS, '/gfsdata/imstars/upload') AS FILE_STRE_COURS
+                  , STRE_FILE_NM
+                  , WON_FILE_NM
+                  , FILE_EXTSN
+                  , FILE_CN
+                  , FILE_MG
+                  , REGIST_DT
+                  , REGISTER_ID
+                  , CHANGE_DT
+                  , CHANGER_ID
+                  , USE_AT
+           FROM CMMN_FILEDETAILINFO
+        WHERE 1=1
+            AND FILE_ID = #{P_FILE_ID}
+        <if test='P_FILE_SN != null and P_FILE_SN != "" '>
+			AND FILE_SN = #{P_FILE_SN}
+		</if>
+		   AND USE_AT = 'Y'
+        ORDER BY FILE_SN
+	</select>
+	
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 공통 첨부 파일 정보 조회(다건)
+     * 2. 처리내용 :
+     *  	TABLE : TMDM_ATFI(공통첨부파일)
+     -->
+	<select id="selectCmmnFileListInqire" resultType="dataEntity">
+		SELECT 	FILE_GRP_NO
+					,FILE_SN
+					,ATCH_FSCD
+					,TSK_SECD
+					,SV_FILE_NM
+					,SYS_FILE_NM
+					,FILE_SZ
+					,FILE_LCTN
+					,FILE_DOC_NM
+					,FILE_DESC
+					,OPEN_YN
+					,TSK_VKEY1
+					,TSK_VKEY2
+					,TSK_VKEY3
+					,RMK
+					,REGR_ID
+					,REGR_NM
+					,REG_DT
+					,MODR_ID
+					,MODR_NM
+					,MOD_DT
+					,CONN_IP
+					,DEL_AT
+		FROM 	T_MM_FILE_MST
+		WHERE	1=1
+		<if test='fileSnList != null and fileSnList.size != 0'>
+		AND		FILE_SN IN
+		<foreach separator="," item="fileSn" collection="fileSnList" open="(" close=")">
+					#{fileSn, jdbcType=VARCHAR}
+		</foreach>
+		</if>
+		<if test='fileGrpList != null and fileGrpList.size != 0'>
+		AND		FILE_GRP_NO IN
+		<foreach separator="," item="fileGrp" collection="fileGrpList" open="(" close=")">
+					#{fileGrp, jdbcType=VARCHAR}
+		</foreach>
+		</if>
+		AND		DEL_AT NOT IN ('Y')
+	</select>
+	
+	
+	
+	<select id="selectcomCmcdScsCdInqireByCdId" resultType="dataEntity">		
+		SELECT	T1.CD_ID
+				,	T1.CD_VALUE 
+				,	T1.CD_VALUE_NM
+		FROM		TMDM_CODECO T1		
+		WHERE	T1.CD_ID = #{P_CD_ID, jdbcType=VARCHAR, javaType=String}
+		AND		NVL(T1.USE_AT, 'Y') != 'N'
+			<!-- AND	T1.DELETE_AT = 'N' -->
+		<if test='P_USE_AT != null and P_USE_AT != "" '>
+			    AND T1.USE_AT = #{P_USE_AT}
+		</if>
+		<if test='P_DATE_AT != null and P_DATE_AT == "Y" '>
+				AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN T1.BEGIN_DE AND T1.END_DE	
+		</if>
+		<if test='P_EXTRA1_VALUE != null and P_EXTRA1_VALUE != "" '>
+			    AND EXTRA1_VALUE = #{P_EXTRA1_VALUE}
+		</if>
+		<if test='P_EXTRA2_VALUE != null and P_EXTRA2_VALUE != "" '>
+			    AND EATRA2_VALUE = #{P_EXTRA2_VALUE}
+		</if>
+		<if test='P_EXTRA3_VALUE != null and P_EXTRA3_VALUE != "" '>
+			    AND EXTRA3_VALUE = #{P_EXTRA3_VALUE}
+		</if>
+		<if test='P_EXTRA4_VALUE != null and P_EXTRA4_VALUE != "" '>
+			    AND EXTRA4_VALUE = #{P_EXTRA4_VALUE}
+		</if>
+		<if test='P_EXTRA5_VALUE != null and P_EXTRA5_VALUE != "" '>
+			    AND EXTRA5_VALUE = #{P_EXTRA5_VALUE}
+		</if>
+		
+		ORDER BY CD_ORDR_NO		 
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 결재대상 Form Html 불러오기
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectApplFormHtml
+     * @date : 2018. 10. 15.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2018. 10. 05.       은우소프트 맹경열              최초 작성 
+     *  =======================================================  
+     -->
+    <resultMap id="selectApplFormHtmlEntity" type="dataEntity">
+		<result property="HTML_CNTN" column="HTML_CNTN" jdbcType="CLOB" javaType="java.lang.String" />
+	</resultMap>	     
+	<select id="selectApplFormHtml" resultMap="selectApplFormHtmlEntity">
+		SELECT	FRM_ID
+					, HTML_CNTN
+					, APPR_TSK_SECD
+					, USE_YN
+		FROM		T_MM_APPL_FORM
+		WHERE	1=1
+		AND		FRM_ID = #{P_FRM_ID, jdbcType=VARCHAR}
+		AND		NVL(USE_YN, 'N') = 'Y'
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 인터페이스 테이블 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectApplFormHtml
+     * @date : 2018. 10. 15.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2018. 10. 05.       은우소프트 맹경열              최초 작성 
+     *  =======================================================  
+     -->		
+	<insert id="insertIfLegacyMst" >
+		<selectKey keyProperty="P_INTERFACE_ID" resultType="String" order="BEFORE">
+			SELECT	#{P_PREFIX_STR}||TO_CHAR(SYSTIMESTAMP, 'YYYYMMDDHH24MISSFF3') AS P_INTERFACE_ID
+			FROM		DUAL 
+		</selectKey>
+		INSERT
+		INTO		T_GWAPP_LEGACY
+		(
+			INTERFACE_ID
+			, DRAFT_COM
+			, DRAFT_SABUN
+			, DRAFT_DEPT
+			, FORM_ID
+			, TITLE
+			, MAIN_TITLE
+			, HTML_DATA1
+			, REG_DATE
+		)
+		VALUES
+		(
+			#{P_INTERFACE_ID, jdbcType=VARCHAR}
+			, 'COM0'
+			, #{P_DRAFT_SABUN, jdbcType=VARCHAR}
+			, #{P_DRAFT_DEPT, jdbcType=VARCHAR}
+			, #{P_FRM_ID, jdbcType=VARCHAR}
+			, #{P_TITLE, jdbcType=VARCHAR}
+			, #{P_MAIN_TITLE, jdbcType=VARCHAR}
+			, #{P_HTML_DATA1, jdbcType=CLOB}
+			, SYSDATE
+		)
+	</insert>
+	
+	<insert id="insertIfLegacyDoc">
+		<selectKey keyProperty="P_APP_SEQ" resultType="int" order="BEFORE">
+			SELECT	NVL(MAX(APP_SEQ)+1,1)
+			FROM	T_GWAPPREL_LEGACY
+			WHERE	INTERFACE_ID =  #{P_INTERFACE_ID, jdbcType=VARCHAR}
+		</selectKey>
+		INSERT INTO	T_GWAPPREL_LEGACY (
+			INTERFACE_ID
+			, APP_SEQ
+			, APP_ID
+			, REG_DATE
+			, CHG_DATE
+		)VALUES(
+			#{P_INTERFACE_ID, jdbcType=VARCHAR}
+			, #{P_APP_SEQ, jdbcType=INTEGER}
+			, #{P_APP_ID, jdbcType=VARCHAR}
+			, SYSDATE
+			, SYSDATE
+		)
+	</insert>
+	
+	<insert id="insertIfLegacyFile">
+		<selectKey keyProperty="P_APP_SEQ" resultType="int" order="BEFORE">
+			SELECT	NVL(MAX(APP_SEQ)+1,1)
+			FROM	T_GWAPPFILE_LEGACY
+			WHERE	INTERFACE_ID =  #{P_INTERFACE_ID, jdbcType=VARCHAR}
+		</selectKey>
+		INSERT INTO	T_GWAPPFILE_LEGACY (
+			INTERFACE_ID
+			, APP_SEQ
+			, APP_FILEPATH
+			, APP_FILENAME
+			, REG_DATE
+			, CHG_DATE
+		)VALUES(
+			#{P_INTERFACE_ID, jdbcType=VARCHAR}
+			, #{P_APP_SEQ, jdbcType=INTEGER}
+			, #{P_APP_FILEPATH, jdbcType=VARCHAR}
+			, #{P_APP_FILENAME, jdbcType=VARCHAR}
+			, SYSDATE
+			, SYSDATE
+		)
+	</insert>			
+	
+	<select id="selectIfLegacyMst" resultType="dataEntity">
+		SELECT INTERFACE_ID
+					,APP_ID
+					,DOC_NO
+		FROM	T_GWAPP_LEGACY
+		WHERE	INTERFACE_ID = #{P_DOC_NO, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="vendDetail" resultType="dataEntity">
+		SELECT VEND_REG_NO
+					,VEND_NM
+		FROM		T_CU_MST
+		WHERE	1=1
+		<if test='P_VEND_REG_NO != null and P_VEND_REG_NO != "" '>
+		AND		VEND_REG_NO = #{P_VEND_REG_NO, jdbcType=VARCHAR}
+		</if>
+		<if test='P_BIZRNO != null and P_BIZRNO != "" '>
+		AND		BIZRNO = #{P_BIZRNO, jdbcType=VARCHAR}
+		</if>
+	</select>
+	
+	<!-- 	메일등록 -->
+	<insert id="insertMail">
+		<selectKey keyProperty="P_ALARMID" resultType="String" order="BEFORE">
+			SELECT	'EBID_'||TO_CHAR(SYSTIMESTAMP, 'YYYYMMDDHH24MISSFF3')||'_'||#{P_STR} AS P_ALARMID
+			FROM		DUAL 
+		</selectKey>
+		INSERT INTO T_CEF_LEGACYALARM(
+			ALARMID
+			,RCVID
+			,TITLE
+			,CONTENT
+			,ALARMKIND
+			,ALARMTYPE
+			,STATUS
+			,CHGDATE
+			,REGNAME
+		)VALUES(
+			#{P_ALARMID, jdbcType=VARCHAR}
+			,#{P_RCVID, jdbcType=VARCHAR}
+			,#{P_TITLE, jdbcType=VARCHAR}
+			,#{P_CONTENT, jdbcType=VARCHAR}
+			,'MAIL'
+			,'MAIL'
+			,'READY'
+			,SYSDATE
+			,'EBS 전자입찰계약시스템'
+		)
+	</insert>
+	
+	<select id="selectVendMail" resultType="dataEntity">
+		SELECT 	VEND.VEND_REG_NO
+					,VEND.BIZRNO
+					,VEND.VEND_NM
+					,VEND.RPRS_NM
+					,NVL(USR.EMAL_ADDR, VEND.EMAL_ADDR) AS EMAL_ADDR
+					,USR.USR_NM
+		FROM		T_CU_MST VEND
+					,T_CU_USER USR
+		WHERE	VEND.VEND_REG_NO = USR.VEND_REG_NO
+		AND		USR.DLGT_YN = 'Y'
+		AND		VEND.VEND_REG_NO = #{P_VEND_REG_NO}
+	</select>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 근로계약자 메일 주소 select(바라보는 테이블이 달라 따로 작성) 
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectVendLabMail
+     * @date : 2018. 12. 31.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2018. 12. 31.       은우소프트 맹경열              최초 작성 
+     *  =======================================================  
+     -->			
+	<select id="selectVendLabMail" resultType="dataEntity">
+		SELECT 	VEND.VEND_REG_NO
+					,NVL(VEND.EMAL_ADDR, '') AS EMAL_ADDR
+		FROM		(
+						SELECT	TA.*
+						FROM		
+						(
+							SELECT	VI.EMPL_NUMB	AS SABUN
+										, VI.ENCO_DATE
+										, VI.DEPT_CODE	AS DEPT_NO
+										, VI.DEPT_NAME	AS DEPT_NM
+										, VI.EMPL_NAME	AS VEND_NM
+										, VI.EMPL_NAME	AS RPRS_NM
+										, VI.STEC_DATE
+										, VI.JBGP_CODE
+										, VI.JBGP_NAME
+										, VI.SPOS_CODE
+										, VI.SPOS_NAME
+										, VI.CCEM_NAME
+										, VI.RETR_DATE
+										, VI.OPOS_CODE
+										, VI.OPOS_NAME
+										, VI.CPOS_CODE
+										, VI.CPOS_NAME
+										, VI.ENEE_NAME
+										, VI.WODN_CODE
+										, VI.WODN_NAME
+										, VI.CLSD_CODE
+										, VI.CLSD_NAME
+										, VI.WRKS_CODE
+										, VI.WRKS_NAME
+										, VI.GNDR_CODE
+										, VI.GNDR_NAME
+										, REPLACE(VI.COMP_TENR,'-','')	AS TEL_NO
+										, VI.POST_NUMB
+										, REPLACE(VI.HNPN_TENR,'-','')	AS CP_NO
+										, VI.DTL1_ADDR	AS ADDR_NM
+										, VI.DTL2_ADDR	AS ADDR_DENM
+										, VI.ANSD_DATE
+										, (VI.ELTR_MLAD || '@ebs.co.kr') AS EMAL_ADDR
+										, SUBSTR(HR.RERN_NUMB,0,6)||'-*******' AS RERN_NUMB
+										, HR.RERN_NUMB AS RERN_NUMB_REAL
+										, (SELECT USERID FROM V_SSO_USER WHERE SABUN = VI.EMPL_NUMB AND LEGACYDEPTCODE = VI.DEPT_CODE) VEND_REG_NO
+							FROM		MISDBA.VI_MASTXM VI
+										, MISDBA.HR_MASTXM HR
+							WHERE	1=1
+							AND		VI.EMPL_NUMB = HR.EMPL_NUMB
+						) TA
+						WHERE	1=1
+						AND		VEND_REG_NO IS NOT NULL
+						AND		WODN_CODE = '1'				
+					) VEND.
+		WHERE	1=1
+		AND		VEND.VEND_REG_NO = #{P_VEND_REG_NO}
+	</select>
+	
+	<insert id="insertMmLogInfo">
+		INSERT
+		INTO		T_MM_LOG
+		(
+			LOG_SN
+			, SYS_CONN_SECD
+			, CONN_CNTN
+			, CONN_DT
+			, CONN_ID
+			, CONN_URL
+			, LOG_ERR_SECD
+			, ERR_CNTN
+			, MENU_ID		
+			<include refid="ComRegr.RegrColumnClause"/>
+		)
+		VALUES
+		(
+			S_T_MM_LOG.NEXTVAL
+			, #{P_SYS_CONN_SECD , jdbcType=VARCHAR}
+			, #{P_CONN_CNTN , jdbcType=VARCHAR}
+			, TO_CHAR(SYSDATE, 'yyyyMMddHH24MISS')
+			, #{P_CONN_ID , jdbcType=VARCHAR}
+			, #{P_CONN_URL , jdbcType=VARCHAR}
+			, #{P_LOG_ERR_SECD , jdbcType=VARCHAR}
+			, #{P_ERR_CNTN , jdbcType=VARCHAR}
+			, #{P_MENU_ID , jdbcType=VARCHAR} 
+			<include refid="ComRegr.RegrValueClause"/>
+		)
+	</insert>
+	
+	<!--  
+     * <pre>
+     * 1. 개요 : 메일 템플릿 불러오기
+     * 2. 처리내용 :
+     * </pre>
+     * @Query ID : selectMailFormHtml
+     * @date : 2019. 05. 29.
+     * @author : 은우소프트 맹경열
+     * @history : 
+     *  =======================================================
+     *  변경일             		작성자                     		변경내용  
+     *  =======================================================
+     *  2019. 05. 29.       은우소프트 맹경열              최초 작성 
+     *  =======================================================  
+     -->
+    <resultMap id="selectMailFormHtmlEntity" type="dataEntity">
+		<result property="HTML_CNTN" column="HTML_CNTN" jdbcType="CLOB" javaType="java.lang.String" />
+	</resultMap>	     
+	<select id="selectMailFormHtml" resultMap="selectMailFormHtmlEntity">
+		SELECT	FRM_ID
+					, HTML_CNTN
+					, USE_YN
+		FROM		T_MM_MAIL_FORM
+		WHERE	1=1
+		AND		FRM_ID = #{P_FRM_ID, jdbcType=VARCHAR}
+		AND		NVL(USE_YN, 'N') = 'Y'
+	</select>	
+		
+		
+	<select id="selectCodeList" resultType="dataEntity">
+		SELECT CD_ID
+                  , CD_DTL_ID
+                  , CD_NM
+                  , CD_DTL_NM
+                  , ORD_SN
+                  , USE_YN
+                  , RMK
+                  , ETC_VAL1
+                  , ETC_VAL2
+                  , ETC_VAL3
+                  , REGR_ID
+                  , REGR_NM
+                  , REG_DT
+                  , MODR_ID
+                  , MODR_NM
+                  , MOD_DT
+                  , CONN_IP
+                  , DEL_AT
+                  , CHNG_PSBL_YN
+           FROM T_MM_CODE_MST
+           
+           WHERE 1 = 1
+           AND DEL_AT = 'N'
+           AND USE_YN = 'Y'
+		<if test='P_CD_ID_S != null and P_CD_ID_S != "" '>
+			AND CD_ID LIKE '%'||#{P_CD_ID_S}||'%'
+		</if>
+		ORDER BY ORD_SN
+	</select> 
+	
+	<select id="selectExcelHeadList" resultType="dataEntity">
+		<foreach separator="union all " item="SEARCH_CHECK" collection="P_CHECK_LIST" open="" close="" >
+			SELECT 
+					 #{P_EXCEL_TH, jdbcType=VARCHAR} AS EXCEL_TH 
+					,#{P_EXCEL_TD, jdbcType=VARCHAR} AS EXCEL_TD
+			FROM DUAL 
+		</foreach>
+	</select>
+	
+	
+	<select id="selectExcelTHList" resultType="dataEntity">
+		<foreach separator="union all " item="P_EXCEL_TH" collection="P_EXCEL_TH_LIST" open="" close="" >
+			SELECT #{P_EXCEL_TH, jdbcType=VARCHAR} AS VAL FROM DUAL 
+		</foreach>
+	</select>
+	
+	<select id="selectExcelTHColList" resultType="dataEntity">
+		<foreach separator="union all " item="P_EXCEL_TH_COL" collection="P_EXCEL_TH_COL_LIST" open="" close="" >
+			SELECT #{P_EXCEL_TH_COL, jdbcType=VARCHAR} AS VAL FROM DUAL 
+		</foreach>
+	</select>
+	
+	<select id="selectExcelTHRowList" resultType="dataEntity">
+		<foreach separator="union all " item="P_EXCEL_TH_ROW" collection="P_EXCEL_TH_ROW_LIST" open="" close="" >
+			SELECT #{P_EXCEL_TH_ROW, jdbcType=VARCHAR} AS VAL FROM DUAL 
+		</foreach>
+	</select>
+	
+	<select id="selectExcelTDList" resultType="dataEntity">
+		<foreach separator="union all " item="P_EXCEL_TD" collection="P_EXCEL_TD_LIST" open="" close="" >
+			SELECT #{P_EXCEL_TD, jdbcType=VARCHAR} AS VAL FROM DUAL 
+		</foreach>
+	</select>
+	
+	<select id="selectExcelXList" resultType="dataEntity">
+		<foreach separator="union all " item="P_EXCEL_X" collection="P_EXCEL_X_LIST" open="" close="" >
+			SELECT #{P_EXCEL_X, jdbcType=VARCHAR} AS VAL FROM DUAL 
+		</foreach>
+	</select>
+	
+	<select id="selectExcelYList" resultType="dataEntity">
+		<foreach separator="union all " item="P_EXCEL_Y" collection="P_EXCEL_Y_LIST" open="" close="" >
+			SELECT #{P_EXCEL_Y, jdbcType=VARCHAR} AS VAL FROM DUAL 
+		</foreach>
+	</select>
+
+	
+	
+	
+	
+	
+	<insert id="sendLOG">
+		INSERT INTO T_MM_LOG
+			(LOG_SN
+			, SYS_CONN_SECD
+			, CONN_CNTN
+			, CONN_DT
+			, CONN_ID
+			, CONN_URL
+			, LOG_ERR_SECD
+			, ERR_CNTN
+			, REGR_ID
+			, REGR_NM
+			, REG_DT
+			, MODR_ID
+			, MODR_NM
+			, MOD_DT
+			, CONN_IP
+			, DEL_AT
+			, MENU_ID
+		)VALUES (
+			S_T_MM_LOG.NEXTVAL
+			,#{P_SYS_CONN_SECD, jdbcType=VARCHAR} 		  
+			,#{P_CONN_CNTN, jdbcType=VARCHAR} 		  	 
+			,TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 		  
+			,#{P_USR_ID, jdbcType=VARCHAR} 		      	  
+			,#{P_CONN_URL, jdbcType=VARCHAR} 		     
+			,NULL										 
+			,NULL										 
+			,#{P_USR_ID, jdbcType=VARCHAR}				  
+			,#{P_USR_NM, jdbcType=VARCHAR}				  	
+			,TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 		 
+			,#{P_USR_ID, jdbcType=VARCHAR}				  
+			,#{P_USR_NM, jdbcType=VARCHAR}				  
+			,TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS') 		  
+			,#{P_CONN_IP, jdbcType=VARCHAR}
+			,'N'   
+			,#{P_MENU_ID, jdbcType=VARCHAR}     		  
+		)			
+	</insert >
+	
+	<select id="selectMsgContents" resultType="dataEntity">
+		SELECT MSG_CNTN 
+				, MSG_TTL
+		FROM T_MM_MSG
+		WHERE  MSG_SECD = #{P_MSG_SECD , jdbcType=VARCHAR}
+		  AND  MSG_SN = #{P_MSG_SN , jdbcType=VARCHAR}
+		<!-- AND  MSG_OBJ_ID = #{P_MSG_OBJ_ID , jdbcType=VARCHAR} -->
+	</select>
+</mapper>	

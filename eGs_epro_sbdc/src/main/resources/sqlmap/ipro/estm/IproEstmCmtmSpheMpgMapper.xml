@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+ --> 
+ <mapper namespace="com.eunwoosoft.ipro.estm.dao.IproEstmCmtmSpheMpgDao">
+ 
+ 	<select id="selectEstmCmtmSpheMpgList" resultType="dataEntity">
+        <include refid="ComPgng.pgngHeaderClause"/>
+        SELECT * FROM (
+		    <include refid="estmCmtmSpheMpgList"/>
+			<include refid="estmCmtmSpheMpgListWhere"/>
+			ORDER BY ESTM_SPHE_SECD DESC
+		) T1
+		WHERE 1 = 1
+		<include refid="ComPgng.pgngTailClause"/>   
+    </select>
+    
+    
+    <select id="selectEstmCmtmSpheMpgListTotCnt" resultType="int" > 
+		SELECT COUNT(1) FROM ( 
+			<include refid="estmCmtmSpheMpgList"/>
+			<include refid="estmCmtmSpheMpgListWhere"/>
+		) T1
+		WHERE 1 = 1
+	</select>
+    
+    
+    <sql id="estmCmtmSpheMpgList">
+        select * from (
+            SELECT ESTM_SPHE_SECD
+                      , ESTM_SPHE_SENM
+                      , DECODE(REG_CNT, 0, 'N', 'Y') AS REG_AT
+                      , REG_CNT
+                      , DEL_AT
+                      , REGR_ID
+                      , REGR_DEPT_NO
+               FROM ( SELECT A.ESTM_SPHE_SECD
+                                     , A.ESTM_SPHE_SENM
+                                     , (SELECT COUNT(1) FROM T_ESTM_CMTM_SPHE_MPG WHERE ESTM_SPHE_SECD = A.ESTM_SPHE_SECD) AS REG_CNT
+                                     , A.DEL_AT
+                                     , A.REGR_ID
+                                     , ( SELECT DEPT_NO FROM V_MM_USER V WHERE V.USR_ID = A.REGR_ID ) AS REGR_DEPT_NO
+                              FROM T_ESTM_SPHE_MST A
+                          )
+        )
+	</sql>
+	
+	<sql id="estmCmtmSpheMpgListWhere">
+		<where>
+            AND DEL_AT = #{P_DEL_AT, jdbcType=VARCHAR}
+            <if test='P_ESTM_SPHE_SECD_S != null and P_ESTM_SPHE_SECD_S != "" '>
+                AND ESTM_SPHE_SECD = #{P_ESTM_SPHE_SECD_S}
+            </if>
+            <if test='P_REGR_DEPT_NO_S != null and P_REGR_DEPT_NO_S != "" '>
+                AND REGR_DEPT_NO = #{P_REGR_DEPT_NO_S}
+            </if>
+            <if test='P_REG_AT_S != null and P_REG_AT_S != "" '>
+            	<if test='P_REG_AT_S == "Y"'>
+            		AND REG_CNT > 0
+            	</if>
+                <if test='P_REG_AT_S == "N"'>
+                	AND REG_CNT = 0
+                </if>
+            </if>
+		</where>
+	</sql>
+	
+	<select id="selectEstmCmtmSpheMpgItemList" resultType="dataEntity">
+	SELECT A.*, ROWNUM AS RNUM
+	FROM
+	(
+		SELECT
+				
+				 ESTM_CMTM_NO
+				,ESTM_CMTM_NM
+				,DECODE(INO_CMTM_SECD, 'INN','내부', 'OUT', '외부') AS INO_CMTM_SENM
+				,CP_NO
+				,EMAL
+				,'N' AS SELECT_AT
+				,LLF_SECD
+				,F_CDVAL_INQIRE('LLF_SECD', LLF_SECD) AS LLF_NM
+				,CNTN_SECD
+				,F_CDVAL_INQIRE('CNTN_SECD', CNTN_SECD) AS CNTN_NM
+				,MLF_SECD
+				,F_CDVAL_INQIRE('MLF_SECD', MLF_SECD) AS MLF_NM
+				,SLF_SECD
+				,F_CDVAL_INQIRE('SLF_SECD', SLF_SECD) AS SLF_NM
+		FROM
+		(
+			SELECT
+					 ESTM_CMTM_NO
+					,ESTM_CMTM_NM
+					,INO_CMTM_SECD
+					,CP_NO
+					,EMAL
+					,LLF_SECD
+					,F_CDVAL_INQIRE('LLF_SECD', LLF_SECD) AS LLF_NM
+					,CNTN_SECD
+					,F_CDVAL_INQIRE('CNTN_SECD', CNTN_SECD) AS CNTN_NM
+					,MLF_SECD
+					,F_CDVAL_INQIRE('MLF_SECD', MLF_SECD) AS MLF_NM
+					,SLF_SECD
+					,F_CDVAL_INQIRE('SLF_SECD', SLF_SECD) AS SLF_NM
+			FROM V_MM_ESTM_CMTM_MST
+			WHERE 1=1
+			AND   SLCT_YN = 'Y'
+			AND   NVL(HNDW_REG_YN,'N') = 'N'
+
+			UNION
+
+			SELECT ESTM_CMTM_NO
+					,ESTM_CMTM_NM
+					,INO_CMTM_SECD
+					,CP_NO
+					,EMAL
+					,LLF_SECD
+					,F_CDVAL_INQIRE('LLF_SECD', LLF_SECD) AS LLF_NM
+					,CNTN_SECD
+					,F_CDVAL_INQIRE('CNTN_SECD', CNTN_SECD) AS CNTN_NM
+					,MLF_SECD
+					,F_CDVAL_INQIRE('MLF_SECD', MLF_SECD) AS MLF_NM
+					,SLF_SECD
+					,F_CDVAL_INQIRE('SLF_SECD', SLF_SECD) AS SLF_NM
+			FROM V_MM_ESTM_CMTM_MST
+			WHERE 1=1
+			AND   SLCT_YN = 'Y'
+			AND   HNDW_REG_YN = 'Y'
+			AND   ESTM_CMTM_REG_DEPT_NO = (SELECT DEPT_NO FROM V_MM_USER
+											WHERE 1=1
+											AND USR_ID = (SELECT REGR_ID FROM T_ESTM_SPHE_MST WHERE ESTM_SPHE_SECD = #{P_ESTM_SPHE_SECD, jdbcType=VARCHAR})
+											)
+			
+			MINUS
+			SELECT
+					 ESTM_CMTM_NO
+					,ESTM_CMTM_NM
+					,INO_CMTM_SECD
+					,CP_NO
+					,EMAL
+					,LLF_SECD
+					,F_CDVAL_INQIRE('LLF_SECD', LLF_SECD) AS LLF_NM
+					,CNTN_SECD
+					,F_CDVAL_INQIRE('CNTN_SECD', CNTN_SECD) AS CNTN_NM
+					,MLF_SECD
+					,F_CDVAL_INQIRE('MLF_SECD', MLF_SECD) AS MLF_NM
+					,SLF_SECD
+					,F_CDVAL_INQIRE('SLF_SECD', SLF_SECD) AS SLF_NM
+			FROM V_MM_ESTM_CMTM_MST
+			WHERE 1=1
+			AND   SLCT_YN = 'Y'
+			AND ESTM_CMTM_NO IN (SELECT ESTM_CMTM_NO FROM T_ESTM_CMTM_SPHE_MPG WHERE ESTM_SPHE_SECD = #{P_ESTM_SPHE_SECD, jdbcType=VARCHAR})
+		)
+		
+		UNION
+		
+		SELECT
+				 ESTM_CMTM_NO
+				,ESTM_CMTM_NM
+				,DECODE(INO_CMTM_SECD, 'INN','내부', 'OUT', '외부') AS INO_CMTM_SENM
+				,CP_NO
+				,EMAL
+				,'Y' AS SELECT_AT
+				,LLF_SECD
+				,F_CDVAL_INQIRE('LLF_SECD', LLF_SECD) AS LLF_NM
+				,CNTN_SECD
+				,F_CDVAL_INQIRE('CNTN_SECD', CNTN_SECD) AS CNTN_NM
+				,MLF_SECD
+				,F_CDVAL_INQIRE('MLF_SECD', MLF_SECD) AS MLF_NM
+				,SLF_SECD
+				,F_CDVAL_INQIRE('SLF_SECD', SLF_SECD) AS SLF_NM
+		FROM V_MM_ESTM_CMTM_MST
+		WHERE 1=1
+		AND   SLCT_YN = 'Y'
+		AND ESTM_CMTM_NO IN (SELECT ESTM_CMTM_NO FROM T_ESTM_CMTM_SPHE_MPG WHERE ESTM_SPHE_SECD = #{P_ESTM_SPHE_SECD, jdbcType=VARCHAR})
+	) A
+	WHERE 1=1
+	<if test='P_SELECT_AT != null and P_SELECT_AT != "" '>
+    	<if test='P_SELECT_AT = "Y"'>
+			AND SELECT_AT = #{P_SELECT_AT, jdbcType=VARCHAR}
+    	</if>
+    </if>
+    ORDER BY INO_CMTM_SENM, ESTM_CMTM_NM
+            	
+	</select>
+	
+	<select id="selectRealEstmYn" resultType="dataEntity">
+		SELECT REAL_ESTM_YN
+		FROM T_ESTM_MNG_MST
+	</select>
+
+	<select id="selectEstmCmtmSpheMpgDetail" resultType="dataEntity">
+		SELECT
+				 ESTM_SPHE_SECD
+				,ESTM_SPHE_SENM
+		FROM T_ESTM_SPHE_MST
+		WHERE ESTM_SPHE_SECD = #{P_ESTM_SPHE_SECD, jdbcType=VARCHAR}
+	</select>
+	
+	
+	<delete id="deleteCmtmSpheMpgDelt">
+		DELETE FROM T_ESTM_CMTM_SPHE_MPG
+		WHERE	1=1
+		AND		ESTM_SPHE_SECD = #{P_ESTM_SPHE_SECD, jdbcType=VARCHAR}
+	</delete>
+
+
+
+	<!-- 평가위원 분야매핑 -->
+	<insert id="insertCmtmSpheMpgItemRegist">
+        INSERT INTO T_ESTM_CMTM_SPHE_MPG (
+		                    ESTM_CMTM_NO
+		                  , ESTM_SPHE_SECD
+		                  , ESTM_CMTM_NM
+		                  , ESTM_SPHE_SENM
+		                 <include refid="ComRegr.RegrColumnClause"/>
+        ) VALUES (
+		                    #{P_ESTM_CMTM_NO, jdbcType=VARCHAR}
+		                  , #{P_ESTM_SPHE_SECD, jdbcType=VARCHAR}
+		                  , (select ESTM_CMTM_NM from T_ESTM_CMTM_POOL_MST where ESTM_CMTM_NO = #{P_ESTM_CMTM_NO, jdbcType=VARCHAR})
+		                  , (select ESTM_SPHE_SENM from T_ESTM_SPHE_MST where ESTM_SPHE_SECD = #{P_ESTM_SPHE_SECD, jdbcType=VARCHAR})
+		                  <include refid="ComRegr.RegrValueClause"/>
+		)
+	</insert>
+
+	<select id="selectCmtmSpheMpgListExcelDwld" resultType="dataEntity">
+		 SELECT 
+        			ROWNUM AS RNUM
+        		 , 	T2.ESTM_SPHE_SECD
+                  , T2.ESTM_SPHE_SENM
+                  , DECODE(REG_CNT, 0, 'N', 'Y') AS REG_AT
+                  , T2.REG_CNT
+                  , T2.DEL_AT
+		 FROM (
+		   	<include refid="estmCmtmSpheMpgList"/>
+			<include refid="estmCmtmSpheMpgListWhere"/>
+		ORDER BY ESTM_SPHE_SECD DESC
+		) T2
+		WHERE 1 = 1
+	</select>
+	
+ </mapper> 
